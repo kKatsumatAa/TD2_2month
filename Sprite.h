@@ -6,7 +6,7 @@
 class Sprite
 {
 private:
-	
+	//
 
 public:
 	VertexSprite vertices[4] = {
