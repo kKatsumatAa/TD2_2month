@@ -17,7 +17,7 @@ public:
 };
 
 //何もしていない
-class StateNormalP : public PlayerState
+class StateNormalMoveP : public PlayerState
 {
 private:
 
@@ -26,7 +26,30 @@ public:
 	void Draw(Camera* camera, Model* model);
 };
 
-//ジャンプのみ
+//移動中
+class StateMoveP : public PlayerState
+{
+private:
+	int count = 0;
+	const int countMax = 20;
+
+public:
+	void Update(/*Tutorial* tutorial = nullptr*/);
+	void Draw(Camera* camera, Model* model);
+};
+
+//-----------------------------------------------
+//何もしていない
+class StateNormalConTurP : public PlayerState
+{
+private:
+
+public:
+	void Update(/*Tutorial* tutorial = nullptr*/);
+	void Draw(Camera* camera, Model* model);
+};
+
+//繋いでる
 class StateConnectP : public PlayerState
 {
 private:
@@ -36,7 +59,7 @@ public:
 	void Draw(Camera* camera, Model* model);
 };
 
-//ジャンプ攻撃中
+//回してる
 class StateTurnP : public PlayerState
 {
 private:
@@ -59,21 +82,42 @@ private:
 
 
 	//状態
-	PlayerState* state = nullptr;
+	PlayerState* stateMove = nullptr;
+	PlayerState* stateConnectTurn = nullptr;
 
 	const float scaleTmp = 1.8f;
 
+
+
 	/*Tutorial* tutorial;*/
 public:
-	//
-	Camera* camera;
+	//外部からセットするブロックあるから動ける
+	bool isMove = false;
+	bool isWantToMove = false; //外部で何したいか参照してもらう
+	bool isMoveNow = false;	//今しているか
+	//外部からセットするブロックあるから繋げるフラグ
+	bool isConnect = false;
+	bool isWantToConnect = false;  //外部で何したいか参照してもらう
+	bool isCennectNow = false;	//今しているか
+	//〃ブロック回転するフラグ
+	bool isTurn = false;
+	bool isisWantToTurn = false;  //外部で何したいか参照してもらう
+	bool isTurnNow = false;  //今しているか
+
+	float moveDistance;
+	//進みたい場所
+	Vec3 moveEndPos;
+	Vec3 moveStartPos;
+
+
 	Object draw[10];
 	DebugText* debugText_ = nullptr;
 
 
-	void ChangeState(PlayerState* state);
+	void ChangeStateTurnConnect(PlayerState* state);
+	void ChangeStateMove(PlayerState* state);
 
-	void Initialize(Model* model, DebugText* debugText_, Camera* camera	/*,Tutorial* tutorial = nullptr*/);
+	void Initialize(float moveDistance, Model* model, DebugText* debugText_/*,Tutorial* tutorial = nullptr*/);
 	void Update();
 	void Draw(Camera* camera);
 	void DrawSprite();
