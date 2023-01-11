@@ -80,14 +80,11 @@ private:
 	//テクスチャハンドル
 	UINT64 textureHandle[10];
 
-
 	//状態
 	PlayerState* stateMove = nullptr;
 	PlayerState* stateConnectTurn = nullptr;
 
 	const float scaleTmp = 1.8f;
-
-
 
 	/*Tutorial* tutorial;*/
 public:
