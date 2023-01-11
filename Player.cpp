@@ -164,6 +164,8 @@ void StateNormalConTurP::Update()
 	{
 		//if (/*ステージの関数で判定(player->GetWorldPos()に、ボタンがあるか)*/)
 		{
+			//ステージの関数で(player->GetWorldPos()のボタンを軸に設定する関数)
+
 			player->ChangeStateTurnConnect(new StateConnectP);
 		}
 	}
@@ -187,6 +189,8 @@ void StateConnectP::Update()
 		}
 		//else
 		{
+			//繋がれているブロックを全部解除するステージ関数()
+			//stage~();
 			player->ChangeStateTurnConnect(new StateNormalConTurP);
 		}
 	}
@@ -199,13 +203,15 @@ void StateConnectP::Draw(Camera* camera, Model* model)
 //--------------------------------------------------------------------------
 void StateTurnP::Update()
 {
-	/*ステージ関数/ キーボードによって回転(player->getWorldPos())*/
+	/*ステージ関数/ キーボードによってプレイヤーとブロック両方を回転(&player->getWorldPos())*/
 
 
 	//回転終わる
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
 		player->isTurnNow = false;
+		//繋がれているブロックを全部解除するステージ関数()
+		//stage~();
 		player->ChangeStateTurnConnect(new StateNormalConTurP);
 	}
 }
