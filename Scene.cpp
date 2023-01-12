@@ -156,6 +156,11 @@ void SceneLoad::DrawSprite()
 //デストラクタ
 Scene::~Scene()
 {
+	camera.reset();
+	connectEM.reset();
+	imGuiManager->Finalize();
+	delete imGuiManager;
+	delete lightManager;
 }
 
 void Scene::ChangeState(SceneState* state)
@@ -192,14 +197,22 @@ void Scene::Initialize()
 	lightManager->SetDirLightColor(0, { 1,1,1 });
 	//3Dオブジェクトにライトをセット(全体で一つを共有)
 	Object::SetLight(lightManager);
+	lightManager->SetDirLightActive(0, true);
 
 	//カメラ
 	camera = std::make_unique<Camera>();
 	camera->Initialize();
 
+
+	//電気エフェクト
+	connectEM = std::make_unique<ConnectingEffectManager>();
+	connectEM->Initialize();
+
 	//ステート変更
 	ChangeState(new SceneLoad);
 }
+
+int count = 0;
 
 void Scene::Update()
 {
@@ -214,6 +227,14 @@ void Scene::Update()
 
 	state->Update();
 
+	count++;
+	if (/*KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE)*/count % 7 == 0)
+	{
+		connectEM->GenerateRandomConnectingEffect({ 0,0,0 }, 30.0f, 6.0f, 15, 20,10);
+	}
+
+	connectEM->Update();
+
 
 #ifdef _DEBUG
 	//if (KeyboardInput::GetInstance().KeyTrigger(DIK_E)) ChangeState(new SceneTitle);
@@ -226,6 +247,8 @@ void Scene::Update()
 void Scene::Draw()
 {
 	state->Draw();
+
+	connectEM->Draw(*camera.get());
 
 	//imgui
 	imGuiManager->Draw();
