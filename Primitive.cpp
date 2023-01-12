@@ -366,8 +366,8 @@ void Primitive::InitializeCube()
 
 void Primitive::InitializeLine()
 {
-	verticesLine[0] = { {-1.0,0,0},{verticesLine[0].normal},{0.0f,1.0f} };//ç∂â∫
-	verticesLine[1] = { {1.0,0,0},  {verticesLine[1].normal},{0.5f,0.0f} };//è„
+	verticesLine[0] = { {0,0,1.0f},{verticesLine[0].normal},{0.0f,1.0f} };//ç∂â∫
+	verticesLine[1] = { {0,0,-1.0f},  {verticesLine[1].normal},{0.5f,0.0f} };//è„
 
 	{
 		//03_04

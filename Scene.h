@@ -6,6 +6,7 @@
 #include"ParticleManager.h"
 #include"Camera.h"
 #include"Async.h"
+#include"ConnectingEffect.h"
 
 
 
@@ -61,6 +62,8 @@ public:
 
 
 	std::unique_ptr<Camera> camera;
+
+	std::unique_ptr<ConnectingEffectManager> connectEM;
 
 public:
 	~Scene();
