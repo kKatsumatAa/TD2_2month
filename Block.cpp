@@ -1,5 +1,8 @@
 #include "Block.h"
 
+const int blockWidth = 13;
+const int blockHeight = 13;
+
 void Block::Initialize(Model* model, DebugText* debugText_)
 {
 	assert(model);
@@ -15,19 +18,6 @@ void Block::Initialize(Model* model, DebugText* debugText_)
 
 void Block::Updata()
 {
-
-
-	//Œq‚®ˆ—
-	if (isConnect_ == false && isOverlap_ == false && isRotate_ == false)
-	{
-		isConnect_ = true;
-	}
-	//‰ñ“]‚·‚éˆ—
-	if (isConnect_ == false && isOverlap_ == false)
-	{
-
-	}
-
 	worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
 	worldTransform_.SetWorld();
 }

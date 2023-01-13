@@ -6,6 +6,7 @@
 #include"ParticleManager.h"
 #include"Camera.h"
 #include"Async.h"
+#include"BlockManager.h"
 
 
 
@@ -29,6 +30,7 @@ class Scene
 private:
 	//ó‘Ôis“®j
 	SceneState* state = nullptr;
+	BlockManager* blockManager = nullptr;
 
 public:
 	WorldMat cameraWorldMat;

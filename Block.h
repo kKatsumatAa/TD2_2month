@@ -6,8 +6,10 @@
 //ブロック
 class Block : public Collider
 {
+
+public:
 	//形態フェーズ
-	enum class Form
+	enum Form
 	{
 		BLOCK = 0,		//ブロック状態
 		GEAR,			//ギア
@@ -17,7 +19,7 @@ class Block : public Collider
 		None,			//何もない状態
 	};
 
-	enum class Action
+	enum Action
 	{
 		Rotate,		//回転しているとき
 		Overlap,	//重なっているとき
@@ -39,6 +41,8 @@ private:
 	bool isConnect_;	//繋がっているかどうか
 	bool isAxis_;		//軸になっているかどうか
 
+	//ブロックの大きさ
+	Vec3 scale_;
 	//半径
 	float radius_;
 
@@ -47,6 +51,8 @@ private:
 
 	//移動方向
 	float moveDistance_;
+
+	
 
 public:
 
@@ -68,6 +74,10 @@ public:
 	
 	//ゲッター
 	const Vec3 GetPos(Vec3 pos) const { return pos_; };
+	const Vec3 GetScale(Vec3 scale) const { return scale_; };
+
+	const WorldMat GetWorldTransform() { return worldTransform_; };
+
 
 	//セッター
 };

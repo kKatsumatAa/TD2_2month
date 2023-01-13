@@ -212,6 +212,7 @@ void Scene::Update()
 
 	}
 
+	blockManager->Update();
 	state->Update();
 
 
@@ -226,7 +227,8 @@ void Scene::Update()
 void Scene::Draw()
 {
 	state->Draw();
-
+	blockManager->Draw();
+	
 	//imgui
 	imGuiManager->Draw();
 }
