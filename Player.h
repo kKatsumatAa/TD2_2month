@@ -80,14 +80,11 @@ private:
 	//テクスチャハンドル
 	UINT64 textureHandle[10];
 
-
 	//状態
 	PlayerState* stateMove = nullptr;
 	PlayerState* stateConnectTurn = nullptr;
 
 	const float scaleTmp = 1.8f;
-
-
 
 	/*Tutorial* tutorial;*/
 public:
@@ -108,7 +105,6 @@ public:
 	//進みたい場所
 	Vec3 moveEndPos;
 	Vec3 moveStartPos;
-
 
 	Object draw[10];
 	DebugText* debugText_ = nullptr;

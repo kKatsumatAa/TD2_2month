@@ -61,7 +61,6 @@ void Player::Initialize(float moveDistance, Model* model, DebugText* debugText_)
 void Player::Update()
 {
 
-	//
 	stateMove->Update();
 	stateConnectTurn->Update();
 
@@ -88,7 +87,6 @@ void Player::OnCollision(Collider& collider)
 void Player::OnCollision2(Collider& collider)
 {
 }
-
 
 //----------------------------------------------------------------------------------------------
 void PlayerState::SetPlayer(Player* player)

@@ -8,6 +8,7 @@
 #include"Async.h"
 #include"ConnectingEffect.h"
 #include"Player.h"
+#include"BlockManager.h"
 
 
 
@@ -31,6 +32,7 @@ class Scene
 private:
 	//ó‘Ôis“®j
 	SceneState* state = nullptr;
+	BlockManager* blockManager = nullptr;
 
 public:
 	WorldMat cameraWorldMat;

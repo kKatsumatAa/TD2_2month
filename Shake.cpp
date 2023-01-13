@@ -4,6 +4,9 @@
 float Shake::GetRandomShakeInternal(float min, float max)
 {
 	std::uniform_real_distribution<float> random(min, max);
+	//—”¶¬Ší
+	std::random_device seed_gen;
+	std::mt19937_64 engine(seed_gen());
 	return random(engine);
 }
 
