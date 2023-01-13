@@ -70,6 +70,7 @@ void Player::Update()
 
 void Player::Draw(Camera* camera)
 {
+	draw[0].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &model_[0]);
 
 	//
 	stateMove->Draw(camera, model_);
@@ -99,25 +100,25 @@ void PlayerState::SetPlayer(Player* player)
 void StateNormalMoveP::Update()
 {
 	//移動の場合(回転中は移動しない)
-	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHTARROW) ||
-		KeyboardInput::GetInstance().KeyTrigger(DIK_UPARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_DOWNARROW))
+	if ((KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) ||
+		KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW))
 		&& player->isTurnNow == false)
 	{
-		if (KeyboardInput::GetInstance().KeyTrigger(DIK_LEFTARROW))
+		if (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW))
 		{
-			player->moveEndPos = { player->GetWorldPos().x - player->moveDistance ,0,0 };
+			player->moveEndPos = { player->GetWorldPos().x - player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
 		}
-		if (KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHTARROW))
+		if (KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW))
 		{
-			player->moveEndPos = { player->GetWorldPos().x + player->moveDistance ,0,0 };
+			player->moveEndPos = { player->GetWorldPos().x + player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
 		}
-		if (KeyboardInput::GetInstance().KeyTrigger(DIK_UPARROW))
+		if (KeyboardInput::GetInstance().KeyPush(DIK_UPARROW))
 		{
-			player->moveEndPos = { 0,player->moveDistance,0 };
+			player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + player->moveDistance };
 		}
-		if (KeyboardInput::GetInstance().KeyTrigger(DIK_DOWNARROW))
+		if (KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW))
 		{
-			player->moveEndPos = { 0,-player->moveDistance ,0 };
+			player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + -player->moveDistance };
 		}
 
 		//if (/*ステージの関数で先にブロックあるか判定(endPosを引数)*/)

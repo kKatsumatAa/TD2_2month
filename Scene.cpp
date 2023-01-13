@@ -158,6 +158,7 @@ Scene::~Scene()
 {
 	camera.reset();
 	connectEM.reset();
+	player.reset();
 	imGuiManager->Finalize();
 	delete imGuiManager;
 	delete lightManager;
@@ -185,6 +186,8 @@ void Scene::Initialize()
 	//model
 	Model::StaticInitialize();
 
+	model[0] = Model::LoadFromOBJ("sphere");
+
 	//imgui
 	imGuiManager = new ImGuiManager();
 	imGuiManager->Initialize();
@@ -203,10 +206,13 @@ void Scene::Initialize()
 	camera = std::make_unique<Camera>();
 	camera->Initialize();
 
-
 	//電気エフェクト
 	connectEM = std::make_unique<ConnectingEffectManager>();
 	connectEM->Initialize();
+
+	//電気エフェクト
+	player = std::make_unique<Player>();
+	player->Initialize(5.0f, model[0], &debugText);
 
 	//ステート変更
 	ChangeState(new SceneLoad);
@@ -235,6 +241,8 @@ void Scene::Update()
 
 	connectEM->Update();
 
+	player->Update();
+
 
 #ifdef _DEBUG
 	//if (KeyboardInput::GetInstance().KeyTrigger(DIK_E)) ChangeState(new SceneTitle);
@@ -248,6 +256,7 @@ void Scene::Draw()
 {
 	state->Draw();
 
+	player->Draw(camera.get());
 	connectEM->Draw(*camera.get());
 
 	//imgui
