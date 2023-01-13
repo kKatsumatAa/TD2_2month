@@ -6,8 +6,8 @@ void ConnectingEffect::Initialize(Vec3 pos, Vec3 rot, float length, int lifeTime
 	worldTransform.rot = rot;
 	worldTransform.trans = pos;
 	//zに変える可能性あり
-	worldTransform.scale = { 0,0.05f,0.05f };
 	scaleTmp = length;
+	worldTransform.scale = { scaleTmp,0.05f,0.05f };
 	worldTransform.SetWorld();
 
 	this->lifeTime = lifeTime;
@@ -28,9 +28,19 @@ void ConnectingEffect::Update()
 	}
 }
 
-void ConnectingEffect::Draw(Camera& camera)
+void ConnectingEffect::Draw(Camera& camera, bool isAlpha)
 {
-	obj.DrawCube3D(&worldTransform, &camera.viewMat, &camera.projectionMat, { 1.0f,1.0f,0.0f,1.0f });
+	XMFLOAT4 color;
+	if (isAlpha)
+	{
+		color = { 1.0f,1.0f,0.0f,1.0f };
+	}
+	else
+	{
+		color = { 1.0f,1.0f,0.0f,0.4f };
+	}
+
+	obj.DrawCube3D(&worldTransform, &camera.viewMat, &camera.projectionMat, color);
 }
 
 
@@ -76,15 +86,13 @@ void ConnectingEffectSet::GenerateRandomConnectingEffect(Vec3 pos, float radius,
 			oldPos += vec;
 
 
-			/*vec = { 1.0f,0,0 };
-			oldLength = lengthDist(engine);
-			vec *= oldLength;*/
-
 			oldRot = { rotDist(engine),rotDist(engine),rotDist(engine) };
 			worldTransform.rot = oldRot;
 			worldTransform.SetWorld();
 
 			vec = { 1.0f,0,0 };
+			oldLength = lengthDist(engine);
+			vec *= oldLength;
 			Vec3xM4(vec, worldTransform.matWorld, 0);
 
 			oldPos += vec;
@@ -94,10 +102,10 @@ void ConnectingEffectSet::GenerateRandomConnectingEffect(Vec3 pos, float radius,
 	}
 }
 
-void ConnectingEffectSet::Initialize(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num, int countMax)
+void ConnectingEffectSet::Initialize(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num)
 {
 	count = 0;
-	this->countMax = countMax;
+	this->countMax = num;
 	isEnd = false;
 
 	oldPos = pos;
@@ -106,7 +114,7 @@ void ConnectingEffectSet::Initialize(Vec3 pos, float radius, float lengthMax, in
 	lifeTime = lifeTimeMax;
 	this->num = num;
 
-	GenerateRandomConnectingEffect(pos, radius, lengthMax, lifeTimeMax, countMax);
+	GenerateRandomConnectingEffect(pos, radius, lengthMax, lifeTimeMax, num);
 
 	//最初のポインタ
 	itr = connectingEffects.begin();
@@ -136,13 +144,19 @@ void ConnectingEffectSet::Update()
 
 	if (isFinal)
 	{
-		connectingEffects.erase(itr);
-		itr = connectingEffects.begin();
+		timer++;
 
-		if (connectingEffects.size() <= 0)
+		if (timer % 5 == 0)
 		{
-			isEnd = true;
+			connectingEffects.erase(itr);
+			itr = connectingEffects.begin();
+
+			if (connectingEffects.size() <= 0)
+			{
+				isEnd = true;
+			}
 		}
+		
 	}
 }
 
@@ -151,7 +165,7 @@ void ConnectingEffectSet::Draw(Camera& camera)
 {
 	for (std::unique_ptr<ConnectingEffect>& connectEffects : this->connectingEffects)
 	{
-		connectEffects->Draw(camera);
+		connectEffects->Draw(camera,!isFinal);
 	}
 }
 
@@ -189,23 +203,23 @@ void ConnectingEffectManager::Draw(Camera& camera)
 	}
 }
 
-void ConnectingEffectManager::GenerateConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num, int count)
+void ConnectingEffectManager::GenerateConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num)
 {
 	{
 		//球を生成、初期化
 		std::unique_ptr<ConnectingEffectSet> connectSet = std::make_unique<ConnectingEffectSet>();
-		connectSet->Initialize(pos, radius, lengthMax, lifeTimeMax, num, count);
+		connectSet->Initialize(pos, radius, lengthMax, lifeTimeMax, num);
 		//球を登録
 		connectingEffects_.push_back(std::move(connectSet));
 	}
 }
 
-void ConnectingEffectManager::GenerateRandomConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num, int count)
+void ConnectingEffectManager::GenerateRandomConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num)
 {
-	static std::uniform_int_distribution<int> numDist(0, num);
+	static std::uniform_int_distribution<int> numDist(1, num);
 	num = numDist(engine);
 
-	GenerateConnectingEffect(pos, radius, lengthMax, lifeTimeMax, num, count);
+	GenerateConnectingEffect(pos, radius, lengthMax, lifeTimeMax, num);
 }
 
 

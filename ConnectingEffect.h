@@ -19,7 +19,7 @@ private:
 public:
 	void Initialize(Vec3 pos, Vec3 rot, float length, int lifeTime, float t);
 	void Update();
-	void Draw(Camera& camera);
+	void Draw(Camera& camera,bool isAlpha);
 
 	bool GetIsAlive() { return isAlive; }
 	void SetIsAlive(bool is) { isAlive = is; }
@@ -43,9 +43,10 @@ private:
 	int lifeTime;
 	int num;
 	
+	int timer = 0;
 
 public:
-	void Initialize(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num, int countMax);
+	void Initialize(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num);
 	void Update();
 	void Draw(Camera& camera);
 
@@ -72,8 +73,8 @@ public:
 	void Update();
 	void Draw(Camera& camera);
 
-	void GenerateConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num, int count);
-	void GenerateRandomConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num,int count);
+	void GenerateConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num);
+	void GenerateRandomConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num);
 };
 
 
