@@ -230,7 +230,7 @@ void Scene::Update()
 	count++;
 	if (/*KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE)*/count % 7 == 0)
 	{
-		connectEM->GenerateRandomConnectingEffect({ 0,0,0 }, 30.0f, 6.0f, 15, 20,10);
+		connectEM->GenerateRandomConnectingEffect({ 0,0,0 }, 30.0f, 6.0f, 15, 20);
 	}
 
 	connectEM->Update();
