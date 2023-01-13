@@ -16,7 +16,7 @@ public:
 		BUTTON,			//ボタン
 		LOCKED,			//固定ブロック
 		GOAL,			//ゴール
-		None,			//何もない状態
+		NONE,			//何もない状態
 	};
 
 	enum Action
@@ -32,25 +32,25 @@ private:
 	Model* model_ = nullptr;
 
 	//テクスチャハンドル
-	UINT64 textureHandle_[10];
+	//UINT64 textureHandle_[10];
 
 	const float scaleTmp = 1.8f;
 
-	bool isRotate_;		//回転しているかどうか
-	bool isOverlap_;	//重なっているかどうか
-	bool isConnect_;	//繋がっているかどうか
-	bool isAxis_;		//軸になっているかどうか
+	//bool isRotate_;		//回転しているかどうか
+	//bool isOverlap_;	//重なっているかどうか
+	//bool isConnect_;	//繋がっているかどうか
+	//bool isAxis_;		//軸になっているかどうか
 
 	//ブロックの大きさ
 	Vec3 scale_;
 	//半径
-	float radius_;
+	//float radius_;
 
 	//座標
 	Vec3 pos_;
 
 	//移動方向
-	float moveDistance_;
+	//float moveDistance_;
 
 	
 

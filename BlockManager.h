@@ -16,7 +16,7 @@ public:
 	void Initialize(Model* model, DebugText* debugText_);
 
 	//XV
-	void Update(Vec3 pos);
+	void Update();
 
 	//•`‰æ
 	void Draw();

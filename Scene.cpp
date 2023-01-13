@@ -231,7 +231,7 @@ void Scene::Update()
 
 	}
 
-	blockManager->Update();
+	//blockManager->Update();
 	state->Update();
 
 	count++;

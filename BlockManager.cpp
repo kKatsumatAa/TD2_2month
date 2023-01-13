@@ -6,7 +6,10 @@ BlockManager::~BlockManager()
 {
 	for (int i = 0; i < blockWidth; i++)
 	{
-		delete blocks_;
+		for (int j = 0; j < blockHeight; j++)
+		{
+			delete blocks_[i][j];
+		}
 	}
 }
 
@@ -66,14 +69,14 @@ void BlockManager::Initialize(Model* model, DebugText* debugText_)
 	isCount = 0;
 }
 
-void BlockManager::Update(Vec3 pos)
+void BlockManager::Update()
 {
 	for (int i = 0; i < blockWidth; i++)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
 			//状態
-			preWorldTransform_[i][j] = worldTransform_[i][j];
+			//preWorldTransform_[i][j] = worldTransform_[i][j];
 
 			//ブロックの更新
 			blocks_[i][j]->Updata();
@@ -102,6 +105,8 @@ void BlockManager::Draw()
 
 bool BlockManager::CheckPlayerOnBlock(Vec3 pos)
 {
+	bool result;
+
 	for (int i = 0; i < blockWidth; i++)
 	{
 		for (int j = 0; j < blockHeight; j++)
@@ -110,14 +115,16 @@ bool BlockManager::CheckPlayerOnBlock(Vec3 pos)
 			if (worldTransform_[i][j].trans.x - radius_ < pos.x && worldTransform_[i][j].trans.x + radius_ > pos.x
 				&& worldTransform_[i][j].trans.z - radius_ < pos.z && worldTransform_[i][j].trans.z + radius_ > pos.z)
 			{
-				return true;
+				result =  true;
 			}
 			else
 			{
-				return false;
+				result =  false;
 			}
 		}
 	}
+
+	return result;
 }
 
 //ステージの関数で先にブロックあるか判定(endPosを引数)
