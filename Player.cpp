@@ -61,7 +61,6 @@ void Player::Initialize(float moveDistance, Model* model, DebugText* debugText_)
 void Player::Update()
 {
 
-	//
 	stateMove->Update();
 	stateConnectTurn->Update();
 
@@ -87,7 +86,6 @@ void Player::OnCollision(Collider& collider)
 void Player::OnCollision2(Collider& collider)
 {
 }
-
 
 //----------------------------------------------------------------------------------------------
 void PlayerState::SetPlayer(Player* player)
@@ -187,6 +185,7 @@ void StateConnectP::Update()
 		}
 		//else
 		{
+
 			player->ChangeStateTurnConnect(new StateNormalConTurP);
 		}
 	}
@@ -200,7 +199,7 @@ void StateConnectP::Draw(Camera* camera, Model* model)
 void StateTurnP::Update()
 {
 	/*ステージ関数/ キーボードによって回転(player->getWorldPos())*/
-
+	//キーボードを関数内で取得
 
 	//回転終わる
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))

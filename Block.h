@@ -3,46 +3,50 @@
 #include "Collider.h"
 #include "Camera.h"
 
-class Block;
-
-//ブロックの状態
-class BlockState
-{
-protected:
-	Block* block_ = nullptr;
-
-public:
-	void SetBlock(Block* player);
-	virtual void Update() = 0;
-	virtual void Draw(Camera* camera, Model* model) = 0;
-
-};
-
-//何もしていない状態
-class StateNormalB : BlockState
-{
-private:
-
-public:
-	void Update(/*Tutorial* tutorial = nullptr*/);
-	void Draw(Camera* camera, Model* model);
-};
-
 //ブロック
 class Block : public Collider
 {
+	//形態フェーズ
+	enum class Form
+	{
+		BLOCK = 0,		//ブロック状態
+		GEAR,			//ギア
+		BUTTON,			//ボタン
+		LOCKED,			//固定ブロック
+		GOAL,			//ゴール
+		None,			//何もない状態
+	};
 
-
+	enum class Action
+	{
+		Rotate,		//回転しているとき
+		Overlap,	//重なっているとき
+		Connect,	//繋がっているとき
+		None,		//何もしていないとき
+	};
 
 private:
 
 	Model* model_ = nullptr;
 
 	//テクスチャハンドル
-	UINT64 textureHandle[10];
+	UINT64 textureHandle_[10];
 
 	const float scaleTmp = 1.8f;
 
+	bool isRotate_;		//回転しているかどうか
+	bool isOverlap_;	//重なっているかどうか
+	bool isConnect_;	//繋がっているかどうか
+	bool isAxis_;		//軸になっているかどうか
+
+	//半径
+	float radius_;
+
+	//座標
+	Vec3 pos_;
+
+	//移動方向
+	float moveDistance_;
 
 public:
 
@@ -57,5 +61,14 @@ public:
 
 	void SetWorldPos(const Vec3& pos) { worldTransform_.trans = pos; };
 
+	//衝突時に呼ばれる
+	void OnCollision(Collider& collider)override;
+	//手と敵の判定用
+	void OnCollision2(Collider& collider)override;
+	
+	//ゲッター
+	const Vec3 GetPos(Vec3 pos) const { return pos_; };
+
+	//セッター
 };
 

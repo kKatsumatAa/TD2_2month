@@ -106,7 +106,6 @@ public:
 	Vec3 moveEndPos;
 	Vec3 moveStartPos;
 
-
 	Object draw[10];
 	DebugText* debugText_ = nullptr;
 
