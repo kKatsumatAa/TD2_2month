@@ -7,6 +7,8 @@ BlockManager::~BlockManager()
 
 	//ブロックの削除
 	//blocks_.clear();
+	delete block_;
+	//delete worldmat_;
 }
 
 //初期化
@@ -15,13 +17,8 @@ void BlockManager::Initialize()
 
 	//std::unique_ptr<Block> newBullet = std::make_unique<Block>();
 
-	//Block* block_ = nullptr;
 	block_ = new Block;
 
-	//初期化
-	//block_.Initialize();
-	block_->Initialize();
-	
 	//ベクタ配列に要素<ブロック>を追加
 	for (int i = 0; i < blockWidth; i++)
 	{
@@ -35,8 +32,18 @@ void BlockManager::Initialize()
 		}
 	}
 
-	scale_ = { 3.0,3.0,3.0 };
-
+	//ベクタ配列に要素<ワールド行列>を追加
+	for (int i = 0; i < blockWidth; i++)
+	{
+		//ブロック型を持てる空のベクタを追加(行列でいうi列)
+		worldmats_.push_back(vector<WorldMat>());
+		
+		for (int j = 0; j < blockHeight; j++)
+		{
+			//ブロックの要素を追加
+			worldmats_[i].push_back(worldmat_);
+		}
+	}
 
 	//ブロックの大きさ
 	
@@ -45,8 +52,13 @@ void BlockManager::Initialize()
 		for (int j = 0; j < blockHeight; j++)
 		{
 			
-			blocks_[i][j]->Initialize();
+			worldmats_[i][j].scale = { 1.8f,1.8f,1.8f };
+			
+			//worldmats_[i][j]->rot = { 0.0f,0.0f,0.0f };
 
+
+			blocks_[i][j]->Initialize();
+			
 			//ブロックの種類を設定
 			if (i == 1 && j == 1)
 			{
@@ -57,24 +69,25 @@ void BlockManager::Initialize()
 				form_[i][j] = Form::BLOCK;
 			}
 
+			
 			//ブロックの座標を設定
-			if (i > 0)
+			if (i >= 0)
 			{
-				worldTransform_[i][j].trans.x += i * (scale_.x * 3);
+				//blocks_[i][j]->GetWorldTransForm()->trans.x = i * (scale_.x * 1);
+				worldmats_[i][j].trans.x = i * (worldmats_[i][j].scale.x * 1);
+				
 			}
-			if (j > 0)
+			if (j >= 0)
 			{
-				worldTransform_[i][j].trans.y += j * (scale_.y * 3);
+				//blocks_[i][j]->GetWorldTransForm()->trans.y = i * (scale_.y * 1);
+
+				worldmats_[i][j].trans.y = j * (worldmats_[i][j].scale.y * 1);
 			}
 
-			//ブロックの各フラグを設定
-			//isRotate_[i][j] = false;
-			////重なっているかどうか
-			//isOverlap_[i][j] = false;
-			////繋がっているかどうか
-			//isConnect_[i][j] = false;
-			////軸になっているかどうか
-			//isAxis_[i][j] = false;
+			block_->Initialize();
+			
+			//軸になっているかどうか
+			isAxis_[i][j] = false;
 
 			//現在どうなっているか
 			action_[i][j] = Action::None;
@@ -88,24 +101,23 @@ void BlockManager::Initialize()
 
 void BlockManager::Update()
 {
-	
-
 	for (int i = 0; i < blockWidth; i++)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
 			//状態
 			//preWorldTransform_[i][j] = worldTransform_[i][j];
-			Vec3 transform;
-			transform.x = worldTransform_[i][j].trans.x;
-			transform.y = worldTransform_[i][j].trans.y;
-			transform.z = worldTransform_[i][j].trans.z;
 
+			//transforms[i][j].x += 0.001f;
+			
 			//ブロックの更新
-			blocks_[i][j]->SetWorldPos(transform);
+			//blocks_[i][j]->SetWorldPos(transforms[i][j]);
+			//blocks_[i][j]->Updata(transforms[i][j]);
+			/*worldmats_[i][j]->trans.x += 0.001f;
+			worldmats_[i][j]->trans.z += 0.001f * j;*/
 
-			//blocks_[i][j]->Updata(transform);
-
+			//worldmats_[i][j]->SetWorld();
+			
 			//X座標の一つ前の番号を保存
 			prevBlockY = j;
 		}
@@ -130,6 +142,8 @@ void BlockManager::Draw(Camera* camera)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
+			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
+			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
 			blocks_[i][j]->Draw(camera);
 		}
 	}

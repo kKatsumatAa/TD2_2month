@@ -12,9 +12,6 @@ class BlockManager
 
 public:
 
-	//BlockManager(const int Width,const int Height) : Width(Width),Height(Height) {};
-	
-
 	~BlockManager();
 
 	//初期化
@@ -53,8 +50,6 @@ public:
 
 public:
 
-	
-
 	static const int blockWidth = 13;
 	static const int blockHeight = 13;
 
@@ -62,40 +57,15 @@ private:
 	
 	const int width = 13;
 
-	//要素数を指定しての宣言
-	//BlockManager() : width(13) {}
-	//std::vector<Block> Width;
-	//std::vector<std::vector<int>> blockss_(width);
-
-
 	Model* model_ = nullptr;
 	
 	//ブロックの二次元配列
 	//std::unique_ptr < std::vector <std::vector<Block>> > blocks_ ;
-
-	std::vector<std::vector<int>> ints_;
-	
-	//Block block_;
 	Block* block_;
-
 	std::vector<std::vector<Block*>> blocks_;
 
-	//std::vector<std::vector<Block>> blocks_(blockWidth, std::vector<Block>(13));
-
-	/*vector<vector<string>> xy;
-	vector<vector<string>> xy(int a );
-	vector<vector<string>> xy(3, vector<string>(3));
-	vector<vector<string>> xy(3, vector<string>(3, "abc"));
-
-	std::vector<std::vector<Block> > blocks_(11, std::vector<Block>(13));*/
-
-	
-	//std::vector<int> blockss_(Width);
-
-	//Block* blocks_[blockWidth][blockHeight];
-	//Block* blocks_;
-
-	//std::unique_ptr<Block> blocks_[blockWidth][blockHeight];
+	WorldMat worldmat_;
+	std::vector<std::vector<WorldMat>> worldmats_;
 
 	//ワールド変換データ
 	WorldMat worldTransform_[blockWidth][blockHeight];
@@ -106,13 +76,6 @@ private:
 
 	Action action_[blockWidth][blockHeight] = { Action::None };
 
-	//マップチップで管理するフラグ
-	////回転しているかどうか
-	//bool isRotate_[blockWidth][blockHeight];
-	////重なっているかどうか
-	//bool isOverlap_[blockWidth][blockHeight];
-	////繋がっているかどうか
-	//bool isConnect_[blockWidth][blockHeight];
 	//軸になっているかどうか
 	bool isAxis_[blockWidth][blockHeight];
 
@@ -139,6 +102,9 @@ private:
 	bool changedAction_;
 	bool isChanged_;
 
+	Vec3 transforms[blockWidth][blockHeight];
+
+	Object draw[10];
 	
 };
 

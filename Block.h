@@ -38,22 +38,11 @@ private:
 
 	const float scaleTmp = 1.8f;
 
-	//bool isRotate_;		//回転しているかどうか
-	//bool isOverlap_;	//重なっているかどうか
-	//bool isConnect_;	//繋がっているかどうか
-	//bool isAxis_;		//軸になっているかどうか
-
 	//ブロックの大きさ
 	Vec3 scale_;
-	//半径
-	//float radius_;
-
+	
 	//座標
 	Vec3 pos_;
-
-	//移動方向
-	//float moveDistance_;
-
 	
 
 public:
@@ -80,9 +69,10 @@ public:
 	const Vec3 GetPos(Vec3 pos) const { return pos_; };
 	const Vec3 GetScale(Vec3 scale) const { return scale_; };
 
-	const WorldMat GetWorldTransform() { return worldTransform_; };
+	//const WorldMat GetWorldTransform() { return worldTransform_; };
 
 
 	//セッター
+	void SetWorldPos(Vec3& pos);
 };
 

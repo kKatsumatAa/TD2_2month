@@ -231,7 +231,7 @@ void Scene::Update()
 void Scene::Draw()
 {
 	state->Draw();
-	//blockManager->Draw(camera.get());
+	blockManager->Draw(camera.get());
 	
 	//imgui
 	imGuiManager->Draw();

@@ -24,8 +24,12 @@ void Block::Initialize()
 
 void Block::Updata(Vec3& pos)
 {
-	//worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
+	
+	worldTransform_.trans = {pos.x,pos.y,pos.z};
+	
+	
 	//block_.SetWorldPos(pos);
+	worldTransform_.SetWorld();
 }
 
 void Block::Draw(Camera* camera)
@@ -42,4 +46,10 @@ void Block::OnCollision(Collider& collider)
 
 void Block::OnCollision2(Collider& collider)
 {
+}
+
+void Block::SetWorldPos(Vec3& pos)
+{
+	worldTransform_.trans = pos;
+	worldTransform_.SetWorld();
 }
