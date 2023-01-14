@@ -16,16 +16,17 @@ void BlockManager::Initialize()
 	//std::unique_ptr<Block> newBullet = std::make_unique<Block>();
 
 	//Block* block_ = nullptr;
-	//block_ = new Block;
+	block_ = new Block;
 
 	//初期化
-	block_.Initialize();
+	//block_.Initialize();
+	block_->Initialize();
 	
 	//ベクタ配列に要素<ブロック>を追加
 	for (int i = 0; i < blockWidth; i++)
 	{
 		//ブロック型を持てる空のベクタを追加(行列でいうi列)
-		blocks_.push_back(vector<Block>());
+		blocks_.push_back(vector<Block*>());
 		
 		for (int j = 0; j < blockHeight; j++)
 		{
@@ -34,7 +35,9 @@ void BlockManager::Initialize()
 		}
 	}
 
-	
+	scale_ = { 3.0,3.0,3.0 };
+
+
 	//ブロックの大きさ
 	
 	for (int i = 0; i < blockWidth; i++)
@@ -42,7 +45,7 @@ void BlockManager::Initialize()
 		for (int j = 0; j < blockHeight; j++)
 		{
 			
-			blocks_[i][j].Initialize();
+			blocks_[i][j]->Initialize();
 
 			//ブロックの種類を設定
 			if (i == 1 && j == 1)
@@ -57,11 +60,11 @@ void BlockManager::Initialize()
 			//ブロックの座標を設定
 			if (i > 0)
 			{
-				worldTransform_[i][j].trans.x += i * (scale_.x * 2);
+				worldTransform_[i][j].trans.x += i * (scale_.x * 3);
 			}
 			if (j > 0)
 			{
-				worldTransform_[i][j].trans.z += j * (scale_.z * 2);
+				worldTransform_[i][j].trans.y += j * (scale_.y * 3);
 			}
 
 			//ブロックの各フラグを設定
@@ -80,21 +83,28 @@ void BlockManager::Initialize()
 
 	//その他の設定
 	isCount = 1;
-	scale_ = { 3.0,3.0,3.0 };
-
+	
 }
 
 void BlockManager::Update()
 {
+	
+
 	for (int i = 0; i < blockWidth; i++)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
 			//状態
 			//preWorldTransform_[i][j] = worldTransform_[i][j];
+			Vec3 transform;
+			transform.x = worldTransform_[i][j].trans.x;
+			transform.y = worldTransform_[i][j].trans.y;
+			transform.z = worldTransform_[i][j].trans.z;
 
 			//ブロックの更新
-			blocks_[i][j].Updata();
+			blocks_[i][j]->SetWorldPos(transform);
+
+			//blocks_[i][j]->Updata(transform);
 
 			//X座標の一つ前の番号を保存
 			prevBlockY = j;
@@ -120,7 +130,7 @@ void BlockManager::Draw(Camera* camera)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
-			blocks_[i][j].Draw(camera);
+			blocks_[i][j]->Draw(camera);
 		}
 	}
 }

@@ -75,8 +75,10 @@ private:
 
 	std::vector<std::vector<int>> ints_;
 	
-	Block block_;
-	std::vector<std::vector<Block>> blocks_;
+	//Block block_;
+	Block* block_;
+
+	std::vector<std::vector<Block*>> blocks_;
 
 	//std::vector<std::vector<Block>> blocks_(blockWidth, std::vector<Block>(13));
 
@@ -137,5 +139,6 @@ private:
 	bool changedAction_;
 	bool isChanged_;
 
+	
 };
 

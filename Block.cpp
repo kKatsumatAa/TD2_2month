@@ -17,17 +17,15 @@ void Block::Initialize()
 	//this->debugText_ = debugText_;
 	
 	worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
-
-
 	worldTransform_.SetWorld();
 
 	radius_ = scaleTmp;
 }
 
-void Block::Updata()
+void Block::Updata(Vec3& pos)
 {
-	worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
-	worldTransform_.SetWorld();
+	//worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
+	//block_.SetWorldPos(pos);
 }
 
 void Block::Draw(Camera* camera)

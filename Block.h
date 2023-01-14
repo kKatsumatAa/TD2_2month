@@ -65,7 +65,7 @@ public:
 
 	void Initialize();
 
-	void Updata();
+	void Updata(Vec3& pos);
 
 	void Draw(Camera* camera);
 
