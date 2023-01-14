@@ -1,6 +1,8 @@
 #pragma once
 #include "Block.h"
 #include <vector>
+#include <string>
+
 
 class BlockManager 
 {
@@ -10,16 +12,19 @@ class BlockManager
 
 public:
 
+	//BlockManager(const int Width,const int Height) : Width(Width),Height(Height) {};
+	
+
 	~BlockManager();
 
 	//初期化
-	void Initialize(Model* model, DebugText* debugText_);
+	void Initialize();
 
 	//更新
 	void Update();
 
 	//描画
-	void Draw();
+	void Draw(Camera* camera);
 
 	//プレイヤーがブロックの上にいるかどうか
 	bool CheckPlayerOnBlock(Vec3 pos);
@@ -48,18 +53,47 @@ public:
 
 public:
 
+	
+
 	static const int blockWidth = 13;
 	static const int blockHeight = 13;
 
 private:
 	
+	const int width = 13;
+
+	//要素数を指定しての宣言
+	//BlockManager() : width(13) {}
+	//std::vector<Block> Width;
+	//std::vector<std::vector<int>> blockss_(width);
+
+
 	Model* model_ = nullptr;
 	
 	//ブロックの二次元配列
 	//std::unique_ptr < std::vector <std::vector<Block>> > blocks_ ;
-	//std::vector< std::unique_ptr<std::vector<Block>> > blocks_;
 
-	Block* blocks_[blockWidth][blockHeight];
+	std::vector<std::vector<int>> ints_;
+	
+	Block block_;
+	std::vector<std::vector<Block>> blocks_;
+
+	//std::vector<std::vector<Block>> blocks_(blockWidth, std::vector<Block>(13));
+
+	/*vector<vector<string>> xy;
+	vector<vector<string>> xy(int a );
+	vector<vector<string>> xy(3, vector<string>(3));
+	vector<vector<string>> xy(3, vector<string>(3, "abc"));
+
+	std::vector<std::vector<Block> > blocks_(11, std::vector<Block>(13));*/
+
+	
+	//std::vector<int> blockss_(Width);
+
+	//Block* blocks_[blockWidth][blockHeight];
+	//Block* blocks_;
+
+	//std::unique_ptr<Block> blocks_[blockWidth][blockHeight];
 
 	//ワールド変換データ
 	WorldMat worldTransform_[blockWidth][blockHeight];

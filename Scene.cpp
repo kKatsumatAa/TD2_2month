@@ -156,6 +156,7 @@ void SceneLoad::DrawSprite()
 //デストラクタ
 Scene::~Scene()
 {
+	delete blockManager;
 }
 
 void Scene::ChangeState(SceneState* state)
@@ -183,6 +184,9 @@ void Scene::Initialize()
 	//imgui
 	imGuiManager = new ImGuiManager();
 	imGuiManager->Initialize();
+
+	blockManager = new BlockManager();
+	blockManager->Initialize();
 
 	//Light
 	LightManager::StaticInitialize();
@@ -212,7 +216,7 @@ void Scene::Update()
 
 	}
 
-	//blockManager->Update();
+	blockManager->Update();
 	state->Update();
 
 
@@ -227,7 +231,7 @@ void Scene::Update()
 void Scene::Draw()
 {
 	state->Draw();
-	blockManager->Draw();
+	blockManager->Draw(camera.get());
 	
 	//imgui
 	imGuiManager->Draw();

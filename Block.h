@@ -29,7 +29,9 @@ public:
 
 private:
 
-	Model* model_ = nullptr;
+	//Object* objcet_ = nullptr;
+
+	//Model* model_ = nullptr;
 
 	//テクスチャハンドル
 	//UINT64 textureHandle_[10];
@@ -56,10 +58,12 @@ private:
 
 public:
 
+	~Block();
+
 	Object draw[10];
 	DebugText* debugText_ = nullptr;
 
-	void Initialize(Model* model, DebugText* debugText_);
+	void Initialize();
 
 	void Updata();
 

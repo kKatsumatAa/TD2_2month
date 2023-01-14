@@ -3,14 +3,22 @@
 const int blockWidth = 13;
 const int blockHeight = 13;
 
-void Block::Initialize(Model* model, DebugText* debugText_)
-{
-	assert(model);
 
-	model_ = model;
-	this->debugText_ = debugText_;
+
+Block::~Block()
+{
+	
+}
+
+void Block::Initialize()
+{
+	//assert(model);
+	//model_ = model;
+	//this->debugText_ = debugText_;
 	
 	worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
+
+
 	worldTransform_.SetWorld();
 
 	radius_ = scaleTmp;
@@ -24,6 +32,10 @@ void Block::Updata()
 
 void Block::Draw(Camera* camera)
 {
+	//‰¼•\Ž¦
+	draw->DrawCube3D(&worldTransform_, &camera->viewMat, &camera->projectionMat);
+	//model_[0] = Model::LoadFromOBJ("sphere");
+	//draw[0].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, model_[0]);
 }
 
 void Block::OnCollision(Collider& collider)

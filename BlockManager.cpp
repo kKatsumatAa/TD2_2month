@@ -4,32 +4,45 @@ using namespace std;
 
 BlockManager::~BlockManager()
 {
-	for (int i = 0; i < blockWidth; i++)
-	{
-		for (int j = 0; j < blockHeight; j++)
-		{
-			delete blocks_[i][j];
-		}
-	}
+
+	//ブロックの削除
+	//blocks_.clear();
 }
 
 //初期化
-void BlockManager::Initialize(Model* model, DebugText* debugText_)
+void BlockManager::Initialize()
 {
 
-	model_ = model;
-	//ブロックを生成し初期化
-	//blocks_ = std::make_unique<std::vector <std::vector<Block>>>();
+	//std::unique_ptr<Block> newBullet = std::make_unique<Block>();
+
+	//Block* block_ = nullptr;
+	//block_ = new Block;
+
+	//初期化
+	block_.Initialize();
+	
+	//ベクタ配列に要素<ブロック>を追加
+	for (int i = 0; i < blockWidth; i++)
+	{
+		//ブロック型を持てる空のベクタを追加(行列でいうi列)
+		blocks_.push_back(vector<Block>());
+		
+		for (int j = 0; j < blockHeight; j++)
+		{
+			//ブロックの要素を追加
+			blocks_[i].push_back(block_);
+		}
+	}
+
 	
 	//ブロックの大きさ
-	scale_ = { 3.0,3.0,3.0 };
-
+	
 	for (int i = 0; i < blockWidth; i++)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
-			blocks_[i][j] = new Block;
-			blocks_[i][j]->Initialize(model_, debugText_);
+			
+			blocks_[i][j].Initialize();
 
 			//ブロックの種類を設定
 			if (i == 1 && j == 1)
@@ -66,7 +79,9 @@ void BlockManager::Initialize(Model* model, DebugText* debugText_)
 	}
 
 	//その他の設定
-	isCount = 0;
+	isCount = 1;
+	scale_ = { 3.0,3.0,3.0 };
+
 }
 
 void BlockManager::Update()
@@ -79,7 +94,7 @@ void BlockManager::Update()
 			//preWorldTransform_[i][j] = worldTransform_[i][j];
 
 			//ブロックの更新
-			blocks_[i][j]->Updata();
+			blocks_[i][j].Updata();
 
 			//X座標の一つ前の番号を保存
 			prevBlockY = j;
@@ -99,8 +114,15 @@ void BlockManager::Update()
 	}
 }
 
-void BlockManager::Draw()
+void BlockManager::Draw(Camera* camera)
 {
+	for (int i = 0; i < blockWidth; i++)
+	{
+		for (int j = 0; j < blockHeight; j++)
+		{
+			blocks_[i][j].Draw(camera);
+		}
+	}
 }
 
 bool BlockManager::CheckPlayerOnBlock(Vec3 pos)
