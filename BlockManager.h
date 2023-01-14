@@ -54,9 +54,8 @@ public:
 	static const int blockHeight = 13;
 
 private:
-	
-	const int width = 13;
 
+	//モデル
 	Model* model_ = nullptr;
 	
 	//ブロックの二次元配列
@@ -64,12 +63,13 @@ private:
 	Block* block_;
 	std::vector<std::vector<Block*>> blocks_;
 
+	//各ブロック用のワールドトランスフォーム
 	WorldMat worldmat_;
 	std::vector<std::vector<WorldMat>> worldmats_;
 
-	//ワールド変換データ
-	WorldMat worldTransform_[blockWidth][blockHeight];
-	WorldMat preWorldTransform_[blockWidth][blockHeight];
+	//ワールド変換データ(こっちまだ使ってないけど消さないでほしい)
+	/*WorldMat worldTransform_[blockWidth][blockHeight];
+	WorldMat preWorldTransform_[blockWidth][blockHeight];*/
 
 	//状態変化変数
 	Form form_[blockWidth][blockHeight] = { Form::BLOCK };
@@ -102,9 +102,5 @@ private:
 	bool changedAction_;
 	bool isChanged_;
 
-	Vec3 transforms[blockWidth][blockHeight];
-
-	Object draw[10];
-	
 };
 

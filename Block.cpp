@@ -22,14 +22,10 @@ void Block::Initialize()
 	radius_ = scaleTmp;
 }
 
-void Block::Updata(Vec3& pos)
-{
-	
-	worldTransform_.trans = {pos.x,pos.y,pos.z};
-	
-	
-	//block_.SetWorldPos(pos);
-	worldTransform_.SetWorld();
+void Block::Updata()
+{	
+	//åªç›égÇ¡ÇƒÇ»Ç¢
+	//worldTransform_.SetWorld();
 }
 
 void Block::Draw(Camera* camera)
