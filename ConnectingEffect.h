@@ -17,6 +17,8 @@ private:
 	Object obj;
 
 public:
+	~ConnectingEffect();
+
 	void Initialize(Vec3 pos, Vec3 rot, float length, int lifeTime, float t);
 	void Update();
 	void Draw(Camera& camera,bool isAlpha);
@@ -46,6 +48,8 @@ private:
 	int timer = 0;
 
 public:
+	~ConnectingEffectSet();
+
 	void Initialize(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num);
 	void Update();
 	void Draw(Camera& camera);

@@ -6,15 +6,20 @@ BlockManager::~BlockManager()
 {
 
 	//ブロックの削除
-	//blocks_.clear();
+	blocks_.clear();
+	worldmats_.clear();
 	delete block_;
 	//delete worldmat_;
 }
 
 //初期化
-void BlockManager::Initialize(ConnectingEffectManager* connectEM)
+void BlockManager::Initialize(ConnectingEffectManager* connectEM, Camera* camera)
 {
+	blocks_.clear();
+	worldmats_.clear();
+
 	this->connectEM = connectEM;
+	this->camera = camera;
 
 	//std::unique_ptr<Block> newBullet = std::make_unique<Block>();
 
@@ -65,14 +70,14 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM)
 			blocks_[i][j]->Initialize(connectEM);
 
 			//ブロックの種類を設定
-			if (i == 1 && j == 1 || i == 2 && j == 2)
+			if (i == j)
 			{
 				form_[i][j] = Form::BUTTON;
 			}
-			/*else if (i % 3 == 0 && j % 3 == 0)
+			else if (i == 10 && j == 5)
 			{
-				form_[i][j] = Form::NONE;
-			}*/
+				form_[i][j] = Form::GOAL;
+			}
 			else
 			{
 				form_[i][j] = Form::BLOCK;
@@ -157,6 +162,9 @@ void BlockManager::Update()
 
 void BlockManager::Draw(Camera* camera)
 {
+	bool isEffect = false;
+	effectCount++;
+
 	for (int i = 0; i < blockWidth; i++)
 	{
 		for (int j = 0; j < blockHeight; j++)
@@ -165,12 +173,15 @@ void BlockManager::Draw(Camera* camera)
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
 			blocks_[i][j]->Draw(camera, texhandle, form_[i][j]);
 
-			if (action_[i][j] == Action::Connect)
+			if (action_[i][j] == Action::Connect && effectCount >= effectCountMax)
 			{
-				connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 40, 1);
+				isEffect = true;
+				connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 20, 5);
 			}
 		}
 	}
+
+	if (isEffect) { effectCount = 0; isEffect = false; }
 }
 
 bool BlockManager::CheckPlayerOnBlock(Vec3 pos)
@@ -281,6 +292,8 @@ void BlockManager::RegistAxisButton(const Vec3& pos)
 					axis_pos_.x = worldmats_[i][j].trans.x;
 					axis_pos_.y = worldmats_[i][j].trans.y;
 					axis_pos_.z = worldmats_[i][j].trans.z;
+
+					camera->CameraShake(10, 1.2f);
 				}
 				else {}
 			}
@@ -299,10 +312,13 @@ void BlockManager::UpdateConnect(Vec3 pos)
 		for (int j = 0; j < blockHeight; j++)
 		{
 			//プレイヤーが指定のブロックの上にいるかどうか
-			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
+			if ((worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
+				&& action_[i][j] != Action::Connect)
 			{
 				action_[i][j] = Action::Connect;
+
+				camera->CameraShake(10, 0.3f);
 
 				////繋ぎはじめ
 				////ボタンかつ繋がっていなければ現在位置をつなぐ状態にする
@@ -351,6 +367,7 @@ bool BlockManager::CheckAxisButton(Vec3 pos)
 			{
 				if (isAxis_[i][j] == false && form_[i][j] == Form::BUTTON)
 				{
+					camera->CameraShake(10, 0.7f);
 					return true;
 				}
 			}
@@ -454,6 +471,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		if (rotateCount >= rotateCountMax)
 		{
 			isRightRolling = false;
+			camera->CameraShake(10, 1.4f);
 		}
 	}
 
@@ -493,6 +511,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		if (rotateCount >= rotateCountMax)
 		{
 			isLeftRolling = false;
+			camera->CameraShake(10, 1.4f);
 		}
 	}
 }

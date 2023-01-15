@@ -32,7 +32,7 @@ class Scene
 private:
 	//ó‘Ôis“®j
 	SceneState* state = nullptr;
-	BlockManager* blockManager = nullptr;
+
 
 public:
 	WorldMat cameraWorldMat;
@@ -71,6 +71,8 @@ public:
 	std::unique_ptr<ConnectingEffectManager> connectEM;
 
 	std::unique_ptr<Player> player;
+
+	BlockManager* blockManager = nullptr;
 
 public:
 	~Scene();

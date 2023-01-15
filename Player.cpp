@@ -26,6 +26,7 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, Model* model, 
 
 	isPlayer = true;
 	isDead = false;
+	isGoal = false;
 
 	{
 		//死亡フラグ
@@ -146,6 +147,11 @@ void StateMoveP::Update()
 	//動かす
 	player->SetWorldPos(LerpVec3(player->moveStartPos, player->moveEndPos, EaseOut(t)));
 
+	//ゴールしたら
+	if (player->blockM->GetIsGoal(player->GetWorldPos()))
+	{
+		player->isGoal = true;
+	}
 	//移動し終わったらステート戻す
 	if (count >= countMax)
 	{

@@ -104,6 +104,8 @@ public:
 	bool isisWantToTurn = false;  //ŠO•”‚Å‰½‚µ‚½‚¢‚©QÆ‚µ‚Ä‚à‚ç‚¤
 	bool isTurnNow = false;  //¡‚µ‚Ä‚¢‚é‚©
 
+	bool isGoal = false;
+
 	float moveDistance;
 	//i‚İ‚½‚¢êŠ
 	Vec3 moveEndPos;

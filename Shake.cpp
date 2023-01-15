@@ -23,6 +23,7 @@ void Shake::SetLifeTime(int time)
 
 void Shake::SetShake(int time, float length)
 {
+
 	if (time > this->lifeTimer)
 	{
 		SetLifeTime(time);
@@ -33,6 +34,16 @@ void Shake::SetShake(int time, float length)
 float Shake::GetShake()
 {
 	return  GetRandomShakeInternal(-shakeLength * t, shakeLength * t);
+}
+
+bool Shake::GetIsShaking()
+{
+	if (lifeTimer > 0)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 void Shake::Initialize()
