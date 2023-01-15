@@ -15,16 +15,19 @@ void Player::ChangeStateMove(PlayerState* state)
 	state->SetPlayer(this);
 }
 
-void Player::Initialize(float moveDistance, Model* model, DebugText* debugText_)
+void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket, Model* model, DebugText* debugText_)
 {
 	assert(model);
 
 	model_ = model;
 	this->debugText_ = debugText_;
 	this->moveDistance = moveDistance;
+	this->blockM = blockM;
+	this->playerSocket = playerSocket;
 
 	isPlayer = true;
 	isDead = false;
+	isGoal = false;
 
 	{
 		//死亡フラグ
@@ -36,6 +39,7 @@ void Player::Initialize(float moveDistance, Model* model, DebugText* debugText_)
 	//this->tutorial = tutorial;
 
 	worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
+	worldTransform_.trans = { 0,moveDistance,0 };
 	worldTransform_.SetWorld();
 
 	radius_ = scaleTmp;
@@ -60,7 +64,6 @@ void Player::Initialize(float moveDistance, Model* model, DebugText* debugText_)
 
 void Player::Update()
 {
-
 	stateMove->Update();
 	stateConnectTurn->Update();
 
@@ -119,7 +122,8 @@ void StateNormalMoveP::Update()
 			player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + -player->moveDistance };
 		}
 
-		//if (/*ステージの関数で先にブロックあるか判定(endPosを引数)*/)
+		//進んだ先にブロック
+		if (player->blockM->GetPosIsBlock(player->moveEndPos))
 		{
 			//フラグ、スピードなどをセット
 			player->SetVelocity((player->moveEndPos - player->GetWorldPos()).GetNormalized());
@@ -143,6 +147,11 @@ void StateMoveP::Update()
 	//動かす
 	player->SetWorldPos(LerpVec3(player->moveStartPos, player->moveEndPos, EaseOut(t)));
 
+	//ゴールしたら
+	if (player->blockM->GetIsGoal(player->GetWorldPos()))
+	{
+		player->isGoal = true;
+	}
 	//移動し終わったらステート戻す
 	if (count >= countMax)
 	{
@@ -161,9 +170,14 @@ void StateNormalConTurP::Update()
 	//繋ぐ
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
-		//if (/*ステージの関数で判定(player->GetWorldPos()に、ボタンがあるか)*/)
+		//ボタンがあったら
+		if (player->blockM->GetPosIsButton(player->GetWorldPos()))
 		{
-			//ステージの関数で(player->GetWorldPos()のボタンを軸に設定する関数)
+			//軸を登録
+			player->blockM->RegistAxisButton(player->GetWorldPos());
+
+			//コンセントをさす
+			player->playerSocket->UseSocket(player->GetWorldPos());
 
 			player->ChangeStateTurnConnect(new StateConnectP);
 		}
@@ -177,19 +191,22 @@ void StateNormalConTurP::Draw(Camera* camera, Model* model)
 //--------------------------------------------------------------------------
 void StateConnectP::Update()
 {
-	/*ステージの関数でつなぐ更新関数(player->GetWorldPos())*/
+	player->blockM->UpdateConnect(player->GetWorldPos());
 
 	if (KeyboardInput::GetInstance().KeyReleaseTrigger(DIK_SPACE))
 	{
-		//if(/*ステージ関数 /離したところが違うボタンだったら(player->GetWorldPos())*/)
+		//離したところがボタンだったら
+		if(player->blockM->CheckAxisButton(player->GetWorldPos()))
 		{
 			player->isTurnNow = true;
 			player->ChangeStateTurnConnect(new StateTurnP);
 		}
-		//else
+		else
 		{
-			//繋がれているブロックを全部解除するステージ関数()
-			//stage~();
+			//繋がれているブロックを全部解除するステージ関数
+			player->blockM->ReleseConectedBlock();
+			//コンセントを抜く
+			player->playerSocket->FinishSocket(player->GetWorldPos());
 			player->ChangeStateTurnConnect(new StateNormalConTurP);
 		}
 	}
@@ -202,15 +219,18 @@ void StateConnectP::Draw(Camera* camera, Model* model)
 //--------------------------------------------------------------------------
 void StateTurnP::Update()
 {
-	/*ステージ関数/ キーボードによってプレイヤーとブロック両方を回転(&player->getWorldPos())*/
+	//回転する関数
+	player->blockM->UpdateRotate(player->GetWorldPos());
 
 
 	//回転終わる
-	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
+	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) && !player->blockM->GetIsRollingLeftorRight())
 	{
 		player->isTurnNow = false;
 		//繋がれているブロックを全部解除するステージ関数()
-		//stage~();
+		player->blockM->ReleseConectedBlock();
+		//コンセントを抜く
+		player->playerSocket->FinishSocket(player->GetWorldPos());
 		player->ChangeStateTurnConnect(new StateNormalConTurP);
 	}
 }

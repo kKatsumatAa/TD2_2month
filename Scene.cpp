@@ -41,18 +41,31 @@ void SceneTitle::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
-
+	scene->blockManager->Initialize(scene->connectEM.get(), scene->camera.get());
+	scene->camera->Initialize();
+	scene->connectEM->Initialize();
+	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
+		, scene->model[0], &scene->debugText);
+	scene->playerSocket->Initialize(scene->model[0]);
 }
 
 void SceneGame::Update()
 {
+	scene->blockManager->Update();
 
+	scene->connectEM->Update();
+
+	scene->player->Update();
+
+	Vec3 pos = scene->player->GetWorldPos();
+	scene->playerSocket->Update({ pos.x,pos.y + scene->player->GetRadius(),pos.z });
 
 	//シーン遷移
-	/*if ()
+	if (scene->player->isGoal)
 	{
 		scene->ChangeState(new SceneClear);
 	}
+	/*
 	else if ()
 	{
 		scene->ChangeState(new SceneGameOver);
@@ -61,6 +74,11 @@ void SceneGame::Update()
 
 void SceneGame::Draw()
 {
+	scene->blockManager->Draw(scene->camera.get());
+
+	scene->player->Draw(scene->camera.get());
+	scene->playerSocket->Draw(scene->camera.get());
+	scene->connectEM->Draw(*scene->camera.get());
 }
 
 void SceneGame::DrawSprite()
@@ -92,6 +110,7 @@ void SceneGameOver::Draw()
 
 void SceneGameOver::DrawSprite()
 {
+
 }
 
 
@@ -105,10 +124,10 @@ void SceneClear::Update()
 
 
 	//シーン遷移
-	/*if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
+	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
-		scene->ChangeState(new SceneLoad);
-	}*/
+		scene->ChangeState(new SceneGame);
+	}
 }
 
 void SceneClear::Draw()
@@ -117,6 +136,7 @@ void SceneClear::Draw()
 
 void SceneClear::DrawSprite()
 {
+	scene->debugText.Print("clear", 10, 10);
 }
 
 
@@ -160,9 +180,12 @@ Scene::~Scene()
 	camera.reset();
 	connectEM.reset();
 	player.reset();
+	playerSocket.reset();
 	imGuiManager->Finalize();
 	delete imGuiManager;
 	delete lightManager;
+
+	delete model[0];
 }
 
 void Scene::ChangeState(SceneState* state)
@@ -193,8 +216,12 @@ void Scene::Initialize()
 	imGuiManager = new ImGuiManager();
 	imGuiManager->Initialize();
 
+	//電気エフェクト
+	connectEM = std::make_unique<ConnectingEffectManager>();
+	connectEM->Initialize();
+
 	blockManager = new BlockManager();
-	blockManager->Initialize();
+	blockManager->Initialize(connectEM.get(), camera.get());
 
 	//Light
 	LightManager::StaticInitialize();
@@ -209,17 +236,22 @@ void Scene::Initialize()
 	//カメラ
 	camera = std::make_unique<Camera>();
 	camera->Initialize();
+	camera->SetEye({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 40, -50 });
+	camera->SetTarget({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 0, 0 });
+	camera->UpdateViewMatrix();
 
-	//電気エフェクト
-	connectEM = std::make_unique<ConnectingEffectManager>();
-	connectEM->Initialize();
+	//player
+	playerSocket = std::make_unique<PlayerSocket>();
+	playerSocket->Initialize(model[0]);
 
-	//電気エフェクト
+	//player
 	player = std::make_unique<Player>();
-	player->Initialize(5.0f, model[0], &debugText);
+	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), model[0], &debugText);
+
+
 
 	//ステート変更
-	ChangeState(new SceneLoad);
+	ChangeState(new SceneGame);
 }
 
 int count = 0;
@@ -235,18 +267,9 @@ void Scene::Update()
 
 	}
 
-	blockManager->Update();
+	camera->Update();
+
 	state->Update();
-
-	count++;
-	if (/*KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE)*/count % 7 == 0)
-	{
-		connectEM->GenerateRandomConnectingEffect({ 0,0,0 }, 30.0f, 6.0f, 15, 20);
-	}
-
-	connectEM->Update();
-
-	player->Update();
 
 
 #ifdef _DEBUG
@@ -260,11 +283,14 @@ void Scene::Update()
 void Scene::Draw()
 {
 	state->Draw();
+
 	blockManager->Draw(camera.get());
 
 	player->Draw(camera.get());
 	connectEM->Draw(*camera.get());
 
+	blockManager->Draw();
+	
 	//imgui
 	imGuiManager->Draw();
 }

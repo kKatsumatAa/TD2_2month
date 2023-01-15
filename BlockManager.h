@@ -4,6 +4,7 @@
 #include <string>
 
 
+
 class BlockManager 
 {
 
@@ -15,7 +16,7 @@ public:
 	~BlockManager();
 
 	//初期化
-	void Initialize();
+	void Initialize(ConnectingEffectManager* connectEM,Camera * camera);
 
 	//更新
 	void Update();
@@ -33,27 +34,38 @@ public:
 	bool GetPosIsButton(Vec3 pos);
 
 	//最初に繋ぐボタンを押したブロックを軸に登録する関数
-	void RegistAxisButton(const Vec3& pos, bool isConnect);
+	void RegistAxisButton(const Vec3& pos);
 
 	//ブロック同士をつなぐ更新関数
-	void UpdateConnect(Vec3 pos, bool isConnect);
+	void UpdateConnect(Vec3 pos);
 
 	//繋ぐ際に離したところが軸以外のボタンかどうか
-	bool CheckAxisButton(Vec3 pos, bool isConnect);
+	bool CheckAxisButton(Vec3 pos);
 
 	//繋がれているブロックを全部解除する
 	void ReleseConectedBlock();
 
 	//キーボードによって回転
-	//キーボードを関数内で取得
-	void UpdateRotatePlayerBlock(Vec3& rotatePos, bool isRota);
+	void UpdateRotate(Vec3& rotatePos);
+
+	//回転中だったら
+	bool GetIsRollingLeftorRight();
+
+	//ゴールがあるかどうか
+	bool GetIsGoal(Vec3& Pos);
+
 
 public:
 
 	static const int blockWidth = 13;
 	static const int blockHeight = 13;
+	//半径
+	const float blockRadius_ = 1.8f;
+
 
 private:
+	Camera* camera;
+
 	UINT64 texhandle[10];
 
 	const int width = 13;
@@ -81,15 +93,16 @@ private:
 	//軸になっているかどうか
 	bool isAxis_[blockWidth][blockHeight];
 
+	//軸になっているブロックの座標
+	Vec3 axis_pos_;
+
 	//選択されているかどうか
 	int isCount;
 
 	//ブロックの大きさ
 	Vec3 scale_;
 
-	//半径
-	float radius_;
-
+	
 	//前のフレームにおいて選択用のブロックの情報を保存しておく変数
 	int prevBlockX;
 	int prevBlockY;
@@ -104,5 +117,26 @@ private:
 	bool changedAction_;
 	bool isChanged_;
 
+	Vec3 transforms[blockWidth][blockHeight];
+
+	Object draw[10];
+
+	//回転
+
+	bool isRightRolling;
+	bool isLeftRolling;
+
+	int rotateCount;
+	const int rotateCountMax = 40;
+
+	float angle_;
+
+	Vec3 distancePos[blockWidth][blockHeight];
+	Vec3 distancePosPlayer;
+	
+	ConnectingEffectManager* connectEM;
+
+	int effectCount = 0;
+	const int effectCountMax = 5;
 };
 

@@ -2,6 +2,8 @@
 #include "Sound.h"
 #include "Collider.h"
 #include "Camera.h"
+#include "BlockManager.h"
+#include "PlayerSocket.h"
 
 class Player;
 
@@ -86,6 +88,8 @@ private:
 
 	const float scaleTmp = 1.8f;
 
+
+
 	/*Tutorial* tutorial;*/
 public:
 	//外部からセットするブロックあるから動ける
@@ -101,6 +105,8 @@ public:
 	bool isisWantToTurn = false;  //外部で何したいか参照してもらう
 	bool isTurnNow = false;  //今しているか
 
+	bool isGoal = false;
+
 	float moveDistance;
 	//進みたい場所
 	Vec3 moveEndPos;
@@ -109,11 +115,15 @@ public:
 	Object draw[10];
 	DebugText* debugText_ = nullptr;
 
+	BlockManager* blockM;
+
+	PlayerSocket* playerSocket;
+
 
 	void ChangeStateTurnConnect(PlayerState* state);
 	void ChangeStateMove(PlayerState* state);
 
-	void Initialize(float moveDistance, Model* model, DebugText* debugText_/*,Tutorial* tutorial = nullptr*/);
+	void Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket, Model* model, DebugText* debugText_/*,Tutorial* tutorial = nullptr*/);
 	void Update();
 	void Draw(Camera* camera);
 	void DrawSprite();

@@ -30,9 +30,9 @@ void Camera::Initialize()
 
 void Camera::Update()
 {
-	if (viewDirty || projectionDirty) {
+	if (viewDirty || projectionDirty || shake.GetIsShaking()) {
 		// 再計算必要なら
-		if (viewDirty) {
+		if (viewDirty || shake.GetIsShaking()) {
 			// ビュー行列更新
 			UpdateViewMatrix();
 			viewDirty = false;

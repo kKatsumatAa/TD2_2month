@@ -37,6 +37,24 @@ void Vec3xM4(Vec3& v, const M4& m4, const bool w)
 	v = { v4[1][0],v4[1][1] ,v4[1][2] };
 }
 
+Vec3 GetVec3xM4(Vec3 v, const M4 m4, const bool w)
+{
+	float v4[2][4] = {
+	{ v.x,v.y,v.z,(float)w },
+	{0,0,0,0}
+	};
+
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			v4[1][i] += v4[0][j] * (float)m4.m[j][i];
+		}
+	}
+
+	return { v4[1][0],v4[1][1] ,v4[1][2] };
+}
+
 void Vec3xM4andDivisionW(Vec3& v, const M4& m4, const bool w)
 {
 	float v4[2][4] = {
