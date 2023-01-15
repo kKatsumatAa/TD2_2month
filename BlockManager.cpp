@@ -117,17 +117,17 @@ void BlockManager::Update()
 				//blocks_[i][j]->GetWorldTransForm()->trans.x = i * (scale_.x * 1);
 				worldmats_[i][j].trans.x = i * (worldmats_[i][j].scale.x * 2.0f);
 
-			//transforms[i][j].x += 0.001f;
+				//transforms[i][j].x += 0.001f;
 
-			//ブロックの更新
-			//blocks_[i][j]->SetWorldPos(transforms[i][j]);
-			//blocks_[i][j]->Updata(transforms[i][j]);
-			/*worldmats_[i][j]->trans.x += 0.001f;
-			worldmats_[i][j]->trans.z += 0.001f * j;*/
-
-			//worldmats_[i][j]->SetWorld();
+				//ブロックの更新
+				//blocks_[i][j]->SetWorldPos(transforms[i][j]);
+				//blocks_[i][j]->Updata(transforms[i][j]);
+				/*worldmats_[i][j]->trans.x += 0.001f;
+				worldmats_[i][j]->trans.z += 0.001f * j;*/
 
 				//worldmats_[i][j]->SetWorld();
+
+					//worldmats_[i][j]->SetWorld();
 			}
 
 			//X座標の一つ前の番号を保存
@@ -157,7 +157,7 @@ void BlockManager::Draw(Camera* camera)
 		{
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
-			blocks_[i][j]->Draw(camera, texhandle);
+			blocks_[i][j]->Draw(camera, texhandle, form_[i][j]);
 		}
 	}
 }
