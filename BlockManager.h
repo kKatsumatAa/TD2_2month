@@ -54,7 +54,8 @@ public:
 	static const int blockHeight = 13;
 
 private:
-	
+	UINT64 texhandle[10];
+
 	const int width = 13;
 
 	Model* model_ = nullptr;

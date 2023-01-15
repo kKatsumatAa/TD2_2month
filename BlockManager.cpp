@@ -17,16 +17,20 @@ void BlockManager::Initialize()
 
 	//std::unique_ptr<Block> newBullet = std::make_unique<Block>();
 
-	block_ = new Block;
+	if (texhandle[0] == NULL)
+	{
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/effect1.png", texhandle[0]);
+	}
 
 	//ベクタ配列に要素<ブロック>を追加
 	for (int i = 0; i < blockWidth; i++)
 	{
 		//ブロック型を持てる空のベクタを追加(行列でいうi列)
 		blocks_.push_back(vector<Block*>());
-		
+
 		for (int j = 0; j < blockHeight; j++)
 		{
+			block_ = new Block;
 			//ブロックの要素を追加
 			blocks_[i].push_back(block_);
 		}
@@ -37,7 +41,7 @@ void BlockManager::Initialize()
 	{
 		//ブロック型を持てる空のベクタを追加(行列でいうi列)
 		worldmats_.push_back(vector<WorldMat>());
-		
+
 		for (int j = 0; j < blockHeight; j++)
 		{
 			//ブロックの要素を追加
@@ -46,19 +50,19 @@ void BlockManager::Initialize()
 	}
 
 	//ブロックの大きさ
-	
+
 	for (int i = 0; i < blockWidth; i++)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
-			
+
 			worldmats_[i][j].scale = { 1.8f,1.8f,1.8f };
-			
+
 			//worldmats_[i][j]->rot = { 0.0f,0.0f,0.0f };
 
 
 			blocks_[i][j]->Initialize();
-			
+
 			//ブロックの種類を設定
 			if (i == 1 && j == 1)
 			{
@@ -69,23 +73,25 @@ void BlockManager::Initialize()
 				form_[i][j] = Form::BLOCK;
 			}
 
-			
+
 			//ブロックの座標を設定
 			if (i >= 0)
 			{
 				//blocks_[i][j]->GetWorldTransForm()->trans.x = i * (scale_.x * 1);
-				worldmats_[i][j].trans.x = i * (worldmats_[i][j].scale.x * 1);
-				
+				worldmats_[i][j].trans.x = i * (worldmats_[i][j].scale.x * 2.0f);
+
 			}
 			if (j >= 0)
 			{
 				//blocks_[i][j]->GetWorldTransForm()->trans.y = i * (scale_.y * 1);
 
-				worldmats_[i][j].trans.y = j * (worldmats_[i][j].scale.y * 1);
+				worldmats_[i][j].trans.y = j * (worldmats_[i][j].scale.y * 2.0f);
 			}
 
+			worldmats_[i][j].SetWorld();
+
 			block_->Initialize();
-			
+
 			//軸になっているかどうか
 			isAxis_[i][j] = false;
 
@@ -96,7 +102,7 @@ void BlockManager::Initialize()
 
 	//その他の設定
 	isCount = 1;
-	
+
 }
 
 void BlockManager::Update()
@@ -109,7 +115,7 @@ void BlockManager::Update()
 			//preWorldTransform_[i][j] = worldTransform_[i][j];
 
 			//transforms[i][j].x += 0.001f;
-			
+
 			//ブロックの更新
 			//blocks_[i][j]->SetWorldPos(transforms[i][j]);
 			//blocks_[i][j]->Updata(transforms[i][j]);
@@ -117,7 +123,7 @@ void BlockManager::Update()
 			worldmats_[i][j]->trans.z += 0.001f * j;*/
 
 			//worldmats_[i][j]->SetWorld();
-			
+
 			//X座標の一つ前の番号を保存
 			prevBlockY = j;
 		}
@@ -144,7 +150,7 @@ void BlockManager::Draw(Camera* camera)
 		{
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
-			blocks_[i][j]->Draw(camera);
+			blocks_[i][j]->Draw(camera, texhandle);
 		}
 	}
 }
@@ -161,11 +167,11 @@ bool BlockManager::CheckPlayerOnBlock(Vec3 pos)
 			if (worldTransform_[i][j].trans.x - radius_ < pos.x && worldTransform_[i][j].trans.x + radius_ > pos.x
 				&& worldTransform_[i][j].trans.z - radius_ < pos.z && worldTransform_[i][j].trans.z + radius_ > pos.z)
 			{
-				result =  true;
+				result = true;
 			}
 			else
 			{
-				result =  false;
+				result = false;
 			}
 		}
 	}
@@ -257,10 +263,10 @@ void BlockManager::RegistAxisButton(const Vec3& pos, bool isConnect)
 						//軸登録する
 						isAxis_[i][j] = true;
 					}
-					else{}
+					else {}
 				}
 				//プレイヤーがどのブロックにもいない場合
-				else{}
+				else {}
 			}
 		}
 	}
@@ -329,11 +335,11 @@ bool BlockManager::CheckAxisButton(Vec3 pos, bool isConnect)
 					&& worldTransform_[i][j].trans.z - radius_ < pos.z && worldTransform_[i][j].trans.z + radius_ > pos.z)
 				{
 					//現在のブロックが軸登録されているならfalse
-					if (isAxis_[i][j] == true )
+					if (isAxis_[i][j] == true)
 					{
 						return false;
 					}
-					else  if(isAxis_[i][j] == false)
+					else  if (isAxis_[i][j] == false)
 					{
 						return true;
 					}
