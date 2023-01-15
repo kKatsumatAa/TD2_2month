@@ -56,7 +56,7 @@ public:
 
 	void Updata();
 
-	void Draw(Camera* camera);
+	void Draw(Camera* camera,UINT64* texhandle);
 
 	void SetWorldPos(const Vec3& pos) { worldTransform_.trans = pos; };
 

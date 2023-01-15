@@ -54,8 +54,10 @@ public:
 	static const int blockHeight = 13;
 
 private:
+	UINT64 texhandle[10];
 
-	//モデル
+	const int width = 13;
+
 	Model* model_ = nullptr;
 	
 	//ブロックの二次元配列

@@ -10,6 +10,7 @@
 #include "WindowsApp.h"
 #include <random>
 #include "Sound.h"
+#include"Camera.h"
 
 
 /// <summary>

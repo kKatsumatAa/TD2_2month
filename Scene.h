@@ -6,6 +6,8 @@
 #include"ParticleManager.h"
 #include"Camera.h"
 #include"Async.h"
+#include"ConnectingEffect.h"
+#include"Player.h"
 #include"BlockManager.h"
 
 
@@ -36,6 +38,8 @@ public:
 	WorldMat cameraWorldMat;
 	const Vec3 cameraPos = { 0,0,-100 };
 
+	Model* model[10];
+
 	DebugText debugText;
 
 	//デバッグテキスト
@@ -63,6 +67,10 @@ public:
 
 
 	std::unique_ptr<Camera> camera;
+
+	std::unique_ptr<ConnectingEffectManager> connectEM;
+
+	std::unique_ptr<Player> player;
 
 public:
 	~Scene();
