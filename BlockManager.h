@@ -46,15 +46,10 @@ public:
 	void ReleseConectedBlock();
 
 	//キーボードによって回転
-	//キーボードを関数内で取得
-	void UpdateRotateRight(Vec3& rotatePos);
-
-	void UpdateRotateLeft(Vec3& rotatePos);
-
 	void UpdateRotate(Vec3& rotatePos);
 
-
-
+	//回転中だったら
+	bool GetIsRollingLeftorRight();
 
 
 public:

@@ -372,72 +372,18 @@ void BlockManager::ReleseConectedBlock()
 			{
 				//全部何もしていない状態に
 				action_[i][j] = Action::None;
+				isAxis_[i][j] = false;
 			}
 		}
 	}
 }
 
 //キーボードによって回転
-//キーボードを関数内で取得
-void BlockManager::UpdateRotateRight(Vec3& rotatePos)
-{
-	//軸に向けての方向ベクトルを取得
-
-	if (isLeftRolling == false)
-	{
-		isRightRolling = true;
-		rotateCount = 0;
-		angle_ = 0;
-	}
-
-	if (isRightRolling == true)
-	{
-		//角度が必要(前にやった円運動が参考になるかも)
-		for (int i = 0; i < blockWidth; i++)
-		{
-			for (int j = 0; j < blockHeight; j++)
-			{
-				if (isAxis_[i][j] == true)
-				{
-					//もしつながっているなら
-					if (action_[i][j] == Action::Connect)
-					{
-						//回転処理
-						Vec3 distancePos;
-
-						distancePos = worldmats_[i][j].trans - axis_pos_;
-
-
-						worldmats_[i][j].trans.x += cosf(LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
-							EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos.x;
-
-						worldmats_[i][j].trans.z += sinf(LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
-							EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos.z;
-
-
-					}
-				}
-			}
-		}
-
-		rotateCount++;
-		if (rotateCount >= rotateCountMax)
-		{
-			isRightRolling = false;
-		}
-	}
-}
-
-void BlockManager::UpdateRotateLeft(Vec3& rotatePos)
-{
-
-
-}
 
 void BlockManager::UpdateRotate(Vec3& rotatePos)
 {
 
-	if (isLeftRolling == false && KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW))
+	if (isLeftRolling == false && isRightRolling == false && KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW))
 	{
 		isRightRolling = true;
 		rotateCount = 0;
@@ -454,7 +400,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		distancePosPlayer = rotatePos - axis_pos_;
 	}
 
-	if (isRightRolling == false && KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW))
+	if (isLeftRolling == false && isRightRolling == false && KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW))
 	{
 		isLeftRolling = true;
 		rotateCount = 0;
@@ -484,19 +430,21 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 				//もしつながっているなら
 				if (action_[i][j] == Action::Connect && isAxis_[i][j] == false)
 				{
-					//ブロックの回転
-					worldmats_[i][j].trans.x = axis_pos_.x + cosf(LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
-						EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos[i][j].x;
+					WorldMat worldMat;
+					worldMat.rot.y = LerpVec3({ angle_, 0, 0 }, { pi / 2.0f,0,0 },
+						EaseOut((float)rotateCount / (float)rotateCountMax)).x;
+					worldMat.SetWorld();
 
-					worldmats_[i][j].trans.z = axis_pos_.z + sinf(LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
-						EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos[i][j].z;
+					//ブロックの回転
+					worldmats_[i][j].trans.x = axis_pos_.x + GetVec3xM4(distancePos[i][j], worldMat.matWorld, 0).x;
+					worldmats_[i][j].trans.z = axis_pos_.z + GetVec3xM4(distancePos[i][j], worldMat.matWorld, 0).z;
+					worldmats_[i][j].rot.y = worldMat.rot.y;
+					worldmats_[i][j].SetWorld();
 
 					//プレイヤーの回転
-					rotatePos.x = axis_pos_.x + cosf(LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
-						EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePosPlayer.x;
+					rotatePos.x = axis_pos_.x + GetVec3xM4(distancePosPlayer, worldMat.matWorld, 0).x;
 
-					rotatePos.z = axis_pos_.z + sinf(LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
-						EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePosPlayer.z;
+					rotatePos.z = axis_pos_.z + GetVec3xM4(distancePosPlayer, worldMat.matWorld, 0).z;
 				}
 
 			}
@@ -521,19 +469,20 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 				//もしつながっているなら
 				if (action_[i][j] == Action::Connect && isAxis_[i][j] == false)
 				{
-					//ブロックの回転
-					worldmats_[i][j].trans.x = axis_pos_.x + cosf(LerpVec3({ angle_, 0, 0 }, { pi / 2.0f,0,0 },
-						EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos[i][j].x;
+					WorldMat worldMat;
+					worldMat.rot.y = LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
+						EaseOut((float)rotateCount / (float)rotateCountMax)).x;
+					worldMat.SetWorld();
 
-					worldmats_[i][j].trans.z = axis_pos_.z + sinf(LerpVec3({ angle_, 0, 0 }, { pi / 2.0f,0,0 },
-						EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos[i][j].z;
+					//ブロックの回転
+					worldmats_[i][j].trans.x = axis_pos_.x + GetVec3xM4(distancePos[i][j], worldMat.matWorld, 0).x;
+					worldmats_[i][j].trans.z = axis_pos_.z + GetVec3xM4(distancePos[i][j], worldMat.matWorld, 0).z;
+					worldmats_[i][j].rot.y = worldMat.rot.y;
 
 					//プレイヤーの回転
-					rotatePos.x = axis_pos_.x + cosf(LerpVec3({ angle_, 0, 0 }, { pi / 2.0f,0,0 },
-						EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePosPlayer.x;
+					rotatePos.x = axis_pos_.x + GetVec3xM4(distancePosPlayer, worldMat.matWorld, 0).x;
 
-					rotatePos.z = axis_pos_.z + sinf(LerpVec3({ angle_, 0, 0 }, { pi / 2.0f,0,0 },
-						EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePosPlayer.z;
+					rotatePos.z = axis_pos_.z + GetVec3xM4(distancePosPlayer, worldMat.matWorld, 0).z;
 
 
 				}
@@ -546,4 +495,13 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 			isLeftRolling = false;
 		}
 	}
+}
+
+bool BlockManager::GetIsRollingLeftorRight()
+{
+	if (isLeftRolling || isRightRolling)
+	{
+		return true;
+	}
+	return false;
 }

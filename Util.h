@@ -9,6 +9,7 @@
 //©ì
 void Vec4xM4(Vec4& v, const M4& m4);
 void Vec3xM4(Vec3& v, const M4& m4, const bool w);
+Vec3 GetVec3xM4(Vec3 v, const M4 m4, const bool w);
 void Vec3xM4andDivisionW(Vec3& v, const M4& m4, const bool w);
 
 //ƒ‰ƒWƒAƒ“Œn

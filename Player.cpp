@@ -164,8 +164,10 @@ void StateNormalConTurP::Update()
 	//繋ぐ
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
+		//ボタンがあったら
 		if (player->blockM->GetPosIsButton(player->GetWorldPos()))
 		{
+			//軸を登録
 			player->blockM->RegistAxisButton(player->GetWorldPos());
 
 			player->ChangeStateTurnConnect(new StateConnectP);
@@ -211,7 +213,7 @@ void StateTurnP::Update()
 
 
 	//回転終わる
-	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
+	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) && !player->blockM->GetIsRollingLeftorRight())
 	{
 		player->isTurnNow = false;
 		//繋がれているブロックを全部解除するステージ関数()
