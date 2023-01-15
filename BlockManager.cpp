@@ -13,7 +13,7 @@ BlockManager::~BlockManager()
 }
 
 //初期化
-void BlockManager::Initialize(ConnectingEffectManager* connectEM, Camera* camera)
+void BlockManager::Initialize(ConnectingEffectManager* connectEM, Camera* camera,Model* model)
 {
 	blocks_.clear();
 	worldmats_.clear();
@@ -66,8 +66,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Camera* camera
 
 			//worldmats_[i][j]->rot = { 0.0f,0.0f,0.0f };
 
-
-			blocks_[i][j]->Initialize(connectEM);
+			blocks_[i][j]->Initialize(connectEM,model);
 
 			//ブロックの種類を設定
 			if (i == j)
@@ -87,20 +86,16 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Camera* camera
 			//ブロックの座標を設定
 			if (i >= 0)
 			{
-				//blocks_[i][j]->GetWorldTransForm()->trans.x = i * (scale_.x * 1);
 				worldmats_[i][j].trans.x = i * (worldmats_[i][j].scale.x * 2.0f);
-
 			}
 			if (j >= 0)
 			{
-				//blocks_[i][j]->GetWorldTransForm()->trans.y = i * (scale_.y * 1);
-
 				worldmats_[i][j].trans.z = j * (worldmats_[i][j].scale.y * 2.0f);
 			}
 
 			worldmats_[i][j].SetWorld();
 
-			block_->Initialize(connectEM);
+			block_->Initialize(connectEM, model);
 
 			//軸になっているかどうか
 			isAxis_[i][j] = false;
@@ -174,6 +169,7 @@ void BlockManager::Draw(Camera* camera)
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
 			blocks_[i][j]->Draw(camera, texhandle, form_[i][j]);
+
 
 			if (action_[i][j] == Action::Connect && effectCount >= effectCountMax)
 			{

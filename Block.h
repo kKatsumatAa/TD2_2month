@@ -35,7 +35,7 @@ private:
 
 	//Object* objcet_ = nullptr;
 
-	//Model* model_ = nullptr;
+	Model* model_ = nullptr;
 
 	//テクスチャハンドル
 	//UINT64 textureHandle_[10];
@@ -56,7 +56,7 @@ public:
 	Object draw[10];
 	DebugText* debugText_ = nullptr;
 
-	void Initialize(ConnectingEffectManager* connectEM);
+	void Initialize(ConnectingEffectManager* connectEM,Model* model);
 
 	void Updata(Vec3& pos);
 

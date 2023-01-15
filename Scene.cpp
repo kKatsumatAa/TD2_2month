@@ -41,7 +41,7 @@ void SceneTitle::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
-	scene->blockManager->Initialize(scene->connectEM.get(), scene->camera.get());
+	scene->blockManager->Initialize(scene->connectEM.get(), scene->camera.get(), scene->model[1]);
 	scene->camera->Initialize();
 	scene->connectEM->Initialize();
 	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
@@ -186,6 +186,7 @@ Scene::~Scene()
 	delete lightManager;
 
 	delete model[0];
+	delete model[1];
 }
 
 void Scene::ChangeState(SceneState* state)
@@ -211,6 +212,7 @@ void Scene::Initialize()
 	Model::StaticInitialize();
 
 	model[0] = Model::LoadFromOBJ("sphere");
+	model[1] = Model::LoadFromOBJ("Mesh_NormalTile_01");
 
 	//imgui
 	imGuiManager = new ImGuiManager();
@@ -221,7 +223,7 @@ void Scene::Initialize()
 	connectEM->Initialize();
 
 	blockManager = new BlockManager();
-	blockManager->Initialize(connectEM.get(), camera.get());
+	blockManager->Initialize(connectEM.get(), camera.get(),model[1]);
 
 	//Light
 	LightManager::StaticInitialize();

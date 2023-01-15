@@ -8,10 +8,10 @@ Block::~Block()
 
 }
 
-void Block::Initialize(ConnectingEffectManager* connectEM)
+void Block::Initialize(ConnectingEffectManager* connectEM,Model* model)
 {
-	//assert(model);
-	//model_ = model;
+	assert(model);
+	model_ = model;
 	//this->debugText_ = debugText_;
 
 	this->connectEM = connectEM;
@@ -43,9 +43,9 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form)
 	if (form == Form::GOAL) { color = { 1.0f,0,0,1.0f }; }
 
 
-	draw->DrawCube3D(&worldTransform_, &camera->viewMat, &camera->projectionMat, color, texhandle[0]);
-	//model_[0] = Model::LoadFromOBJ("sphere");
-	//draw[0].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, model_[0]);
+	//draw->DrawCube3D(&worldTransform_, &camera->viewMat, &camera->projectionMat, color, texhandle[0]);
+
+	draw[0].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &model_[0]);
 }
 
 void Block::OnCollision(Collider& collider)
