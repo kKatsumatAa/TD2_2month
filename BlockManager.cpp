@@ -120,6 +120,7 @@ void BlockManager::Update()
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
+			
 			//ブロックの座標を設定
 			if (i >= 0)
 			{
@@ -556,4 +557,42 @@ bool BlockManager::GetIsGoal(Vec3& pos)
 
 	//プレイヤーがどのブロックにもいない場合
 	return false;
+}
+
+void BlockManager::UpdateOverlap()
+{
+	for (int i = 0; i < blockWidth; i++)
+	{
+		for (int j = 0; j < blockHeight; j++)
+		{
+			for (int k = 0; i < blockWidth; k++)
+			{
+				for (int l = 0; l < blockHeight; l++)
+				{
+					//同じ番号ではないとき
+					if (i != k || j != l)
+					{
+						//重なっているかどうか
+						if (CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans))
+						{
+							//重なっていたら進めなくする
+							form_[i][j] = Form::LOCKED;
+							form_[k][l] = Form::LOCKED;
+						}
+					}
+				}
+			}
+		}
+	}
+
+}
+
+//ブロックブロックの矩形の当たり判定
+bool BlockManager::CollisionBlockToBlock(Vec3 blockPos, Vec3 comPos)
+{
+	if (blockPos.x - blockRadius_ < comPos.x - blockRadius_ && blockPos.x + blockRadius_ > comPos.x + blockRadius_
+		&& blockPos.z - blockRadius_ <comPos.z - blockRadius_ && blockPos.z + blockRadius_ > comPos.z + blockRadius_)
+	{
+			return true;
+	}
 }

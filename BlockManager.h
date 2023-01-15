@@ -54,6 +54,11 @@ public:
 	//ゴールがあるかどうか
 	bool GetIsGoal(Vec3& Pos);
 
+	//重なった時の処理
+	void UpdateOverlap();
+
+	//ブロックとブロックの当たり判定
+	bool CollisionBlockToBlock(Vec3 blockPos, Vec3 pos);
 
 public:
 
@@ -138,5 +143,9 @@ private:
 
 	int effectCount = 0;
 	const int effectCountMax = 5;
+
+	//比較用に保存しておく変数
+	Vec3 comparisonPos[blockWidth][blockHeight];
+
 };
 
