@@ -46,12 +46,23 @@ public:
 
 	//キーボードによって回転
 	//キーボードを関数内で取得
-	void UpdateRotatePlayerBlock(Vec3& rotatePos, bool isRota);
+	void UpdateRotateRight(Vec3& rotatePos);
+
+	void UpdateRotateLeft(Vec3& rotatePos);
+
+	void UpdateRotate(Vec3& rotatePos);
+
+
+
+
 
 public:
 
 	static const int blockWidth = 13;
 	static const int blockHeight = 13;
+	//半径
+	const float blockRadius_ = 1.8f;
+
 
 private:
 	UINT64 texhandle[10];
@@ -80,15 +91,16 @@ private:
 	//軸になっているかどうか
 	bool isAxis_[blockWidth][blockHeight];
 
+	//軸になっているブロックの座標
+	Vec3 axis_pos_;
+
 	//選択されているかどうか
 	int isCount;
 
 	//ブロックの大きさ
 	Vec3 scale_;
 
-	//半径
-	float radius_;
-
+	
 	//前のフレームにおいて選択用のブロックの情報を保存しておく変数
 	int prevBlockX;
 	int prevBlockY;
@@ -106,6 +118,16 @@ private:
 	Vec3 transforms[blockWidth][blockHeight];
 
 	Object draw[10];
+
+	//回転
+
+	bool isRightRolling;
+	bool isLeftRolling;
+
+	int rotateCount;
+	const int rotateCountMax = 30;
+
+	float angle_;
 	
 };
 

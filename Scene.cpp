@@ -218,7 +218,7 @@ void Scene::Initialize()
 
 	//電気エフェクト
 	player = std::make_unique<Player>();
-	player->Initialize(5.0f, model[0], &debugText);
+	player->Initialize(blockManager->blockRadius_, model[0], &debugText);
 
 	//ステート変更
 	ChangeState(new SceneLoad);

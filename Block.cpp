@@ -3,8 +3,6 @@
 const int blockWidth = 13;
 const int blockHeight = 13;
 
-
-
 Block::~Block()
 {
 
