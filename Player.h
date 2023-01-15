@@ -3,6 +3,7 @@
 #include "Collider.h"
 #include "Camera.h"
 #include "BlockManager.h"
+#include "PlayerSocket.h"
 
 class Player;
 
@@ -116,11 +117,13 @@ public:
 
 	BlockManager* blockM;
 
+	PlayerSocket* playerSocket;
+
 
 	void ChangeStateTurnConnect(PlayerState* state);
 	void ChangeStateMove(PlayerState* state);
 
-	void Initialize(float moveDistance, BlockManager* blockM, Model* model, DebugText* debugText_/*,Tutorial* tutorial = nullptr*/);
+	void Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket, Model* model, DebugText* debugText_/*,Tutorial* tutorial = nullptr*/);
 	void Update();
 	void Draw(Camera* camera);
 	void DrawSprite();

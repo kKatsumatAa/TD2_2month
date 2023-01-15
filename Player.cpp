@@ -15,7 +15,7 @@ void Player::ChangeStateMove(PlayerState* state)
 	state->SetPlayer(this);
 }
 
-void Player::Initialize(float moveDistance, BlockManager* blockM, Model* model, DebugText* debugText_)
+void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket, Model* model, DebugText* debugText_)
 {
 	assert(model);
 
@@ -23,6 +23,7 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, Model* model, 
 	this->debugText_ = debugText_;
 	this->moveDistance = moveDistance;
 	this->blockM = blockM;
+	this->playerSocket = playerSocket;
 
 	isPlayer = true;
 	isDead = false;
@@ -63,7 +64,6 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, Model* model, 
 
 void Player::Update()
 {
-
 	stateMove->Update();
 	stateConnectTurn->Update();
 
@@ -176,6 +176,9 @@ void StateNormalConTurP::Update()
 			//軸を登録
 			player->blockM->RegistAxisButton(player->GetWorldPos());
 
+			//コンセントをさす
+			player->playerSocket->UseSocket(player->GetWorldPos());
+
 			player->ChangeStateTurnConnect(new StateConnectP);
 		}
 	}
@@ -202,6 +205,8 @@ void StateConnectP::Update()
 		{
 			//繋がれているブロックを全部解除するステージ関数
 			player->blockM->ReleseConectedBlock();
+			//コンセントを抜く
+			player->playerSocket->FinishSocket(player->GetWorldPos());
 			player->ChangeStateTurnConnect(new StateNormalConTurP);
 		}
 	}
@@ -224,6 +229,8 @@ void StateTurnP::Update()
 		player->isTurnNow = false;
 		//繋がれているブロックを全部解除するステージ関数()
 		player->blockM->ReleseConectedBlock();
+		//コンセントを抜く
+		player->playerSocket->FinishSocket(player->GetWorldPos());
 		player->ChangeStateTurnConnect(new StateNormalConTurP);
 	}
 }
