@@ -1,6 +1,8 @@
 #pragma once
 #include "Block.h"
 #include <vector>
+#include <string>
+
 
 class BlockManager 
 {
@@ -13,13 +15,13 @@ public:
 	~BlockManager();
 
 	//初期化
-	void Initialize(Model* model, DebugText* debugText_);
+	void Initialize();
 
 	//更新
 	void Update();
 
 	//描画
-	void Draw();
+	void Draw(Camera* camera);
 
 	//プレイヤーがブロックの上にいるかどうか
 	bool CheckPlayerOnBlock(Vec3 pos);
@@ -52,14 +54,19 @@ public:
 	static const int blockHeight = 13;
 
 private:
-	
+	UINT64 texhandle[10];
+
+	const int width = 13;
+
 	Model* model_ = nullptr;
 	
 	//ブロックの二次元配列
 	//std::unique_ptr < std::vector <std::vector<Block>> > blocks_ ;
-	//std::vector< std::unique_ptr<std::vector<Block>> > blocks_;
+	Block* block_;
+	std::vector<std::vector<Block*>> blocks_;
 
-	Block* blocks_[blockWidth][blockHeight];
+	WorldMat worldmat_;
+	std::vector<std::vector<WorldMat>> worldmats_;
 
 	//ワールド変換データ
 	WorldMat worldTransform_[blockWidth][blockHeight];
@@ -70,13 +77,6 @@ private:
 
 	Action action_[blockWidth][blockHeight] = { Action::None };
 
-	//マップチップで管理するフラグ
-	////回転しているかどうか
-	//bool isRotate_[blockWidth][blockHeight];
-	////重なっているかどうか
-	//bool isOverlap_[blockWidth][blockHeight];
-	////繋がっているかどうか
-	//bool isConnect_[blockWidth][blockHeight];
 	//軸になっているかどうか
 	bool isAxis_[blockWidth][blockHeight];
 
@@ -103,5 +103,9 @@ private:
 	bool changedAction_;
 	bool isChanged_;
 
+	Vec3 transforms[blockWidth][blockHeight];
+
+	Object draw[10];
+	
 };
 

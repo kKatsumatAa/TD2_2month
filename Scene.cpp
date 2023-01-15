@@ -4,14 +4,14 @@
 
 void SceneState::SetScene(Scene* scene)
 {
-	//state‚Å‚Í‚È‚­SceneƒNƒ‰ƒX‚ÌƒCƒ“ƒXƒ^ƒ“ƒX//
+	//stateã§ã¯ãªãSceneã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹//
 	this->scene = scene;
 }
 
 
 
 //---------------------------------------------------------------------------------------
-//ƒ^ƒCƒgƒ‹
+//ã‚¿ã‚¤ãƒˆãƒ«
 void SceneTitle::Initialize()
 {
 
@@ -21,7 +21,7 @@ void SceneTitle::Update()
 {
 
 
-	//ƒV[ƒ“‘JˆÚ
+	//ã‚·ãƒ¼ãƒ³é·ç§»
 	/*if ()
 	{
 		scene->ChangeState(new SceneGame);
@@ -38,7 +38,7 @@ void SceneTitle::DrawSprite()
 
 
 //---------------------------------------------------------------------------------------
-//ƒQ[ƒ€
+//ã‚²ãƒ¼ãƒ 
 void SceneGame::Initialize()
 {
 
@@ -48,7 +48,7 @@ void SceneGame::Update()
 {
 
 
-	//ƒV[ƒ“‘JˆÚ
+	//ã‚·ãƒ¼ãƒ³é·ç§»
 	/*if ()
 	{
 		scene->ChangeState(new SceneClear);
@@ -70,7 +70,7 @@ void SceneGame::DrawSprite()
 
 
 //---------------------------------------------------------------------------------------
-//I—¹‰æ–Ê
+//çµ‚äº†ç”»é¢
 void SceneGameOver::Initialize()
 {
 }
@@ -79,7 +79,7 @@ void SceneGameOver::Update()
 {
 
 
-	//ƒV[ƒ“‘JˆÚ
+	//ã‚·ãƒ¼ãƒ³é·ç§»
 	/*if ()
 	{
 		scene->ChangeState(new SceneLoad);
@@ -104,7 +104,7 @@ void SceneClear::Update()
 {
 
 
-	//ƒV[ƒ“‘JˆÚ
+	//ã‚·ãƒ¼ãƒ³é·ç§»
 	/*if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
 		scene->ChangeState(new SceneLoad);
@@ -124,20 +124,20 @@ void SceneClear::DrawSprite()
 void SceneLoad::Initialize()
 {
 
-	//”ñ“¯Šúˆ—(ƒXƒe[ƒWì¬’†‚É‚àƒ[ƒh‰æ–Êo‚·“I‚È)
-	//async.StartAsyncFunction([=]() { /*‚±‚±‚ÉŠÖ” */ });
+	//éåŒæœŸå‡¦ç†(ã‚¹ãƒ†ãƒ¼ã‚¸ä½œæˆä¸­ã«ã‚‚ãƒ­ãƒ¼ãƒ‰ç”»é¢å‡ºã™çš„ãª)
+	//async.StartAsyncFunction([=]() { /*ã“ã“ã«é–¢æ•° */ });
 }
 
 void SceneLoad::Update()
 {
 
 
-	//ƒV[ƒ“‘JˆÚ
+	//ã‚·ãƒ¼ãƒ³é·ç§»
 	//if (async.GetLockFlag())
 	//{
 	//	async.EndThread();
 
-	//	//ƒXƒe[ƒWì‚èI‚í‚Á‚½‚ç
+	//	//ã‚¹ãƒ†ãƒ¼ã‚¸ä½œã‚Šçµ‚ã‚ã£ãŸã‚‰
 	//	scene->ChangeState(new SceneTitle);
 	//}
 }
@@ -153,9 +153,10 @@ void SceneLoad::DrawSprite()
 
 
 //---------------------------------------------------------------------------------------
-//ƒfƒXƒgƒ‰ƒNƒ^
+//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 Scene::~Scene()
 {
+	delete blockManager;
 	camera.reset();
 	connectEM.reset();
 	player.reset();
@@ -176,10 +177,10 @@ void Scene::ChangeState(SceneState* state)
 
 void Scene::Initialize()
 {
-	//”’‚¢‰æ‘œ
+	//ç™½ã„ç”»åƒ
 	TextureManager::GetInstance().LoadGraph(L"Resources/image/white.png", TextureManager::GetInstance().whiteTexHandle);
 
-	//‰æ‘œ
+	//ç”»åƒ
 	TextureManager::LoadGraph(L"Resources/ascii.png", debugTextHandle);
 	TextureManager::LoadGraph(L"Resources/image/effect1.png", texhandle[1]);
 
@@ -192,29 +193,32 @@ void Scene::Initialize()
 	imGuiManager = new ImGuiManager();
 	imGuiManager->Initialize();
 
+	blockManager = new BlockManager();
+	blockManager->Initialize();
+
 	//Light
 	LightManager::StaticInitialize();
-	//ƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+	//ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 	lightManager = LightManager::Create();
-	//ƒ‰ƒCƒgF‚ğİ’è
+	//ãƒ©ã‚¤ãƒˆè‰²ã‚’è¨­å®š
 	lightManager->SetDirLightColor(0, { 1,1,1 });
-	//3DƒIƒuƒWƒFƒNƒg‚Éƒ‰ƒCƒg‚ğƒZƒbƒg(‘S‘Ì‚Åˆê‚Â‚ğ‹¤—L)
+	//3Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ãƒ©ã‚¤ãƒˆã‚’ã‚»ãƒƒãƒˆ(å…¨ä½“ã§ä¸€ã¤ã‚’å…±æœ‰)
 	Object::SetLight(lightManager);
 	lightManager->SetDirLightActive(0, true);
 
-	//ƒJƒƒ‰
+	//ã‚«ãƒ¡ãƒ©
 	camera = std::make_unique<Camera>();
 	camera->Initialize();
 
-	//“d‹CƒGƒtƒFƒNƒg
+	//é›»æ°—ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
 	connectEM = std::make_unique<ConnectingEffectManager>();
 	connectEM->Initialize();
 
-	//“d‹CƒGƒtƒFƒNƒg
+	//é›»æ°—ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
 	player = std::make_unique<Player>();
 	player->Initialize(5.0f, model[0], &debugText);
 
-	//ƒXƒe[ƒg•ÏX
+	//ã‚¹ãƒ†ãƒ¼ãƒˆå¤‰æ›´
 	ChangeState(new SceneLoad);
 }
 
@@ -226,12 +230,12 @@ void Scene::Update()
 	imGuiManager->Begin();
 
 	{
-		//ƒfƒ‚
+		//ãƒ‡ãƒ¢
 		ImGui::ShowDemoWindow();
 
 	}
 
-	//blockManager->Update();
+	blockManager->Update();
 	state->Update();
 
 	count++;
@@ -256,6 +260,7 @@ void Scene::Update()
 void Scene::Draw()
 {
 	state->Draw();
+	blockManager->Draw(camera.get());
 
 	player->Draw(camera.get());
 	connectEM->Draw(*camera.get());
