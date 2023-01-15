@@ -2,6 +2,7 @@
 #include "Sound.h"
 #include "Collider.h"
 #include "Camera.h"
+#include "BlockManager.h"
 
 class Player;
 
@@ -86,6 +87,8 @@ private:
 
 	const float scaleTmp = 1.8f;
 
+
+
 	/*Tutorial* tutorial;*/
 public:
 	//外部からセットするブロックあるから動ける
@@ -109,11 +112,13 @@ public:
 	Object draw[10];
 	DebugText* debugText_ = nullptr;
 
+	BlockManager* blockM;
+
 
 	void ChangeStateTurnConnect(PlayerState* state);
 	void ChangeStateMove(PlayerState* state);
 
-	void Initialize(float moveDistance, Model* model, DebugText* debugText_/*,Tutorial* tutorial = nullptr*/);
+	void Initialize(float moveDistance, BlockManager* blockM, Model* model, DebugText* debugText_/*,Tutorial* tutorial = nullptr*/);
 	void Update();
 	void Draw(Camera* camera);
 	void DrawSprite();

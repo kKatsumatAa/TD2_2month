@@ -193,8 +193,12 @@ void Scene::Initialize()
 	imGuiManager = new ImGuiManager();
 	imGuiManager->Initialize();
 
+	//電気エフェクト
+	connectEM = std::make_unique<ConnectingEffectManager>();
+	connectEM->Initialize();
+
 	blockManager = new BlockManager();
-	blockManager->Initialize();
+	blockManager->Initialize(connectEM.get());
 
 	//Light
 	LightManager::StaticInitialize();
@@ -212,13 +216,11 @@ void Scene::Initialize()
 	camera->SetEye({ 0, 20, -50 });
 	camera->UpdateViewMatrix();
 
-	//電気エフェクト
-	connectEM = std::make_unique<ConnectingEffectManager>();
-	connectEM->Initialize();
+
 
 	//電気エフェクト
 	player = std::make_unique<Player>();
-	player->Initialize(blockManager->blockRadius_, model[0], &debugText);
+	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, model[0], &debugText);
 
 	//ステート変更
 	ChangeState(new SceneLoad);
@@ -239,12 +241,6 @@ void Scene::Update()
 
 	blockManager->Update();
 	state->Update();
-
-	count++;
-	if (/*KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE)*/count % 7 == 0)
-	{
-		connectEM->GenerateRandomConnectingEffect({ 0,0,0 }, 30.0f, 6.0f, 15, 20);
-	}
 
 	connectEM->Update();
 
@@ -268,7 +264,7 @@ void Scene::Draw()
 	connectEM->Draw(*camera.get());
 
 	blockManager->Draw(camera.get());
-	
+
 	//imgui
 	imGuiManager->Draw();
 }

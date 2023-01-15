@@ -2,6 +2,7 @@
 #include "Sound.h"
 #include "Collider.h"
 #include "Camera.h"
+#include "ConnectingEffect.h"
 
 //ÉuÉçÉbÉN
 class Block : public Collider
@@ -29,6 +30,9 @@ public:
 
 private:
 
+
+	ConnectingEffectManager* connectEM;
+
 	//Object* objcet_ = nullptr;
 
 	//Model* model_ = nullptr;
@@ -52,7 +56,7 @@ public:
 	Object draw[10];
 	DebugText* debugText_ = nullptr;
 
-	void Initialize();
+	void Initialize(ConnectingEffectManager* connectEM);
 
 	void Updata(Vec3& pos);
 
