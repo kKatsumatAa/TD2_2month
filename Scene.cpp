@@ -41,7 +41,8 @@ void SceneTitle::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
-	scene->blockManager->Initialize(scene->connectEM.get(), scene->camera.get(), scene->model[1]);
+	scene->blockManager->Initialize(scene->connectEM.get(), scene->camera.get(), 
+		scene->model[1],scene->model[2], scene->model[3], scene->model[4]);
 	scene->camera->Initialize();
 	scene->connectEM->Initialize();
 	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
@@ -187,6 +188,10 @@ Scene::~Scene()
 
 	delete model[0];
 	delete model[1];
+	delete model[2];
+	delete model[3];
+	delete model[4];
+
 }
 
 void Scene::ChangeState(SceneState* state)
@@ -213,6 +218,9 @@ void Scene::Initialize()
 
 	model[0] = Model::LoadFromOBJ("sphere");
 	model[1] = Model::LoadFromOBJ("Mesh_NormalTile_01");
+	model[2] = Model::LoadFromOBJ("Mesh_ButtonTile_01");
+	model[3] = Model::LoadFromOBJ("Mesh_GoalTile_01");
+	model[4] = Model::LoadFromOBJ("Mesh_SocketTile_01");
 
 	//imgui
 	imGuiManager = new ImGuiManager();
@@ -223,7 +231,7 @@ void Scene::Initialize()
 	connectEM->Initialize();
 
 	blockManager = new BlockManager();
-	blockManager->Initialize(connectEM.get(), camera.get(),model[1]);
+	blockManager->Initialize(connectEM.get(), camera.get(),model[1],model[2],model[3],model[4]);
 
 	//Light
 	LightManager::StaticInitialize();

@@ -13,7 +13,8 @@ BlockManager::~BlockManager()
 }
 
 //‰Šú‰»
-void BlockManager::Initialize(ConnectingEffectManager* connectEM, Camera* camera,Model* model)
+void BlockManager::Initialize(ConnectingEffectManager* connectEM, Camera* camera,
+	Model* normal, Model* button, Model* goal, Model* Socket)
 {
 	blocks_.clear();
 	worldmats_.clear();
@@ -66,7 +67,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Camera* camera
 
 			//worldmats_[i][j]->rot = { 0.0f,0.0f,0.0f };
 
-			blocks_[i][j]->Initialize(connectEM,model);
+			blocks_[i][j]->Initialize(connectEM, normal, button, goal, Socket);
 
 			//ƒuƒƒbƒN‚ÌŽí—Þ‚ðÝ’è
 			if (i == j)
@@ -95,7 +96,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Camera* camera
 
 			worldmats_[i][j].SetWorld();
 
-			block_->Initialize(connectEM, model);
+			block_->Initialize(connectEM, normal, button, goal, Socket);
 
 			//Ž²‚É‚È‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©
 			isAxis_[i][j] = false;

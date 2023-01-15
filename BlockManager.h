@@ -16,7 +16,8 @@ public:
 	~BlockManager();
 
 	//‰Šú‰»
-	void Initialize(ConnectingEffectManager* connectEM,Camera * camera, Model* model);
+	void Initialize(ConnectingEffectManager* connectEM,Camera * camera, 
+		Model* normal, Model* button, Model* goal, Model* Socket);
 
 	//XV
 	void Update();
