@@ -71,6 +71,7 @@ public:
 	std::unique_ptr<ConnectingEffectManager> connectEM;
 
 	std::unique_ptr<Player> player;
+	std::unique_ptr<PlayerSocket> playerSocket;
 
 	BlockManager* blockManager = nullptr;
 
