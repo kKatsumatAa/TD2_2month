@@ -209,6 +209,8 @@ void Scene::Initialize()
 	//カメラ
 	camera = std::make_unique<Camera>();
 	camera->Initialize();
+	camera->SetEye({ 0, 20, -50 });
+	camera->UpdateViewMatrix();
 
 	//電気エフェクト
 	connectEM = std::make_unique<ConnectingEffectManager>();

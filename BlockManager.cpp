@@ -85,7 +85,7 @@ void BlockManager::Initialize()
 			{
 				//blocks_[i][j]->GetWorldTransForm()->trans.y = i * (scale_.y * 1);
 
-				worldmats_[i][j].trans.y = j * (worldmats_[i][j].scale.y * 2.0f);
+				worldmats_[i][j].trans.z = j * (worldmats_[i][j].scale.y * 2.0f);
 			}
 
 			worldmats_[i][j].SetWorld();
