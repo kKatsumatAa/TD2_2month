@@ -260,8 +260,6 @@ void Scene::Draw()
 	player->Draw(camera.get());
 	connectEM->Draw(*camera.get());
 
-	blockManager->Draw();
-	
 	//imgui
 	imGuiManager->Draw();
 }

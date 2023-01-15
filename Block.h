@@ -61,7 +61,7 @@ public:
 
 	void Initialize(Model* model, DebugText* debugText_);
 
-	void Updata();
+	void Updata(Vec3& pos);
 
 	void Draw(Camera* camera);
 
