@@ -158,7 +158,7 @@ void BlockManager::Draw(Camera* camera)
 		{
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
-			blocks_[i][j]->Draw(camera, texhandle);
+			blocks_[i][j]->Draw(camera, texhandle, form_[i][j]);
 		}
 	}
 }

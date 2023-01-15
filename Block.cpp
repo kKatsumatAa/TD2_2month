@@ -30,10 +30,18 @@ void Block::Updata(Vec3& pos)
 	worldTransform_.SetWorld();
 }
 
-void Block::Draw(Camera* camera, UINT64* texhandle)
+void Block::Draw(Camera* camera, UINT64* texhandle, int form)
 {
 	//‰¼•\Ž¦
-	draw->DrawCube3D(&worldTransform_, &camera->viewMat, &camera->projectionMat, { 1.0f,1.0f,1.0f,1.0f }, texhandle[0]);
+	XMFLOAT4 color;
+
+	if (form == Form::BLOCK) { color = { 1.0f,1.0f,1.0f,1.0f }; }
+	if (form == Form::BUTTON) { color = { 0,0,1.0f,1.0f }; }
+	if (form == Form::GEAR) { color = { 1.0f,1.0f,0,1.0f }; }
+	if (form == Form::GOAL) { color = { 1.0f,0,0,1.0f }; }
+
+
+	draw->DrawCube3D(&worldTransform_, &camera->viewMat, &camera->projectionMat, color, texhandle[0]);
 	//model_[0] = Model::LoadFromOBJ("sphere");
 	//draw[0].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, model_[0]);
 }

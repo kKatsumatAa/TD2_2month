@@ -40,10 +40,10 @@ private:
 
 	//ブロックの大きさ
 	Vec3 scale_;
-	
+
 	//座標
 	Vec3 pos_;
-	
+
 
 public:
 
@@ -56,7 +56,7 @@ public:
 
 	void Updata(Vec3& pos);
 
-	void Draw(Camera* camera,UINT64* texhandle);
+	void Draw(Camera* camera, UINT64* texhandle, int form);
 
 	void SetWorldPos(const Vec3& pos) { worldTransform_.trans = pos; };
 
@@ -64,7 +64,7 @@ public:
 	void OnCollision(Collider& collider)override;
 	//手と敵の判定用
 	void OnCollision2(Collider& collider)override;
-	
+
 	//ゲッター
 	const Vec3 GetPos(Vec3 pos) const { return pos_; };
 	const Vec3 GetScale(Vec3 scale) const { return scale_; };
