@@ -4,6 +4,7 @@
 #include <string>
 
 
+
 class BlockManager 
 {
 
@@ -15,7 +16,7 @@ public:
 	~BlockManager();
 
 	//初期化
-	void Initialize();
+	void Initialize(ConnectingEffectManager* connectEM);
 
 	//更新
 	void Update();
@@ -33,13 +34,13 @@ public:
 	bool GetPosIsButton(Vec3 pos);
 
 	//最初に繋ぐボタンを押したブロックを軸に登録する関数
-	void RegistAxisButton(const Vec3& pos, bool isConnect);
+	void RegistAxisButton(const Vec3& pos);
 
 	//ブロック同士をつなぐ更新関数
-	void UpdateConnect(Vec3 pos, bool isConnect);
+	void UpdateConnect(Vec3 pos);
 
 	//繋ぐ際に離したところが軸以外のボタンかどうか
-	bool CheckAxisButton(Vec3 pos, bool isConnect);
+	bool CheckAxisButton(Vec3 pos);
 
 	//繋がれているブロックを全部解除する
 	void ReleseConectedBlock();
@@ -125,9 +126,13 @@ private:
 	bool isLeftRolling;
 
 	int rotateCount;
-	const int rotateCountMax = 30;
+	const int rotateCountMax = 120;
 
 	float angle_;
+
+	Vec3 distancePos[blockWidth][blockHeight];
+	Vec3 distancePosPlayer;
 	
+	ConnectingEffectManager* connectEM;
 };
 

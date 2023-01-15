@@ -8,11 +8,13 @@ Block::~Block()
 
 }
 
-void Block::Initialize()
+void Block::Initialize(ConnectingEffectManager* connectEM)
 {
 	//assert(model);
 	//model_ = model;
 	//this->debugText_ = debugText_;
+
+	this->connectEM = connectEM;
 
 	worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
 	worldTransform_.SetWorld();

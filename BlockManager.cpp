@@ -12,8 +12,9 @@ BlockManager::~BlockManager()
 }
 
 //初期化
-void BlockManager::Initialize()
+void BlockManager::Initialize(ConnectingEffectManager* connectEM)
 {
+	this->connectEM = connectEM;
 
 	//std::unique_ptr<Block> newBullet = std::make_unique<Block>();
 
@@ -61,13 +62,17 @@ void BlockManager::Initialize()
 			//worldmats_[i][j]->rot = { 0.0f,0.0f,0.0f };
 
 
-			blocks_[i][j]->Initialize();
+			blocks_[i][j]->Initialize(connectEM);
 
 			//ブロックの種類を設定
-			if (i == 1 && j == 1)
+			if (i == 1 && j == 1 || i == 2 && j == 2)
 			{
 				form_[i][j] = Form::BUTTON;
 			}
+			/*else if (i % 3 == 0 && j % 3 == 0)
+			{
+				form_[i][j] = Form::NONE;
+			}*/
 			else
 			{
 				form_[i][j] = Form::BLOCK;
@@ -90,7 +95,7 @@ void BlockManager::Initialize()
 
 			worldmats_[i][j].SetWorld();
 
-			block_->Initialize();
+			block_->Initialize(connectEM);
 
 			//軸になっているかどうか
 			isAxis_[i][j] = false;
@@ -114,7 +119,7 @@ void BlockManager::Update()
 			if (i >= 0)
 			{
 				//blocks_[i][j]->GetWorldTransForm()->trans.x = i * (scale_.x * 1);
-				worldmats_[i][j].trans.x = i * (worldmats_[i][j].scale.x * 2.0f);
+				//worldmats_[i][j].trans.x = i * (worldmats_[i][j].scale.x * 2.0f);
 
 				//transforms[i][j].x += 0.001f;
 
@@ -129,7 +134,7 @@ void BlockManager::Update()
 					//worldmats_[i][j]->SetWorld();
 			}
 
-			
+
 
 			//X座標の一つ前の番号を保存
 			prevBlockY = j;
@@ -159,6 +164,11 @@ void BlockManager::Draw(Camera* camera)
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
 			blocks_[i][j]->Draw(camera, texhandle, form_[i][j]);
+
+			if (action_[i][j] == Action::Connect)
+			{
+				connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 40, 1);
+			}
 		}
 	}
 }
@@ -172,8 +182,8 @@ bool BlockManager::CheckPlayerOnBlock(Vec3 pos)
 		for (int j = 0; j < blockHeight; j++)
 		{
 			//プレイヤーがブロックの上にいるかどうか
-			if (worldTransform_[i][j].trans.x - blockRadius_ < pos.x && worldTransform_[i][j].trans.x + blockRadius_ > pos.x
-				&& worldTransform_[i][j].trans.z - blockRadius_ < pos.z && worldTransform_[i][j].trans.z + blockRadius_ > pos.z)
+			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
+				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
 				result = true;
 			}
@@ -194,12 +204,13 @@ bool BlockManager::GetPosIsBlock(Vec3 pos)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
+
 			//プレイヤーがブロックの上にいるかどうか
-			if (worldTransform_[i][j].trans.x - blockRadius_ < pos.x && worldTransform_[i][j].trans.x + blockRadius_ > pos.x
-				&& worldTransform_[i][j].trans.z - blockRadius_ < pos.z && worldTransform_[i][j].trans.z + blockRadius_ > pos.z)
+			if (worldmats_[i][j].trans.x - blockRadius_ <= pos.x && worldmats_[i][j].trans.x + blockRadius_ >= pos.x
+				&& worldmats_[i][j].trans.z - blockRadius_ <= pos.z && worldmats_[i][j].trans.z + blockRadius_ >= pos.z)
 			{
 				//そのブロックの形状は普通のブロックかどうか
-				if (form_[i][j] == Form::BLOCK)
+				if (form_[i][j] != Form::NONE)
 				{
 					return true;
 				}
@@ -208,13 +219,11 @@ bool BlockManager::GetPosIsBlock(Vec3 pos)
 					return false;
 				}
 			}
-			//プレイヤーがどのブロックにもいない場合
-			else
-			{
-				return false;
-			}
 		}
 	}
+
+	//playerがどのブロックにもいない
+	return false;
 }
 
 //ボタンがあるかどうか
@@ -225,8 +234,8 @@ bool BlockManager::GetPosIsButton(Vec3 pos)
 		for (int j = 0; j < blockHeight; j++)
 		{
 			//プレイヤーが指定のブロックの上にいるかどうか
-			if (worldTransform_[i][j].trans.x - blockRadius_ < pos.x && worldTransform_[i][j].trans.x + blockRadius_ > pos.x
-				&& worldTransform_[i][j].trans.z - blockRadius_ < pos.z && worldTransform_[i][j].trans.z + blockRadius_ > pos.z)
+			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
+				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
 				//そのブロックの形状はボタンかどうか
 				if (form_[i][j] == Form::BUTTON)
@@ -238,127 +247,118 @@ bool BlockManager::GetPosIsButton(Vec3 pos)
 					return false;
 				}
 			}
-			//プレイヤーがどのブロックにもいない場合
-			else
-			{
-				return false;
-			}
 		}
 	}
+
+	//プレイヤーがどのブロックにもいない場合
+	return false;
+
 }
 
 //最初に繋ぐボタンを押したブロックを軸に登録する関数
-void BlockManager::RegistAxisButton(const Vec3& pos, bool isConnect)
+void BlockManager::RegistAxisButton(const Vec3& pos)
 {
 	//最初にボタンを押したブロックを軸に登録する関数
 	//引数で受け取ったプレイヤーの座標をもとに現在位置のボタンをONにする
 
 	//プレイヤーの位置にあるブロックを軸にする
 
-	if (isConnect == true)
+
+	for (int i = 0; i < blockWidth; i++)
 	{
-		for (int i = 0; i < blockWidth; i++)
+		for (int j = 0; j < blockHeight; j++)
 		{
-			for (int j = 0; j < blockHeight; j++)
+			//プレイヤーが指定のブロックの上にいるかどうか
+			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
+				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
-				//プレイヤーが指定のブロックの上にいるかどうか
-				if (worldTransform_[i][j].trans.x - blockRadius_ < pos.x && worldTransform_[i][j].trans.x + blockRadius_ > pos.x
-					&& worldTransform_[i][j].trans.z - blockRadius_ < pos.z && worldTransform_[i][j].trans.z + blockRadius_ > pos.z)
+				//そのブロックの形状はボタンかどうか
+				if (form_[i][j] == Form::BUTTON && isAxis_[i][j] == false)
 				{
-					//そのブロックの形状はボタンかどうか
-					if (form_[i][j] == Form::BUTTON && isAxis_[i][j] == false)
-					{
-						//軸登録する
-						isAxis_[i][j] = true;
-						//軸のブロックの座標を得る
-						axis_pos_.x = worldmats_[i][j].trans.x;
-						axis_pos_.y = worldmats_[i][j].trans.y;
-						axis_pos_.z = worldmats_[i][j].trans.z;
-					}
-					else {}
+					//軸登録する
+					isAxis_[i][j] = true;
+					//軸のブロックの座標を得る
+					axis_pos_.x = worldmats_[i][j].trans.x;
+					axis_pos_.y = worldmats_[i][j].trans.y;
+					axis_pos_.z = worldmats_[i][j].trans.z;
 				}
-				//プレイヤーがどのブロックにもいない場合
 				else {}
 			}
+			//プレイヤーがどのブロックにもいない場合
+			else {}
 		}
 	}
 
 }
 
 //ブロック同士をつなぐ更新関数
-void BlockManager::UpdateConnect(Vec3 pos, bool isConnect)
+void BlockManager::UpdateConnect(Vec3 pos)
 {
-	if (isConnect == true)
+	for (int i = 0; i < blockWidth; i++)
 	{
-		for (int i = 0; i < blockWidth; i++)
+		for (int j = 0; j < blockHeight; j++)
 		{
-			for (int j = 0; j < blockHeight; j++)
+			//プレイヤーが指定のブロックの上にいるかどうか
+			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
+				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
-				//プレイヤーが指定のブロックの上にいるかどうか
-				if (worldTransform_[i][j].trans.x - blockRadius_ < pos.x && worldTransform_[i][j].trans.x + blockRadius_ > pos.x
-					&& worldTransform_[i][j].trans.z - blockRadius_ < pos.z && worldTransform_[i][j].trans.z + blockRadius_ > pos.z)
-				{
-					//繋ぎはじめ
-					//ボタンかつ繋がっていなければ現在位置をつなぐ状態にする
-					if (form_[i][j] == Form::BUTTON && action_[i][j] == Action::None)
-					{
-						action_[i][j] = Action::Connect;
-					}
+				action_[i][j] = Action::Connect;
 
-					//繋ぐ処理(右だけテスト)
-					if (KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHT) && i < blockWidth - 1 && changedAction_ == true && isChanged_ == true)
-					{
-						//前ブロックが繋がっていれば繋げる
-						if (action_[i][j] == Action::Connect)
-						{
-							if (form_[i + 1][j] == Form::BLOCK)
-							{
-								//ブロックなら繋げる
-								action_[i + 1][j] = Action::Connect;
-								isChanged_ = false;
-							}
-							else if (form_[i + 1][j] == Form::GEAR)
-							{
-								//ギアなら繋げて止める
-								action_[i + 1][j] = Action::Connect;
-								isChanged_ = false;
-								changedAction_ = false;
-							}
-						}
-					}
-				}
+				////繋ぎはじめ
+				////ボタンかつ繋がっていなければ現在位置をつなぐ状態にする
+				//if (form_[i][j] == Form::BUTTON && action_[i][j] == Action::None)
+				//{
+				//	action_[i][j] = Action::Connect;
+				//}
 
+				////繋ぐ処理(右だけテスト)
+				//if (KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHT) && i < blockWidth - 1)
+				//{
+				//	//前ブロックが繋がっていれば繋げる
+				//	if (action_[i][j] == Action::Connect)
+				//	{
+				//		if (form_[i + 1][j] == Form::BLOCK)
+				//		{
+				//			//ブロックなら繋げる
+				//			action_[i + 1][j] = Action::Connect;
+				//			isChanged_ = false;
+				//		}
+				//		else if (form_[i + 1][j] == Form::GEAR)
+				//		{
+				//			//ギアなら繋げて止める
+				//			action_[i + 1][j] = Action::Connect;
+				//			isChanged_ = false;
+				//			changedAction_ = false;
+				//		}
+				//	}
+				//}
 			}
+
 		}
 	}
 }
 
 //繋ぐ際に離したところが軸以外のボタンかどうか
-bool BlockManager::CheckAxisButton(Vec3 pos, bool isConnect)
+bool BlockManager::CheckAxisButton(Vec3 pos)
 {
-	if (isConnect == true)
+	for (int i = 0; i < blockWidth; i++)
 	{
-		for (int i = 0; i < blockWidth; i++)
+		for (int j = 0; j < blockHeight; j++)
 		{
-			for (int j = 0; j < blockHeight; j++)
+			//プレイヤーがいるブロック内において
+			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
+				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
-				//プレイヤーがいるブロック内において
-				if (worldTransform_[i][j].trans.x - blockRadius_ < pos.x && worldTransform_[i][j].trans.x + blockRadius_ > pos.x
-					&& worldTransform_[i][j].trans.z - blockRadius_ < pos.z && worldTransform_[i][j].trans.z + blockRadius_ > pos.z)
+				if (isAxis_[i][j] == false && form_[i][j] == Form::BUTTON)
 				{
-					//現在のブロックが軸登録されているならfalse
-					if (isAxis_[i][j] == true)
-					{
-						return false;
-					}
-					else  if (isAxis_[i][j] == false)
-					{
-						return true;
-					}
+					return true;
 				}
 			}
 		}
 	}
+
+	//現在のブロックが軸登録されているならfalse
+	return false;
 }
 
 //繋がれているブロックを全部解除する
@@ -414,7 +414,7 @@ void BlockManager::UpdateRotateRight(Vec3& rotatePos)
 						worldmats_[i][j].trans.z += sinf(LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
 							EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos.z;
 
-						
+
 					}
 				}
 			}
@@ -430,8 +430,8 @@ void BlockManager::UpdateRotateRight(Vec3& rotatePos)
 
 void BlockManager::UpdateRotateLeft(Vec3& rotatePos)
 {
-	
-	
+
+
 }
 
 void BlockManager::UpdateRotate(Vec3& rotatePos)
@@ -442,6 +442,16 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		isRightRolling = true;
 		rotateCount = 0;
 		angle_ = 0;
+
+		for (int i = 0; i < blockWidth; i++)
+		{
+			for (int j = 0; j < blockHeight; j++)
+			{
+				distancePos[i][j] = worldmats_[i][j].trans - axis_pos_;
+			}
+		}
+
+		distancePosPlayer = rotatePos - axis_pos_;
 	}
 
 	if (isRightRolling == false && KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW))
@@ -449,43 +459,46 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		isLeftRolling = true;
 		rotateCount = 0;
 		angle_ = 0;
+
+		for (int i = 0; i < blockWidth; i++)
+		{
+			for (int j = 0; j < blockHeight; j++)
+			{
+				distancePos[i][j] = worldmats_[i][j].trans - axis_pos_;
+			}
+		}
+
+		distancePosPlayer = rotatePos - axis_pos_;
 	}
 
 	if (isRightRolling == true)
 	{
+
+
 		//角度が必要(前にやった円運動が参考になるかも)
 		for (int i = 0; i < blockWidth; i++)
 		{
 			for (int j = 0; j < blockHeight; j++)
 			{
-				if (isAxis_[i][j] == true)
+
+				//もしつながっているなら
+				if (action_[i][j] == Action::Connect && isAxis_[i][j] == false)
 				{
-					//もしつながっているなら
-					if (action_[i][j] == Action::Connect)
-					{
-						//回転処理
-						Vec3 distancePos;
+					//ブロックの回転
+					worldmats_[i][j].trans.x = axis_pos_.x + cosf(LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
+						EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos[i][j].x;
 
-						distancePos = worldmats_[i][j].trans - axis_pos_;
+					worldmats_[i][j].trans.z = axis_pos_.z + sinf(LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
+						EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos[i][j].z;
 
-						//ブロックの回転
-						worldmats_[i][j].trans.x += cosf(LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
-							EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos.x;
+					//プレイヤーの回転
+					rotatePos.x = axis_pos_.x + cosf(LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
+						EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePosPlayer.x;
 
-						worldmats_[i][j].trans.z += sinf(LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
-							EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos.z;
-
-						//プレイヤーの回転
-						rotatePos.x += cosf(LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
-							EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos.x;
-
-						rotatePos.z += sinf(LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
-							EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos.z;
-
-						
-
-					}
+					rotatePos.z = axis_pos_.z + sinf(LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
+						EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePosPlayer.z;
 				}
+
 			}
 		}
 
@@ -498,37 +511,31 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 	if (isLeftRolling == true)
 	{
+
+
 		//角度が必要(前にやった円運動が参考になるかも)
 		for (int i = 0; i < blockWidth; i++)
 		{
 			for (int j = 0; j < blockHeight; j++)
 			{
-				if (isAxis_[i][j] == true)
+				//もしつながっているなら
+				if (action_[i][j] == Action::Connect && isAxis_[i][j] == false)
 				{
-					//もしつながっているなら
-					if (action_[i][j] == Action::Connect)
-					{
-						//回転処理
-						Vec3 distancePos;
+					//ブロックの回転
+					worldmats_[i][j].trans.x = axis_pos_.x + cosf(LerpVec3({ angle_, 0, 0 }, { pi / 2.0f,0,0 },
+						EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos[i][j].x;
 
-						distancePos = worldmats_[i][j].trans - axis_pos_;
+					worldmats_[i][j].trans.z = axis_pos_.z + sinf(LerpVec3({ angle_, 0, 0 }, { pi / 2.0f,0,0 },
+						EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos[i][j].z;
 
-						//ブロックの回転
-						worldmats_[i][j].trans.x += cosf(LerpVec3({ angle_, 0, 0 }, { pi / 2.0f,0,0 },
-							EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos.x;
+					//プレイヤーの回転
+					rotatePos.x = axis_pos_.x + cosf(LerpVec3({ angle_, 0, 0 }, { pi / 2.0f,0,0 },
+						EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePosPlayer.x;
 
-						worldmats_[i][j].trans.z += sinf(LerpVec3({ angle_, 0, 0 }, { pi / 2.0f,0,0 },
-							EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos.z;
-
-						//プレイヤーの回転
-						rotatePos.x += cosf(LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
-							EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos.x;
-
-						rotatePos.z += sinf(LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
-							EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePos.z;
+					rotatePos.z = axis_pos_.z + sinf(LerpVec3({ angle_, 0, 0 }, { pi / 2.0f,0,0 },
+						EaseOut((float)rotateCount / (float)rotateCountMax)).x) * distancePosPlayer.z;
 
 
-					}
 				}
 			}
 		}
