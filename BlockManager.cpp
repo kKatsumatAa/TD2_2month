@@ -505,3 +505,27 @@ bool BlockManager::GetIsRollingLeftorRight()
 	}
 	return false;
 }
+
+bool BlockManager::GetIsGoal(Vec3& pos)
+{
+
+	for (int i = 0; i < blockWidth; i++)
+	{
+		for (int j = 0; j < blockHeight; j++)
+		{
+			//プレイヤーが指定のブロックの上にいるかどうか
+			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
+				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
+			{
+				//そのブロックの形状はボタンかどうか
+				if (form_[i][j] == Form::GOAL)
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	//プレイヤーがどのブロックにもいない場合
+	return false;
+}

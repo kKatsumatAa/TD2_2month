@@ -51,6 +51,9 @@ public:
 	//‰ñ“]’†‚¾‚Á‚½‚ç
 	bool GetIsRollingLeftorRight();
 
+	//ƒS[ƒ‹‚ª‚ ‚é‚©‚Ç‚¤‚©
+	bool GetIsGoal(Vec3& Pos);
+
 
 public:
 
