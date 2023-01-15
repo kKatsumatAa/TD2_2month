@@ -16,12 +16,14 @@ private:
 
 	Object obj;
 
+	XMFLOAT4 color;
+
 public:
 	~ConnectingEffect();
 
-	void Initialize(Vec3 pos, Vec3 rot, float length, int lifeTime, float t);
+	void Initialize(Vec3 pos, Vec3 rot, float length, int lifeTime, float t, XMFLOAT4 color);
 	void Update();
-	void Draw(Camera& camera,bool isAlpha);
+	void Draw(Camera& camera, bool isAlpha);
 
 	bool GetIsAlive() { return isAlive; }
 	void SetIsAlive(bool is) { isAlive = is; }
@@ -44,13 +46,13 @@ private:
 	float radius;
 	int lifeTime;
 	int num;
-	
+
 	int timer = 0;
 
 public:
 	~ConnectingEffectSet();
 
-	void Initialize(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num);
+	void Initialize(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num, XMFLOAT4 color);
 	void Update();
 	void Draw(Camera& camera);
 
@@ -58,8 +60,8 @@ public:
 
 	bool GetIsEnd() { return isEnd; }
 
-	void GenerateConnectingEffect(Vec3 pos, Vec3 rot, float length, int lifeTime, float t);
-	void GenerateRandomConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num);
+	void GenerateConnectingEffect(Vec3 pos, Vec3 rot, float length, int lifeTime, float t, XMFLOAT4 color);
+	void GenerateRandomConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num, XMFLOAT4 color);
 };
 
 class ConnectingEffectManager
@@ -77,8 +79,8 @@ public:
 	void Update();
 	void Draw(Camera& camera);
 
-	void GenerateConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num);
-	void GenerateRandomConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num);
+	void GenerateConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num, XMFLOAT4 color);
+	void GenerateRandomConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num, XMFLOAT4 color);
 };
 
 

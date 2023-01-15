@@ -6,7 +6,7 @@ ConnectingEffect::~ConnectingEffect()
 
 }
 
-void ConnectingEffect::Initialize(Vec3 pos, Vec3 rot, float length, int lifeTime, float t)
+void ConnectingEffect::Initialize(Vec3 pos, Vec3 rot, float length, int lifeTime, float t, XMFLOAT4 color)
 {
 	worldTransform.rot = rot;
 	worldTransform.trans = pos;
@@ -16,6 +16,7 @@ void ConnectingEffect::Initialize(Vec3 pos, Vec3 rot, float length, int lifeTime
 	worldTransform.SetWorld();
 
 	this->lifeTime = lifeTime;
+	this->color = color;
 
 	this->t = t;
 }
@@ -35,14 +36,9 @@ void ConnectingEffect::Update()
 
 void ConnectingEffect::Draw(Camera& camera, bool isAlpha)
 {
-	XMFLOAT4 color;
-	if (isAlpha)
+	if (!isAlpha)
 	{
-		color = { 1.0f,1.0f,0.0f,1.0f };
-	}
-	else
-	{
-		color = { 1.0f,1.0f,0.0f,0.4f };
+		color.w = 0.4f;
 	}
 
 	obj.DrawCube3D(&worldTransform, &camera.viewMat, &camera.projectionMat, color);
@@ -50,16 +46,16 @@ void ConnectingEffect::Draw(Camera& camera, bool isAlpha)
 
 
 //----------------------------------------------------------------------------------------------------------
-void ConnectingEffectSet::GenerateConnectingEffect(Vec3 pos, Vec3 rot, float length, int lifeTime, float t)
+void ConnectingEffectSet::GenerateConnectingEffect(Vec3 pos, Vec3 rot, float length, int lifeTime, float t, XMFLOAT4 color)
 {
 	//ãÖÇê∂ê¨ÅAèâä˙âª
 	std::unique_ptr<ConnectingEffect> connectE = std::make_unique<ConnectingEffect>();
-	connectE->Initialize(pos, rot, length, lifeTime, t);
+	connectE->Initialize(pos, rot, length, lifeTime, t, color);
 	//ãÖÇìoò^
 	connectingEffects.push_back(std::move(connectE));
 }
 
-void ConnectingEffectSet::GenerateRandomConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int numMax)
+void ConnectingEffectSet::GenerateRandomConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int numMax, XMFLOAT4 color)
 {
 	static std::uniform_real_distribution<float> posDist(-radius, radius);
 	static std::uniform_real_distribution<float> lengthDist(lengthMax / 2.0f, lengthMax);
@@ -76,7 +72,7 @@ void ConnectingEffectSet::GenerateRandomConnectingEffect(Vec3 pos, float radius,
 			oldRot = { rotDist(engine),rotDist(engine),rotDist(engine) };
 			oldLength = lengthDist(engine);
 
-			GenerateConnectingEffect(oldPos, oldRot, oldLength, (float)lifeTimeTmp / (float)numMax, (float)i / (float)numMax);
+			GenerateConnectingEffect(oldPos, oldRot, oldLength, (float)lifeTimeTmp / (float)numMax, (float)i / (float)numMax, color);
 		}
 		else
 		{
@@ -102,7 +98,7 @@ void ConnectingEffectSet::GenerateRandomConnectingEffect(Vec3 pos, float radius,
 
 			oldPos += vec;
 
-			GenerateConnectingEffect(oldPos, oldRot, oldLength, lifeTimeTmp, (float)i / (float)numMax);
+			GenerateConnectingEffect(oldPos, oldRot, oldLength, lifeTimeTmp, (float)i / (float)numMax, color);
 		}
 	}
 }
@@ -112,7 +108,7 @@ ConnectingEffectSet::~ConnectingEffectSet()
 	connectingEffects.clear();
 }
 
-void ConnectingEffectSet::Initialize(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num)
+void ConnectingEffectSet::Initialize(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num, XMFLOAT4 color)
 {
 	count = 0;
 	this->countMax = num;
@@ -124,7 +120,7 @@ void ConnectingEffectSet::Initialize(Vec3 pos, float radius, float lengthMax, in
 	lifeTime = lifeTimeMax;
 	this->num = num;
 
-	GenerateRandomConnectingEffect(pos, radius, lengthMax, lifeTimeMax, num);
+	GenerateRandomConnectingEffect(pos, radius, lengthMax, lifeTimeMax, num, color);
 
 	//ç≈èâÇÃÉ|ÉCÉìÉ^
 	itr = connectingEffects.begin();
@@ -213,23 +209,23 @@ void ConnectingEffectManager::Draw(Camera& camera)
 	}
 }
 
-void ConnectingEffectManager::GenerateConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num)
+void ConnectingEffectManager::GenerateConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num, XMFLOAT4 color)
 {
 	{
 		//ãÖÇê∂ê¨ÅAèâä˙âª
 		std::unique_ptr<ConnectingEffectSet> connectSet = std::make_unique<ConnectingEffectSet>();
-		connectSet->Initialize(pos, radius, lengthMax, lifeTimeMax, num);
+		connectSet->Initialize(pos, radius, lengthMax, lifeTimeMax, num, color);
 		//ãÖÇìoò^
 		connectingEffects_.push_back(std::move(connectSet));
 	}
 }
 
-void ConnectingEffectManager::GenerateRandomConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num)
+void ConnectingEffectManager::GenerateRandomConnectingEffect(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num, XMFLOAT4 color)
 {
 	static std::uniform_int_distribution<int> numDist(1, num);
 	num = numDist(engine);
 
-	GenerateConnectingEffect(pos, radius, lengthMax, lifeTimeMax, num);
+	GenerateConnectingEffect(pos, radius, lengthMax, lifeTimeMax, num, color);
 }
 
 
