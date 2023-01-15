@@ -24,6 +24,8 @@ public:
 	void SetShake(int time, float length);
 	float GetShake();
 
+	bool GetIsShaking();
+
 	void Initialize();
 
 	void Update();

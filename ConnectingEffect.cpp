@@ -1,6 +1,11 @@
 #include "ConnectingEffect.h"
 
 
+ConnectingEffect::~ConnectingEffect()
+{
+
+}
+
 void ConnectingEffect::Initialize(Vec3 pos, Vec3 rot, float length, int lifeTime, float t)
 {
 	worldTransform.rot = rot;
@@ -71,7 +76,7 @@ void ConnectingEffectSet::GenerateRandomConnectingEffect(Vec3 pos, float radius,
 			oldRot = { rotDist(engine),rotDist(engine),rotDist(engine) };
 			oldLength = lengthDist(engine);
 
-			GenerateConnectingEffect(oldPos, oldRot, oldLength, lifeTimeTmp, (float)i / (float)numMax);
+			GenerateConnectingEffect(oldPos, oldRot, oldLength, (float)lifeTimeTmp / (float)numMax, (float)i / (float)numMax);
 		}
 		else
 		{
@@ -100,6 +105,11 @@ void ConnectingEffectSet::GenerateRandomConnectingEffect(Vec3 pos, float radius,
 			GenerateConnectingEffect(oldPos, oldRot, oldLength, lifeTimeTmp, (float)i / (float)numMax);
 		}
 	}
+}
+
+ConnectingEffectSet::~ConnectingEffectSet()
+{
+	connectingEffects.clear();
 }
 
 void ConnectingEffectSet::Initialize(Vec3 pos, float radius, float lengthMax, int lifeTimeMax, int num)
@@ -146,7 +156,7 @@ void ConnectingEffectSet::Update()
 	{
 		timer++;
 
-		if (timer % 5 == 0)
+		if (timer % 5 == 4)
 		{
 			connectingEffects.erase(itr);
 			itr = connectingEffects.begin();
@@ -156,7 +166,7 @@ void ConnectingEffectSet::Update()
 				isEnd = true;
 			}
 		}
-		
+
 	}
 }
 
@@ -165,7 +175,7 @@ void ConnectingEffectSet::Draw(Camera& camera)
 {
 	for (std::unique_ptr<ConnectingEffect>& connectEffects : this->connectingEffects)
 	{
-		connectEffects->Draw(camera,!isFinal);
+		connectEffects->Draw(camera, !isFinal);
 	}
 }
 

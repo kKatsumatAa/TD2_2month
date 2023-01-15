@@ -16,7 +16,7 @@ public:
 	~BlockManager();
 
 	//‰Šú‰»
-	void Initialize(ConnectingEffectManager* connectEM);
+	void Initialize(ConnectingEffectManager* connectEM,Camera * camera);
 
 	//XV
 	void Update();
@@ -64,6 +64,8 @@ public:
 
 
 private:
+	Camera* camera;
+
 	UINT64 texhandle[10];
 
 	const int width = 13;
@@ -124,7 +126,7 @@ private:
 	bool isLeftRolling;
 
 	int rotateCount;
-	const int rotateCountMax = 120;
+	const int rotateCountMax = 40;
 
 	float angle_;
 
@@ -132,5 +134,8 @@ private:
 	Vec3 distancePosPlayer;
 	
 	ConnectingEffectManager* connectEM;
+
+	int effectCount = 0;
+	const int effectCountMax = 5;
 };
 

@@ -41,18 +41,26 @@ void SceneTitle::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
-
+	scene->blockManager->Initialize(scene->connectEM.get(), scene->camera.get());
+	scene->camera->Initialize();
+	scene->connectEM->Initialize();
+	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->model[0], &scene->debugText);
 }
 
 void SceneGame::Update()
 {
+	scene->blockManager->Update();
 
+	scene->connectEM->Update();
+
+	scene->player->Update();
 
 	//シーン遷移
-	/*if ()
+	if (scene->player->isGoal)
 	{
 		scene->ChangeState(new SceneClear);
 	}
+	/*
 	else if ()
 	{
 		scene->ChangeState(new SceneGameOver);
@@ -61,6 +69,10 @@ void SceneGame::Update()
 
 void SceneGame::Draw()
 {
+	scene->blockManager->Draw(scene->camera.get());
+
+	scene->player->Draw(scene->camera.get());
+	scene->connectEM->Draw(*scene->camera.get());
 }
 
 void SceneGame::DrawSprite()
@@ -92,6 +104,7 @@ void SceneGameOver::Draw()
 
 void SceneGameOver::DrawSprite()
 {
+
 }
 
 
@@ -105,10 +118,10 @@ void SceneClear::Update()
 
 
 	//シーン遷移
-	/*if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
+	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
-		scene->ChangeState(new SceneLoad);
-	}*/
+		scene->ChangeState(new SceneGame);
+	}
 }
 
 void SceneClear::Draw()
@@ -117,6 +130,7 @@ void SceneClear::Draw()
 
 void SceneClear::DrawSprite()
 {
+	scene->debugText.Print("clear", 10, 10);
 }
 
 
@@ -198,7 +212,7 @@ void Scene::Initialize()
 	connectEM->Initialize();
 
 	blockManager = new BlockManager();
-	blockManager->Initialize(connectEM.get());
+	blockManager->Initialize(connectEM.get(), camera.get());
 
 	//Light
 	LightManager::StaticInitialize();
@@ -213,17 +227,16 @@ void Scene::Initialize()
 	//カメラ
 	camera = std::make_unique<Camera>();
 	camera->Initialize();
-	camera->SetEye({ 0, 20, -50 });
+	camera->SetEye({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 40, -50 });
+	camera->SetTarget({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 0, 0 });
 	camera->UpdateViewMatrix();
 
-
-
-	//電気エフェクト
+	//player
 	player = std::make_unique<Player>();
 	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, model[0], &debugText);
 
 	//ステート変更
-	ChangeState(new SceneLoad);
+	ChangeState(new SceneGame);
 }
 
 int count = 0;
@@ -239,12 +252,9 @@ void Scene::Update()
 
 	}
 
-	blockManager->Update();
+	camera->Update();
+
 	state->Update();
-
-	connectEM->Update();
-
-	player->Update();
 
 
 #ifdef _DEBUG
@@ -258,12 +268,6 @@ void Scene::Update()
 void Scene::Draw()
 {
 	state->Draw();
-	blockManager->Draw(camera.get());
-
-	player->Draw(camera.get());
-	connectEM->Draw(*camera.get());
-
-	blockManager->Draw(camera.get());
 
 	//imgui
 	imGuiManager->Draw();
