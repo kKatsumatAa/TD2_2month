@@ -115,7 +115,7 @@ void BlockManager::Update()
 			if (i >= 0)
 			{
 				//blocks_[i][j]->GetWorldTransForm()->trans.x = i * (scale_.x * 1);
-				worldmats_[i][j].trans.x = i * (worldmats_[i][j].scale.x * 1);
+				worldmats_[i][j].trans.x = i * (worldmats_[i][j].scale.x * 2.0f);
 
 			//transforms[i][j].x += 0.001f;
 
