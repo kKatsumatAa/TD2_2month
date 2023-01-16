@@ -42,6 +42,7 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 
 	worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
 	worldTransform_.trans = { 0,moveDistance,0 };
+	posYTmp = moveDistance;
 	worldTransform_.SetWorld();
 
 	radius_ = scaleTmp;
@@ -112,24 +113,32 @@ void PlayerState::SetPlayer(Player* player)
 //--------------------------------------------------------------------------
 void StateNormalMoveP::Update()
 {
+	count++;
+
+	Vec3 trans = { player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z };
+
+	player->GetWorldTransForm()->trans = { trans.x ,player->posYTmp + sinf(count * 0.07f) ,trans.z };
+
 	//移動の場合(回転中は移動しない)
 	if ((KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) ||
-		KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW))
+		KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW)) ||
+		(KeyboardInput::GetInstance().KeyPush(DIK_A) || KeyboardInput::GetInstance().KeyPush(DIK_D) ||
+			KeyboardInput::GetInstance().KeyPush(DIK_W) || KeyboardInput::GetInstance().KeyPush(DIK_S))
 		&& player->isTurnNow == false)
 	{
-		if (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW))
+		if (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A))
 		{
 			player->moveEndPos = { player->GetWorldPos().x - player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
 		}
-		if (KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW))
+		if (KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D))
 		{
 			player->moveEndPos = { player->GetWorldPos().x + player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
 		}
-		if (KeyboardInput::GetInstance().KeyPush(DIK_UPARROW))
+		if (KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_W))
 		{
 			player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + player->moveDistance };
 		}
-		if (KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW))
+		if (KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW) || KeyboardInput::GetInstance().KeyPush(DIK_S))
 		{
 			player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + -player->moveDistance };
 		}
@@ -137,6 +146,8 @@ void StateNormalMoveP::Update()
 		//進んだ先にブロック
 		if (player->blockM->GetPosIsBlock(player->moveEndPos))
 		{
+			player->isMove = true;
+
 			//フラグ、スピードなどをセット
 			player->SetVelocity((player->moveEndPos - player->GetWorldPos()).GetNormalized());
 			player->moveStartPos = (player->GetWorldPos());
@@ -172,6 +183,7 @@ void StateMoveP::Update()
 	//移動し終わったらステート戻す
 	if (count >= countMax)
 	{
+		player->isMove = false;
 		player->ChangeStateMove(new StateNormalMoveP);
 	}
 }
@@ -188,7 +200,7 @@ void StateNormalConTurP::Update()
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
 		//ボタンがあったら
-		if (player->blockM->GetPosIsButton(player->GetWorldPos()))
+		if (player->blockM->GetPosIsButton(player->GetWorldPos()) && !player->isMove)
 		{
 			//軸を登録
 			player->blockM->RegistAxisButton(player->GetWorldPos());

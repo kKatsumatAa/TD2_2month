@@ -23,6 +23,7 @@ public:
 class StateNormalMoveP : public PlayerState
 {
 private:
+	int count = 0;
 
 public:
 	void Update(/*Tutorial* tutorial = nullptr*/);
@@ -93,6 +94,9 @@ private:
 
 	/*Tutorial* tutorial;*/
 public:
+	float posYTmp = 0;
+
+
 	//外部からセットするブロックあるから動ける
 	bool isMove = false;
 	bool isWantToMove = false; //外部で何したいか参照してもらう
