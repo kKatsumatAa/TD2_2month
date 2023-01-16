@@ -158,10 +158,10 @@
     <ClCompile Include="ConstBuffTransform.cpp" />
     <ClCompile Include="DebugText.cpp" />
     <ClCompile Include="DirectX.cpp" />
+    <ClCompile Include="DirLight.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
     <ClCompile Include="KeyboardInput.cpp" />
-    <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="M4.cpp" />
     <ClCompile Include="main.cpp" />
@@ -204,9 +204,9 @@
     <ClInclude Include="ConstBuffTransform.h" />
     <ClInclude Include="DebugText.h" />
     <ClInclude Include="DirectX.h" />
+    <ClInclude Include="DirLight.h" />
     <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="KeyboardInput.h" />
-    <ClInclude Include="Light.h" />
     <ClInclude Include="LightManager.h" />
     <ClInclude Include="M4.h" />
     <ClInclude Include="Material.h" />
