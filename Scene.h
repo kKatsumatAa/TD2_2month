@@ -61,9 +61,11 @@ public:
 	//ƒ‰ƒCƒg
 	LightManager* lightManager = nullptr;
 
-	float pointLightPos[3] = { 0,0,0 };
-	float pointLightColor[3] = { 1.0f,1.0f,1.0f };
-	float pointLightAtten[3] = { 0.3f,0.1f,0.1f };
+	//ŠÛ‰e
+	float circleShadowDir[3] = { 0,-1,0 };
+	float circleShadowAtten[3] = { 0.5f,0.15f,0 };
+	float circleShadowFactorAngle[2] = { 0,0.7f };
+	float circleShadowDistance = 100.0f;
 
 
 	std::unique_ptr<Camera> camera;

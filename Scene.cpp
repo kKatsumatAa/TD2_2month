@@ -245,6 +245,15 @@ void Scene::Initialize()
 	//3Dオブジェクトにライトをセット(全体で一つを共有)
 	Object::SetLight(lightManager);
 	lightManager->SetDirLightActive(0, true);
+	lightManager->SetDirLightActive(1, false);
+	lightManager->SetDirLightActive(2, false);
+	//点光源
+	for (int i = 0; i < 6; i++)
+	{
+		lightManager->SetPointLightActive(i, false);
+	}
+	//丸影
+	lightManager->SetCircleShadowActive(0, true);
 
 	//カメラ
 	camera = std::make_unique<Camera>();
@@ -281,6 +290,27 @@ void Scene::Update()
 	{
 		//デモ
 		ImGui::ShowDemoWindow();
+
+		//丸影
+		lightManager->SetCircleShadowDir(0,
+			XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2],0 }));
+		lightManager->SetCircleShadowCasterPos(0,
+			XMFLOAT3({ player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z}));
+		lightManager->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
+		lightManager->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
+		lightManager->SetCircleShadowDistanceCasterLight(0, circleShadowDistance);
+
+		static bool a = true;
+		ImGui::Begin("circleShadow", &a, ImGuiWindowFlags_MenuBar);
+
+		ImGui::InputFloat3("circleShadowDir", circleShadowDir);
+		ImGui::InputFloat3("circleShadowAtten", circleShadowAtten);
+		ImGui::InputFloat2("circleShadowFactorAngle", circleShadowFactorAngle);
+		ImGui::InputFloat("distanceLight", &circleShadowDistance);
+
+
+		ImGui::End();
+		lightManager->Update();
 
 	}
 
