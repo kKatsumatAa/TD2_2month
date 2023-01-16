@@ -204,7 +204,7 @@ void StateNormalConTurP::Update()
 			Vec3 startScale = { player->GetRadius() * 2.0f,player->GetRadius() * 2.0f,player->GetRadius() * 2.0f };
 			Vec3 endScale = { player->GetRadius() * 0.1f,player->GetRadius() * 100.0f,player->GetRadius() * 0.1f };
 			player->connectE2M->GenerateConnectingEffect2(player->GetWorldPos(), startScale, endScale
-				, { 1.0f,1.0f,0,0.8f }, { 1.0f,1.0f,1.0f,0 }, 40);
+				, { 1.0f,1.0f,0,0.9f }, { 1.0f,1.0f,1.0f,0.3f }, 40);
 
 			player->ChangeStateTurnConnect(new StateConnectP);
 		}
@@ -235,7 +235,7 @@ void StateConnectP::Update()
 			Vec3 startScale = { player->GetRadius() * 2.0f,player->GetRadius() * 2.0f,player->GetRadius() * 2.0f };
 			Vec3 endScale = { player->GetRadius() * 0.1f,player->GetRadius() * 100.0f,player->GetRadius() * 0.1f };
 			player->connectE2M->GenerateConnectingEffect2(player->GetWorldPos(), startScale, endScale
-				, { 0.2f,0.1f,1.0f,0.8f }, { 1.0f,1.0f,1.0f,0 }, 40);
+				, { 0.2f,0.1f,1.0f,0.9f }, { 1.0f,1.0f,1.0f,0.3f }, 40);
 
 			player->ChangeStateTurnConnect(new StateTurnP);
 		}
