@@ -105,6 +105,8 @@ void StateNormalMoveP::Update()
 		KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW))
 		&& player->isTurnNow == false)
 	{
+		player->blockM->UpdateOverlap();
+
 		if (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW))
 		{
 			player->moveEndPos = { player->GetWorldPos().x - player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
@@ -131,6 +133,8 @@ void StateNormalMoveP::Update()
 			player->ChangeStateMove(new StateMoveP);
 		}
 	}
+
+	
 }
 
 void StateNormalMoveP::Draw(Camera* camera, Model* model)
@@ -233,6 +237,7 @@ void StateTurnP::Update()
 		player->playerSocket->FinishSocket(player->GetWorldPos());
 		player->ChangeStateTurnConnect(new StateNormalConTurP);
 	}
+
 }
 
 void StateTurnP::Draw(Camera* camera, Model* model)

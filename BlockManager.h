@@ -58,8 +58,19 @@ public:
 	//重なった時の処理
 	void UpdateOverlap();
 
+	//重なっていたブロックを元に戻す処理
+	void RepositBlock();
+
+
+
 	//ブロックとブロックの当たり判定
 	bool CollisionBlockToBlock(Vec3 blockPos, Vec3 pos);
+
+	//進む先に重なっているブロックがあるかどうか
+	//bool GetIsOverlapBlock(Vec3 pos);
+
+	//ブロックのリセット
+	void ResetBlock();
 
 public:
 
@@ -92,7 +103,10 @@ private:
 	WorldMat preWorldTransform_[blockWidth][blockHeight];*/
 
 	//状態変化変数
+	//現在の形
 	Form form_[blockWidth][blockHeight] = { Form::BLOCK };
+	//回転する前の形
+	Form beforeForm_[blockWidth][blockHeight] = { Form::BLOCK };
 
 	Action action_[blockWidth][blockHeight] = { Action::None };
 

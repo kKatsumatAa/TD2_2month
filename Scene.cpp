@@ -279,6 +279,8 @@ void Scene::Update()
 
 	camera->Update();
 
+	blockManager->Update();
+
 	state->Update();
 
 
