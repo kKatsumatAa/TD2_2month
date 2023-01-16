@@ -158,19 +158,19 @@ void BlockManager::Draw(Camera* camera)
 			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j]);
 
 
-			//if (action_[i][j] == Action::Connect && effectCount >= effectCountMax)
-			//{
-			//	if (isAxis_[i][j])
-			//	{
-			//		connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 35, 5, { 1.0f,0.3f,0.2f,1.0f });
-			//	}
-			//	else
-			//	{
-			//		connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 20, 3, { 1.0f,1.0f,0,1.0 });
-			//	}
+			if (action_[i][j] == Action::Connect && effectCount >= effectCountMax)
+			{
+				if (isAxis_[i][j])
+				{
+					connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 35, 5, { 1.0f,0.3f,0.2f,1.0f });
+				}
+				else
+				{
+					connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 20, 3, { 1.0f,1.0f,0,1.0 });
+				}
 
-			//	isEffect = true;
-			//}
+				isEffect = true;
+			}
 		}
 	}
 
