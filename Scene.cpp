@@ -41,12 +41,12 @@ void SceneTitle::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
-	scene->blockManager->Initialize(scene->connectEM.get(), scene->camera.get(), 
-		scene->model[1],scene->model[2], scene->model[3], scene->model[4]);
+	scene->blockManager->Initialize(scene->connectEM.get(), scene->camera.get(),
+		scene->model[1], scene->model[2], scene->model[3], scene->model[4]);
 	scene->camera->Initialize();
 	scene->connectEM->Initialize();
 	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
-		, scene->model[0], &scene->debugText);
+		, scene->connectE2M.get(), scene->model[0], &scene->debugText);
 	scene->playerSocket->Initialize(scene->model[0]);
 }
 
@@ -55,6 +55,7 @@ void SceneGame::Update()
 	scene->blockManager->Update();
 
 	scene->connectEM->Update();
+	scene->connectE2M->Update();
 
 	scene->player->Update();
 
@@ -80,6 +81,7 @@ void SceneGame::Draw()
 	scene->player->Draw(scene->camera.get());
 	scene->playerSocket->Draw(scene->camera.get());
 	scene->connectEM->Draw(*scene->camera.get());
+	scene->connectE2M->Draw(scene->camera.get());
 }
 
 void SceneGame::DrawSprite()
@@ -137,7 +139,7 @@ void SceneClear::Draw()
 
 void SceneClear::DrawSprite()
 {
-	scene->debugText.Print("clear", 10, 10,114514,5.0f);
+	scene->debugText.Print("clear", 10, 10, 114514, 5.0f);
 }
 
 
@@ -182,6 +184,7 @@ Scene::~Scene()
 	connectEM.reset();
 	player.reset();
 	playerSocket.reset();
+	connectE2M.reset();
 	imGuiManager->Finalize();
 	delete imGuiManager;
 	delete lightManager;
@@ -231,7 +234,7 @@ void Scene::Initialize()
 	connectEM->Initialize();
 
 	blockManager = new BlockManager();
-	blockManager->Initialize(connectEM.get(), camera.get(),model[1],model[2],model[3],model[4]);
+	blockManager->Initialize(connectEM.get(), camera.get(), model[1], model[2], model[3], model[4]);
 
 	//Light
 	LightManager::StaticInitialize();
@@ -250,13 +253,17 @@ void Scene::Initialize()
 	camera->SetTarget({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 0, 0 });
 	camera->UpdateViewMatrix();
 
-	//player
+	//playerSocket
 	playerSocket = std::make_unique<PlayerSocket>();
 	playerSocket->Initialize(model[0]);
 
+	//effect2
+	connectE2M = std::make_unique<ConnectingEffect2Manager>();
+	connectE2M->Initialize();
+
 	//player
 	player = std::make_unique<Player>();
-	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), model[0], &debugText);
+	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), model[0], &debugText);
 
 
 

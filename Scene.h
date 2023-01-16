@@ -72,6 +72,7 @@ public:
 
 	std::unique_ptr<Player> player;
 	std::unique_ptr<PlayerSocket> playerSocket;
+	std::unique_ptr<ConnectingEffect2Manager> connectE2M;
 
 	BlockManager* blockManager = nullptr;
 

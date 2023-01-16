@@ -154,6 +154,7 @@
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CollisionPrimitive.cpp" />
     <ClCompile Include="ConnectingEffect.cpp" />
+    <ClCompile Include="ConnectingEffect2.cpp" />
     <ClCompile Include="ConstBuffTransform.cpp" />
     <ClCompile Include="DebugText.cpp" />
     <ClCompile Include="DirectX.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="CollisionConfig.h" />
     <ClInclude Include="CollisionPrimitive.h" />
     <ClInclude Include="ConnectingEffect.h" />
+    <ClInclude Include="ConnectingEffect2.h" />
     <ClInclude Include="ConstBuffTransform.h" />
     <ClInclude Include="DebugText.h" />
     <ClInclude Include="DirectX.h" />
