@@ -52,6 +52,8 @@ private:
 	//ç¿ïW
 	Vec3 pos_;
 
+	XMFLOAT4 color;
+
 
 public:
 
@@ -65,7 +67,7 @@ public:
 
 	void Updata(Vec3& pos);
 
-	void Draw(Camera* camera, UINT64* texhandle, int form);
+	void Draw(Camera* camera, UINT64* texhandle, int form, Action action);
 
 	void SetWorldPos(const Vec3& pos) { worldTransform_.trans = pos; };
 

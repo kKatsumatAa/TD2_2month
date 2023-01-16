@@ -137,7 +137,7 @@ void SceneClear::Draw()
 
 void SceneClear::DrawSprite()
 {
-	scene->debugText.Print("clear", 10, 10);
+	scene->debugText.Print("clear", 10, 10,114514,5.0f);
 }
 
 
@@ -216,7 +216,7 @@ void Scene::Initialize()
 	//model
 	Model::StaticInitialize();
 
-	model[0] = Model::LoadFromOBJ("sphere");
+	model[0] = Model::LoadFromOBJ("Player");
 	model[1] = Model::LoadFromOBJ("Mesh_NormalTile_01");
 	model[2] = Model::LoadFromOBJ("Mesh_ButtonTile_01");
 	model[3] = Model::LoadFromOBJ("Mesh_GoalTile_01");
@@ -294,10 +294,6 @@ void Scene::Draw()
 {
 	state->Draw();
 
-	blockManager->Draw(camera.get());
-
-	player->Draw(camera.get());
-	connectEM->Draw(*camera.get());
 	//imgui
 	imGuiManager->Draw();
 }

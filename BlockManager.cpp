@@ -116,7 +116,7 @@ void BlockManager::Update()
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
-			
+
 			//ブロックの座標を設定
 			if (i >= 0)
 			{
@@ -169,18 +169,18 @@ void BlockManager::Draw(Camera* camera)
 			//Manager.cppで配列で定義したworldTransformの値をBlock.cppのDrawにセット
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
-			blocks_[i][j]->Draw(camera, texhandle, form_[i][j]);
+			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j]);
 
 
 			if (action_[i][j] == Action::Connect && effectCount >= effectCountMax)
 			{
 				if (isAxis_[i][j])
 				{
-					connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 35, 5, { 1.0f,0.3f,0.2f,1.0f });
+					connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 15, 5, { 1.0f,1.0f,0.2f,0.9f });
 				}
 				else
 				{
-					connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 20, 3, { 1.0f,1.0f,0,1.0 });
+					connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 7, 3, { 1.0f,1.0f,0,0.9f });
 				}
 
 				isEffect = true;
@@ -443,7 +443,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 	if (isRightRolling == true)
 	{
-
+		rotateCount++;
 
 		//角度が必要(前にやった円運動が参考になるかも)
 		for (int i = 0; i < blockWidth; i++)
@@ -474,7 +474,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 			}
 		}
 
-		rotateCount++;
+
 		if (rotateCount >= rotateCountMax)
 		{
 			isRightRolling = false;
@@ -484,7 +484,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 	if (isLeftRolling == true)
 	{
-
+		rotateCount++;
 
 		//角度が必要(前にやった円運動が参考になるかも)
 		for (int i = 0; i < blockWidth; i++)
@@ -514,7 +514,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 			}
 		}
 
-		rotateCount++;
+
 		if (rotateCount >= rotateCountMax)
 		{
 			isLeftRolling = false;
@@ -590,6 +590,6 @@ bool BlockManager::CollisionBlockToBlock(Vec3 blockPos, Vec3 comPos)
 	if (blockPos.x - blockRadius_ < comPos.x - blockRadius_ && blockPos.x + blockRadius_ > comPos.x + blockRadius_
 		&& blockPos.z - blockRadius_ <comPos.z - blockRadius_ && blockPos.z + blockRadius_ > comPos.z + blockRadius_)
 	{
-			return true;
+		return true;
 	}
 }

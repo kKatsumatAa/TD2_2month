@@ -64,6 +64,16 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 
 void Player::Update()
 {
+	if (worldTransform_.scale.x > scaleTmp) { worldTransform_.scale.x -= 0.05f; }
+	if (worldTransform_.scale.x < scaleTmp) { worldTransform_.scale.x += 0.05f; }
+	
+	if (worldTransform_.scale.y > scaleTmp) { worldTransform_.scale.y -= 0.05f; }
+	if (worldTransform_.scale.y < scaleTmp) { worldTransform_.scale.y += 0.05f; }
+
+	if (worldTransform_.scale.z > scaleTmp) { worldTransform_.scale.z -= 0.05f; }
+	if (worldTransform_.scale.z < scaleTmp) { worldTransform_.scale.z += 0.05f; }
+	
+
 	stateMove->Update();
 	stateConnectTurn->Update();
 
@@ -128,6 +138,11 @@ void StateNormalMoveP::Update()
 			//フラグ、スピードなどをセット
 			player->SetVelocity((player->moveEndPos - player->GetWorldPos()).GetNormalized());
 			player->moveStartPos = (player->GetWorldPos());
+
+			//演出
+			Vec3 scale = player->GetWorldTransForm()->scale;
+			player->GetWorldTransForm()->scale = { scale.x * 1.1f,scale.y * 0.8f,scale.z * 1.1f };
+
 			player->ChangeStateMove(new StateMoveP);
 		}
 	}
@@ -179,6 +194,10 @@ void StateNormalConTurP::Update()
 			//コンセントをさす
 			player->playerSocket->UseSocket(player->GetWorldPos());
 
+			//演出
+			Vec3 scale = player->GetWorldTransForm()->scale;
+			player->GetWorldTransForm()->scale = { scale.x * 2.0f,scale.y * 0.2f,scale.z * 2.0f };
+
 			player->ChangeStateTurnConnect(new StateConnectP);
 		}
 	}
@@ -196,9 +215,14 @@ void StateConnectP::Update()
 	if (KeyboardInput::GetInstance().KeyReleaseTrigger(DIK_SPACE))
 	{
 		//離したところがボタンだったら
-		if(player->blockM->CheckAxisButton(player->GetWorldPos()))
+		if (player->blockM->CheckAxisButton(player->GetWorldPos()))
 		{
 			player->isTurnNow = true;
+
+			//演出
+			Vec3 scale = player->GetWorldTransForm()->scale;
+			player->GetWorldTransForm()->scale = { scale.x * 2.0f,scale.y * 0.2f,scale.z * 2.0f };
+
 			player->ChangeStateTurnConnect(new StateTurnP);
 		}
 		else
@@ -207,6 +231,11 @@ void StateConnectP::Update()
 			player->blockM->ReleseConectedBlock();
 			//コンセントを抜く
 			player->playerSocket->FinishSocket(player->GetWorldPos());
+
+			//演出
+			Vec3 scale = player->GetWorldTransForm()->scale;
+			player->GetWorldTransForm()->scale = { scale.x * 0.1f,scale.y * 2.0f,scale.z * 0.1f };
+
 			player->ChangeStateTurnConnect(new StateNormalConTurP);
 		}
 	}
@@ -231,6 +260,11 @@ void StateTurnP::Update()
 		player->blockM->ReleseConectedBlock();
 		//コンセントを抜く
 		player->playerSocket->FinishSocket(player->GetWorldPos());
+
+		//演出
+		Vec3 scale = player->GetWorldTransForm()->scale;
+		player->GetWorldTransForm()->scale = { scale.x * 0.1f,scale.y * 2.0f,scale.z * 0.1f };
+
 		player->ChangeStateTurnConnect(new StateNormalConTurP);
 	}
 }
