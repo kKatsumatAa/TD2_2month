@@ -46,7 +46,7 @@ void PlayerSocket::Draw(Camera* camera)
 {
 	state->Draw(camera, model);
 
-	obj->DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, model, { 1.0f,0,1.0f,1.0f });
+	obj->DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, model, { 1.0f,1.0f,1.0f,1.0f });
 }
 
 void PlayerSocket::UseSocket(Vec3 endPos)

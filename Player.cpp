@@ -15,7 +15,8 @@ void Player::ChangeStateMove(PlayerState* state)
 	state->SetPlayer(this);
 }
 
-void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket, Model* model, DebugText* debugText_)
+void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket,
+	ConnectingEffect2Manager* connectE2M, Model* model, DebugText* debugText_)
 {
 	assert(model);
 
@@ -24,6 +25,7 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 	this->moveDistance = moveDistance;
 	this->blockM = blockM;
 	this->playerSocket = playerSocket;
+	this->connectE2M = connectE2M;
 
 	isPlayer = true;
 	isDead = false;
@@ -66,13 +68,13 @@ void Player::Update()
 {
 	if (worldTransform_.scale.x > scaleTmp) { worldTransform_.scale.x -= 0.05f; }
 	if (worldTransform_.scale.x < scaleTmp) { worldTransform_.scale.x += 0.05f; }
-	
+
 	if (worldTransform_.scale.y > scaleTmp) { worldTransform_.scale.y -= 0.05f; }
 	if (worldTransform_.scale.y < scaleTmp) { worldTransform_.scale.y += 0.05f; }
 
 	if (worldTransform_.scale.z > scaleTmp) { worldTransform_.scale.z -= 0.05f; }
 	if (worldTransform_.scale.z < scaleTmp) { worldTransform_.scale.z += 0.05f; }
-	
+
 
 	stateMove->Update();
 	stateConnectTurn->Update();
@@ -198,6 +200,12 @@ void StateNormalConTurP::Update()
 			Vec3 scale = player->GetWorldTransForm()->scale;
 			player->GetWorldTransForm()->scale = { scale.x * 2.0f,scale.y * 0.2f,scale.z * 2.0f };
 
+			//エフェクト
+			Vec3 startScale = { player->GetRadius() * 2.0f,player->GetRadius() * 2.0f,player->GetRadius() * 2.0f };
+			Vec3 endScale = { player->GetRadius() * 0.1f,player->GetRadius() * 100.0f,player->GetRadius() * 0.1f };
+			player->connectE2M->GenerateConnectingEffect2(player->GetWorldPos(), startScale, endScale
+				, { 1.0f,1.0f,0,0.8f }, { 1.0f,1.0f,1.0f,0 }, 40);
+
 			player->ChangeStateTurnConnect(new StateConnectP);
 		}
 	}
@@ -222,6 +230,12 @@ void StateConnectP::Update()
 			//演出
 			Vec3 scale = player->GetWorldTransForm()->scale;
 			player->GetWorldTransForm()->scale = { scale.x * 2.0f,scale.y * 0.2f,scale.z * 2.0f };
+
+			//エフェクト
+			Vec3 startScale = { player->GetRadius() * 2.0f,player->GetRadius() * 2.0f,player->GetRadius() * 2.0f };
+			Vec3 endScale = { player->GetRadius() * 0.1f,player->GetRadius() * 100.0f,player->GetRadius() * 0.1f };
+			player->connectE2M->GenerateConnectingEffect2(player->GetWorldPos(), startScale, endScale
+				, { 0.2f,0.1f,1.0f,0.8f }, { 1.0f,1.0f,1.0f,0 }, 40);
 
 			player->ChangeStateTurnConnect(new StateTurnP);
 		}
