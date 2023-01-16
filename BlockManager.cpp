@@ -155,7 +155,7 @@ void BlockManager::Draw(Camera* camera)
 			//Manager.cppで配列で定義したworldTransformの値をBlock.cppのDrawにセット
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
-			blocks_[i][j]->Draw(camera, texhandle, form_[i][j]);
+			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j]);
 
 
 			//if (action_[i][j] == Action::Connect && effectCount >= effectCountMax)
@@ -427,6 +427,8 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 	if (isRightRolling == true)
 	{
+		rotateCount++;
+
 		//角度が必要(前にやった円運動が参考になるかも)
 		for (int i = 0; i < blockWidth; i++)
 		{
@@ -456,7 +458,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 			}
 		}
 
-		rotateCount++;
+
 		if (rotateCount >= rotateCountMax)
 		{
 			isRightRolling = false;
@@ -467,6 +469,9 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 	if (isLeftRolling == true)
 	{
+		rotateCount++;
+
+		//角度が必要(前にやった円運動が参考になるかも)
 		for (int i = 0; i < blockWidth; i++)
 		{
 			for (int j = 0; j < blockHeight; j++)
@@ -493,7 +498,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 			}
 		}
 
-		rotateCount++;
+
 		if (rotateCount >= rotateCountMax)
 		{
 			isLeftRolling = false;

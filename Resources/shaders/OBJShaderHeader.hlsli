@@ -40,12 +40,37 @@ struct DirLight
 	uint   active;      //有効か
 };
 
+static const int SPOTLIGHT_NUM = 3;
+struct SpotLight
+{
+	float3 lightv;    // ライトへの方向の単位ベクトル
+	float3 lightpos;    // ライトの位置
+	float3 lightcolor;    // ライトの色(RGB)
+	float3 lightatten;    // ライトの減衰係数
+	float2 lightfactoranglecos;//ライト減衰角度のコサイン
+	uint   active;      //有効か
+};
+
+//丸影
+static const int CIRCLESHADOW_NUM = 1;
+struct CircleShadow
+{
+	float3 dir; //投影方向の逆ベクトル
+	float3 casterPos; //キャスター座標
+	float distanceCasterLight; //キャスターとライトの距離
+	float3 atten; //距離減衰係数
+	float2 factorAngleCos; //減衰角度のコサイン
+	uint active;
+};
+
 //LightManagerのConstBufferと同じ型を宣言
 cbuffer ConstBufferDataMaterial3 : register(b3)
 {
 	float3     ambientColor;
 	DirLight   dirLights[DIRLIGHT_NUM];
 	PointLight pointLights[POINTLIGHT_NUM];
+	SpotLight  spotLights[SPOTLIGHT_NUM];
+	CircleShadow circleShadows[CIRCLESHADOW_NUM];
 }
 
 //頂点シェーダからピクセルシェーダーへのやり取りに使用する構造体
@@ -56,3 +81,4 @@ struct VSOutput
 	float3 normal   : NORMAL;//ワールド座標
 	float2 uv       : TEXCOORD;//uv座標
 };
+

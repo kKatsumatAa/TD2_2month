@@ -64,98 +64,77 @@ float4 main(VSOutput input) : SV_TARGET
 			}
 		}
 
+		//スポットライト
+		for (int i = 0; i < SPOTLIGHT_NUM; i++)
+		{
+			if (spotLights[i].active)
+			{
+				//ライトへの方向ベクトル
+				float3 lightv = spotLights[i].lightpos - input.worldpos.xyz;
+				float d = length(lightv);
+				lightv = normalize(lightv);
+				//距離減衰係数
+				float atten = saturate(1.0f / (spotLights[i].lightatten.x + spotLights[i].lightatten.y
+					* d + spotLights[i].lightatten.z * d * d));
+				//角度減衰
+				float cos = dot(lightv, spotLights[i].lightv);
+				//減衰開始角度から、減衰終了角度にかけて減衰
+				//減衰開始角度の内側は、1倍 減衰終了角度の外側は0倍の輝度
+				float angleatten = smoothstep(spotLights[i].lightfactoranglecos.y,
+					spotLights[i].lightfactoranglecos.x, cos);
+				//角度減衰を乗算
+				atten *= angleatten;
+				//ライトに向かうベクトルと法線の内積
+				float3 dotlightnormal = dot(lightv, input.normal);
+				//反射光ベクトル　
+				float3 reflect = normalize(-lightv + 2 * dotlightnormal * input.normal);
+				//拡散反射光
+				float3 diffuse = dotlightnormal * m_diffuse;
+				//鏡面反射光
+				float3 specular = pow(saturate(dot(reflect, eyedir)), shininess) * m_specular;
+				//全て加算する
+				shadecolor.rgb += atten * (diffuse + specular) * spotLights[i].lightcolor;
+			}
+		}
+
+		//丸影
+		for (int i = 0; i < CIRCLESHADOW_NUM; i++)
+		{
+			if (circleShadows[i].active)
+			{
+				//ライトへの方向ベクトル
+				float3 casterv = circleShadows[i].casterPos - input.worldpos.xyz;
+				//投影方向での距離
+				float d = dot(casterv, circleShadows[i].dir);
+				//距離減衰係数
+				float atten = saturate(1.0f / (circleShadows[i].atten.x + circleShadows[i].atten.y
+					* d + circleShadows[i].atten.z * d * d));
+				//距離がマイナスなら0にする
+				atten *= step(0, d);
+				//仮想ライトの座標
+				float3 lightpos = circleShadows[i].casterPos + circleShadows[i].dir
+				   * circleShadows[i].distanceCasterLight;
+				//オブジェクト表面からライトへのベクトル（単位ベクトル）
+				float3 lightv = normalize(lightpos - input.worldpos.xyz);
+				//角度減衰
+				float cos = dot(lightv, circleShadows[i].dir);
+				//減衰開始角度から、減衰終了角度にかけて減衰
+				//減衰開始角度の内側は、1倍 減衰終了角度の外側は0倍の輝度
+				float angleatten = smoothstep(circleShadows[i].factorAngleCos.y,
+					circleShadows[i].factorAngleCos.x, cos);
+				//角度減衰を乗算
+				atten *= angleatten;
+
+				//全て減算する
+				shadecolor.rgb -= atten;
+			}
+		}
+
 		// シェーディングによる色で描画
 		float4 RGBA = (shadecolor * texcolor * color);
 		float4 RGBA2 = (shadecolor * color);
 		float3 RGB = RGBA.rgb;
 		float  A = RGBA.a;
-
-		float w, h, levels;
-		//ミップマップ、横幅、縦幅、ミップマップレベル
-		tex.GetDimensions(0, w, h, levels);
-
-		float dx = 1.0f / w;
-		float dy = 1.0f / h;
-		float4 ret = float4(0, 0, 0, 0);
-
-		//ぼかし
-		//ret += tex.Sample(smp, input.uv + float2(-2 * dx, -2 * dy)); // 左上 
-		//ret += tex.Sample(smp, input.uv + float2(0, -2 * dy)); // 上 
-		//ret += tex.Sample(smp, input.uv + float2(2 * dx, -2 * dy));// 右 上 
-		//ret += tex.Sample(smp, input.uv + float2(-2 * dx, 0)); // 左 
-		//ret += tex.Sample(smp, input.uv);                       // 自分 
-		//ret += tex.Sample(smp, input.uv + float2(2 * dx, 0)); // 右
-		//ret += tex.Sample(smp, input.uv + float2(-2 * dx, 2 * dy)); // 左下 
-		//ret += tex.Sample(smp, input.uv + float2(0, 2 * dy));// 下 
-		//ret += tex.Sample(smp, input.uv + float2(2 * dx, 2 * dy)); // 右 下
-		//return ret / 9.0f * RGBA;
-
-		//シャープネス
-		//ret += tex.Sample(smp, input.uv + float2(-2 * dx, -2 * dy)) * 0; // 左上 
-		//ret += tex.Sample(smp, input.uv + float2(0, -2 * dy)); // 上 
-		//ret += tex.Sample(smp, input.uv + float2(2 * dx, -2 * dy)) * 0;// 右 上 
-		//ret += tex.Sample(smp, input.uv + float2(-2 * dx, 0)); // 左 
-		//ret += tex.Sample(smp, input.uv) * 5.0f;                       // 自分 
-		//ret += tex.Sample(smp, input.uv + float2(2 * dx, 0)); // 右
-		//ret += tex.Sample(smp, input.uv + float2(-2 * dx, 2 * dy)) * 0; // 左下 
-		//ret += tex.Sample(smp, input.uv + float2(0, 2 * dy));// 下 
-		//ret += tex.Sample(smp, input.uv + float2(2 * dx, 2 * dy)) * 0; // 右 下
-		//return ret * RGBA;
-
-		//輪郭
-		//ret += tex.Sample(smp, input.uv + float2(0, -2 * dy)) * -1; // 上
-		//ret += tex.Sample(smp, input.uv + float2(-2 * dx, 0)) * -1; // 左
-		//ret += tex.Sample(smp, input.uv) * 4; // 自分 
-		//ret += tex.Sample(smp, input.uv + float2(2 * dx, 0)) * -1; // 右 
-		//ret += tex.Sample(smp, input.uv + float2(0, 2 * dy)) * -1; // 下 
-		//// 反転 
-		//float Y = dot(ret.rgb * RGBA2.rgb, float3(0.299, 0.587, 0.114));
-		//Y = pow(1.0f - Y, 10.0f);
-		//Y = step(0.2, Y);
-		//return float4(Y, Y, Y, A);
-
-		//ガウシアン
-		{
-			//float dx = 2.0f / w;
-			////float dy = 2.0f / h;
-			//// 今 の ピクセル を 中心 に 縦横 5 つ ずつ に なる よう 加算 する 
-			//// 最 上段 
-			//ret += tex.Sample(smp, input.uv + float2(-2 * dx, 2 * dy)) * 1 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(-1 * dx, 2 * dy)) * 4 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(0 * dx, 2 * dy)) * 6 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(1 * dx, 2 * dy)) * 4 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(2 * dx, 2 * dy)) * 1 / 256;
-			//// 1 つ 上段 
-			//ret += tex.Sample(smp, input.uv + float2(-2 * dx, 1 * dy)) * 4 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(-1 * dx, 1 * dy)) * 16 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(0 * dx, 1 * dy)) * 24 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(1 * dx, 1 * dy)) * 16 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(2 * dx, 1 * dy)) * 4 / 256;
-			//// 中段 
-			//ret += tex.Sample(smp, input.uv + float2(-2 * dx, 0 * dy)) * 6 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(-1 * dx, 0 * dy)) * 24 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(0 * dx, 0 * dy)) * 36 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(1 * dx, 0 * dy)) * 24 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(2 * dx, 0 * dy)) * 6 / 256;
-			//// 1 つ 下段 
-			//ret += tex.Sample(smp, input.uv + float2(-2 * dx, -1 * dy)) * 4 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(-1 * dx, -1 * dy)) * 16 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(0 * dx, -1 * dy)) * 24 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(1 * dx, -1 * dy)) * 16 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(2 * dx, -1 * dy)) * 4 / 256;
-			//// 最 下段 
-			//ret += tex.Sample(smp, input.uv + float2(-2 * dx, -2 * dy)) * 1 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(-1 * dx, -2 * dy)) * 4 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(0 * dx, -2 * dy)) * 6 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(1 * dx, -2 * dy)) * 4 / 256;
-			//ret += tex.Sample(smp, input.uv + float2(2 * dx, -2 * dy)) * 1 / 256;
-
-			//return ret * RGBA;
-		}
-
-
-		//諧調
-		//return float4(RGB - fmod(RGB, 0.25f), A);
 
 		return RGBA;
 }

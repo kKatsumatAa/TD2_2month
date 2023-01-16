@@ -41,12 +41,12 @@ void SceneTitle::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
-	scene->blockManager->Initialize(scene->connectEM.get(), scene->camera.get(), 
-		scene->model[1],scene->model[2], scene->model[3], scene->model[4]);
+	scene->blockManager->Initialize(scene->connectEM.get(), scene->camera.get(),
+		scene->model[1], scene->model[2], scene->model[3], scene->model[4]);
 	scene->camera->Initialize();
 	scene->connectEM->Initialize();
 	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
-		, scene->model[0], &scene->debugText);
+		, scene->connectE2M.get(), scene->model[0], &scene->debugText);
 	scene->playerSocket->Initialize(scene->model[0]);
 }
 
@@ -55,6 +55,7 @@ void SceneGame::Update()
 	scene->blockManager->Update();
 
 	scene->connectEM->Update();
+	scene->connectE2M->Update();
 
 	scene->player->Update();
 
@@ -80,6 +81,7 @@ void SceneGame::Draw()
 	scene->player->Draw(scene->camera.get());
 	scene->playerSocket->Draw(scene->camera.get());
 	scene->connectEM->Draw(*scene->camera.get());
+	scene->connectE2M->Draw(scene->camera.get());
 }
 
 void SceneGame::DrawSprite()
@@ -137,7 +139,7 @@ void SceneClear::Draw()
 
 void SceneClear::DrawSprite()
 {
-	scene->debugText.Print("clear", 10, 10);
+	scene->debugText.Print("clear", 10, 10, 114514, 5.0f);
 }
 
 
@@ -182,6 +184,7 @@ Scene::~Scene()
 	connectEM.reset();
 	player.reset();
 	playerSocket.reset();
+	connectE2M.reset();
 	imGuiManager->Finalize();
 	delete imGuiManager;
 	delete lightManager;
@@ -216,7 +219,7 @@ void Scene::Initialize()
 	//model
 	Model::StaticInitialize();
 
-	model[0] = Model::LoadFromOBJ("sphere");
+	model[0] = Model::LoadFromOBJ("Player");
 	model[1] = Model::LoadFromOBJ("Mesh_NormalTile_01");
 	model[2] = Model::LoadFromOBJ("Mesh_ButtonTile_01");
 	model[3] = Model::LoadFromOBJ("Mesh_GoalTile_01");
@@ -231,7 +234,7 @@ void Scene::Initialize()
 	connectEM->Initialize();
 
 	blockManager = new BlockManager();
-	blockManager->Initialize(connectEM.get(), camera.get(),model[1],model[2],model[3],model[4]);
+	blockManager->Initialize(connectEM.get(), camera.get(), model[1], model[2], model[3], model[4]);
 
 	//Light
 	LightManager::StaticInitialize();
@@ -242,6 +245,15 @@ void Scene::Initialize()
 	//3Dオブジェクトにライトをセット(全体で一つを共有)
 	Object::SetLight(lightManager);
 	lightManager->SetDirLightActive(0, true);
+	lightManager->SetDirLightActive(1, false);
+	lightManager->SetDirLightActive(2, false);
+	//点光源
+	for (int i = 0; i < 6; i++)
+	{
+		lightManager->SetPointLightActive(i, false);
+	}
+	//丸影
+	lightManager->SetCircleShadowActive(0, true);
 
 	//カメラ
 	camera = std::make_unique<Camera>();
@@ -250,13 +262,17 @@ void Scene::Initialize()
 	camera->SetTarget({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 0, 0 });
 	camera->UpdateViewMatrix();
 
-	//player
+	//playerSocket
 	playerSocket = std::make_unique<PlayerSocket>();
 	playerSocket->Initialize(model[0]);
 
+	//effect2
+	connectE2M = std::make_unique<ConnectingEffect2Manager>();
+	connectE2M->Initialize();
+
 	//player
 	player = std::make_unique<Player>();
-	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), model[0], &debugText);
+	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), model[0], &debugText);
 
 
 
@@ -274,6 +290,27 @@ void Scene::Update()
 	{
 		//デモ
 		ImGui::ShowDemoWindow();
+
+		//丸影
+		lightManager->SetCircleShadowDir(0,
+			XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2],0 }));
+		lightManager->SetCircleShadowCasterPos(0,
+			XMFLOAT3({ player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z}));
+		lightManager->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
+		lightManager->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
+		lightManager->SetCircleShadowDistanceCasterLight(0, circleShadowDistance);
+
+		static bool a = true;
+		ImGui::Begin("circleShadow", &a, ImGuiWindowFlags_MenuBar);
+
+		ImGui::InputFloat3("circleShadowDir", circleShadowDir);
+		ImGui::InputFloat3("circleShadowAtten", circleShadowAtten);
+		ImGui::InputFloat2("circleShadowFactorAngle", circleShadowFactorAngle);
+		ImGui::InputFloat("distanceLight", &circleShadowDistance);
+
+
+		ImGui::End();
+		lightManager->Update();
 
 	}
 
@@ -296,10 +333,6 @@ void Scene::Draw()
 {
 	state->Draw();
 
-	blockManager->Draw(camera.get());
-
-	player->Draw(camera.get());
-	connectEM->Draw(*camera.get());
 	//imgui
 	imGuiManager->Draw();
 }

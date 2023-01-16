@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "BlockManager.h"
 #include "PlayerSocket.h"
+#include "ConnectingEffect2.h"
 
 class Player;
 
@@ -22,6 +23,7 @@ public:
 class StateNormalMoveP : public PlayerState
 {
 private:
+	int count = 0;
 
 public:
 	void Update(/*Tutorial* tutorial = nullptr*/);
@@ -92,6 +94,9 @@ private:
 
 	/*Tutorial* tutorial;*/
 public:
+	float posYTmp = 0;
+
+
 	//外部からセットするブロックあるから動ける
 	bool isMove = false;
 	bool isWantToMove = false; //外部で何したいか参照してもらう
@@ -119,11 +124,14 @@ public:
 
 	PlayerSocket* playerSocket;
 
+	ConnectingEffect2Manager* connectE2M;
+
 
 	void ChangeStateTurnConnect(PlayerState* state);
 	void ChangeStateMove(PlayerState* state);
 
-	void Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket, Model* model, DebugText* debugText_/*,Tutorial* tutorial = nullptr*/);
+	void Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket, 
+		ConnectingEffect2Manager* connectE2M, Model* model, DebugText* debugText_/*,Tutorial* tutorial = nullptr*/);
 	void Update();
 	void Draw(Camera* camera);
 	void DrawSprite();

@@ -42,10 +42,10 @@ void Block::Updata(Vec3& pos)
 	worldTransform_.SetWorld();
 }
 
-void Block::Draw(Camera* camera, UINT64* texhandle, int form)
+void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action)
 {
 	//‰¼•\Ž¦
-	XMFLOAT4 color;
+
 
 	/*if (form == Form::BLOCK) { color = { 1.0f,1.0f,1.0f,1.0f }; }
 	if (form == Form::BUTTON) { color = { 0,0,1.0f,1.0f }; }

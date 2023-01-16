@@ -15,7 +15,8 @@ void Player::ChangeStateMove(PlayerState* state)
 	state->SetPlayer(this);
 }
 
-void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket, Model* model, DebugText* debugText_)
+void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket,
+	ConnectingEffect2Manager* connectE2M, Model* model, DebugText* debugText_)
 {
 	assert(model);
 
@@ -24,6 +25,7 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 	this->moveDistance = moveDistance;
 	this->blockM = blockM;
 	this->playerSocket = playerSocket;
+	this->connectE2M = connectE2M;
 
 	isPlayer = true;
 	isDead = false;
@@ -40,6 +42,7 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 
 	worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
 	worldTransform_.trans = { 0,moveDistance,0 };
+	posYTmp = moveDistance;
 	worldTransform_.SetWorld();
 
 	radius_ = scaleTmp;
@@ -64,6 +67,16 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 
 void Player::Update()
 {
+	if (worldTransform_.scale.x > scaleTmp) { worldTransform_.scale.x -= 0.05f; }
+	if (worldTransform_.scale.x < scaleTmp) { worldTransform_.scale.x += 0.05f; }
+
+	if (worldTransform_.scale.y > scaleTmp) { worldTransform_.scale.y -= 0.05f; }
+	if (worldTransform_.scale.y < scaleTmp) { worldTransform_.scale.y += 0.05f; }
+
+	if (worldTransform_.scale.z > scaleTmp) { worldTransform_.scale.z -= 0.05f; }
+	if (worldTransform_.scale.z < scaleTmp) { worldTransform_.scale.z += 0.05f; }
+
+
 	stateMove->Update();
 	stateConnectTurn->Update();
 
@@ -100,26 +113,32 @@ void PlayerState::SetPlayer(Player* player)
 //--------------------------------------------------------------------------
 void StateNormalMoveP::Update()
 {
+	count++;
+
+	Vec3 trans = { player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z };
+
+	player->GetWorldTransForm()->trans = { trans.x ,player->posYTmp + sinf(count * 0.07f) ,trans.z };
+
 	//移動の場合(回転中は移動しない)
 	if ((KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) ||
-		KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW))
+		KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW)) ||
+		(KeyboardInput::GetInstance().KeyPush(DIK_A) || KeyboardInput::GetInstance().KeyPush(DIK_D) ||
+			KeyboardInput::GetInstance().KeyPush(DIK_W) || KeyboardInput::GetInstance().KeyPush(DIK_S))
 		&& player->isTurnNow == false)
 	{
-		player->blockM->UpdateOverlap();
-
-		if (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW))
+		if (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A))
 		{
 			player->moveEndPos = { player->GetWorldPos().x - player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
 		}
-		if (KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW))
+		if (KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D))
 		{
 			player->moveEndPos = { player->GetWorldPos().x + player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
 		}
-		if (KeyboardInput::GetInstance().KeyPush(DIK_UPARROW))
+		if (KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_W))
 		{
 			player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + player->moveDistance };
 		}
-		if (KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW))
+		if (KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW) || KeyboardInput::GetInstance().KeyPush(DIK_S))
 		{
 			player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + -player->moveDistance };
 		}
@@ -127,9 +146,16 @@ void StateNormalMoveP::Update()
 		//進んだ先にブロック
 		if (player->blockM->GetPosIsBlock(player->moveEndPos))
 		{
+			player->isMove = true;
+
 			//フラグ、スピードなどをセット
 			player->SetVelocity((player->moveEndPos - player->GetWorldPos()).GetNormalized());
 			player->moveStartPos = (player->GetWorldPos());
+
+			//演出
+			Vec3 scale = player->GetWorldTransForm()->scale;
+			player->GetWorldTransForm()->scale = { scale.x * 1.1f,scale.y * 0.8f,scale.z * 1.1f };
+
 			player->ChangeStateMove(new StateMoveP);
 		}
 	}
@@ -159,6 +185,7 @@ void StateMoveP::Update()
 	//移動し終わったらステート戻す
 	if (count >= countMax)
 	{
+		player->isMove = false;
 		player->ChangeStateMove(new StateNormalMoveP);
 	}
 }
@@ -175,13 +202,23 @@ void StateNormalConTurP::Update()
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
 		//ボタンがあったら
-		if (player->blockM->GetPosIsButton(player->GetWorldPos()))
+		if (player->blockM->GetPosIsButton(player->GetWorldPos()) && !player->isMove)
 		{
 			//軸を登録
 			player->blockM->RegistAxisButton(player->GetWorldPos());
 
 			//コンセントをさす
 			player->playerSocket->UseSocket(player->GetWorldPos());
+
+			//演出
+			Vec3 scale = player->GetWorldTransForm()->scale;
+			player->GetWorldTransForm()->scale = { scale.x * 2.0f,scale.y * 0.2f,scale.z * 2.0f };
+
+			//エフェクト
+			Vec3 startScale = { player->GetRadius() * 2.0f,player->GetRadius() * 2.0f,player->GetRadius() * 2.0f };
+			Vec3 endScale = { player->GetRadius() * 0.1f,player->GetRadius() * 100.0f,player->GetRadius() * 0.1f };
+			player->connectE2M->GenerateConnectingEffect2(player->GetWorldPos(), startScale, endScale
+				, { 1.0f,1.0f,0,0.9f }, { 1.0f,1.0f,1.0f,0.3f }, 40);
 
 			player->ChangeStateTurnConnect(new StateConnectP);
 		}
@@ -200,9 +237,20 @@ void StateConnectP::Update()
 	if (KeyboardInput::GetInstance().KeyReleaseTrigger(DIK_SPACE))
 	{
 		//離したところがボタンだったら
-		if(player->blockM->CheckAxisButton(player->GetWorldPos()))
+		if (player->blockM->CheckAxisButton(player->GetWorldPos()))
 		{
 			player->isTurnNow = true;
+
+			//演出
+			Vec3 scale = player->GetWorldTransForm()->scale;
+			player->GetWorldTransForm()->scale = { scale.x * 2.0f,scale.y * 0.2f,scale.z * 2.0f };
+
+			//エフェクト
+			Vec3 startScale = { player->GetRadius() * 2.0f,player->GetRadius() * 2.0f,player->GetRadius() * 2.0f };
+			Vec3 endScale = { player->GetRadius() * 0.1f,player->GetRadius() * 100.0f,player->GetRadius() * 0.1f };
+			player->connectE2M->GenerateConnectingEffect2(player->GetWorldPos(), startScale, endScale
+				, { 0.2f,0.1f,1.0f,0.9f }, { 1.0f,1.0f,1.0f,0.3f }, 40);
+
 			player->ChangeStateTurnConnect(new StateTurnP);
 		}
 		else
@@ -211,6 +259,11 @@ void StateConnectP::Update()
 			player->blockM->ReleseConectedBlock();
 			//コンセントを抜く
 			player->playerSocket->FinishSocket(player->GetWorldPos());
+
+			//演出
+			Vec3 scale = player->GetWorldTransForm()->scale;
+			player->GetWorldTransForm()->scale = { scale.x * 0.1f,scale.y * 2.0f,scale.z * 0.1f };
+
 			player->ChangeStateTurnConnect(new StateNormalConTurP);
 		}
 	}
@@ -235,6 +288,11 @@ void StateTurnP::Update()
 		player->blockM->ReleseConectedBlock();
 		//コンセントを抜く
 		player->playerSocket->FinishSocket(player->GetWorldPos());
+
+		//演出
+		Vec3 scale = player->GetWorldTransForm()->scale;
+		player->GetWorldTransForm()->scale = { scale.x * 0.1f,scale.y * 2.0f,scale.z * 0.1f };
+
 		player->ChangeStateTurnConnect(new StateNormalConTurP);
 	}
 
