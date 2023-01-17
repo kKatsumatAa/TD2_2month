@@ -79,6 +79,9 @@ public:
 	//ブロックのリセット
 	void ResetBlock();
 
+	//回転し終わったときにパーティクル発生させる
+	void GenerateParticleTurnBlock();
+
 public:
 
 	static const int blockWidth = 13;
