@@ -65,6 +65,37 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 	ChangeStateTurnConnect(new StateNormalConTurP);
 }
 
+void Player::Reset()
+{
+	isPlayer = true;
+	isDead = false;
+	isGoal = false;
+
+	velocity = { 0,0,0 };
+
+	//this->tutorial = tutorial;
+
+	worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
+	worldTransform_.trans = { 0,moveDistance,0 };
+	posYTmp = moveDistance;
+	worldTransform_.SetWorld();
+
+	radius_ = scaleTmp;
+
+	{
+		isMove = false;
+		isMoveNow = false;
+		isConnect = false;
+		isCennectNow = false;
+		isTurn = false;
+		isTurnNow = false;
+		moveEndPos = { 0,0,0 };
+	}
+
+	ChangeStateMove(new StateNormalMoveP);
+	ChangeStateTurnConnect(new StateNormalConTurP);
+}
+
 void Player::Update()
 {
 	if (worldTransform_.scale.x > scaleTmp) { worldTransform_.scale.x -= 0.05f; }
@@ -96,6 +127,8 @@ void Player::DrawSprite()
 {
 }
 
+
+
 void Player::OnCollision(Collider& collider)
 {
 }
@@ -113,17 +146,19 @@ void PlayerState::SetPlayer(Player* player)
 //--------------------------------------------------------------------------
 void StateNormalMoveP::Update()
 {
-	count++;
+	{
+		countE++;
 
-	Vec3 trans = { player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z };
+		Vec3 trans = { player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z };
 
-	player->GetWorldTransForm()->trans = { trans.x ,player->posYTmp + sinf(count * 0.07f) ,trans.z };
+		player->GetWorldTransForm()->trans = { trans.x ,player->posYTmp + sinf(countE * 0.07f)*0.3f ,trans.z };
+	}
 
 	//ˆÚ“®‚Ìê‡(‰ñ“]’†‚ÍˆÚ“®‚µ‚È‚¢)
-	if ((KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) ||
+	if (((KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) ||
 		KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW)) ||
 		(KeyboardInput::GetInstance().KeyPush(DIK_A) || KeyboardInput::GetInstance().KeyPush(DIK_D) ||
-			KeyboardInput::GetInstance().KeyPush(DIK_W) || KeyboardInput::GetInstance().KeyPush(DIK_S))
+			KeyboardInput::GetInstance().KeyPush(DIK_W) || KeyboardInput::GetInstance().KeyPush(DIK_S)))
 		&& player->isTurnNow == false)
 	{
 		if (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A))
@@ -160,7 +195,7 @@ void StateNormalMoveP::Update()
 		}
 	}
 
-	
+
 }
 
 void StateNormalMoveP::Draw(Camera* camera, Model* model)
@@ -198,6 +233,8 @@ void StateMoveP::Draw(Camera* camera, Model* model)
 //--------------------------------------------------------------------------
 void StateNormalConTurP::Update()
 {
+
+
 	//Œq‚®
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{

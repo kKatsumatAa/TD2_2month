@@ -113,15 +113,13 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Camera* camera
 
 void BlockManager::Update()
 {
-	
-	
+
+
 
 	for (int i = 0; i < blockWidth; i++)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
-			ResetBlock();
-
 			//X座標の一つ前の番号を保存
 			prevBlockY = j;
 
@@ -156,19 +154,19 @@ void BlockManager::Draw(Camera* camera)
 			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j]);
 
 
-			/*if (action_[i][j] == Action::Connect && effectCount >= effectCountMax)
+			if (action_[i][j] == Action::Connect && effectCount >= effectCountMax)
 			{
 				if (isAxis_[i][j])
 				{
-					connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 35, 5, { 1.0f,0.3f,0.2f,1.0f });
+					connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 15, 3, { 1.0f,0.3f,0.2f,1.0f });
 				}
 				else
 				{
-					connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 20, 3, { 1.0f,1.0f,0,1.0 });
+					connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 10, 1, { 1.0f,1.0f,0,1.0 });
 				}
 
 				isEffect = true;
-			}*/
+			}
 		}
 	}
 
@@ -272,13 +270,13 @@ void BlockManager::RegistAxisButton(const Vec3& pos)
 				if (form_[i][j] == Form::BUTTON && isAxis_[i][j] == false)
 				{
 					//軸登録する
- 					isAxis_[i][j] = true;
+					isAxis_[i][j] = true;
 					//軸のブロックの座標を得る
 					axis_pos_.x = worldmats_[i][j].trans.x;
 					axis_pos_.y = worldmats_[i][j].trans.y;
 					axis_pos_.z = worldmats_[i][j].trans.z;
 
-					camera->CameraShake(10, 1.2f);
+					camera->CameraShake(10, 1.0f);
 				}
 				else {}
 			}
@@ -306,8 +304,8 @@ void BlockManager::UpdateConnect(Vec3 pos)
 					action_[i][j] = Action::Connect;
 
 				}
-				
-				camera->CameraShake(10, 0.3f);
+
+				camera->CameraShake(10, 0.23f);
 
 				////繋ぎはじめ
 				////ボタンかつ繋がっていなければ現在位置をつなぐ状態にする
@@ -356,7 +354,7 @@ bool BlockManager::CheckAxisButton(Vec3 pos)
 			{
 				if (isAxis_[i][j] == false && form_[i][j] == Form::BUTTON)
 				{
-					camera->CameraShake(10, 0.7f);
+					camera->CameraShake(10, 0.6f);
 					return true;
 				}
 			}
@@ -389,7 +387,7 @@ void BlockManager::ReleseConectedBlock()
 void BlockManager::UpdateRotate(Vec3& rotatePos)
 {
 
-	if (isLeftRolling == false && isRightRolling == false && KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW))
+	if (isLeftRolling == false && isRightRolling == false && (KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D)))
 	{
 		isRightRolling = true;
 		rotateCount = 0;
@@ -406,7 +404,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		distancePosPlayer = rotatePos - axis_pos_;
 	}
 
-	if (isLeftRolling == false && isRightRolling == false && KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW))
+	if (isLeftRolling == false && isRightRolling == false && (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A)))
 	{
 		isLeftRolling = true;
 		rotateCount = 0;
@@ -460,7 +458,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		if (rotateCount >= rotateCountMax)
 		{
 			isRightRolling = false;
-			camera->CameraShake(10, 1.4f);
+			camera->CameraShake(10, 0.9f);
 		}
 
 	}
@@ -500,7 +498,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		if (rotateCount >= rotateCountMax)
 		{
 			isLeftRolling = false;
-			camera->CameraShake(10, 1.4f);
+			camera->CameraShake(10, 0.9f);
 		}
 	}
 
@@ -563,7 +561,7 @@ void BlockManager::UpdateOverlap()
 					if (CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans))
 					{
 						//同じ座標ではないとき
-						if (i != k || j != l )
+						if (i != k || j != l)
 						{
 							if (form_[i][j] != Form::BUTTON && form_[k][l] != Form::BUTTON )
 							{
@@ -637,50 +635,46 @@ bool BlockManager::CollisionBlockToBlock(Vec3 blockPos, Vec3 comPos)
 
 void BlockManager::ResetBlock()
 {
-	if (KeyboardInput::GetInstance().KeyPush(DIK_R))
+	for (int i = 0; i < blockWidth; i++)
 	{
-		for (int i = 0; i < blockWidth; i++)
+		for (int j = 0; j < blockHeight; j++)
 		{
-			for (int j = 0; j < blockHeight; j++)
+			//ブロックの座標を設定
+			if (i >= 0)
 			{
-				//ブロックの座標を設定
-				if (i >= 0)
-				{
-					worldmats_[i][j].trans.x = i * (worldmats_[i][j].scale.x * 2.0f);
-				}
-				if (j >= 0)
-				{
-					worldmats_[i][j].trans.z = j * (worldmats_[i][j].scale.y * 2.0f);
-				}
-
-				//ブロックの種類を設定
-				if (i == j)
-				{
-					form_[i][j] = Form::BUTTON;
-				}
-				else if (i == 10 && j == 5)
-				{
-					form_[i][j] = Form::GOAL;
-				}
-				else
-				{
-					form_[i][j] = Form::BLOCK;
-				}
-
-				worldmats_[i][j].SetWorld();
-
-				//block_->Initialize(connectEM, normal, button, goal, Socket);
-
-
-				//軸になっているかどうか
-				isAxis_[i][j] = false;
-
-				//現在どうなっているか
-				action_[i][j] = Action::None;
+				worldmats_[i][j].trans.x = i * (worldmats_[i][j].scale.x * 2.0f);
 			}
+			if (j >= 0)
+			{
+				worldmats_[i][j].trans.z = j * (worldmats_[i][j].scale.y * 2.0f);
+			}
+
+			//ブロックの種類を設定
+			if (i == j)
+			{
+				form_[i][j] = Form::BUTTON;
+			}
+			else if (i == 10 && j == 5)
+			{
+				form_[i][j] = Form::GOAL;
+			}
+			else
+			{
+				form_[i][j] = Form::BLOCK;
+			}
+
+			worldmats_[i][j].SetWorld();
+
+			//block_->Initialize(connectEM, normal, button, goal, Socket);
+
+
+			//軸になっているかどうか
+			isAxis_[i][j] = false;
+
+			//現在どうなっているか
+			action_[i][j] = Action::None;
 		}
 	}
-
 }
 
 

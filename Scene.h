@@ -67,6 +67,10 @@ public:
 	float circleShadowFactorAngle[2] = { 0,0.7f };
 	float circleShadowDistance = 100.0f;
 
+	//camera
+	float cameraPosImgui[3] = { 0 };
+	float cameraTarget[3] = { 0 };
+
 
 	std::unique_ptr<Camera> camera;
 

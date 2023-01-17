@@ -163,7 +163,7 @@ private:
 	ConnectingEffectManager* connectEM;
 
 	int effectCount = 0;
-	const int effectCountMax = 5;
+	const int effectCountMax = 10;
 
 	//”äŠr—p‚É•Û‘¶‚µ‚Ä‚¨‚­•Ï”
 	Vec3 comparisonPos[blockWidth][blockHeight];
