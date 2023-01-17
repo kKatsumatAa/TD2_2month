@@ -669,18 +669,18 @@ void BlockManager::ResetBlock()
 			}
 
 			//ÉuÉçÉbÉNÇÃéÌóﬁÇê›íË
-			if (i == j)
-			{
-				form_[i][j] = Form::BUTTON;
-			}
-			else if (i == 10 && j == 5)
-			{
-				form_[i][j] = Form::GOAL;
-			}
-			else
-			{
-				form_[i][j] = Form::BLOCK;
-			}
+			//if (i == j)
+			//{
+			//	form_[i][j] = Form::BUTTON;
+			//}
+			//else if (i == 10 && j == 5)
+			//{
+			//	form_[i][j] = Form::GOAL;
+			//}
+			//else
+			//{
+			//	form_[i][j] = Form::BLOCK;
+			//}
 
 			worldmats_[i][j].SetWorld();
 
