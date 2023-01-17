@@ -10,8 +10,6 @@ static enum TUTORIAL
 	LAST      //終わり
 };
 
-static float width = 768/2;
-static float height = 319;
 
 class Tutorial;
 

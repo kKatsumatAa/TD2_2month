@@ -150,7 +150,11 @@ void SceneClear::Draw()
 
 void SceneClear::DrawSprite()
 {
-	scene->debugText.Print("clear", 10, 10, 114514, 5.0f);
+	count++;
+
+	float alpha = (float)count / (float)countMax;
+
+	sprite.DrawBoxSprite({ 0,0,0 }, 1.0f, { 1.0f,1.0f,1.0f,alpha }, scene->texhandle[2]);
 }
 
 
@@ -225,8 +229,12 @@ void Scene::Initialize()
 	TextureManager::GetInstance().LoadGraph(L"Resources/image/white.png", TextureManager::GetInstance().whiteTexHandle);
 
 	//画像
-	TextureManager::LoadGraph(L"Resources/ascii.png", debugTextHandle);
-	TextureManager::LoadGraph(L"Resources/image/effect1.png", texhandle[1]);
+	{
+		TextureManager::LoadGraph(L"Resources/ascii.png", debugTextHandle);
+		TextureManager::LoadGraph(L"Resources/image/effect1.png", texhandle[1]);
+		//クリア
+		TextureManager::LoadGraph(L"Resources/image/Temp_GameClearScene.png", texhandle[2]);
+	}
 
 	//model
 	Model::StaticInitialize();
@@ -307,6 +315,8 @@ int count = 0;
 
 void Scene::Update()
 {
+#ifdef _DEBUG
+
 	//imgui
 	imGuiManager->Begin();
 
@@ -324,14 +334,14 @@ void Scene::Update()
 		/*ImGui::InputFloat2("circleShadowFactorAngle", circleShadowFactorAngle);
 		ImGui::InputFloat("distanceLight", &circleShadowDistance);*/
 
-		camera->SetEye({ cameraPosImgui[0],cameraPosImgui[1],cameraPosImgui[2] });
-		camera->SetTarget({ cameraTarget[0],cameraTarget[1],cameraTarget[2] });
-
-
 		ImGui::End();
-		lightManager->Update();
-
 	}
+
+	//imgui
+	imGuiManager->End();
+#endif 
+	camera->SetEye({ cameraPosImgui[0],cameraPosImgui[1],cameraPosImgui[2] });
+	camera->SetTarget({ cameraTarget[0],cameraTarget[1],cameraTarget[2] });
 
 	//丸影
 	lightManager->SetCircleShadowDir(0,
@@ -341,6 +351,7 @@ void Scene::Update()
 	lightManager->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
 	lightManager->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
 	lightManager->SetCircleShadowDistanceCasterLight(0, circleShadowDistance);
+	lightManager->Update();
 
 	camera->Update();
 
@@ -353,21 +364,22 @@ void Scene::Update()
 	//if (KeyboardInput::GetInstance().KeyTrigger(DIK_E)) ChangeState(new SceneTitle);
 #endif 
 
-	//imgui
-	imGuiManager->End();
+
 }
 
 void Scene::Draw()
 {
 	state->Draw();
-
-	//imgui
-	imGuiManager->Draw();
 }
 
 void Scene::DrawSprite()
 {
 	state->DrawSprite();
 
+#ifdef _DEBUG
 	debugText.DrawAll(debugTextHandle);
+
+	//imgui
+	imGuiManager->Draw();
+#endif 
 }

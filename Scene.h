@@ -135,7 +135,9 @@ public:
 class SceneClear : public SceneState
 {
 private:
-
+	int count = 0;
+	const int countMax = 40;
+	Object sprite;
 
 public:
 	void Initialize()override;

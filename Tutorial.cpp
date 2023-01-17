@@ -52,7 +52,7 @@ void MoveTutorial::Draw()
 {
 	count += 0.1f;
 
-	sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.3f,50.0f + sinf(count) * 2.0f,0 }, 0.5f, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[MOVE]);
+	sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.25f,30.0f + sinf(count) * 2.4f,0 }, 0.58f, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[MOVE]);
 }
 
 //-------------------------------------------------------------------------------
@@ -74,7 +74,7 @@ void ConnectTutorial::Draw()
 {
 	count += 0.1f;
 
-	sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.3f,50.0f + sinf(count) * 2.0f,0 }, 0.5f, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[CONNECT]);
+	sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.25f,30.0f + sinf(count) * 2.4f,0 }, 0.58f, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[CONNECT]);
 }
 
 //------------------------------------------------------------------
@@ -97,7 +97,7 @@ void TurnTutorial::Draw()
 {
 	count += 0.1f;
 
-	sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.3f,50.0f + sinf(count) * 2.0f,0 }, 0.5f, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[TURN]);
+	sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.25f,30.0f + sinf(count) * 2.4f,0 }, 0.58f, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[TURN]);
 }
 
 //-----------------------------------------------------------------------
@@ -121,7 +121,7 @@ void OverlapTutorial::Draw()
 {
 	count += 0.1f;
 
-	sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.3f,50.0f + sinf(count) * 2.0f,0 }, 0.5f, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[OVERLAP]);
+	sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.25f,30.0f + sinf(count) * 2.4f,0 }, 0.58f, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[OVERLAP]);
 }
 
 
