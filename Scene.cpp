@@ -62,6 +62,13 @@ void SceneGame::Update()
 	Vec3 pos = scene->player->GetWorldPos();
 	scene->playerSocket->Update({ pos.x,pos.y + scene->player->GetRadius(),pos.z });
 
+	//リセット
+	if (KeyboardInput::GetInstance().KeyTrigger(DIK_R))
+	{
+		scene->player->Reset();
+		scene->blockManager->ResetBlock();
+	}
+
 	//シーン遷移
 	if (scene->player->isGoal)
 	{

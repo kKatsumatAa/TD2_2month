@@ -23,7 +23,7 @@ public:
 class StateNormalMoveP : public PlayerState
 {
 private:
-	int count = 0;
+	int countE = 0;
 
 public:
 	void Update(/*Tutorial* tutorial = nullptr*/);
@@ -37,6 +37,7 @@ private:
 	int count = 0;
 	const int countMax = 20;
 
+
 public:
 	void Update(/*Tutorial* tutorial = nullptr*/);
 	void Draw(Camera* camera, Model* model);
@@ -47,6 +48,7 @@ public:
 class StateNormalConTurP : public PlayerState
 {
 private:
+	int countE = 0;
 
 public:
 	void Update(/*Tutorial* tutorial = nullptr*/);
@@ -137,6 +139,8 @@ public:
 	void DrawSprite();
 
 	void SetWorldPos(const Vec3& pos) { worldTransform_.trans = pos; };
+
+	void Reset();
 
 	//衝突を検出したら呼び出す（コールバック関数）
 	//
