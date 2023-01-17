@@ -581,7 +581,7 @@ void BlockManager::UpdateOverlap()
 				for (int l = 0; l < blockWidth; l++)
 				{
 					//d‚È‚Á‚½Žž‚ÉŒ`‚ð•Ï‚¦‚éˆ—
-					if (CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans))
+					if (CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans) && form_[k][l] != Form::NONE && form_[i][j] != Form::NONE)
 					{
 						//“¯‚¶À•W‚Å‚Í‚È‚¢‚Æ‚«
 						if (i != k || j != l)
