@@ -72,7 +72,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 			blocks_[i][j]->Initialize(connectEM, normal, button, goal, Socket);
 
 			//ブロックの種類を設定
-			if (i == j)
+		/*	if (i == j)
 			{
 				form_[i][j] = Form::BUTTON;
 			}
@@ -83,7 +83,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 			else
 			{
 				form_[i][j] = Form::BLOCK;
-			}
+			}*/
 
 
 			//ブロックの座標を設定
