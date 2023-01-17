@@ -15,6 +15,7 @@ void Tutorial::Initialize()
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Connecting.png", texhandle[CONNECT]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Rotate.png", texhandle[TURN]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Overlapping.png", texhandle[OVERLAP]);
+		TextureManager::LoadGraph(L"Resources/image/restart.png", texhandle[OVERLAP + 1]);
 	}
 
 
@@ -29,6 +30,8 @@ void Tutorial::Update()
 void Tutorial::Draw()
 {
 	state->Draw();
+
+	sprite[0].DrawBoxSprite({ 10,10,0 }, 1.0f, { 1.0f,1.0f,1.0f,1.0f }, texhandle[OVERLAP + 1]);
 }
 
 
