@@ -54,6 +54,8 @@ private:
 
 	XMFLOAT4 color;
 
+	int count = 0;
+
 
 public:
 

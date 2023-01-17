@@ -219,10 +219,7 @@ bool BlockManager::GetPosIsBlock(Vec3 pos)
 				{
 					return true;
 				}
-				else
-				{
-					return false;
-				}
+				
 			}
 		}
 	}
@@ -717,7 +714,7 @@ void BlockManager::GenerateParticleTurnBlock()
 			if (action_[i][j] == Action::Connect)
 			{
 				//パーティクル発生
-				ParticleManager::GetInstance()->GenerateRandomParticle(4, 100, 0.9f, worldmats_[i][j].trans, 0.4f, 0,
+				ParticleManager::GetInstance()->GenerateRandomParticle(4, 100, 1.2f, worldmats_[i][j].trans, 0.4f, 0,
 					{ 1.0f,1.0f,0.0f,1.0f }, { 1.0f,0.0f,0.0f,1.0f });
 			}
 		}

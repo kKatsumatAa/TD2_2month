@@ -60,7 +60,19 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action)
 	if (form == Form::BLOCK) { draw[0].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color); }
 	if (form == Form::BUTTON) { draw[1].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &button_[0], color); }
 	//if (form == Form::GEAR) { draw[2].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &goal_[0],color); }
-	if (form == Form::GOAL) { draw[3].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &goal_[0], color); }
+	if (form == Form::GOAL) {
+		count++;
+		if (count % 240 == 0 || count % 240 == 10 || count % 240 == 20 || count % 240 == 30)
+		{
+			worldTransform_.scale = { scaleTmp + scaleTmp / 4.0f,scaleTmp + scaleTmp / 4.0f ,scaleTmp + scaleTmp / 4.0f };
+		}
+		if (worldTransform_.scale.x > scaleTmp) {
+			worldTransform_.scale.x -= 0.01f;
+			worldTransform_.scale.y -= 0.01f;
+			worldTransform_.scale.z -= 0.01f;
+		}
+		draw[3].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &goal_[0], color);
+	}
 
 	if (form == Form::LOCKED) { draw[2].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &socket_[0], color); }
 
