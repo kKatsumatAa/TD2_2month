@@ -1,5 +1,7 @@
 #include "BlockManager.h"
 #include <fstream>
+#include "ParticleManager.h"
+
 
 using namespace std;
 
@@ -72,18 +74,18 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 			blocks_[i][j]->Initialize(connectEM, normal, button, goal, Socket);
 
 			//ブロックの種類を設定
-			//if (i == j)
-			//{
-			//	form_[i][j] = Form::BUTTON;
-			//}
-			//else if (i == 10 && j == 5)
-			//{
-			//	form_[i][j] = Form::GOAL;
-			//}
-			//else
-			//{
-			//	form_[i][j] = Form::BLOCK;
-			//}
+		/*	if (i == j)
+			{
+				form_[i][j] = Form::BUTTON;
+			}
+			else if (i == 10 && j == 5)
+			{
+				form_[i][j] = Form::GOAL;
+			}
+			else
+			{
+				form_[i][j] = Form::BLOCK;
+			}*/
 
 
 			//ブロックの座標を設定
@@ -466,6 +468,9 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 			{
 				tutorial->AddStateNum();
 			}
+
+			//パーティクル発生
+			GenerateParticleTurnBlock();
 		}
 
 	}
@@ -512,6 +517,9 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 			{
 				tutorial->AddStateNum();
 			}
+
+			//パーティクル発生
+			GenerateParticleTurnBlock();
 		}
 	}
 
@@ -669,18 +677,18 @@ void BlockManager::ResetBlock()
 			}
 
 			//ブロックの種類を設定
-			//if (i == j)
-			//{
-			//	form_[i][j] = Form::BUTTON;
-			//}
-			//else if (i == 10 && j == 5)
-			//{
-			//	form_[i][j] = Form::GOAL;
-			//}
-			//else
-			//{
-			//	form_[i][j] = Form::BLOCK;
-			//}
+			if (i == j)
+			{
+				form_[i][j] = Form::BUTTON;
+			}
+			else if (i == 10 && j == 5)
+			{
+				form_[i][j] = Form::GOAL;
+			}
+			else
+			{
+				form_[i][j] = Form::BLOCK;
+			}
 
 			worldmats_[i][j].SetWorld();
 
@@ -692,6 +700,22 @@ void BlockManager::ResetBlock()
 
 			//現在どうなっているか
 			action_[i][j] = Action::None;
+		}
+	}
+}
+
+void BlockManager::GenerateParticleTurnBlock()
+{
+	for (int i = 0; i < blockWidth; i++)
+	{
+		for (int j = 0; j < blockHeight; j++)
+		{
+			if (action_[i][j] == Action::Connect)
+			{
+				//パーティクル発生
+				ParticleManager::GetInstance()->GenerateRandomParticle(4, 100, 0.9f, worldmats_[i][j].trans, 0.4f, 0,
+					{ 1.0f,1.0f,0.0f,1.0f }, { 1.0f,0.0f,0.0f,1.0f });
+			}
 		}
 	}
 }
