@@ -2,7 +2,7 @@
 #include "Block.h"
 #include <vector>
 #include <string>
-
+#include <sstream>
 
 
 class BlockManager 
@@ -69,7 +69,11 @@ public:
 	//進む先に重なっているブロックがあるかどうか
 	//bool GetIsOverlapBlock(Vec3 pos);
 
-
+	//ブロック座標読み込み
+	void LoadBlockPosData();
+	void UpdateBlockPos();
+	//ブロックの発生関数
+	void BlockPop(Vec3 pos);
 
 	//ブロックのリセット
 	void ResetBlock();
@@ -163,6 +167,14 @@ private:
 
 	//比較用に保存しておく変数
 	Vec3 comparisonPos[blockWidth][blockHeight];
+
+	//ファイル読み込み用の変数
+	std::stringstream blocksPos;
+
+	//待機中フラグ
+	bool isWaitBlock;
+	//待機中タイマー
+	int32_t blockWaitTimer;
 
 };
 

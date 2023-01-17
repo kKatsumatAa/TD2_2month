@@ -1,4 +1,5 @@
 #include "BlockManager.h"
+#include <fstream>
 
 using namespace std;
 
@@ -683,31 +684,113 @@ void BlockManager::ResetBlock()
 }
 
 
-//
-////進む先に重なっているブロックがあるかどうか
-//bool BlockManager::GetIsOverlapBlock(Vec3 pos)
-//{
-//	for (int i = 0; i < blockWidth; i++)
-//	{
-//		for (int j = 0; j < blockHeight; j++)
-//		{
-//			//プレイヤーが指定のブロックの上にいるかどうか
-//			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
-//				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
-//			{
-//				//そのブロックの形状は重なっているかどうか
-//				if (form_[i][j] != Form::LOCKED)
-//				{
-//					return true;
-//				}
-//				else
-//				{
-//					return false;
-//				}
-//			}
-//		}
-//	}
-//
-//	//プレイヤーがどのブロックにもいない場合
-//	return false;
-//}
+void BlockManager::LoadBlockPosData()
+{
+	//ファイルを開く
+	std::ifstream file;
+	file.open("Resources\\blockPos.csv");
+	assert(file.is_open());
+
+	//ファイルの内容を文字列ストリームにコピー
+	blocksPos << file.rdbuf();
+
+	//ファイルを閉じる
+	file.close();
+}
+
+void BlockManager::BlockPop(Vec3 pos)
+{
+	//敵の生成
+
+	//ベクタ配列に要素<ブロック>を追加
+	for (int i = 0; i < blockWidth; i++)
+	{
+		//ブロック型を持てる空のベクタを追加(行列でいうi列)
+		blocks_.push_back(vector<Block*>());
+
+		for (int j = 0; j < blockHeight; j++)
+		{
+			block_ = new Block;
+			//ブロックの要素を追加
+			blocks_[i].push_back(block_);
+		}
+	}
+
+	for (int i = 0; i < blockWidth; i++)
+	{
+		for (int j = 0; j < blockHeight; j++)
+		{
+			worldmats_[i][j].trans = pos;
+		}
+	}
+}
+
+void BlockManager::UpdateBlockPos()
+{
+	//待機処理
+	if (isWaitBlock)
+	{
+		blockWaitTimer--;
+		if (blockWaitTimer <= 0)
+		{
+			//待機完了
+			isWaitBlock = false;
+		}
+		return;
+	}
+
+	//1行分の文字列を入れる変数
+	std::string line;
+
+	//コマンド実行ループ
+	while (getline(blocksPos, line))
+	{
+		//1行分の文字列をストリームに変換して解析しやすくする
+		std::istringstream line_stream(line);
+
+		std::string word;
+		//,区切りで行の先頭文字列を取得
+		getline(line_stream, word, ',');
+
+		//"//"から始まる行はコメント
+		if (word.find("//") == 0)
+		{
+			//コメント行を飛ばす
+			continue;
+		}
+
+		//POPコマンドcsv
+		if (word.find("POP") == 0)
+		{
+			//X座標
+			getline(line_stream, word, ',');
+			float x = (float)std::atof(word.c_str());
+			//Y座標
+			getline(line_stream, word, ',');
+			float y = (float)std::atof(word.c_str());
+			//Z座標
+			getline(line_stream, word, ',');
+			float z = (float)std::atof(word.c_str());
+
+			//ブロックを発生させる
+			BlockPop(Vec3(x, y, z));
+		}
+		//WAITコマンド
+		else if (word.find("WAIT") == 0)
+		{
+			getline(line_stream, word, ',');
+
+			//待ち時間
+			int32_t waitTime = atoi(word.c_str());
+
+			//待機開始
+			isWaitBlock = true;
+			blockWaitTimer = waitTime;
+
+			//コマンドループを抜ける
+			break;
+		}
+	}
+
+}
+

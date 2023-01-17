@@ -77,6 +77,7 @@ public:
 	std::unique_ptr<ConnectingEffect2Manager> connectE2M;
 
 	BlockManager* blockManager = nullptr;
+	
 
 public:
 	~Scene();
@@ -86,6 +87,7 @@ public:
 	void Update();
 	void Draw();
 	void DrawSprite();
+	
 };
 
 class SceneTitle : public SceneState
