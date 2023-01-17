@@ -508,6 +508,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 	{
 		UpdateOverlap();
 	}
+
 	else if (isLeftRolling == true || isRightRolling == true)
 	{
 		RepositBlock();
@@ -558,33 +559,25 @@ void BlockManager::UpdateOverlap()
 			{
 				for (int l = 0; l < blockWidth; l++)
 				{
-				
 					//重なった時に形を変える処理
 					if (CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans))
 					{
 						//同じ座標ではないとき
 						if (i != k || j != l )
 						{
-							if (form_[i][j] != Form::BUTTON && form_[k][l] != Form::BUTTON)
+							if (form_[i][j] != Form::BUTTON && form_[k][l] != Form::BUTTON )
 							{
 								//重なっているブロック両方を固定ブロック化
 								form_[i][j] = Form::LOCKED;
 								form_[k][l] = Form::LOCKED;
+								/*action_[i][j] = Action::Overlap;
+								action_[k][l] = Action::Overlap;*/
+								/*isOverLap_[i][j] = true;
+								isOverLap_[k][l] = true;*/
+
 							}
 						}
 					}
-					/*else if (CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans) == false)
-					{
-						if (form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED)
-						{
-							if (i != k || j != l)
-							{
-								form_[i][j] = Form::BLOCK;
-								form_[k][l] = Form::BLOCK;
-							}
-						}
-					}*/
-
 				}
 			}
 		}
@@ -605,12 +598,20 @@ void BlockManager::RepositBlock()
 					bool isOverlap = CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans);
 
 					//重なりが外れて元の状態に戻す処理
-					if (isOverlap == false && form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED && action_[i][j] == Action::Connect)
+					
+					//formのところを||にすれば一応できる
+					if (isOverlap == false && form_[i][j] == Form::LOCKED || form_[k][l] == Form::LOCKED &&
+						 action_[i][j] == Action::Connect && form_[i][j] != Form::BUTTON)
+					/*if (form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED &&
+						action_[i][j] == Action::Connect )*/
 					{
 						if (i != k || j != l)
 						{
 							form_[i][j] = Form::BLOCK;
-							form_[k][l] = Form::BLOCK;
+							//form_[k][l] = Form::BLOCK;
+							/*isOverLap_[i][j] = false;
+							isOverLap_[k][l] = false;*/
+
 						}
 					}
 
@@ -618,7 +619,6 @@ void BlockManager::RepositBlock()
 			}
 		}
 	}
-
 }
 
 //ブロックブロックの矩形の当たり判定

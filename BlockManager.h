@@ -176,5 +176,7 @@ private:
 	//待機中タイマー
 	int32_t blockWaitTimer;
 
+	int isOverLap_[blockWidth][blockHeight];
+
 };
 
