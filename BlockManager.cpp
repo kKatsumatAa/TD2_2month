@@ -14,7 +14,7 @@ BlockManager::~BlockManager()
 }
 
 //初期化
-void BlockManager::Initialize(ConnectingEffectManager* connectEM, Camera* camera,
+void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, Camera* camera,
 	Model* normal, Model* button, Model* goal, Model* Socket)
 {
 	blocks_.clear();
@@ -22,6 +22,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Camera* camera
 
 	this->connectEM = connectEM;
 	this->camera = camera;
+	this->tutorial = tutorial;
 
 	//std::unique_ptr<Block> newBullet = std::make_unique<Block>();
 
@@ -459,6 +460,12 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		{
 			isRightRolling = false;
 			camera->CameraShake(10, 0.9f);
+
+			//チュートリアル
+			if (tutorial->GetState() == TUTORIAL::TURN)
+			{
+				tutorial->AddStateNum();
+			}
 		}
 
 	}
@@ -499,6 +506,12 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		{
 			isLeftRolling = false;
 			camera->CameraShake(10, 0.9f);
+
+			//チュートリアル
+			if (tutorial->GetState() == TUTORIAL::TURN)
+			{
+				tutorial->AddStateNum();
+			}
 		}
 	}
 
@@ -574,6 +587,12 @@ void BlockManager::UpdateOverlap()
 								isOverLap_[k][l] = true;*/
 
 							}
+						}
+
+						//チュートリアル
+						if (tutorial->GetState() == TUTORIAL::OVERLAP)
+						{
+							//tutorial->AddStateNum();
 						}
 					}
 				}

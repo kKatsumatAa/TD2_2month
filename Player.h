@@ -128,12 +128,13 @@ public:
 
 	ConnectingEffect2Manager* connectE2M;
 
+	Tutorial* tutorial;
 
 	void ChangeStateTurnConnect(PlayerState* state);
 	void ChangeStateMove(PlayerState* state);
 
 	void Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket, 
-		ConnectingEffect2Manager* connectE2M, Model* model, DebugText* debugText_/*,Tutorial* tutorial = nullptr*/);
+		ConnectingEffect2Manager* connectE2M, Tutorial* tutorial, Model* model, DebugText* debugText_/*,Tutorial* tutorial = nullptr*/);
 	void Update();
 	void Draw(Camera* camera);
 	void DrawSprite();

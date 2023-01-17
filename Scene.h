@@ -80,6 +80,8 @@ public:
 	std::unique_ptr<PlayerSocket> playerSocket;
 	std::unique_ptr<ConnectingEffect2Manager> connectE2M;
 
+	std::unique_ptr<Tutorial> tutorial;
+
 	BlockManager* blockManager = nullptr;
 	
 
