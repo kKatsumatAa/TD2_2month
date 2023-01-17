@@ -64,6 +64,8 @@ void SceneGame::Update()
 
 	scene->tutorial->Update();
 
+	ParticleManager::GetInstance()->Update(&scene->camera->viewMat, &scene->camera->projectionMat);
+
 	//リセット
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_R))
 	{
@@ -92,6 +94,8 @@ void SceneGame::Draw()
 	scene->playerSocket->Draw(scene->camera.get());
 	scene->connectEM->Draw(*scene->camera.get());
 	scene->connectE2M->Draw(scene->camera.get());
+
+	ParticleManager::GetInstance()->Draw(scene->texhandle[1]);
 }
 
 void SceneGame::DrawSprite()
@@ -248,6 +252,9 @@ void Scene::Initialize()
 	//imgui
 	imGuiManager = new ImGuiManager();
 	imGuiManager->Initialize();
+
+	//パーティクル
+	ParticleManager::GetInstance()->Initialize();
 
 	//tutorial
 	tutorial = std::make_unique<Tutorial>();
