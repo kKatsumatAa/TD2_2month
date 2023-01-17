@@ -16,7 +16,7 @@ void Player::ChangeStateMove(PlayerState* state)
 }
 
 void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket,
-	ConnectingEffect2Manager* connectE2M, Model* model, DebugText* debugText_)
+	ConnectingEffect2Manager* connectE2M, Tutorial* tutorial, Model* model, DebugText* debugText_)
 {
 	assert(model);
 
@@ -26,6 +26,7 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 	this->blockM = blockM;
 	this->playerSocket = playerSocket;
 	this->connectE2M = connectE2M;
+	this->tutorial = tutorial;
 
 	isPlayer = true;
 	isDead = false;
@@ -191,6 +192,12 @@ void StateNormalMoveP::Update()
 			Vec3 scale = player->GetWorldTransForm()->scale;
 			player->GetWorldTransForm()->scale = { scale.x * 1.1f,scale.y * 0.8f,scale.z * 1.1f };
 
+			//チュートリアル
+			if (player->tutorial->GetState() == TUTORIAL::MOVE)
+			{
+				player->tutorial->AddStateNum();
+			}
+
 			player->ChangeStateMove(new StateMoveP);
 		}
 	}
@@ -287,6 +294,12 @@ void StateConnectP::Update()
 			Vec3 endScale = { player->GetRadius() * 0.1f,player->GetRadius() * 100.0f,player->GetRadius() * 0.1f };
 			player->connectE2M->GenerateConnectingEffect2(player->GetWorldPos(), startScale, endScale
 				, { 0.2f,0.1f,1.0f,0.9f }, { 1.0f,1.0f,1.0f,0.3f }, 40);
+
+			//チュートリアル
+			if (player->tutorial->GetState() == TUTORIAL::CONNECT)
+			{
+				player->tutorial->AddStateNum();
+			}
 
 			player->ChangeStateTurnConnect(new StateTurnP);
 		}

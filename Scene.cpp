@@ -41,12 +41,12 @@ void SceneTitle::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
-	scene->blockManager->Initialize(scene->connectEM.get(), scene->camera.get(),
+	scene->blockManager->Initialize(scene->connectEM.get(), scene->tutorial.get(), scene->camera.get(),
 		scene->model[1], scene->model[2], scene->model[3], scene->model[4]);
 	scene->camera->Initialize();
 	scene->connectEM->Initialize();
 	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
-		, scene->connectE2M.get(), scene->model[0], &scene->debugText);
+		, scene->connectE2M.get(), scene->tutorial.get(), scene->model[0], &scene->debugText);
 	scene->playerSocket->Initialize(scene->model[0]);
 }
 
@@ -61,6 +61,8 @@ void SceneGame::Update()
 
 	Vec3 pos = scene->player->GetWorldPos();
 	scene->playerSocket->Update({ pos.x,pos.y + scene->player->GetRadius(),pos.z });
+
+	scene->tutorial->Update();
 
 	//リセット
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_R))
@@ -94,6 +96,7 @@ void SceneGame::Draw()
 
 void SceneGame::DrawSprite()
 {
+	scene->tutorial->Draw();
 }
 
 
@@ -193,6 +196,7 @@ Scene::~Scene()
 	player.reset();
 	playerSocket.reset();
 	connectE2M.reset();
+	tutorial.reset();
 	imGuiManager->Finalize();
 	delete imGuiManager;
 	delete lightManager;
@@ -237,12 +241,16 @@ void Scene::Initialize()
 	imGuiManager = new ImGuiManager();
 	imGuiManager->Initialize();
 
+	//tutorial
+	tutorial = std::make_unique<Tutorial>();
+	tutorial->Initialize();
+
 	//電気エフェクト
 	connectEM = std::make_unique<ConnectingEffectManager>();
 	connectEM->Initialize();
 
 	blockManager = new BlockManager();
-	blockManager->Initialize(connectEM.get(), camera.get(), model[1], model[2], model[3], model[4]);
+	blockManager->Initialize(connectEM.get(), tutorial.get(), camera.get(), model[1], model[2], model[3], model[4]);
 
 	//Light
 	LightManager::StaticInitialize();
@@ -270,9 +278,9 @@ void Scene::Initialize()
 	camera->SetEye({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 40, -30 });
 	camera->SetTarget({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 0, 0 });
 	camera->UpdateViewMatrix();
-	cameraPosImgui[0] = {blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f};
-	cameraPosImgui[1] = {35};
-	cameraPosImgui[2] = {-30};
+	cameraPosImgui[0] = { blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f };
+	cameraPosImgui[1] = { 35 };
+	cameraPosImgui[2] = { -30 };
 	cameraTarget[0] = { blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f };
 	cameraTarget[1] = { 10 };
 	cameraTarget[2] = { 0 };
@@ -287,7 +295,7 @@ void Scene::Initialize()
 
 	//player
 	player = std::make_unique<Player>();
-	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), model[0], &debugText);
+	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), tutorial.get(), model[0], &debugText);
 
 
 
@@ -306,7 +314,7 @@ void Scene::Update()
 		//デモ
 		ImGui::ShowDemoWindow();
 
-		
+
 
 		static bool a = true;
 		ImGui::Begin("circleShadow", &a, ImGuiWindowFlags_MenuBar);
@@ -316,7 +324,7 @@ void Scene::Update()
 		/*ImGui::InputFloat2("circleShadowFactorAngle", circleShadowFactorAngle);
 		ImGui::InputFloat("distanceLight", &circleShadowDistance);*/
 
-		camera->SetEye({ cameraPosImgui[0],cameraPosImgui[1],cameraPosImgui[2]});
+		camera->SetEye({ cameraPosImgui[0],cameraPosImgui[1],cameraPosImgui[2] });
 		camera->SetTarget({ cameraTarget[0],cameraTarget[1],cameraTarget[2] });
 
 

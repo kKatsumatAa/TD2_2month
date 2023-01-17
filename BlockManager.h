@@ -1,5 +1,6 @@
 #pragma once
 #include "Block.h"
+#include "Tutorial.h"
 #include <vector>
 #include <string>
 #include <sstream>
@@ -16,7 +17,7 @@ public:
 	~BlockManager();
 
 	//èâä˙âª
-	void Initialize(ConnectingEffectManager* connectEM,Camera * camera, 
+	void Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial,Camera * camera,
 		Model* normal, Model* button, Model* goal, Model* Socket);
 
 	//çXêV
@@ -87,6 +88,8 @@ public:
 
 
 private:
+	Tutorial* tutorial;
+
 	Camera* camera;
 
 	UINT64 texhandle[10];
