@@ -72,18 +72,18 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 			blocks_[i][j]->Initialize(connectEM, normal, button, goal, Socket);
 
 			//ブロックの種類を設定
-			if (i == j)
-			{
-				form_[i][j] = Form::BUTTON;
-			}
-			else if (i == 10 && j == 5)
-			{
-				form_[i][j] = Form::GOAL;
-			}
-			else
-			{
-				form_[i][j] = Form::BLOCK;
-			}
+			//if (i == j)
+			//{
+			//	form_[i][j] = Form::BUTTON;
+			//}
+			//else if (i == 10 && j == 5)
+			//{
+			//	form_[i][j] = Form::GOAL;
+			//}
+			//else
+			//{
+			//	form_[i][j] = Form::BLOCK;
+			//}
 
 
 			//ブロックの座標を設定
