@@ -151,7 +151,7 @@ void StateNormalMoveP::Update()
 
 		Vec3 trans = { player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z };
 
-		player->GetWorldTransForm()->trans = { trans.x ,player->posYTmp + sinf(countE * 0.07f) ,trans.z };
+		player->GetWorldTransForm()->trans = { trans.x ,player->posYTmp + sinf(countE * 0.07f)*0.3f ,trans.z };
 	}
 
 	//ˆÚ“®‚Ìê‡(‰ñ“]’†‚ÍˆÚ“®‚µ‚È‚¢)

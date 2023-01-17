@@ -276,7 +276,7 @@ void BlockManager::RegistAxisButton(const Vec3& pos)
 					axis_pos_.y = worldmats_[i][j].trans.y;
 					axis_pos_.z = worldmats_[i][j].trans.z;
 
-					camera->CameraShake(10, 1.2f);
+					camera->CameraShake(10, 1.0f);
 				}
 				else {}
 			}
@@ -305,7 +305,7 @@ void BlockManager::UpdateConnect(Vec3 pos)
 
 				}
 
-				camera->CameraShake(10, 0.3f);
+				camera->CameraShake(10, 0.23f);
 
 				////Œq‚¬‚Í‚¶‚ß
 				////ƒ{ƒ^ƒ“‚©‚ÂŒq‚ª‚Á‚Ä‚¢‚È‚¯‚ê‚ÎŒ»ÝˆÊ’u‚ð‚Â‚È‚®ó‘Ô‚É‚·‚é
@@ -354,7 +354,7 @@ bool BlockManager::CheckAxisButton(Vec3 pos)
 			{
 				if (isAxis_[i][j] == false && form_[i][j] == Form::BUTTON)
 				{
-					camera->CameraShake(10, 0.7f);
+					camera->CameraShake(10, 0.6f);
 					return true;
 				}
 			}
@@ -458,7 +458,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		if (rotateCount >= rotateCountMax)
 		{
 			isRightRolling = false;
-			camera->CameraShake(10, 1.4f);
+			camera->CameraShake(10, 0.9f);
 		}
 
 	}
@@ -498,7 +498,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		if (rotateCount >= rotateCountMax)
 		{
 			isLeftRolling = false;
-			camera->CameraShake(10, 1.4f);
+			camera->CameraShake(10, 0.9f);
 		}
 	}
 

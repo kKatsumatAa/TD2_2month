@@ -67,6 +67,7 @@ void SceneGame::Update()
 	{
 		scene->player->Reset();
 		scene->blockManager->ResetBlock();
+		scene->playerSocket->Initialize(scene->model[0]);
 	}
 
 	//シーン遷移
@@ -262,12 +263,19 @@ void Scene::Initialize()
 	//丸影
 	lightManager->SetCircleShadowActive(0, true);
 
+
 	//カメラ
 	camera = std::make_unique<Camera>();
 	camera->Initialize();
-	camera->SetEye({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 40, -50 });
+	camera->SetEye({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 40, -30 });
 	camera->SetTarget({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 0, 0 });
 	camera->UpdateViewMatrix();
+	cameraPosImgui[0] = {blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f};
+	cameraPosImgui[1] = {35};
+	cameraPosImgui[2] = {-30};
+	cameraTarget[0] = { blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f };
+	cameraTarget[1] = { 10 };
+	cameraTarget[2] = { 0 };
 
 	//playerSocket
 	playerSocket = std::make_unique<PlayerSocket>();
@@ -298,28 +306,33 @@ void Scene::Update()
 		//デモ
 		ImGui::ShowDemoWindow();
 
-		//丸影
-		lightManager->SetCircleShadowDir(0,
-			XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2],0 }));
-		lightManager->SetCircleShadowCasterPos(0,
-			XMFLOAT3({ player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z}));
-		lightManager->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
-		lightManager->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
-		lightManager->SetCircleShadowDistanceCasterLight(0, circleShadowDistance);
+		
 
 		static bool a = true;
 		ImGui::Begin("circleShadow", &a, ImGuiWindowFlags_MenuBar);
 
-		ImGui::InputFloat3("circleShadowDir", circleShadowDir);
-		ImGui::InputFloat3("circleShadowAtten", circleShadowAtten);
-		ImGui::InputFloat2("circleShadowFactorAngle", circleShadowFactorAngle);
-		ImGui::InputFloat("distanceLight", &circleShadowDistance);
+		ImGui::InputFloat3("cameraPos", cameraPosImgui);
+		ImGui::InputFloat3("cameraTarget", cameraTarget);
+		/*ImGui::InputFloat2("circleShadowFactorAngle", circleShadowFactorAngle);
+		ImGui::InputFloat("distanceLight", &circleShadowDistance);*/
+
+		camera->SetEye({ cameraPosImgui[0],cameraPosImgui[1],cameraPosImgui[2]});
+		camera->SetTarget({ cameraTarget[0],cameraTarget[1],cameraTarget[2] });
 
 
 		ImGui::End();
 		lightManager->Update();
 
 	}
+
+	//丸影
+	lightManager->SetCircleShadowDir(0,
+		XMVECTOR({ circleShadowDir[0], circleShadowDir[1], circleShadowDir[2],0 }));
+	lightManager->SetCircleShadowCasterPos(0,
+		XMFLOAT3({ player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z }));
+	lightManager->SetCircleShadowAtten(0, XMFLOAT3(circleShadowAtten));
+	lightManager->SetCircleShadowFactorAngle(0, XMFLOAT2(circleShadowFactorAngle));
+	lightManager->SetCircleShadowDistanceCasterLight(0, circleShadowDistance);
 
 	camera->Update();
 
