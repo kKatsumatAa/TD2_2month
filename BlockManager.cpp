@@ -1,5 +1,7 @@
 #include "BlockManager.h"
 #include <fstream>
+#include "ParticleManager.h"
+
 
 using namespace std;
 
@@ -466,6 +468,9 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 			{
 				tutorial->AddStateNum();
 			}
+
+			//パーティクル発生
+			GenerateParticleTurnBlock();
 		}
 
 	}
@@ -512,6 +517,9 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 			{
 				tutorial->AddStateNum();
 			}
+
+			//パーティクル発生
+			GenerateParticleTurnBlock();
 		}
 	}
 
@@ -692,6 +700,22 @@ void BlockManager::ResetBlock()
 
 			//現在どうなっているか
 			action_[i][j] = Action::None;
+		}
+	}
+}
+
+void BlockManager::GenerateParticleTurnBlock()
+{
+	for (int i = 0; i < blockWidth; i++)
+	{
+		for (int j = 0; j < blockHeight; j++)
+		{
+			if (action_[i][j] == Action::Connect)
+			{
+				//パーティクル発生
+				ParticleManager::GetInstance()->GenerateRandomParticle(4, 100, 0.9f, worldmats_[i][j].trans, 0.4f, 0,
+					{ 1.0f,1.0f,0.0f,1.0f }, { 1.0f,0.0f,0.0f,1.0f });
+			}
 		}
 	}
 }
