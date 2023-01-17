@@ -74,18 +74,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 			blocks_[i][j]->Initialize(connectEM, normal, button, goal, Socket);
 
 			//ブロックの種類を設定
-		/*	if (i == j)
-			{
-				form_[i][j] = Form::BUTTON;
-			}
-			else if (i == 10 && j == 5)
-			{
-				form_[i][j] = Form::GOAL;
-			}
-			else
-			{
-				form_[i][j] = Form::BLOCK;
-			}*/
+			form_[i][j] = formTmp_[i][j];
 
 
 			//ブロックの座標を設定
@@ -112,6 +101,19 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 
 	//その他の設定
 	isCount = 1;
+
+	changedAction_ = false;
+	isChanged_ = false;
+	//回転
+
+	isRightRolling = false;
+	isLeftRolling = false;
+
+	rotateCount = 0;
+
+	angle_ = 0;
+
+	effectCount = 0;
 }
 
 void BlockManager::Update()
@@ -584,7 +586,7 @@ void BlockManager::UpdateOverlap()
 						//同じ座標ではないとき
 						if (i != k || j != l)
 						{
-							if (form_[i][j] != Form::BUTTON && form_[k][l] != Form::BUTTON )
+							if (form_[i][j] != Form::BUTTON && form_[k][l] != Form::BUTTON)
 							{
 								//重なっているブロック両方を固定ブロック化
 								form_[i][j] = Form::LOCKED;
@@ -623,12 +625,12 @@ void BlockManager::RepositBlock()
 					bool isOverlap = CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans);
 
 					//重なりが外れて元の状態に戻す処理
-					
+
 					//formのところを||にすれば一応できる
 					if (isOverlap == false && form_[i][j] == Form::LOCKED || form_[k][l] == Form::LOCKED &&
-						 action_[i][j] == Action::Connect && form_[i][j] != Form::BUTTON)
-					/*if (form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED &&
-						action_[i][j] == Action::Connect )*/
+						action_[i][j] == Action::Connect && form_[i][j] != Form::BUTTON)
+						/*if (form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED &&
+							action_[i][j] == Action::Connect )*/
 					{
 						if (i != k || j != l)
 						{
@@ -676,19 +678,8 @@ void BlockManager::ResetBlock()
 				worldmats_[i][j].trans.z = j * (worldmats_[i][j].scale.y * 2.0f);
 			}
 
-			//ブロックの種類を設定
-			if (i == j)
-			{
-				form_[i][j] = Form::BUTTON;
-			}
-			else if (i == 10 && j == 5)
-			{
-				form_[i][j] = Form::GOAL;
-			}
-			else
-			{
-				form_[i][j] = Form::BLOCK;
-			}
+			////ブロックの種類を設定
+			form_[i][j] = formTmp_[i][j];
 
 			worldmats_[i][j].SetWorld();
 
@@ -702,6 +693,19 @@ void BlockManager::ResetBlock()
 			action_[i][j] = Action::None;
 		}
 	}
+
+	changedAction_ = false;
+	isChanged_ = false;
+	//回転
+
+	isRightRolling = false;
+	isLeftRolling = false;
+
+	rotateCount = 0;
+
+	angle_ = 0;
+
+	effectCount = 0;
 }
 
 void BlockManager::GenerateParticleTurnBlock()
