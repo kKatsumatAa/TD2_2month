@@ -112,10 +112,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Camera* camera
 
 void BlockManager::Update()
 {
-	if (isLeftRolling == false && isRightRolling == false)
-	{
-		//UpdateOverlap();
-	}
+	
 	
 
 	for (int i = 0; i < blockWidth; i++)
@@ -158,7 +155,7 @@ void BlockManager::Draw(Camera* camera)
 			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j]);
 
 
-			if (action_[i][j] == Action::Connect && effectCount >= effectCountMax)
+			/*if (action_[i][j] == Action::Connect && effectCount >= effectCountMax)
 			{
 				if (isAxis_[i][j])
 				{
@@ -170,7 +167,7 @@ void BlockManager::Draw(Camera* camera)
 				}
 
 				isEffect = true;
-			}
+			}*/
 		}
 	}
 
@@ -510,7 +507,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 	{
 		UpdateOverlap();
 	}
-	else if (isLeftRolling == false || isRightRolling == false)
+	else if (isLeftRolling == true || isRightRolling == true)
 	{
 		RepositBlock();
 	}
@@ -607,7 +604,7 @@ void BlockManager::RepositBlock()
 					bool isOverlap = CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans);
 
 					//重なりが外れて元の状態に戻す処理
-					if (isOverlap == false && form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED)
+					if (isOverlap == false && form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED && action_[i][j] == Action::Connect)
 					{
 						if (i != k || j != l)
 						{
@@ -654,6 +651,31 @@ void BlockManager::ResetBlock()
 				{
 					worldmats_[i][j].trans.z = j * (worldmats_[i][j].scale.y * 2.0f);
 				}
+
+				//ブロックの種類を設定
+				if (i == j)
+				{
+					form_[i][j] = Form::BUTTON;
+				}
+				else if (i == 10 && j == 5)
+				{
+					form_[i][j] = Form::GOAL;
+				}
+				else
+				{
+					form_[i][j] = Form::BLOCK;
+				}
+
+				worldmats_[i][j].SetWorld();
+
+				//block_->Initialize(connectEM, normal, button, goal, Socket);
+
+
+				//軸になっているかどうか
+				isAxis_[i][j] = false;
+
+				//現在どうなっているか
+				action_[i][j] = Action::None;
 			}
 		}
 	}

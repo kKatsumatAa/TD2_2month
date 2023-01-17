@@ -69,6 +69,8 @@ public:
 	//進む先に重なっているブロックがあるかどうか
 	//bool GetIsOverlapBlock(Vec3 pos);
 
+
+
 	//ブロックのリセット
 	void ResetBlock();
 
