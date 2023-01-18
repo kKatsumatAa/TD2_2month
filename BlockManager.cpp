@@ -215,7 +215,7 @@ bool BlockManager::GetPosIsBlock(Vec3 pos)
 				&& worldmats_[i][j].trans.z - blockRadius_ <= pos.z && worldmats_[i][j].trans.z + blockRadius_ >= pos.z)
 			{
 				//そのブロックの形状は普通のブロックかどうか
-				if (form_[i][j] != Form::NONE && form_[i][j] != Form::LOCKED)
+				if (form_[i][j] != Form::NONE && form_[i][j] != Form::LOCKED && action_[i][j] != Action::Connect)
 				{
 					return true;
 				}
