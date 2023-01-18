@@ -114,8 +114,16 @@ void Player::Update()
 
 	}
 
+	//先行入力
+	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
+	{
+		bufferedPushSpace = true;
+	}
+
 	stateMove->Update();
 	stateConnectTurn->Update();
+
+
 
 	worldTransform_.SetWorld();
 
@@ -218,7 +226,7 @@ void StateNormalMoveP::Update()
 		{
 			//演出
 			shake.SetShake(12, player->moveDistance / 4.0f);
-		
+
 			effectCount = effectCountTmp;
 		}
 	}
@@ -262,14 +270,15 @@ void StateMoveP::Draw(Camera* camera, Model* model)
 //--------------------------------------------------------------------------
 void StateNormalConTurP::Update()
 {
-
-
 	//繋ぐ
-	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
+	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) || player->bufferedPushSpace) && !player->isMove)
 	{
 		//ボタンがあったら
-		if (player->blockM->GetPosIsButton(player->GetWorldPos()) && !player->isMove)
+		if (player->blockM->GetPosIsButton(player->GetWorldPos()) /*&& !player->isMove*/)
 		{
+			player->bufferedPushSpace = false;
+			player->isConnect = true;
+
 			//軸を登録
 			player->blockM->RegistAxisButton(player->GetWorldPos());
 
@@ -288,6 +297,10 @@ void StateNormalConTurP::Update()
 
 			player->ChangeStateTurnConnect(new StateConnectP);
 		}
+		else
+		{
+			player->bufferedPushSpace = false;
+		}
 	}
 }
 
@@ -300,11 +313,13 @@ void StateConnectP::Update()
 {
 	player->blockM->UpdateConnect(player->GetWorldPos());
 
-	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
+	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) || player->bufferedPushSpace) && !player->isMove)
 	{
 		//押したところがボタンだったら
 		if (player->blockM->CheckAxisButton(player->GetWorldPos()))
 		{
+			player->bufferedPushSpace = false;
+
 			player->isTurnNow = true;
 
 			//演出
@@ -331,6 +346,10 @@ void StateConnectP::Update()
 			player->blockM->ReleseConectedBlock();
 			//コンセントを抜く
 			player->playerSocket->FinishSocket(player->GetWorldPos());
+
+			player->isConnect = false;
+
+			player->bufferedPushSpace = false;
 
 			//演出
 			Vec3 scale = player->GetWorldTransForm()->scale;
@@ -361,6 +380,10 @@ void StateTurnP::Update()
 		player->blockM->ReleseConectedBlock();
 		//コンセントを抜く
 		player->playerSocket->FinishSocket(player->GetWorldPos());
+
+		player->isConnect = false;
+
+		player->bufferedPushSpace = false;
 
 		//演出
 		Vec3 scale = player->GetWorldTransForm()->scale;

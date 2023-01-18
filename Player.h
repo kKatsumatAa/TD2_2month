@@ -83,6 +83,15 @@ public:
 
 //--------------------------------------------------------
 
+enum BUFFERED_INPUT_ARROW
+{
+	NONE,
+	RIGHT,
+	DOWN,
+	LEFT,
+	UP
+};
+
 class Player : public Collider
 {
 private:
@@ -126,7 +135,11 @@ public:
 	Vec3 moveEndPos;
 	Vec3 moveStartPos;
 
-	Object draw[10];
+	//êÊçsì¸óÕóp
+	bool bufferedPushSpace = false;
+	int bufferedKeyArrow = BUFFERED_INPUT_ARROW::NONE;
+
+		Object draw[10];
 	DebugText* debugText_ = nullptr;
 
 	BlockManager* blockM;
@@ -140,7 +153,7 @@ public:
 	void ChangeStateTurnConnect(PlayerState* state);
 	void ChangeStateMove(PlayerState* state);
 
-	void Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket, 
+	void Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket,
 		ConnectingEffect2Manager* connectE2M, Tutorial* tutorial, Model* model, DebugText* debugText_/*,Tutorial* tutorial = nullptr*/);
 	void Update();
 	void Draw(Camera* camera);
