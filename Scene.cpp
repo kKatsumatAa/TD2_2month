@@ -72,6 +72,7 @@ void SceneGame::Update()
 		scene->player->Reset();
 		scene->blockManager->ResetBlock();
 		scene->playerSocket->Initialize(scene->model[0]);
+		scene->tutorial->Initialize();
 	}
 
 	//シーン遷移

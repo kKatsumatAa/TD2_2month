@@ -25,6 +25,11 @@ class StateNormalMoveP : public PlayerState
 private:
 	int countE = 0;
 
+	Shake shake;
+
+	int effectCount = 0;
+	int effectCountTmp = 60;
+
 public:
 	void Update(/*Tutorial* tutorial = nullptr*/);
 	void Draw(Camera* camera, Model* model);
@@ -36,6 +41,7 @@ class StateMoveP : public PlayerState
 private:
 	int count = 0;
 	const int countMax = 20;
+
 
 
 public:
@@ -97,6 +103,7 @@ private:
 	/*Tutorial* tutorial;*/
 public:
 	float posYTmp = 0;
+	float posXTmp = 0;
 
 
 	//外部からセットするブロックあるから動ける

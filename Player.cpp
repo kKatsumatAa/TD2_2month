@@ -44,6 +44,7 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 	worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
 	worldTransform_.trans = { 0,moveDistance,0 };
 	posYTmp = moveDistance;
+	posXTmp = 0;
 	worldTransform_.SetWorld();
 
 	radius_ = scaleTmp;
@@ -79,6 +80,7 @@ void Player::Reset()
 	worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
 	worldTransform_.trans = { 0,moveDistance,0 };
 	posYTmp = moveDistance;
+	posXTmp = 0;
 	worldTransform_.SetWorld();
 
 	radius_ = scaleTmp;
@@ -108,11 +110,16 @@ void Player::Update()
 	if (worldTransform_.scale.z > scaleTmp) { worldTransform_.scale.z -= 0.05f; }
 	if (worldTransform_.scale.z < scaleTmp) { worldTransform_.scale.z += 0.05f; }
 
+	{
+
+	}
 
 	stateMove->Update();
 	stateConnectTurn->Update();
 
 	worldTransform_.SetWorld();
+
+
 }
 
 void Player::Draw(Camera* camera)
@@ -147,12 +154,18 @@ void PlayerState::SetPlayer(Player* player)
 //--------------------------------------------------------------------------
 void StateNormalMoveP::Update()
 {
+	if (player->isTurnNow == false)
 	{
+		shake.Update();
+
 		countE++;
 
-		Vec3 trans = { player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z };
+		effectCount--;
 
-		player->GetWorldTransForm()->trans = { trans.x ,player->posYTmp + sinf(countE * 0.07f)*0.3f ,trans.z };
+		Vec3 trans = { player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z };
+		trans = { trans.x ,trans.y,trans.z };
+
+		player->GetWorldTransForm()->trans = { player->posXTmp + shake.GetShake() ,player->posYTmp + sinf(countE * 0.07f) * 0.3f ,trans.z };
 	}
 
 	//ˆÚ“®‚Ìê‡(‰ñ“]’†‚ÍˆÚ“®‚µ‚È‚¢)
@@ -160,7 +173,7 @@ void StateNormalMoveP::Update()
 		KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW)) ||
 		(KeyboardInput::GetInstance().KeyPush(DIK_A) || KeyboardInput::GetInstance().KeyPush(DIK_D) ||
 			KeyboardInput::GetInstance().KeyPush(DIK_W) || KeyboardInput::GetInstance().KeyPush(DIK_S)))
-		&& player->isTurnNow == false)
+		&& player->isTurnNow == false && !shake.GetIsShaking())
 	{
 		if (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A))
 		{
@@ -200,6 +213,14 @@ void StateNormalMoveP::Update()
 
 			player->ChangeStateMove(new StateMoveP);
 		}
+		//–³‚©‚Á‚½Žž
+		else if (!shake.GetIsShaking() && shake.GetShake() == 0 && effectCount <= 0)
+		{
+			//‰‰o
+			shake.SetShake(12, player->moveDistance / 4.0f);
+		
+			effectCount = effectCountTmp;
+		}
 	}
 
 
@@ -228,6 +249,7 @@ void StateMoveP::Update()
 	if (count >= countMax)
 	{
 		player->isMove = false;
+		player->posXTmp = player->GetWorldPos().x;
 		player->ChangeStateMove(new StateNormalMoveP);
 	}
 }
@@ -278,9 +300,9 @@ void StateConnectP::Update()
 {
 	player->blockM->UpdateConnect(player->GetWorldPos());
 
-	if (KeyboardInput::GetInstance().KeyReleaseTrigger(DIK_SPACE))
+	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
-		//—£‚µ‚½‚Æ‚±‚ë‚ªƒ{ƒ^ƒ“‚¾‚Á‚½‚ç
+		//‰Ÿ‚µ‚½‚Æ‚±‚ë‚ªƒ{ƒ^ƒ“‚¾‚Á‚½‚ç
 		if (player->blockM->CheckAxisButton(player->GetWorldPos()))
 		{
 			player->isTurnNow = true;
@@ -329,6 +351,7 @@ void StateTurnP::Update()
 	//‰ñ“]‚·‚éŠÖ”
 	player->blockM->UpdateRotate(player->GetWorldPos());
 
+	player->posXTmp = player->GetWorldPos().x;
 
 	//‰ñ“]I‚í‚é
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) && !player->blockM->GetIsRollingLeftorRight())
