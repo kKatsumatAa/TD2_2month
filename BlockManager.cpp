@@ -654,6 +654,9 @@ void BlockManager::RepositBlock()
 									/*form_[i][j] = Form::BLOCK;
 									form_[k][l] = Form::BLOCK;*/
 
+									isTurn[i][j] = false;
+									isTurn[k][l] = false;
+
 								}
 							}
 						}
