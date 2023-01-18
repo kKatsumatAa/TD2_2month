@@ -219,7 +219,7 @@ bool BlockManager::GetPosIsBlock(Vec3 pos)
 				{
 					return true;
 				}
-				
+
 			}
 		}
 	}
@@ -452,7 +452,6 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 					rotatePos.z = axis_pos_.z + GetVec3xM4(distancePosPlayer, worldMat.matWorld, 0).z;
 				}
-
 			}
 		}
 
@@ -524,11 +523,13 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 	if (isLeftRolling == false && isRightRolling == false)
 	{
+
 		UpdateOverlap();
 	}
 
 	else if (isLeftRolling == true || isRightRolling == true)
 	{
+		ChangePosY();
 		RepositBlock();
 	}
 }
@@ -583,16 +584,16 @@ void BlockManager::UpdateOverlap()
 						//同じ座標ではないとき
 						if (i != k || j != l)
 						{
-							if (form_[i][j] != Form::BUTTON && form_[k][l] != Form::BUTTON)
+							/*beforeTurn_[i][j] = form_[i][j];
+							beforeTurn_[k][l] = form_[k][l];*/
+
+							//if (form_[i][j] != Form::NONE && form_[k][l] != Form::NONE)
+							if ( form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
 							{
+								//if(action_[i][j] == Action::Connect || action_[k][l] == Action::Connect)
 								//重なっているブロック両方を固定ブロック化
 								form_[i][j] = Form::LOCKED;
 								form_[k][l] = Form::LOCKED;
-								/*action_[i][j] = Action::Overlap;
-								action_[k][l] = Action::Overlap;*/
-								/*isOverLap_[i][j] = true;
-								isOverLap_[k][l] = true;*/
-
 							}
 						}
 
@@ -623,19 +624,21 @@ void BlockManager::RepositBlock()
 
 					//重なりが外れて元の状態に戻す処理
 
-					//formのところを||にすれば一応できる
-					if (isOverlap == false && form_[i][j] == Form::LOCKED || form_[k][l] == Form::LOCKED &&
-						action_[i][j] == Action::Connect && form_[i][j] != Form::BUTTON)
-						/*if (form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED &&
-							action_[i][j] == Action::Connect )*/
+					if (action_[i][j] == Action::Connect)
 					{
-						if (i != k || j != l)
-						{
-							form_[i][j] = Form::BLOCK;
-							//form_[k][l] = Form::BLOCK;
-							/*isOverLap_[i][j] = false;
-							isOverLap_[k][l] = false;*/
+						if (isOverlap == false && form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED)
 
+							/*if (form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED &&
+								action_[i][j] == Action::Connect )*/
+						{
+							if (form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
+							{
+								if (i != k || j != l)
+								{
+									form_[i][j] = Form::BLOCK;
+									form_[k][l] = Form::BLOCK;
+								}
+							}
 						}
 					}
 
@@ -721,6 +724,27 @@ void BlockManager::GenerateParticleTurnBlock()
 	}
 }
 
+void BlockManager::ChangePosY()
+{
+	for (int i = 0; i < blockWidth; i++)
+	{
+		for (int j = 0; j < blockHeight; j++)
+		{
+			if (action_[i][j] == Action::Connect)
+			{
+				if (form_[i][j] == Form::BLOCK && isTurn[i][j] == false)
+				{
+					if (isLeftRolling == true || isRightRolling == true)
+					{
+						worldmats_[i][j].trans.y -= 0.01;
+
+						isTurn[i][j] = true;
+					}
+				}
+			}
+		}
+	}
+}
 
 void BlockManager::LoadBlockPosData()
 {
