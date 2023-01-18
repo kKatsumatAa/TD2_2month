@@ -82,6 +82,9 @@ public:
 	//回転し終わったときにパーティクル発生させる
 	void GenerateParticleTurnBlock();
 
+	//描画用にY座標をずらす関数
+	void ChangePosY();
+
 public:
 
 	static const int blockWidth = 13;
@@ -133,6 +136,8 @@ private:
 		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 	};
+
+
 	//回転する前の形
 	Form beforeForm_[blockWidth][blockHeight] = { Form::BLOCK };
 
@@ -200,5 +205,12 @@ private:
 
 	int isOverLap_[blockWidth][blockHeight];
 
+	//回転する前の形状
+	Form beforeTurn_[blockWidth][blockHeight];
+
+	bool isUp[blockWidth][blockHeight];
+
+	//情報を保存したかどうか
+	bool isTurn[blockWidth][blockHeight] = {false};
 };
 
