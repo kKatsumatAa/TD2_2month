@@ -208,7 +208,9 @@ private:
 	//‰ñ“]‚·‚é‘O‚ÌŒ`ó
 	Form beforeTurn_[blockWidth][blockHeight];
 
-	bool isTurn[blockWidth][blockHeight];
+	bool isUp[blockWidth][blockHeight];
 
+	//î•ñ‚ğ•Û‘¶‚µ‚½‚©‚Ç‚¤‚©
+	bool isTurn[blockWidth][blockHeight] = {false};
 };
 

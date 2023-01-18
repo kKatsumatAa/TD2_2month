@@ -592,9 +592,23 @@ void BlockManager::UpdateOverlap()
 							{
 								//if(action_[i][j] == Action::Connect || action_[k][l] == Action::Connect)
 								//重なっているブロック両方を固定ブロック化
+								
+								
+								//回転させる前の状態を保存
+								if (isTurn[i][j] == false && isTurn[k][l] == false)
+								{
+									beforeTurn_[i][j] = form_[i][j];
+									beforeTurn_[k][l] = form_[k][l];
+								}
+
 								form_[i][j] = Form::LOCKED;
 								form_[k][l] = Form::LOCKED;
+
+								isTurn[i][j] = true;
+								isTurn[k][l] = true;
 							}
+
+
 						}
 
 						//チュートリアル
@@ -635,8 +649,11 @@ void BlockManager::RepositBlock()
 							{
 								if (i != k || j != l)
 								{
-									form_[i][j] = Form::BLOCK;
-									form_[k][l] = Form::BLOCK;
+									form_[i][j] = beforeTurn_[i][j];
+									form_[k][l] = beforeTurn_[k][l];
+									/*form_[i][j] = Form::BLOCK;
+									form_[k][l] = Form::BLOCK;*/
+
 								}
 							}
 						}
@@ -732,13 +749,13 @@ void BlockManager::ChangePosY()
 		{
 			if (action_[i][j] == Action::Connect)
 			{
-				if (form_[i][j] == Form::BLOCK && isTurn[i][j] == false)
+				if (form_[i][j] == Form::BLOCK && isUp[i][j] == false)
 				{
 					if (isLeftRolling == true || isRightRolling == true)
 					{
 						worldmats_[i][j].trans.y -= 0.01;
 
-						isTurn[i][j] = true;
+						isUp[i][j] = true;
 					}
 				}
 			}
