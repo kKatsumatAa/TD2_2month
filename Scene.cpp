@@ -48,6 +48,7 @@ void SceneGame::Initialize()
 	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
 		, scene->connectE2M.get(), scene->tutorial.get(), scene->model[0], &scene->debugText);
 	scene->playerSocket->Initialize(scene->model[0]);
+	scene->tutorial->Initialize();
 }
 
 void SceneGame::Update()

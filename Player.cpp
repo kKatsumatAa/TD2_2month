@@ -119,6 +119,11 @@ void Player::Update()
 	{
 		bufferedPushSpace = true;
 	}
+	//〃移動
+	if (KeyboardInput::GetInstance().KeyTrigger(DIK_LEFTARROW)) { bufferedKeyArrow = BUFFERED_INPUT_ARROW::LEFT; }
+	if (KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHTARROW)) { bufferedKeyArrow = BUFFERED_INPUT_ARROW::RIGHT; }
+	if (KeyboardInput::GetInstance().KeyTrigger(DIK_UPARROW)) { bufferedKeyArrow = BUFFERED_INPUT_ARROW::UP; }
+	if (KeyboardInput::GetInstance().KeyTrigger(DIK_DOWNARROW)) { bufferedKeyArrow = BUFFERED_INPUT_ARROW::DOWN; }
 
 	stateMove->Update();
 	stateConnectTurn->Update();
@@ -177,25 +182,42 @@ void StateNormalMoveP::Update()
 	}
 
 	//移動の場合(回転中は移動しない)
-	if (((KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) ||
-		KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW)) ||
-		(KeyboardInput::GetInstance().KeyPush(DIK_A) || KeyboardInput::GetInstance().KeyPush(DIK_D) ||
-			KeyboardInput::GetInstance().KeyPush(DIK_W) || KeyboardInput::GetInstance().KeyPush(DIK_S)))
+	if (
+		(
+			(
+				KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) ||
+				KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW)
+				)
+			||
+			(
+				KeyboardInput::GetInstance().KeyPush(DIK_A) || KeyboardInput::GetInstance().KeyPush(DIK_D) ||
+				KeyboardInput::GetInstance().KeyPush(DIK_W) || KeyboardInput::GetInstance().KeyPush(DIK_S)
+				)
+			|| 
+			(
+				player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::LEFT || player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::RIGHT
+				|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::UP || player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::DOWN
+				)
+			)
 		&& player->isTurnNow == false && !shake.GetIsShaking())
 	{
-		if (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A))
+		if (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A)
+			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::LEFT)
 		{
 			player->moveEndPos = { player->GetWorldPos().x - player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
 		}
-		if (KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D))
+		if (KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D)
+			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::RIGHT)
 		{
 			player->moveEndPos = { player->GetWorldPos().x + player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
 		}
-		if (KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_W))
+		if (KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_W)
+			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::UP)
 		{
 			player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + player->moveDistance };
 		}
-		if (KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW) || KeyboardInput::GetInstance().KeyPush(DIK_S))
+		if (KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW) || KeyboardInput::GetInstance().KeyPush(DIK_S)
+			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::DOWN)
 		{
 			player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + -player->moveDistance };
 		}
@@ -203,6 +225,9 @@ void StateNormalMoveP::Update()
 		//進んだ先にブロック
 		if (player->blockM->GetPosIsBlock(player->moveEndPos))
 		{
+			//先行
+			player->bufferedKeyArrow = NONE;
+
 			player->isMove = true;
 
 			//フラグ、スピードなどをセット
@@ -224,6 +249,9 @@ void StateNormalMoveP::Update()
 		//無かった時
 		else if (!shake.GetIsShaking() && shake.GetShake() == 0 && effectCount <= 0)
 		{
+			//先行
+			player->bufferedKeyArrow = NONE;
+
 			//演出
 			shake.SetShake(12, player->moveDistance / 4.0f);
 
@@ -276,6 +304,12 @@ void StateNormalConTurP::Update()
 		//ボタンがあったら
 		if (player->blockM->GetPosIsButton(player->GetWorldPos()) /*&& !player->isMove*/)
 		{
+			//シェイクやめる
+			Vec3 trans = { player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z };
+			trans = { trans.x ,trans.y,trans.z };
+			player->GetWorldTransForm()->trans = { player->posXTmp ,player->posYTmp,trans.z };
+
+			//先行解除
 			player->bufferedPushSpace = false;
 			player->isConnect = true;
 
@@ -318,6 +352,12 @@ void StateConnectP::Update()
 		//押したところがボタンだったら
 		if (player->blockM->CheckAxisButton(player->GetWorldPos()))
 		{
+			//シェイクやめる
+			Vec3 trans = { player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z };
+			trans = { trans.x ,trans.y,trans.z };
+			player->GetWorldTransForm()->trans = { player->posXTmp ,player->posYTmp,trans.z };
+
+			//先行解除
 			player->bufferedPushSpace = false;
 
 			player->isTurnNow = true;
@@ -372,9 +412,16 @@ void StateTurnP::Update()
 
 	player->posXTmp = player->GetWorldPos().x;
 
+	//演出
+	Vec3 scale = { player->GetRadius(),player->GetRadius(), player->GetRadius() };
+	player->GetWorldTransForm()->scale = { scale.x ,scale.y * 1.3f,scale.z };
+
 	//回転終わる
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) && !player->blockM->GetIsRollingLeftorRight())
 	{
+		//先行
+		player->bufferedKeyArrow = NONE;
+
 		player->isTurnNow = false;
 		//繋がれているブロックを全部解除するステージ関数()
 		player->blockM->ReleseConectedBlock();
