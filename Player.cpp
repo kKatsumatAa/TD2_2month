@@ -41,7 +41,7 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 
 	//this->tutorial = tutorial;
 
-	worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
+	worldTransform_.scale = { scaleTmp,0,scaleTmp };
 	worldTransform_.trans = { 0,moveDistance,0 };
 	posYTmp = moveDistance;
 	posXTmp = 0;
@@ -193,7 +193,7 @@ void StateNormalMoveP::Update()
 				KeyboardInput::GetInstance().KeyPush(DIK_A) || KeyboardInput::GetInstance().KeyPush(DIK_D) ||
 				KeyboardInput::GetInstance().KeyPush(DIK_W) || KeyboardInput::GetInstance().KeyPush(DIK_S)
 				)
-			|| 
+			||
 			(
 				player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::LEFT || player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::RIGHT
 				|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::UP || player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::DOWN
@@ -277,7 +277,7 @@ void StateMoveP::Update()
 	player->SetWorldPos(LerpVec3(player->moveStartPos, player->moveEndPos, EaseOut(t)));
 
 	//ƒS[ƒ‹‚µ‚½‚ç
-	if (player->blockM->GetIsGoal(player->GetWorldPos()))
+	if (!player->isGoal && player->blockM->GetIsGoal(player->GetWorldPos(), true))
 	{
 		player->isGoal = true;
 	}

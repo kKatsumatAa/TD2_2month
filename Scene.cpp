@@ -42,44 +42,59 @@ void SceneTitle::DrawSprite()
 void SceneGame::Initialize()
 {
 	scene->blockManager->Initialize(scene->connectEM.get(), scene->tutorial.get(), scene->camera.get(),
-		scene->model[1], scene->model[2], scene->model[3], scene->model[4]);
+		scene->goalE.get(), scene->model[1], scene->model[2], scene->model[3], scene->model[4]);
 	scene->camera->Initialize();
 	scene->connectEM->Initialize();
 	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
 		, scene->connectE2M.get(), scene->tutorial.get(), scene->model[0], &scene->debugText);
 	scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
 	scene->tutorial->Initialize();
+	scene->goalE->Initialize();
 }
 
 void SceneGame::Update()
 {
-	scene->blockManager->Update();
-
-	scene->connectEM->Update();
-	scene->connectE2M->Update();
-
-	scene->player->Update();
-
-	Vec3 pos = scene->player->GetWorldPos();
-	scene->playerSocket->Update({ pos.x,pos.y + scene->player->GetRadius(),pos.z });
-
-	scene->tutorial->Update();
-
-	ParticleManager::GetInstance()->Update(&scene->camera->viewMat, &scene->camera->projectionMat);
-
-	//リセット
-	if (KeyboardInput::GetInstance().KeyTrigger(DIK_R))
+	if (scene->player->isGoal)
 	{
-		scene->player->Reset();
-		scene->blockManager->ResetBlock();
-		scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
-		scene->tutorial->Initialize();
+		scene->useCamera = &scene->goalE->goalEffectCamera;
+	}
+	else
+	{
+		scene->useCamera = scene->camera.get();
 	}
 
+	if (!scene->player->isGoal) {
+		scene->blockManager->Update();
+
+		scene->connectEM->Update();
+		scene->connectE2M->Update();
+
+		scene->player->Update();
+
+		Vec3 pos = scene->player->GetWorldPos();
+		scene->playerSocket->Update({ pos.x,pos.y + scene->player->GetRadius(),pos.z });
+
+		scene->tutorial->Update();
+
+		//リセット
+		if (KeyboardInput::GetInstance().KeyTrigger(DIK_R))
+		{
+			scene->player->Reset();
+			scene->blockManager->ResetBlock();
+			scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
+			scene->tutorial->Initialize();
+		}
+	}
+	ParticleManager::GetInstance()->Update(&scene->useCamera->viewMat, &scene->useCamera->projectionMat);
 	//シーン遷移
 	if (scene->player->isGoal)
 	{
-		scene->ChangeState(new SceneClear);
+		scene->goalE->Update();
+
+		if (scene->goalE->isEnd)
+		{
+			scene->ChangeState(new SceneClear);
+		}
 	}
 	/*
 	else if ()
@@ -90,12 +105,21 @@ void SceneGame::Update()
 
 void SceneGame::Draw()
 {
-	scene->blockManager->Draw(scene->camera.get());
+	if (scene->player->isGoal)
+	{
+		scene->useCamera = &scene->goalE->goalEffectCamera;
+	}
+	else
+	{
+		scene->useCamera = scene->camera.get();
+	}
 
-	scene->player->Draw(scene->camera.get());
-	scene->playerSocket->Draw(scene->camera.get());
-	scene->connectEM->Draw(*scene->camera.get());
-	scene->connectE2M->Draw(scene->camera.get());
+	scene->blockManager->Draw(scene->useCamera);
+
+	scene->player->Draw(scene->useCamera);
+	scene->playerSocket->Draw(scene->useCamera);
+	scene->connectEM->Draw(*scene->useCamera);
+	scene->connectE2M->Draw(scene->useCamera);
 
 	ParticleManager::GetInstance()->Draw(scene->texhandle[1]);
 }
@@ -207,6 +231,7 @@ Scene::~Scene()
 	playerSocket.reset();
 	connectE2M.reset();
 	tutorial.reset();
+	goalE.reset();
 	imGuiManager->Finalize();
 	delete imGuiManager;
 	delete lightManager;
@@ -261,13 +286,17 @@ void Scene::Initialize()
 	//tutorial
 	tutorial = std::make_unique<Tutorial>();
 	tutorial->Initialize();
+	
+	//goal
+	goalE = std::make_unique<GoalEffect>();
+	goalE->Initialize();
 
 	//電気エフェクト
 	connectEM = std::make_unique<ConnectingEffectManager>();
 	connectEM->Initialize();
 
 	blockManager = new BlockManager();
-	blockManager->Initialize(connectEM.get(), tutorial.get(), camera.get(), model[1], model[2], model[3], model[4]);
+	blockManager->Initialize(connectEM.get(), tutorial.get(), camera.get(), goalE.get(), model[1], model[2], model[3], model[4]);
 
 	//Light
 	LightManager::StaticInitialize();
