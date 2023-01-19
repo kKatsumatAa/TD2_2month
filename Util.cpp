@@ -118,6 +118,31 @@ Vec3 SlerpVec3(const Vec3& v1, const Vec3& v2, float t)
 	return v;
 }
 
+
+Vec3 SplinePosition(const std::vector<Vec3>& points, size_t startIndex, float t)
+{
+	//•âŠ®‚·‚×‚«“_‚Ì”
+	size_t n = points.size() - 2;
+
+	if (startIndex > n)return points[n];
+	if (startIndex < 1)return points[1];
+
+	//p0~p3‚Ì§Œä“_‚ðŽæ“¾@¦p1~p2‚ð•âŠÔ
+	Vec3 p0 = points[startIndex - 1];
+	Vec3 p1 = points[startIndex];
+	Vec3 p2 = points[startIndex + 1];
+	Vec3 p3 = points[startIndex + 2];
+
+	//catmull-rom
+	Vec3 position = (
+		2.0f * p1 + (-1.0f * p0 + p2) * t
+		+ (2.0f * p0 - 5.0f * p1 + 4.0f * p2 - p3) * powf(t, 2)
+		+ (-1.0f * p0 + 3.0f * p1 - 3.0f * p2 + p3) * powf(t, 3)
+		) / 2.0f;
+
+	return position;
+}
+
 float EaseIn(float t)
 {
 	return 1 - cos((t * 3.14f) / 2.0f);

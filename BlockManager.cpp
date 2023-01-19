@@ -16,7 +16,7 @@ BlockManager::~BlockManager()
 }
 
 //初期化
-void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, Camera* camera,
+void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, Camera* camera, GoalEffect* goalEffect,
 	Model* normal, Model* button, Model* goal, Model* Socket)
 {
 	blocks_.clear();
@@ -25,6 +25,8 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 	this->connectEM = connectEM;
 	this->camera = camera;
 	this->tutorial = tutorial;
+	this->goalEffect = goalEffect;
+	this->goalCameraPoses.clear();
 
 	//std::unique_ptr<Block> newBullet = std::make_unique<Block>();
 
@@ -545,7 +547,7 @@ bool BlockManager::GetIsRollingLeftorRight()
 	return false;
 }
 
-bool BlockManager::GetIsGoal(Vec3& pos)
+bool BlockManager::GetIsGoal(Vec3& pos, bool isPlayer)
 {
 
 	for (int i = 0; i < blockWidth; i++)
@@ -559,6 +561,24 @@ bool BlockManager::GetIsGoal(Vec3& pos)
 				//そのブロックの形状はボタンかどうか
 				if (form_[i][j] == Form::GOAL)
 				{
+					if (isPlayer)
+					{
+						Vec3 goalEyeDistance = worldmats_[i][j].trans - camera->GetEye();
+
+						for (int i = 0; i < 4; i++)
+						{
+							if (i < 2) {
+								goalCameraPoses.push_back(camera->GetEye() + Vec3{ goalEyeDistance.x,goalEyeDistance.y + i * 60.0f ,goalEyeDistance.z } / 4.0f * i);
+							}
+							else
+							{
+								goalCameraPoses.push_back(camera->GetEye() + goalEyeDistance / 4.0f * i);
+							}
+						}
+
+						goalEffect->BegineGoalEffect(goalCameraPoses, { worldmats_[i][j].trans.x, worldmats_[i][j].trans.y + blockRadius_ * 2.0f,worldmats_[i][j].trans.z }, 30);
+					}
+
 					return true;
 				}
 			}

@@ -73,12 +73,14 @@ public:
 
 
 	std::unique_ptr<Camera> camera;
+	Camera* useCamera;
 
 	std::unique_ptr<ConnectingEffectManager> connectEM;
 
 	std::unique_ptr<Player> player;
 	std::unique_ptr<PlayerSocket> playerSocket;
 	std::unique_ptr<ConnectingEffect2Manager> connectE2M;
+	std::unique_ptr<GoalEffect> goalE;
 
 	std::unique_ptr<Tutorial> tutorial;
 

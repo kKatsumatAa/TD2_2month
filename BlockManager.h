@@ -4,9 +4,10 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include "GoalEffect.h"
 
 
-class BlockManager 
+class BlockManager
 {
 
 	using Form = Block::Form;
@@ -17,7 +18,7 @@ public:
 	~BlockManager();
 
 	//初期化
-	void Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial,Camera * camera,
+	void Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, Camera* camera, GoalEffect* goalEffect,
 		Model* normal, Model* button, Model* goal, Model* Socket);
 
 	//更新
@@ -54,7 +55,7 @@ public:
 	bool GetIsRollingLeftorRight();
 
 	//ゴールがあるかどうか
-	bool GetIsGoal(Vec3& Pos);
+	bool GetIsGoal(Vec3& Pos, bool isPlayer = false);
 
 	//重なった時の処理
 	void UpdateOverlap();
@@ -96,6 +97,8 @@ public:
 private:
 	Tutorial* tutorial;
 
+	GoalEffect* goalEffect;
+
 	Camera* camera;
 
 	UINT64 texhandle[10];
@@ -103,7 +106,9 @@ private:
 	const int width = 13;
 
 	Model* model_ = nullptr;
-	
+
+	std::vector<Vec3> goalCameraPoses;
+
 	//ブロックの二次元配列
 	//std::unique_ptr < std::vector <std::vector<Block>> > blocks_ ;
 	Block* block_;
@@ -155,7 +160,7 @@ private:
 	//ブロックの大きさ
 	Vec3 scale_;
 
-	
+
 	//前のフレームにおいて選択用のブロックの情報を保存しておく変数
 	int prevBlockX;
 	int prevBlockY;
@@ -186,7 +191,7 @@ private:
 
 	Vec3 distancePos[blockWidth][blockHeight];
 	Vec3 distancePosPlayer;
-	
+
 	ConnectingEffectManager* connectEM;
 
 	int effectCount = 0;
@@ -211,6 +216,6 @@ private:
 	bool isUp[blockWidth][blockHeight];
 
 	//情報を保存したかどうか
-	bool isTurn[blockWidth][blockHeight] = {false};
+	bool isTurn[blockWidth][blockHeight] = { false };
 };
 

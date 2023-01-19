@@ -139,7 +139,7 @@ public:
 	bool bufferedPushSpace = false;
 	int bufferedKeyArrow = BUFFERED_INPUT_ARROW::NONE;
 
-		Object draw[10];
+	Object draw[10];
 	DebugText* debugText_ = nullptr;
 
 	BlockManager* blockM;
@@ -150,7 +150,8 @@ public:
 
 	Tutorial* tutorial;
 
-	void ChangeStateTurnConnect(PlayerState* state);
+
+		void ChangeStateTurnConnect(PlayerState* state);
 	void ChangeStateMove(PlayerState* state);
 
 	void Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket,

@@ -22,6 +22,9 @@ float GetRadianVec3(const Vec3& v1, const Vec3& v2);
 Vec3 LerpVec3(const Vec3& v1, const Vec3& v2, float t);
 Vec3 SlerpVec3(const Vec3& v1, const Vec3& v2, float t);
 
+//ƒXƒvƒ‰ƒCƒ“•âŠÔ
+Vec3 SplinePosition(const std::vector<Vec3>& points, size_t startIndex, float t);
+
 float EaseIn(float t);
 
 float EaseOut(float t);
