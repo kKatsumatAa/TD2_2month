@@ -4,7 +4,7 @@
 #include "Camera.h"
 #include "BlockManager.h"
 #include "PlayerSocket.h"
-#include "ConnectingEffect2.h"
+
 
 class Player;
 
