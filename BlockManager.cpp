@@ -60,10 +60,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 		}
 	}
 
-	
-
 	//ブロックの大きさ
-
 	for (int i = 0; i < blockWidth; i++)
 	{
 		for (int j = 0; j < blockHeight; j++)
@@ -76,8 +73,6 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 			blocks_[i][j]->Initialize(connectEM, normal, button, goal, Socket);
 
 			//ブロックの種類を設定
-			//form_[i][j] = formTmp_[i][j];
-
 
 			//ブロックの座標を設定
 			if (i >= 0)
@@ -126,9 +121,9 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 void BlockManager::Update()
 {
 
-	for (int i = 0; i < blockWidth; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < blockHeight; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
 
 
@@ -156,9 +151,9 @@ void BlockManager::Draw(Camera* camera)
 	bool isEffect = false;
 	effectCount++;
 
-	for (int i = 0; i < blockWidth; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < blockHeight; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
 			//Manager.cppで配列で定義したworldTransformの値をBlock.cppのDrawにセット
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
@@ -189,9 +184,9 @@ bool BlockManager::CheckPlayerOnBlock(Vec3 pos)
 {
 	bool result;
 
-	for (int i = 0; i < blockWidth; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < blockHeight; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
 			//プレイヤーがブロックの上にいるかどうか
 			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
@@ -212,9 +207,9 @@ bool BlockManager::CheckPlayerOnBlock(Vec3 pos)
 //ステージの関数で先にブロックあるか判定(endPosを引数)
 bool BlockManager::GetPosIsBlock(Vec3 pos)
 {
-	for (int i = 0; i < blockWidth; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < blockHeight; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
 
 			//プレイヤーがブロックの上にいるかどうか
@@ -238,9 +233,9 @@ bool BlockManager::GetPosIsBlock(Vec3 pos)
 //ボタンがあるかどうか
 bool BlockManager::GetPosIsButton(Vec3 pos)
 {
-	for (int i = 0; i < blockWidth; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < blockHeight; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
 			//プレイヤーが指定のブロックの上にいるかどうか
 			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
@@ -267,9 +262,9 @@ void BlockManager::RegistAxisButton(const Vec3& pos)
 	//引数で受け取ったプレイヤーの座標をもとに現在位置のボタンをONにする
 
 	//プレイヤーの位置にあるブロックを軸にする
-	for (int i = 0; i < blockWidth; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < blockHeight; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
 			//プレイヤーが指定のブロックの上にいるかどうか
 			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
@@ -299,9 +294,9 @@ void BlockManager::RegistAxisButton(const Vec3& pos)
 //ブロック同士をつなぐ更新関数
 void BlockManager::UpdateConnect(Vec3 pos)
 {
-	for (int i = 0; i < blockWidth; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < blockHeight; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
 			//プレイヤーが指定のブロックの上にいるかどうか
 			if ((worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
@@ -353,9 +348,9 @@ void BlockManager::UpdateConnect(Vec3 pos)
 //繋ぐ際に離したところが軸以外のボタンかどうか
 bool BlockManager::CheckAxisButton(Vec3 pos)
 {
-	for (int i = 0; i < blockWidth; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < blockHeight; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
 			//プレイヤーがいるブロック内において
 			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
@@ -377,9 +372,9 @@ bool BlockManager::CheckAxisButton(Vec3 pos)
 //繋がれているブロックを全部解除する
 void BlockManager::ReleseConectedBlock()
 {
-	for (int i = 0; i < blockWidth; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < blockHeight; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
 			if (action_[i][j] == Action::Connect)
 			{
@@ -435,9 +430,9 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		rotateCount++;
 
 		//角度が必要(前にやった円運動が参考になるかも)
-		for (int i = 0; i < blockWidth; i++)
+		for (int i = 0; i < stageWidth_; i++)
 		{
-			for (int j = 0; j < blockHeight; j++)
+			for (int j = 0; j < stageHeight_; j++)
 			{
 
 				//もしつながっているなら
@@ -485,9 +480,9 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		rotateCount++;
 
 		//角度が必要(前にやった円運動が参考になるかも)
-		for (int i = 0; i < blockWidth; i++)
+		for (int i = 0; i < stageWidth_; i++)
 		{
-			for (int j = 0; j < blockHeight; j++)
+			for (int j = 0; j < stageHeight_; j++)
 			{
 				//もしつながっているなら
 				if (action_[i][j] == Action::Connect && isAxis_[i][j] == false)
@@ -553,9 +548,9 @@ bool BlockManager::GetIsRollingLeftorRight()
 bool BlockManager::GetIsGoal(Vec3& pos)
 {
 
-	for (int i = 0; i < blockWidth; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < blockHeight; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
 			//プレイヤーが指定のブロックの上にいるかどうか
 			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
@@ -577,13 +572,13 @@ bool BlockManager::GetIsGoal(Vec3& pos)
 //重なった時の処理
 void BlockManager::UpdateOverlap()
 {
-	for (int i = 0; i < blockWidth; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < blockHeight; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
-			for (int k = 0; k < blockWidth; k++)
+			for (int k = 0; k < stageWidth_; k++)
 			{
-				for (int l = 0; l < blockWidth; l++)
+				for (int l = 0; l < stageHeight_; l++)
 				{
 					//重なった時に形を変える処理
 					if (CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans) && form_[k][l] != Form::NONE && form_[i][j] != Form::NONE)
@@ -638,13 +633,13 @@ void BlockManager::UpdateOverlap()
 //重なっていたブロックを元に戻す処理
 void BlockManager::RepositBlock()
 {
-	for (int i = 0; i < blockWidth; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < blockHeight; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
-			for (int k = 0; k < blockWidth; k++)
+			for (int k = 0; k < stageWidth_; k++)
 			{
-				for (int l = 0; l < blockWidth; l++)
+				for (int l = 0; l < stageHeight_; l++)
 				{
 					bool isOverlap = CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans);
 
@@ -730,9 +725,9 @@ void BlockManager::ResetBlock()
 
 void BlockManager::GenerateParticleTurnBlock()
 {
-	for (int i = 0; i < blockWidth; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < blockHeight; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
 			if (action_[i][j] == Action::Connect)
 			{
@@ -746,9 +741,9 @@ void BlockManager::GenerateParticleTurnBlock()
 
 void BlockManager::ChangePosY()
 {
-	for (int i = 0; i < blockWidth; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < blockHeight; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
 			if (action_[i][j] == Action::Connect)
 			{
@@ -829,12 +824,12 @@ void BlockManager::BlockPop(Vec3 pos)
 	//敵の生成
 
 	//ベクタ配列に要素<ブロック>を追加
-	for (int i = 0; i < blockWidth; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
 		//ブロック型を持てる空のベクタを追加(行列でいうi列)
 		blocks_.push_back(vector<Block*>());
 
-		for (int j = 0; j < blockHeight; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
 			block_ = new Block;
 			//ブロックの要素を追加

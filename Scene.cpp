@@ -373,13 +373,17 @@ void Scene::Update()
 
 	blockManager->Update();
 
-	if (KeyboardInput::GetInstance().KeyPush(DIK_P))
+	if (KeyboardInput::GetInstance().KeyPush(DIK_0))
 	{
-		stageManager->SetStage1(13,13);
+		stageManager->SetTutorial(13, 13);
 	}
-	else if (KeyboardInput::GetInstance().KeyPush(DIK_O))
+	else if (KeyboardInput::GetInstance().KeyPush(DIK_1))
 	{
-		stageManager->SetTutorial(13,13);
+		stageManager->SetStage1(13, 13);
+	}
+	else if (KeyboardInput::GetInstance().KeyPush(DIK_2))
+	{
+		stageManager->SetStage2(2, 10);
 	}
 	
 

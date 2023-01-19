@@ -24,6 +24,17 @@ public:
 	/// ステージ1をセット
 	/// </summary>
 	void SetStage1(const int& blockWidth, const int& blockHeight);
+	
+	/// <summary>
+	/// ステージ2をセット
+	/// </summary>
+	void SetStage2(const int& blockWidth, const int& blockHeight);
+
+	/// <summary>
+	/// ステージ2をセット
+	/// </summary>
+	void SetStage3(const int& blockWidth, const int& blockHeight);
+
 
 	//チュートリアルステージの長さ
 	static const int TutorialWidth = 13;
