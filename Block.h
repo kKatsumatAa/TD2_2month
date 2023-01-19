@@ -67,7 +67,7 @@ public:
 	void Initialize(ConnectingEffectManager* connectEM,
 		Model* normal, Model* button, Model* goal, Model* Socket);
 
-	void Updata(Vec3& pos);
+	void Updata(Vec3 pos = { 0,0,0 });
 
 	void Draw(Camera* camera, UINT64* texhandle, int form, Action action);
 

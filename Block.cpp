@@ -32,11 +32,14 @@ void Block::Initialize(ConnectingEffectManager* connectEM,
 	radius_ = scaleTmp;
 }
 
-void Block::Updata(Vec3& pos)
+void Block::Updata(Vec3 pos)
 {
 
-	worldTransform_.trans = { pos.x,pos.y,pos.z };
+	//worldTransform_.trans = { pos.x,pos.y,pos.z };
 
+	if (worldTransform_.scale.x > scaleTmp) { worldTransform_.scale.x -= 0.05f; }
+	if (worldTransform_.scale.y > scaleTmp) { worldTransform_.scale.y -= 0.05f; }
+	if (worldTransform_.scale.z > scaleTmp) { worldTransform_.scale.z -= 0.05f; }
 
 	//block_.SetWorldPos(pos);
 	worldTransform_.SetWorld();
@@ -65,11 +68,6 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action)
 		if (count % 240 == 0 || count % 240 == 10 || count % 240 == 20 || count % 240 == 30)
 		{
 			worldTransform_.scale = { scaleTmp + scaleTmp / 4.0f,scaleTmp + scaleTmp / 4.0f ,scaleTmp + scaleTmp / 4.0f };
-		}
-		if (worldTransform_.scale.x > scaleTmp) {
-			worldTransform_.scale.x -= 0.01f;
-			worldTransform_.scale.y -= 0.01f;
-			worldTransform_.scale.z -= 0.01f;
 		}
 		draw[3].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &goal_[0], color);
 	}

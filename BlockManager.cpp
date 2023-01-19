@@ -128,6 +128,8 @@ void BlockManager::Update()
 			//X座標の一つ前の番号を保存
 			prevBlockY = j;
 
+			blocks_[i][j]->Updata();
+
 		}
 		//Y座標の一つ前のブロック番号を保存
 		prevBlockX = i;
@@ -588,17 +590,21 @@ void BlockManager::UpdateOverlap()
 							beforeTurn_[k][l] = form_[k][l];*/
 
 							//if (form_[i][j] != Form::NONE && form_[k][l] != Form::NONE)
-							if ( form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
+							if (form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
 							{
 								//if(action_[i][j] == Action::Connect || action_[k][l] == Action::Connect)
 								//重なっているブロック両方を固定ブロック化
-								
-								
+
+
 								//回転させる前の状態を保存
 								if (isTurn[i][j] == false && isTurn[k][l] == false)
 								{
 									beforeTurn_[i][j] = form_[i][j];
 									beforeTurn_[k][l] = form_[k][l];
+
+									//演出
+									blocks_[i][j]->GetWorldTransForm()->scale =
+									{ blocks_[i][j]->GetRadius() * 1.8f,blocks_[i][j]->GetRadius() * 1.8f, blocks_[i][j]->GetRadius() * 1.8f };
 								}
 
 								form_[i][j] = Form::LOCKED;
