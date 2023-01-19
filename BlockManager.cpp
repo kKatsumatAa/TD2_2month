@@ -8,14 +8,14 @@ using namespace std;
 BlockManager::~BlockManager()
 {
 
-	//ƒuƒƒbƒN‚Ìíœ
+	//ãƒ–ãƒ­ãƒƒã‚¯ã®å‰Šé™¤
 	blocks_.clear();
 	worldmats_.clear();
 	delete block_;
 	//delete worldmat_;
 }
 
-//‰Šú‰»
+//åˆæœŸåŒ–
 void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, Camera* camera, GoalEffect* goalEffect,
 	Model* normal, Model* button, Model* goal, Model* Socket)
 {
@@ -35,34 +35,34 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/effect1.png", texhandle[0]);
 	}
 
-	//ƒxƒNƒ^”z—ñ‚É—v‘f<ƒuƒƒbƒN>‚ğ’Ç‰Á
+	//ãƒ™ã‚¯ã‚¿é…åˆ—ã«è¦ç´ <ãƒ–ãƒ­ãƒƒã‚¯>ã‚’è¿½åŠ 
 	for (int i = 0; i < blockWidth; i++)
 	{
-		//ƒuƒƒbƒNŒ^‚ğ‚Ä‚é‹ó‚ÌƒxƒNƒ^‚ğ’Ç‰Á(s—ñ‚Å‚¢‚¤i—ñ)
+		//ãƒ–ãƒ­ãƒƒã‚¯å‹ã‚’æŒã¦ã‚‹ç©ºã®ãƒ™ã‚¯ã‚¿ã‚’è¿½åŠ (è¡Œåˆ—ã§ã„ã†iåˆ—)
 		blocks_.push_back(vector<Block*>());
 
 		for (int j = 0; j < blockHeight; j++)
 		{
 			block_ = new Block;
-			//ƒuƒƒbƒN‚Ì—v‘f‚ğ’Ç‰Á
+			//ãƒ–ãƒ­ãƒƒã‚¯ã®è¦ç´ ã‚’è¿½åŠ 
 			blocks_[i].push_back(block_);
 		}
 	}
 
-	//ƒxƒNƒ^”z—ñ‚É—v‘f<ƒ[ƒ‹ƒhs—ñ>‚ğ’Ç‰Á
+	//ãƒ™ã‚¯ã‚¿é…åˆ—ã«è¦ç´ <ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—>ã‚’è¿½åŠ 
 	for (int i = 0; i < blockWidth; i++)
 	{
-		//ƒuƒƒbƒNŒ^‚ğ‚Ä‚é‹ó‚ÌƒxƒNƒ^‚ğ’Ç‰Á(s—ñ‚Å‚¢‚¤i—ñ)
+		//ãƒ–ãƒ­ãƒƒã‚¯å‹ã‚’æŒã¦ã‚‹ç©ºã®ãƒ™ã‚¯ã‚¿ã‚’è¿½åŠ (è¡Œåˆ—ã§ã„ã†iåˆ—)
 		worldmats_.push_back(vector<WorldMat>());
 
 		for (int j = 0; j < blockHeight; j++)
 		{
-			//ƒuƒƒbƒN‚Ì—v‘f‚ğ’Ç‰Á
+			//ãƒ–ãƒ­ãƒƒã‚¯ã®è¦ç´ ã‚’è¿½åŠ 
 			worldmats_[i].push_back(worldmat_);
 		}
 	}
 
-	//ƒuƒƒbƒN‚Ì‘å‚«‚³
+	//ãƒ–ãƒ­ãƒƒã‚¯ã®å¤§ãã•
 
 	for (int i = 0; i < blockWidth; i++)
 	{
@@ -75,11 +75,11 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 
 			blocks_[i][j]->Initialize(connectEM, normal, button, goal, Socket);
 
-			//ƒuƒƒbƒN‚Ìí—Ş‚ğİ’è
+			//ãƒ–ãƒ­ãƒƒã‚¯ã®ç¨®é¡ã‚’è¨­å®š
 			form_[i][j] = formTmp_[i][j];
 
 
-			//ƒuƒƒbƒN‚ÌÀ•W‚ğİ’è
+			//ãƒ–ãƒ­ãƒƒã‚¯ã®åº§æ¨™ã‚’è¨­å®š
 			if (i >= 0)
 			{
 				worldmats_[i][j].trans.x = i * (worldmats_[i][j].scale.x * 2.0f);
@@ -93,20 +93,25 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 
 			block_->Initialize(connectEM, normal, button, goal, Socket);
 
-			//²‚É‚È‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©
+			//è»¸ã«ãªã£ã¦ã„ã‚‹ã‹ã©ã†ã‹
 			isAxis_[i][j] = false;
 
-			//Œ»İ‚Ç‚¤‚È‚Á‚Ä‚¢‚é‚©
+			//ç¾åœ¨ã©ã†ãªã£ã¦ã„ã‚‹ã‹
 			action_[i][j] = Action::None;
+
+			isTurn[i][j] = false;
+
+			beforeTurn_[i][j] = form_[i][j];
+
 		}
 	}
 
-	//‚»‚Ì‘¼‚Ìİ’è
+	//ãã®ä»–ã®è¨­å®š
 	isCount = 1;
 
 	changedAction_ = false;
 	isChanged_ = false;
-	//‰ñ“]
+	//å›è»¢
 
 	isRightRolling = false;
 	isLeftRolling = false;
@@ -121,23 +126,23 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 void BlockManager::Update()
 {
 
-
-
 	for (int i = 0; i < blockWidth; i++)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
-			//XÀ•W‚Ìˆê‚Â‘O‚Ì”Ô†‚ğ•Û‘¶
+
+
+			//Xåº§æ¨™ã®ä¸€ã¤å‰ã®ç•ªå·ã‚’ä¿å­˜
 			prevBlockY = j;
 
 			blocks_[i][j]->Updata();
 
 		}
-		//YÀ•W‚Ìˆê‚Â‘O‚ÌƒuƒƒbƒN”Ô†‚ğ•Û‘¶
+		//Yåº§æ¨™ã®ä¸€ã¤å‰ã®ãƒ–ãƒ­ãƒƒã‚¯ç•ªå·ã‚’ä¿å­˜
 		prevBlockX = i;
 	}
 
-	//ó‘Ô‚ğ•Ï‚¦‚é‚Ì’x‰„
+	//çŠ¶æ…‹ã‚’å¤‰ãˆã‚‹æ™‚ã®é…å»¶
 	if (isChanged_ == false)
 	{
 		if (--selectTimer_ <= 0)
@@ -157,7 +162,7 @@ void BlockManager::Draw(Camera* camera)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
-			//Manager.cpp‚Å”z—ñ‚Å’è‹`‚µ‚½worldTransform‚Ì’l‚ğBlock.cpp‚ÌDraw‚ÉƒZƒbƒg
+			//Manager.cppã§é…åˆ—ã§å®šç¾©ã—ãŸworldTransformã®å€¤ã‚’Block.cppã®Drawã«ã‚»ãƒƒãƒˆ
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
 			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j]);
@@ -190,7 +195,7 @@ bool BlockManager::CheckPlayerOnBlock(Vec3 pos)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
-			//ƒvƒŒƒCƒ„[‚ªƒuƒƒbƒN‚Ìã‚É‚¢‚é‚©‚Ç‚¤‚©
+			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒãƒ–ãƒ­ãƒƒã‚¯ã®ä¸Šã«ã„ã‚‹ã‹ã©ã†ã‹
 			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
@@ -206,7 +211,7 @@ bool BlockManager::CheckPlayerOnBlock(Vec3 pos)
 	return result;
 }
 
-//ƒXƒe[ƒW‚ÌŠÖ”‚Åæ‚ÉƒuƒƒbƒN‚ ‚é‚©”»’è(endPos‚ğˆø”)
+//ã‚¹ãƒ†ãƒ¼ã‚¸ã®é–¢æ•°ã§å…ˆã«ãƒ–ãƒ­ãƒƒã‚¯ã‚ã‚‹ã‹åˆ¤å®š(endPosã‚’å¼•æ•°)
 bool BlockManager::GetPosIsBlock(Vec3 pos)
 {
 	for (int i = 0; i < blockWidth; i++)
@@ -214,11 +219,11 @@ bool BlockManager::GetPosIsBlock(Vec3 pos)
 		for (int j = 0; j < blockHeight; j++)
 		{
 
-			//ƒvƒŒƒCƒ„[‚ªƒuƒƒbƒN‚Ìã‚É‚¢‚é‚©‚Ç‚¤‚©
+			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒãƒ–ãƒ­ãƒƒã‚¯ã®ä¸Šã«ã„ã‚‹ã‹ã©ã†ã‹
 			if (worldmats_[i][j].trans.x - blockRadius_ <= pos.x && worldmats_[i][j].trans.x + blockRadius_ >= pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ <= pos.z && worldmats_[i][j].trans.z + blockRadius_ >= pos.z)
 			{
-				//‚»‚ÌƒuƒƒbƒN‚ÌŒ`ó‚Í•’Ê‚ÌƒuƒƒbƒN‚©‚Ç‚¤‚©
+				//ãã®ãƒ–ãƒ­ãƒƒã‚¯ã®å½¢çŠ¶ã¯æ™®é€šã®ãƒ–ãƒ­ãƒƒã‚¯ã‹ã©ã†ã‹
 				if (form_[i][j] != Form::NONE && form_[i][j] != Form::LOCKED && action_[i][j] != Action::Connect)
 				{
 					return true;
@@ -228,22 +233,22 @@ bool BlockManager::GetPosIsBlock(Vec3 pos)
 		}
 	}
 
-	//player‚ª‚Ç‚ÌƒuƒƒbƒN‚É‚à‚¢‚È‚¢
+	//playerãŒã©ã®ãƒ–ãƒ­ãƒƒã‚¯ã«ã‚‚ã„ãªã„
 	return false;
 }
 
-//ƒ{ƒ^ƒ“‚ª‚ ‚é‚©‚Ç‚¤‚©
+//ãƒœã‚¿ãƒ³ãŒã‚ã‚‹ã‹ã©ã†ã‹
 bool BlockManager::GetPosIsButton(Vec3 pos)
 {
 	for (int i = 0; i < blockWidth; i++)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
-			//ƒvƒŒƒCƒ„[‚ªw’è‚ÌƒuƒƒbƒN‚Ìã‚É‚¢‚é‚©‚Ç‚¤‚©
+			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒæŒ‡å®šã®ãƒ–ãƒ­ãƒƒã‚¯ã®ä¸Šã«ã„ã‚‹ã‹ã©ã†ã‹
 			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
-				//‚»‚ÌƒuƒƒbƒN‚ÌŒ`ó‚Íƒ{ƒ^ƒ“‚©‚Ç‚¤‚©
+				//ãã®ãƒ–ãƒ­ãƒƒã‚¯ã®å½¢çŠ¶ã¯ãƒœã‚¿ãƒ³ã‹ã©ã†ã‹
 				if (form_[i][j] == Form::BUTTON)
 				{
 					return true;
@@ -252,32 +257,32 @@ bool BlockManager::GetPosIsButton(Vec3 pos)
 		}
 	}
 
-	//ƒvƒŒƒCƒ„[‚ª‚Ç‚ÌƒuƒƒbƒN‚É‚à‚¢‚È‚¢ê‡
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒã©ã®ãƒ–ãƒ­ãƒƒã‚¯ã«ã‚‚ã„ãªã„å ´åˆ
 	return false;
 
 }
 
-//Å‰‚ÉŒq‚®ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½ƒuƒƒbƒN‚ğ²‚É“o˜^‚·‚éŠÖ”
+//æœ€åˆã«ç¹‹ããƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸãƒ–ãƒ­ãƒƒã‚¯ã‚’è»¸ã«ç™»éŒ²ã™ã‚‹é–¢æ•°
 void BlockManager::RegistAxisButton(const Vec3& pos)
 {
-	//Å‰‚Éƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½ƒuƒƒbƒN‚ğ²‚É“o˜^‚·‚éŠÖ”
-	//ˆø”‚Åó‚¯æ‚Á‚½ƒvƒŒƒCƒ„[‚ÌÀ•W‚ğ‚à‚Æ‚ÉŒ»İˆÊ’u‚Ìƒ{ƒ^ƒ“‚ğON‚É‚·‚é
+	//æœ€åˆã«ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸãƒ–ãƒ­ãƒƒã‚¯ã‚’è»¸ã«ç™»éŒ²ã™ã‚‹é–¢æ•°
+	//å¼•æ•°ã§å—ã‘å–ã£ãŸãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åº§æ¨™ã‚’ã‚‚ã¨ã«ç¾åœ¨ä½ç½®ã®ãƒœã‚¿ãƒ³ã‚’ONã«ã™ã‚‹
 
-	//ƒvƒŒƒCƒ„[‚ÌˆÊ’u‚É‚ ‚éƒuƒƒbƒN‚ğ²‚É‚·‚é
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä½ç½®ã«ã‚ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ã‚’è»¸ã«ã™ã‚‹
 	for (int i = 0; i < blockWidth; i++)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
-			//ƒvƒŒƒCƒ„[‚ªw’è‚ÌƒuƒƒbƒN‚Ìã‚É‚¢‚é‚©‚Ç‚¤‚©
+			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒæŒ‡å®šã®ãƒ–ãƒ­ãƒƒã‚¯ã®ä¸Šã«ã„ã‚‹ã‹ã©ã†ã‹
 			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
-				//‚»‚ÌƒuƒƒbƒN‚ÌŒ`ó‚Íƒ{ƒ^ƒ“‚©‚Ç‚¤‚©
+				//ãã®ãƒ–ãƒ­ãƒƒã‚¯ã®å½¢çŠ¶ã¯ãƒœã‚¿ãƒ³ã‹ã©ã†ã‹
 				if (form_[i][j] == Form::BUTTON && isAxis_[i][j] == false)
 				{
-					//²“o˜^‚·‚é
+					//è»¸ç™»éŒ²ã™ã‚‹
 					isAxis_[i][j] = true;
-					//²‚ÌƒuƒƒbƒN‚ÌÀ•W‚ğ“¾‚é
+					//è»¸ã®ãƒ–ãƒ­ãƒƒã‚¯ã®åº§æ¨™ã‚’å¾—ã‚‹
 					axis_pos_.x = worldmats_[i][j].trans.x;
 					axis_pos_.y = worldmats_[i][j].trans.y;
 					axis_pos_.z = worldmats_[i][j].trans.z;
@@ -286,26 +291,26 @@ void BlockManager::RegistAxisButton(const Vec3& pos)
 				}
 				else {}
 			}
-			//ƒvƒŒƒCƒ„[‚ª‚Ç‚ÌƒuƒƒbƒN‚É‚à‚¢‚È‚¢ê‡
+			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒã©ã®ãƒ–ãƒ­ãƒƒã‚¯ã«ã‚‚ã„ãªã„å ´åˆ
 			else {}
 		}
 	}
 
 }
 
-//ƒuƒƒbƒN“¯m‚ğ‚Â‚È‚®XVŠÖ”
+//ãƒ–ãƒ­ãƒƒã‚¯åŒå£«ã‚’ã¤ãªãæ›´æ–°é–¢æ•°
 void BlockManager::UpdateConnect(Vec3 pos)
 {
 	for (int i = 0; i < blockWidth; i++)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
-			//ƒvƒŒƒCƒ„[‚ªw’è‚ÌƒuƒƒbƒN‚Ìã‚É‚¢‚é‚©‚Ç‚¤‚©
+			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒæŒ‡å®šã®ãƒ–ãƒ­ãƒƒã‚¯ã®ä¸Šã«ã„ã‚‹ã‹ã©ã†ã‹
 			if ((worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 				&& action_[i][j] != Action::Connect)
 			{
-				if (form_[i][j] != Form::GOAL)
+				if (form_[i][j] != Form::NONE)
 				{
 					action_[i][j] = Action::Connect;
 
@@ -313,28 +318,28 @@ void BlockManager::UpdateConnect(Vec3 pos)
 
 				camera->CameraShake(10, 0.23f);
 
-				////Œq‚¬‚Í‚¶‚ß
-				////ƒ{ƒ^ƒ“‚©‚ÂŒq‚ª‚Á‚Ä‚¢‚È‚¯‚ê‚ÎŒ»İˆÊ’u‚ğ‚Â‚È‚®ó‘Ô‚É‚·‚é
+				////ç¹‹ãã¯ã˜ã‚
+				////ãƒœã‚¿ãƒ³ã‹ã¤ç¹‹ãŒã£ã¦ã„ãªã‘ã‚Œã°ç¾åœ¨ä½ç½®ã‚’ã¤ãªãçŠ¶æ…‹ã«ã™ã‚‹
 				//if (form_[i][j] == Form::BUTTON && action_[i][j] == Action::None)
 				//{
 				//	action_[i][j] = Action::Connect;
 				//}
 
-				////Œq‚®ˆ—(‰E‚¾‚¯ƒeƒXƒg)
+				////ç¹‹ãå‡¦ç†(å³ã ã‘ãƒ†ã‚¹ãƒˆ)
 				//if (KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHT) && i < blockWidth - 1)
 				//{
-				//	//‘OƒuƒƒbƒN‚ªŒq‚ª‚Á‚Ä‚¢‚ê‚ÎŒq‚°‚é
+				//	//å‰ãƒ–ãƒ­ãƒƒã‚¯ãŒç¹‹ãŒã£ã¦ã„ã‚Œã°ç¹‹ã’ã‚‹
 				//	if (action_[i][j] == Action::Connect)
 				//	{
 				//		if (form_[i + 1][j] == Form::BLOCK)
 				//		{
-				//			//ƒuƒƒbƒN‚È‚çŒq‚°‚é
+				//			//ãƒ–ãƒ­ãƒƒã‚¯ãªã‚‰ç¹‹ã’ã‚‹
 				//			action_[i + 1][j] = Action::Connect;
 				//			isChanged_ = false;
 				//		}
 				//		else if (form_[i + 1][j] == Form::GEAR)
 				//		{
-				//			//ƒMƒA‚È‚çŒq‚°‚Ä~‚ß‚é
+				//			//ã‚®ã‚¢ãªã‚‰ç¹‹ã’ã¦æ­¢ã‚ã‚‹
 				//			action_[i + 1][j] = Action::Connect;
 				//			isChanged_ = false;
 				//			changedAction_ = false;
@@ -347,14 +352,14 @@ void BlockManager::UpdateConnect(Vec3 pos)
 	}
 }
 
-//Œq‚®Û‚É—£‚µ‚½‚Æ‚±‚ë‚ª²ˆÈŠO‚Ìƒ{ƒ^ƒ“‚©‚Ç‚¤‚©
+//ç¹‹ãéš›ã«é›¢ã—ãŸã¨ã“ã‚ãŒè»¸ä»¥å¤–ã®ãƒœã‚¿ãƒ³ã‹ã©ã†ã‹
 bool BlockManager::CheckAxisButton(Vec3 pos)
 {
 	for (int i = 0; i < blockWidth; i++)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
-			//ƒvƒŒƒCƒ„[‚ª‚¢‚éƒuƒƒbƒN“à‚É‚¨‚¢‚Ä
+			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒã„ã‚‹ãƒ–ãƒ­ãƒƒã‚¯å†…ã«ãŠã„ã¦
 			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
@@ -367,11 +372,11 @@ bool BlockManager::CheckAxisButton(Vec3 pos)
 		}
 	}
 
-	//Œ»İ‚ÌƒuƒƒbƒN‚ª²“o˜^‚³‚ê‚Ä‚¢‚é‚È‚çfalse
+	//ç¾åœ¨ã®ãƒ–ãƒ­ãƒƒã‚¯ãŒè»¸ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ãªã‚‰false
 	return false;
 }
 
-//Œq‚ª‚ê‚Ä‚¢‚éƒuƒƒbƒN‚ğ‘S•”‰ğœ‚·‚é
+//ç¹‹ãŒã‚Œã¦ã„ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ã‚’å…¨éƒ¨è§£é™¤ã™ã‚‹
 void BlockManager::ReleseConectedBlock()
 {
 	for (int i = 0; i < blockWidth; i++)
@@ -380,7 +385,7 @@ void BlockManager::ReleseConectedBlock()
 		{
 			if (action_[i][j] == Action::Connect)
 			{
-				//‘S•”‰½‚à‚µ‚Ä‚¢‚È‚¢ó‘Ô‚É
+				//å…¨éƒ¨ä½•ã‚‚ã—ã¦ã„ãªã„çŠ¶æ…‹ã«
 				action_[i][j] = Action::None;
 				isAxis_[i][j] = false;
 			}
@@ -388,7 +393,7 @@ void BlockManager::ReleseConectedBlock()
 	}
 }
 
-//ƒL[ƒ{[ƒh‚É‚æ‚Á‚Ä‰ñ“]
+//ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã«ã‚ˆã£ã¦å›è»¢
 
 void BlockManager::UpdateRotate(Vec3& rotatePos)
 {
@@ -431,13 +436,13 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 	{
 		rotateCount++;
 
-		//Šp“x‚ª•K—v(‘O‚É‚â‚Á‚½‰~‰^“®‚ªQl‚É‚È‚é‚©‚à)
+		//è§’åº¦ãŒå¿…è¦(å‰ã«ã‚„ã£ãŸå††é‹å‹•ãŒå‚è€ƒã«ãªã‚‹ã‹ã‚‚)
 		for (int i = 0; i < blockWidth; i++)
 		{
 			for (int j = 0; j < blockHeight; j++)
 			{
 
-				//‚à‚µ‚Â‚È‚ª‚Á‚Ä‚¢‚é‚È‚ç
+				//ã‚‚ã—ã¤ãªãŒã£ã¦ã„ã‚‹ãªã‚‰
 				if (action_[i][j] == Action::Connect && isAxis_[i][j] == false)
 				{
 					WorldMat worldMat;
@@ -445,13 +450,13 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 						EaseOut((float)rotateCount / (float)rotateCountMax)).x;
 					worldMat.SetWorld();
 
-					//ƒuƒƒbƒN‚Ì‰ñ“]
+					//ãƒ–ãƒ­ãƒƒã‚¯ã®å›è»¢
 					worldmats_[i][j].trans.x = axis_pos_.x + GetVec3xM4(distancePos[i][j], worldMat.matWorld, 0).x;
 					worldmats_[i][j].trans.z = axis_pos_.z + GetVec3xM4(distancePos[i][j], worldMat.matWorld, 0).z;
 					worldmats_[i][j].rot.y = worldMat.rot.y;
 					worldmats_[i][j].SetWorld();
 
-					//ƒvƒŒƒCƒ„[‚Ì‰ñ“]
+					//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å›è»¢
 					rotatePos.x = axis_pos_.x + GetVec3xM4(distancePosPlayer, worldMat.matWorld, 0).x;
 
 					rotatePos.z = axis_pos_.z + GetVec3xM4(distancePosPlayer, worldMat.matWorld, 0).z;
@@ -465,13 +470,13 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 			isRightRolling = false;
 			camera->CameraShake(10, 0.9f);
 
-			//ƒ`ƒ…[ƒgƒŠƒAƒ‹
+			//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«
 			if (tutorial->GetState() == TUTORIAL::TURN)
 			{
 				tutorial->AddStateNum();
 			}
 
-			//ƒp[ƒeƒBƒNƒ‹”­¶
+			//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç™ºç”Ÿ
 			GenerateParticleTurnBlock();
 		}
 
@@ -481,12 +486,12 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 	{
 		rotateCount++;
 
-		//Šp“x‚ª•K—v(‘O‚É‚â‚Á‚½‰~‰^“®‚ªQl‚É‚È‚é‚©‚à)
+		//è§’åº¦ãŒå¿…è¦(å‰ã«ã‚„ã£ãŸå††é‹å‹•ãŒå‚è€ƒã«ãªã‚‹ã‹ã‚‚)
 		for (int i = 0; i < blockWidth; i++)
 		{
 			for (int j = 0; j < blockHeight; j++)
 			{
-				//‚à‚µ‚Â‚È‚ª‚Á‚Ä‚¢‚é‚È‚ç
+				//ã‚‚ã—ã¤ãªãŒã£ã¦ã„ã‚‹ãªã‚‰
 				if (action_[i][j] == Action::Connect && isAxis_[i][j] == false)
 				{
 					WorldMat worldMat;
@@ -494,12 +499,12 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 						EaseOut((float)rotateCount / (float)rotateCountMax)).x;
 					worldMat.SetWorld();
 
-					//ƒuƒƒbƒN‚Ì‰ñ“]
+					//ãƒ–ãƒ­ãƒƒã‚¯ã®å›è»¢
 					worldmats_[i][j].trans.x = axis_pos_.x + GetVec3xM4(distancePos[i][j], worldMat.matWorld, 0).x;
 					worldmats_[i][j].trans.z = axis_pos_.z + GetVec3xM4(distancePos[i][j], worldMat.matWorld, 0).z;
 					worldmats_[i][j].rot.y = worldMat.rot.y;
 
-					//ƒvƒŒƒCƒ„[‚Ì‰ñ“]
+					//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å›è»¢
 					rotatePos.x = axis_pos_.x + GetVec3xM4(distancePosPlayer, worldMat.matWorld, 0).x;
 
 					rotatePos.z = axis_pos_.z + GetVec3xM4(distancePosPlayer, worldMat.matWorld, 0).z;
@@ -514,13 +519,13 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 			isLeftRolling = false;
 			camera->CameraShake(10, 0.9f);
 
-			//ƒ`ƒ…[ƒgƒŠƒAƒ‹
+			//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«
 			if (tutorial->GetState() == TUTORIAL::TURN)
 			{
 				tutorial->AddStateNum();
 			}
 
-			//ƒp[ƒeƒBƒNƒ‹”­¶
+			//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç™ºç”Ÿ
 			GenerateParticleTurnBlock();
 		}
 	}
@@ -554,14 +559,14 @@ bool BlockManager::GetIsGoal(Vec3& pos, bool isPlayer)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
-			//ƒvƒŒƒCƒ„[‚ªw’è‚ÌƒuƒƒbƒN‚Ìã‚É‚¢‚é‚©‚Ç‚¤‚©
+			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒæŒ‡å®šã®ãƒ–ãƒ­ãƒƒã‚¯ã®ä¸Šã«ã„ã‚‹ã‹ã©ã†ã‹
 			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
-				//‚»‚ÌƒuƒƒbƒN‚ÌŒ`ó‚Íƒ{ƒ^ƒ“‚©‚Ç‚¤‚©
+				//ãã®ãƒ–ãƒ­ãƒƒã‚¯ã®å½¢çŠ¶ã¯ã‹ã‚´ãƒ¼ãƒ«ã‹ã©ã†ã‹
 				if (form_[i][j] == Form::GOAL)
 				{
-					//ƒS[ƒ‹‰‰o
+					//ã‚´ãƒ¼ãƒ«æ¼”å‡º
 					if (isPlayer)
 					{
 						Vec3 goalEyeDistance = worldmats_[i][j].trans - camera->GetEye();
@@ -586,11 +591,11 @@ bool BlockManager::GetIsGoal(Vec3& pos, bool isPlayer)
 		}
 	}
 
-	//ƒvƒŒƒCƒ„[‚ª‚Ç‚ÌƒuƒƒbƒN‚É‚à‚¢‚È‚¢ê‡
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒã©ã®ãƒ–ãƒ­ãƒƒã‚¯ã«ã‚‚ã„ãªã„å ´åˆ
 	return false;
 }
 
-//d‚È‚Á‚½‚Ìˆ—
+//é‡ãªã£ãŸæ™‚ã®å‡¦ç†
 void BlockManager::UpdateOverlap()
 {
 	for (int i = 0; i < blockWidth; i++)
@@ -601,10 +606,10 @@ void BlockManager::UpdateOverlap()
 			{
 				for (int l = 0; l < blockWidth; l++)
 				{
-					//d‚È‚Á‚½‚ÉŒ`‚ğ•Ï‚¦‚éˆ—
+					//é‡ãªã£ãŸæ™‚ã«å½¢ã‚’å¤‰ãˆã‚‹å‡¦ç†
 					if (CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans) && form_[k][l] != Form::NONE && form_[i][j] != Form::NONE)
 					{
-						//“¯‚¶À•W‚Å‚Í‚È‚¢‚Æ‚«
+						//åŒã˜åº§æ¨™ã§ã¯ãªã„ã¨ã
 						if (i != k || j != l)
 						{
 							/*beforeTurn_[i][j] = form_[i][j];
@@ -614,23 +619,24 @@ void BlockManager::UpdateOverlap()
 							if (form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
 							{
 								//if(action_[i][j] == Action::Connect || action_[k][l] == Action::Connect)
-								//d‚È‚Á‚Ä‚¢‚éƒuƒƒbƒN—¼•û‚ğŒÅ’èƒuƒƒbƒN‰»
+								//é‡ãªã£ã¦ã„ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ä¸¡æ–¹ã‚’å›ºå®šãƒ–ãƒ­ãƒƒã‚¯åŒ–
 
 
-								//‰ñ“]‚³‚¹‚é‘O‚Ìó‘Ô‚ğ•Û‘¶
-								if (isTurn[i][j] == false && isTurn[k][l] == false)
+								//å›è»¢ã•ã›ã‚‹å‰ã®çŠ¶æ…‹ã‚’ä¿å­˜
+								if (isTurn[i][j] == false || isTurn[k][l] == false)
 								{
 									beforeTurn_[i][j] = form_[i][j];
 									beforeTurn_[k][l] = form_[k][l];
 
-									//‰‰o
+									//æ¼”å‡º
 									blocks_[i][j]->GetWorldTransForm()->scale =
 									{ blocks_[i][j]->GetRadius() * 1.8f,blocks_[i][j]->GetRadius() * 1.8f, blocks_[i][j]->GetRadius() * 1.8f };
 								}
 
+								//çŠ¶æ…‹ã‚’ãƒ–ãƒ­ãƒƒã‚¯ã«
 								form_[i][j] = Form::LOCKED;
 								form_[k][l] = Form::LOCKED;
-
+								//å¤‰åŒ–ãƒ•ãƒ©ã‚°ã‚’ã‚ªãƒ³ã«
 								isTurn[i][j] = true;
 								isTurn[k][l] = true;
 							}
@@ -638,7 +644,7 @@ void BlockManager::UpdateOverlap()
 
 						}
 
-						//ƒ`ƒ…[ƒgƒŠƒAƒ‹
+						//ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«
 						if (tutorial->GetState() == TUTORIAL::OVERLAP)
 						{
 							//tutorial->AddStateNum();
@@ -646,11 +652,15 @@ void BlockManager::UpdateOverlap()
 					}
 				}
 			}
+
+
 		}
 	}
+
+
 }
 
-//d‚È‚Á‚Ä‚¢‚½ƒuƒƒbƒN‚ğŒ³‚É–ß‚·ˆ—
+//é‡ãªã£ã¦ã„ãŸãƒ–ãƒ­ãƒƒã‚¯ã‚’å…ƒã«æˆ»ã™å‡¦ç†
 void BlockManager::RepositBlock()
 {
 	for (int i = 0; i < blockWidth; i++)
@@ -663,27 +673,27 @@ void BlockManager::RepositBlock()
 				{
 					bool isOverlap = CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans);
 
-					//d‚È‚è‚ªŠO‚ê‚ÄŒ³‚Ìó‘Ô‚É–ß‚·ˆ—
+					//é‡ãªã‚ŠãŒå¤–ã‚Œã¦å…ƒã®çŠ¶æ…‹ã«æˆ»ã™å‡¦ç†
 
 					if (action_[i][j] == Action::Connect)
 					{
-						if (isOverlap == false && form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED)
+						if (isOverlap == false)
 
 							/*if (form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED &&
 								action_[i][j] == Action::Connect )*/
 						{
-							if (form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
+							//ãƒã‚°ã‚Šã‚„ã™ã„ã®ã“ã“ï¼ï¼(å›ã—ã¦ã„ã‚‹é–“ã¯ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒä¹—ã£ã¦ã„ã‚‹ãƒœã‚¿ãƒ³ã¯å¤‰ã‚ã‚‰ãªã„ã®ã§ã€ãƒœã‚¿ãƒ³ã¨ã®åˆ¤å®šãŒå¿…è¦)
+							if (form_[i][j] == Form::LOCKED || form_[i][j] == Form::BUTTON && form_[k][l] == Form::LOCKED)
 							{
 								if (i != k || j != l)
 								{
+									//çŠ¶æ…‹å¤‰åŒ–ã‚’å…ƒã«æˆ»ã™
 									form_[i][j] = beforeTurn_[i][j];
 									form_[k][l] = beforeTurn_[k][l];
-									/*form_[i][j] = Form::BLOCK;
-									form_[k][l] = Form::BLOCK;*/
 
+									//å¤‰åŒ–ãƒ•ãƒ©ã‚°ã‚’ã‚ªãƒ•ã«
 									isTurn[i][j] = false;
 									isTurn[k][l] = false;
-
 								}
 							}
 						}
@@ -695,7 +705,7 @@ void BlockManager::RepositBlock()
 	}
 }
 
-//ƒuƒƒbƒNƒuƒƒbƒN‚Ì‹éŒ`‚Ì“–‚½‚è”»’è
+//ãƒ–ãƒ­ãƒƒã‚¯ãƒ–ãƒ­ãƒƒã‚¯ã®çŸ©å½¢ã®å½“ãŸã‚Šåˆ¤å®š
 bool BlockManager::CollisionBlockToBlock(Vec3 blockPos, Vec3 comPos)
 {
 	if (blockPos.x - blockRadius_ < comPos.x && blockPos.x + blockRadius_ > comPos.x
@@ -715,7 +725,7 @@ void BlockManager::ResetBlock()
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
-			//ƒuƒƒbƒN‚ÌÀ•W‚ğİ’è
+			//ãƒ–ãƒ­ãƒƒã‚¯ã®åº§æ¨™ã‚’è¨­å®š
 			if (i >= 0)
 			{
 				worldmats_[i][j].trans.x = i * (worldmats_[i][j].scale.x * 2.0f);
@@ -725,7 +735,7 @@ void BlockManager::ResetBlock()
 				worldmats_[i][j].trans.z = j * (worldmats_[i][j].scale.y * 2.0f);
 			}
 
-			////ƒuƒƒbƒN‚Ìí—Ş‚ğİ’è
+			////ãƒ–ãƒ­ãƒƒã‚¯ã®ç¨®é¡ã‚’è¨­å®š
 			form_[i][j] = formTmp_[i][j];
 
 			worldmats_[i][j].SetWorld();
@@ -733,17 +743,17 @@ void BlockManager::ResetBlock()
 			//block_->Initialize(connectEM, normal, button, goal, Socket);
 
 
-			//²‚É‚È‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©
+			//è»¸ã«ãªã£ã¦ã„ã‚‹ã‹ã©ã†ã‹
 			isAxis_[i][j] = false;
 
-			//Œ»İ‚Ç‚¤‚È‚Á‚Ä‚¢‚é‚©
+			//ç¾åœ¨ã©ã†ãªã£ã¦ã„ã‚‹ã‹
 			action_[i][j] = Action::None;
 		}
 	}
 
 	changedAction_ = false;
 	isChanged_ = false;
-	//‰ñ“]
+	//å›è»¢
 
 	isRightRolling = false;
 	isLeftRolling = false;
@@ -763,7 +773,7 @@ void BlockManager::GenerateParticleTurnBlock()
 		{
 			if (action_[i][j] == Action::Connect)
 			{
-				//ƒp[ƒeƒBƒNƒ‹”­¶
+				//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç™ºç”Ÿ
 				ParticleManager::GetInstance()->GenerateRandomParticle(4, 100, 1.2f, worldmats_[i][j].trans, 0.4f, 0,
 					{ 1.0f,1.0f,0.0f,1.0f }, { 1.0f,0.0f,0.0f,1.0f });
 			}
@@ -795,32 +805,32 @@ void BlockManager::ChangePosY()
 
 void BlockManager::LoadBlockPosData()
 {
-	//ƒtƒ@ƒCƒ‹‚ğŠJ‚­
+	//ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
 	std::ifstream file;
 	file.open("Resources\\blockPos.csv");
 	assert(file.is_open());
 
-	//ƒtƒ@ƒCƒ‹‚Ì“à—e‚ğ•¶š—ñƒXƒgƒŠ[ƒ€‚ÉƒRƒs[
+	//ãƒ•ã‚¡ã‚¤ãƒ«ã®å†…å®¹ã‚’æ–‡å­—åˆ—ã‚¹ãƒˆãƒªãƒ¼ãƒ ã«ã‚³ãƒ”ãƒ¼
 	blocksPos << file.rdbuf();
 
-	//ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é
+	//ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹
 	file.close();
 }
 
 void BlockManager::BlockPop(Vec3 pos)
 {
-	//“G‚Ì¶¬
+	//æ•µã®ç”Ÿæˆ
 
-	//ƒxƒNƒ^”z—ñ‚É—v‘f<ƒuƒƒbƒN>‚ğ’Ç‰Á
+	//ãƒ™ã‚¯ã‚¿é…åˆ—ã«è¦ç´ <ãƒ–ãƒ­ãƒƒã‚¯>ã‚’è¿½åŠ 
 	for (int i = 0; i < blockWidth; i++)
 	{
-		//ƒuƒƒbƒNŒ^‚ğ‚Ä‚é‹ó‚ÌƒxƒNƒ^‚ğ’Ç‰Á(s—ñ‚Å‚¢‚¤i—ñ)
+		//ãƒ–ãƒ­ãƒƒã‚¯å‹ã‚’æŒã¦ã‚‹ç©ºã®ãƒ™ã‚¯ã‚¿ã‚’è¿½åŠ (è¡Œåˆ—ã§ã„ã†iåˆ—)
 		blocks_.push_back(vector<Block*>());
 
 		for (int j = 0; j < blockHeight; j++)
 		{
 			block_ = new Block;
-			//ƒuƒƒbƒN‚Ì—v‘f‚ğ’Ç‰Á
+			//ãƒ–ãƒ­ãƒƒã‚¯ã®è¦ç´ ã‚’è¿½åŠ 
 			blocks_[i].push_back(block_);
 		}
 	}
@@ -836,67 +846,67 @@ void BlockManager::BlockPop(Vec3 pos)
 
 void BlockManager::UpdateBlockPos()
 {
-	//‘Ò‹@ˆ—
+	//å¾…æ©Ÿå‡¦ç†
 	if (isWaitBlock)
 	{
 		blockWaitTimer--;
 		if (blockWaitTimer <= 0)
 		{
-			//‘Ò‹@Š®—¹
+			//å¾…æ©Ÿå®Œäº†
 			isWaitBlock = false;
 		}
 		return;
 	}
 
-	//1s•ª‚Ì•¶š—ñ‚ğ“ü‚ê‚é•Ï”
+	//1è¡Œåˆ†ã®æ–‡å­—åˆ—ã‚’å…¥ã‚Œã‚‹å¤‰æ•°
 	std::string line;
 
-	//ƒRƒ}ƒ“ƒhÀsƒ‹[ƒv
+	//ã‚³ãƒãƒ³ãƒ‰å®Ÿè¡Œãƒ«ãƒ¼ãƒ—
 	while (getline(blocksPos, line))
 	{
-		//1s•ª‚Ì•¶š—ñ‚ğƒXƒgƒŠ[ƒ€‚É•ÏŠ·‚µ‚Ä‰ğÍ‚µ‚â‚·‚­‚·‚é
+		//1è¡Œåˆ†ã®æ–‡å­—åˆ—ã‚’ã‚¹ãƒˆãƒªãƒ¼ãƒ ã«å¤‰æ›ã—ã¦è§£æã—ã‚„ã™ãã™ã‚‹
 		std::istringstream line_stream(line);
 
 		std::string word;
-		//,‹æØ‚è‚Ås‚Ìæ“ª•¶š—ñ‚ğæ“¾
+		//,åŒºåˆ‡ã‚Šã§è¡Œã®å…ˆé ­æ–‡å­—åˆ—ã‚’å–å¾—
 		getline(line_stream, word, ',');
 
-		//"//"‚©‚çn‚Ü‚és‚ÍƒRƒƒ“ƒg
+		//"//"ã‹ã‚‰å§‹ã¾ã‚‹è¡Œã¯ã‚³ãƒ¡ãƒ³ãƒˆ
 		if (word.find("//") == 0)
 		{
-			//ƒRƒƒ“ƒgs‚ğ”ò‚Î‚·
+			//ã‚³ãƒ¡ãƒ³ãƒˆè¡Œã‚’é£›ã°ã™
 			continue;
 		}
 
-		//POPƒRƒ}ƒ“ƒhcsv
+		//POPã‚³ãƒãƒ³ãƒ‰csv
 		if (word.find("POP") == 0)
 		{
-			//XÀ•W
+			//Xåº§æ¨™
 			getline(line_stream, word, ',');
 			float x = (float)std::atof(word.c_str());
-			//YÀ•W
+			//Yåº§æ¨™
 			getline(line_stream, word, ',');
 			float y = (float)std::atof(word.c_str());
-			//ZÀ•W
+			//Zåº§æ¨™
 			getline(line_stream, word, ',');
 			float z = (float)std::atof(word.c_str());
 
-			//ƒuƒƒbƒN‚ğ”­¶‚³‚¹‚é
+			//ãƒ–ãƒ­ãƒƒã‚¯ã‚’ç™ºç”Ÿã•ã›ã‚‹
 			BlockPop(Vec3(x, y, z));
 		}
-		//WAITƒRƒ}ƒ“ƒh
+		//WAITã‚³ãƒãƒ³ãƒ‰
 		else if (word.find("WAIT") == 0)
 		{
 			getline(line_stream, word, ',');
 
-			//‘Ò‚¿ŠÔ
+			//å¾…ã¡æ™‚é–“
 			int32_t waitTime = atoi(word.c_str());
 
-			//‘Ò‹@ŠJn
+			//å¾…æ©Ÿé–‹å§‹
 			isWaitBlock = true;
 			blockWaitTimer = waitTime;
 
-			//ƒRƒ}ƒ“ƒhƒ‹[ƒv‚ğ”²‚¯‚é
+			//ã‚³ãƒãƒ³ãƒ‰ãƒ«ãƒ¼ãƒ—ã‚’æŠœã‘ã‚‹
 			break;
 		}
 	}

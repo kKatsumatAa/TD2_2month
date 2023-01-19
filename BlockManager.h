@@ -17,80 +17,80 @@ public:
 
 	~BlockManager();
 
-	//‰Šú‰»
+	//åˆæœŸåŒ–
 	void Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, Camera* camera, GoalEffect* goalEffect,
 		Model* normal, Model* button, Model* goal, Model* Socket);
 
-	//XV
+	//æ›´æ–°
 	void Update();
 
-	//•`‰æ
+	//æç”»
 	void Draw(Camera* camera);
 
-	//ƒvƒŒƒCƒ„[‚ªƒuƒƒbƒN‚Ìã‚É‚¢‚é‚©‚Ç‚¤‚©
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒãƒ–ãƒ­ãƒƒã‚¯ã®ä¸Šã«ã„ã‚‹ã‹ã©ã†ã‹
 	bool CheckPlayerOnBlock(Vec3 pos);
 
-	//ƒXƒe[ƒW‚ÌŠÖ”‚Åæ‚ÉƒuƒƒbƒN‚ ‚é‚©”»’è(endPos‚ğˆø”)
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ã®é–¢æ•°ã§å…ˆã«ãƒ–ãƒ­ãƒƒã‚¯ã‚ã‚‹ã‹åˆ¤å®š(endPosã‚’å¼•æ•°)
 	bool GetPosIsBlock(Vec3 pos);
 
-	//ƒ{ƒ^ƒ“‚ª‚ ‚é‚©‚Ç‚¤‚©
+	//ãƒœã‚¿ãƒ³ãŒã‚ã‚‹ã‹ã©ã†ã‹
 	bool GetPosIsButton(Vec3 pos);
 
-	//Å‰‚ÉŒq‚®ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½ƒuƒƒbƒN‚ğ²‚É“o˜^‚·‚éŠÖ”
+	//æœ€åˆã«ç¹‹ããƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸãƒ–ãƒ­ãƒƒã‚¯ã‚’è»¸ã«ç™»éŒ²ã™ã‚‹é–¢æ•°
 	void RegistAxisButton(const Vec3& pos);
 
-	//ƒuƒƒbƒN“¯m‚ğ‚Â‚È‚®XVŠÖ”
+	//ãƒ–ãƒ­ãƒƒã‚¯åŒå£«ã‚’ã¤ãªãæ›´æ–°é–¢æ•°
 	void UpdateConnect(Vec3 pos);
 
-	//Œq‚®Û‚É—£‚µ‚½‚Æ‚±‚ë‚ª²ˆÈŠO‚Ìƒ{ƒ^ƒ“‚©‚Ç‚¤‚©
+	//ç¹‹ãéš›ã«é›¢ã—ãŸã¨ã“ã‚ãŒè»¸ä»¥å¤–ã®ãƒœã‚¿ãƒ³ã‹ã©ã†ã‹
 	bool CheckAxisButton(Vec3 pos);
 
-	//Œq‚ª‚ê‚Ä‚¢‚éƒuƒƒbƒN‚ğ‘S•”‰ğœ‚·‚é
+	//ç¹‹ãŒã‚Œã¦ã„ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ã‚’å…¨éƒ¨è§£é™¤ã™ã‚‹
 	void ReleseConectedBlock();
 
-	//ƒL[ƒ{[ƒh‚É‚æ‚Á‚Ä‰ñ“]
+	//ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã«ã‚ˆã£ã¦å›è»¢
 	void UpdateRotate(Vec3& rotatePos);
 
-	//‰ñ“]’†‚¾‚Á‚½‚ç
+	//å›è»¢ä¸­ã ã£ãŸã‚‰
 	bool GetIsRollingLeftorRight();
 
-	//ƒS[ƒ‹‚ª‚ ‚é‚©‚Ç‚¤‚©
+	//ã‚´ãƒ¼ãƒ«ãŒã‚ã‚‹ã‹ã©ã†ã‹
 	bool GetIsGoal(Vec3& Pos, bool isPlayer = false);
 
-	//d‚È‚Á‚½‚Ìˆ—
+	//é‡ãªã£ãŸæ™‚ã®å‡¦ç†
 	void UpdateOverlap();
 
-	//d‚È‚Á‚Ä‚¢‚½ƒuƒƒbƒN‚ğŒ³‚É–ß‚·ˆ—
+	//é‡ãªã£ã¦ã„ãŸãƒ–ãƒ­ãƒƒã‚¯ã‚’å…ƒã«æˆ»ã™å‡¦ç†
 	void RepositBlock();
 
 
 
-	//ƒuƒƒbƒN‚ÆƒuƒƒbƒN‚Ì“–‚½‚è”»’è
+	//ãƒ–ãƒ­ãƒƒã‚¯ã¨ãƒ–ãƒ­ãƒƒã‚¯ã®å½“ãŸã‚Šåˆ¤å®š
 	bool CollisionBlockToBlock(Vec3 blockPos, Vec3 pos);
 
-	//i‚Şæ‚Éd‚È‚Á‚Ä‚¢‚éƒuƒƒbƒN‚ª‚ ‚é‚©‚Ç‚¤‚©
+	//é€²ã‚€å…ˆã«é‡ãªã£ã¦ã„ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ãŒã‚ã‚‹ã‹ã©ã†ã‹
 	//bool GetIsOverlapBlock(Vec3 pos);
 
-	//ƒuƒƒbƒNÀ•W“Ç‚İ‚İ
+	//ãƒ–ãƒ­ãƒƒã‚¯åº§æ¨™èª­ã¿è¾¼ã¿
 	void LoadBlockPosData();
 	void UpdateBlockPos();
-	//ƒuƒƒbƒN‚Ì”­¶ŠÖ”
+	//ãƒ–ãƒ­ãƒƒã‚¯ã®ç™ºç”Ÿé–¢æ•°
 	void BlockPop(Vec3 pos);
 
-	//ƒuƒƒbƒN‚ÌƒŠƒZƒbƒg
+	//ãƒ–ãƒ­ãƒƒã‚¯ã®ãƒªã‚»ãƒƒãƒˆ
 	void ResetBlock();
 
-	//‰ñ“]‚µI‚í‚Á‚½‚Æ‚«‚Éƒp[ƒeƒBƒNƒ‹”­¶‚³‚¹‚é
+	//å›è»¢ã—çµ‚ã‚ã£ãŸã¨ãã«ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç™ºç”Ÿã•ã›ã‚‹
 	void GenerateParticleTurnBlock();
 
-	//•`‰æ—p‚ÉYÀ•W‚ğ‚¸‚ç‚·ŠÖ”
+	//æç”»ç”¨ã«Yåº§æ¨™ã‚’ãšã‚‰ã™é–¢æ•°
 	void ChangePosY();
 
 public:
 
 	static const int blockWidth = 13;
 	static const int blockHeight = 13;
-	//”¼Œa
+	//åŠå¾„
 	const float blockRadius_ = 1.8f;
 
 
@@ -109,21 +109,21 @@ private:
 
 	std::vector<Vec3> goalCameraPoses;
 
-	//ƒuƒƒbƒN‚Ì“ñŸŒ³”z—ñ
+	//ãƒ–ãƒ­ãƒƒã‚¯ã®äºŒæ¬¡å…ƒé…åˆ—
 	//std::unique_ptr < std::vector <std::vector<Block>> > blocks_ ;
 	Block* block_;
 	std::vector<std::vector<Block*>> blocks_;
 
-	//ŠeƒuƒƒbƒN—p‚Ìƒ[ƒ‹ƒhƒgƒ‰ƒ“ƒXƒtƒH[ƒ€
+	//å„ãƒ–ãƒ­ãƒƒã‚¯ç”¨ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ 
 	WorldMat worldmat_;
 	std::vector<std::vector<WorldMat>> worldmats_;
 
-	//ƒ[ƒ‹ƒh•ÏŠ·ƒf[ƒ^(‚±‚Á‚¿‚Ü‚¾g‚Á‚Ä‚È‚¢‚¯‚ÇÁ‚³‚È‚¢‚Å‚Ù‚µ‚¢)
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›ãƒ‡ãƒ¼ã‚¿(ã“ã£ã¡ã¾ã ä½¿ã£ã¦ãªã„ã‘ã©æ¶ˆã•ãªã„ã§ã»ã—ã„)
 	/*WorldMat worldTransform_[blockWidth][blockHeight];
 	WorldMat preWorldTransform_[blockWidth][blockHeight];*/
 
-	//ó‘Ô•Ï‰»•Ï”
-	//Œ»İ‚ÌŒ`
+	//çŠ¶æ…‹å¤‰åŒ–å¤‰æ•°
+	//ç¾åœ¨ã®å½¢
 	Form form_[blockWidth][blockHeight];
 
 	Form formTmp_[blockWidth][blockHeight] = {
@@ -143,35 +143,35 @@ private:
 	};
 
 
-	//‰ñ“]‚·‚é‘O‚ÌŒ`
+	//å›è»¢ã™ã‚‹å‰ã®å½¢
 	Form beforeForm_[blockWidth][blockHeight] = { Form::BLOCK };
 
 	Action action_[blockWidth][blockHeight] = { Action::None };
 
-	//²‚É‚È‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©
+	//è»¸ã«ãªã£ã¦ã„ã‚‹ã‹ã©ã†ã‹
 	bool isAxis_[blockWidth][blockHeight];
 
-	//²‚É‚È‚Á‚Ä‚¢‚éƒuƒƒbƒN‚ÌÀ•W
+	//è»¸ã«ãªã£ã¦ã„ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ã®åº§æ¨™
 	Vec3 axis_pos_;
 
-	//‘I‘ğ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©
+	//é¸æŠã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹
 	int isCount;
 
-	//ƒuƒƒbƒN‚Ì‘å‚«‚³
+	//ãƒ–ãƒ­ãƒƒã‚¯ã®å¤§ãã•
 	Vec3 scale_;
 
 
-	//‘O‚ÌƒtƒŒ[ƒ€‚É‚¨‚¢‚Ä‘I‘ğ—p‚ÌƒuƒƒbƒN‚Ìî•ñ‚ğ•Û‘¶‚µ‚Ä‚¨‚­•Ï”
+	//å‰ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã«ãŠã„ã¦é¸æŠç”¨ã®ãƒ–ãƒ­ãƒƒã‚¯ã®æƒ…å ±ã‚’ä¿å­˜ã—ã¦ãŠãå¤‰æ•°
 	int prevBlockX;
 	int prevBlockY;
 
-	//‘I‘ğƒJ[ƒ\ƒ‹‚ÌƒN[ƒ‹ƒ^ƒCƒ}[‚Ìİ’èŠÔ
+	//é¸æŠã‚«ãƒ¼ã‚½ãƒ«ã®ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒãƒ¼ã®è¨­å®šæ™‚é–“
 	static const int32_t kSelectTime = 17;
 
-	//‘I‘ğƒJ[ƒ\ƒ‹‚ÌƒN[ƒ‹ƒ^ƒCƒ}[
+	//é¸æŠã‚«ãƒ¼ã‚½ãƒ«ã®ã‚¯ãƒ¼ãƒ«ã‚¿ã‚¤ãƒãƒ¼
 	int32_t selectTimer_ = kSelectTime;
 
-	//‘I‘ğó‘Ô‚É‚µ‚Ä‚à‚¢‚¢‚©
+	//é¸æŠçŠ¶æ…‹ã«ã—ã¦ã‚‚ã„ã„ã‹
 	bool changedAction_;
 	bool isChanged_;
 
@@ -179,7 +179,7 @@ private:
 
 	Object draw[10];
 
-	//‰ñ“]
+	//å›è»¢
 
 	bool isRightRolling;
 	bool isLeftRolling;
@@ -197,25 +197,25 @@ private:
 	int effectCount = 0;
 	const int effectCountMax = 10;
 
-	//”äŠr—p‚É•Û‘¶‚µ‚Ä‚¨‚­•Ï”
+	//æ¯”è¼ƒç”¨ã«ä¿å­˜ã—ã¦ãŠãå¤‰æ•°
 	Vec3 comparisonPos[blockWidth][blockHeight];
 
-	//ƒtƒ@ƒCƒ‹“Ç‚İ‚İ—p‚Ì•Ï”
+	//ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿ç”¨ã®å¤‰æ•°
 	std::stringstream blocksPos;
 
-	//‘Ò‹@’†ƒtƒ‰ƒO
+	//å¾…æ©Ÿä¸­ãƒ•ãƒ©ã‚°
 	bool isWaitBlock;
-	//‘Ò‹@’†ƒ^ƒCƒ}[
+	//å¾…æ©Ÿä¸­ã‚¿ã‚¤ãƒãƒ¼
 	int32_t blockWaitTimer;
 
 	int isOverLap_[blockWidth][blockHeight];
 
-	//‰ñ“]‚·‚é‘O‚ÌŒ`ó
+	//å›è»¢ã™ã‚‹å‰ã®å½¢çŠ¶
 	Form beforeTurn_[blockWidth][blockHeight];
 
 	bool isUp[blockWidth][blockHeight];
 
-	//î•ñ‚ğ•Û‘¶‚µ‚½‚©‚Ç‚¤‚©
+	//æƒ…å ±ã‚’ä¿å­˜ã—ãŸã‹ã©ã†ã‹
 	bool isTurn[blockWidth][blockHeight] = { false };
 };
 
