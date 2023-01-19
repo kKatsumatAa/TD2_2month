@@ -615,8 +615,8 @@ void BlockManager::UpdateOverlap()
 							/*beforeTurn_[i][j] = form_[i][j];
 							beforeTurn_[k][l] = form_[k][l];*/
 
-							//if (form_[i][j] != Form::NONE && form_[k][l] != Form::NONE)
-							if (form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
+							if (form_[i][j] != Form::NONE && form_[k][l] != Form::NONE)
+							//if (form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
 							{
 								//if(action_[i][j] == Action::Connect || action_[k][l] == Action::Connect)
 								//重なっているブロック両方を固定ブロック化
