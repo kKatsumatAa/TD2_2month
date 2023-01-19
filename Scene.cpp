@@ -50,6 +50,7 @@ void SceneGame::Initialize()
 	scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
 	scene->tutorial->Initialize();
 	scene->goalE->Initialize();
+	scene->stageManager->Initialize(scene->blockManager);
 }
 
 void SceneGame::Update()
@@ -295,8 +296,14 @@ void Scene::Initialize()
 	connectEM = std::make_unique<ConnectingEffectManager>();
 	connectEM->Initialize();
 
+	
 	blockManager = new BlockManager();
 	blockManager->Initialize(connectEM.get(), tutorial.get(), camera.get(), goalE.get(), model[1], model[2], model[3], model[4]);
+
+	stageManager = std::make_unique<StageManager>();
+	stageManager->Initialize(blockManager);
+	stageManager->SetTutorial(13,13);
+
 
 	//Light
 	LightManager::StaticInitialize();
@@ -394,6 +401,20 @@ void Scene::Update()
 	camera->Update();
 
 	blockManager->Update();
+
+	if (KeyboardInput::GetInstance().KeyPush(DIK_0))
+	{
+		stageManager->SetTutorial(13, 13);
+	}
+	else if (KeyboardInput::GetInstance().KeyPush(DIK_1))
+	{
+		stageManager->SetStage1(13, 13);
+	}
+	else if (KeyboardInput::GetInstance().KeyPush(DIK_2))
+	{
+		stageManager->SetStage2(2, 10);
+	}
+	
 
 	state->Update();
 
