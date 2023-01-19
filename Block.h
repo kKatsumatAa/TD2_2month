@@ -87,5 +87,7 @@ public:
 
 	//セッター
 	void SetWorldPos(Vec3& pos);
+	//ゲッター
+	float GetRadius() { return radius_; };
 };
 

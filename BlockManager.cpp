@@ -74,7 +74,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 			blocks_[i][j]->Initialize(connectEM, normal, button, goal, Socket);
 
 			//ブロックの種類を設定
-			form_[i][j] = formTmp_[i][j];
+			//form_[i][j] = formTmp_[i][j];
 
 
 			//ブロックの座標を設定
@@ -708,7 +708,7 @@ void BlockManager::ResetBlock()
 				worldmats_[i][j].trans.z = j * (worldmats_[i][j].scale.y * 2.0f);
 			}
 
-			////ブロックの種類を設定
+			//ブロックの種類を設定
 			form_[i][j] = formTmp_[i][j];
 
 			worldmats_[i][j].SetWorld();
@@ -775,6 +775,27 @@ void BlockManager::ChangePosY()
 		}
 	}
 }
+
+//ステージをセット
+void BlockManager::SetStage(const int& stageWidth, const int& stageHeight ,std::vector<std::vector<WorldMat>>& worldmats, std::vector<std::vector<Form>>& forms)
+{
+
+	//worldmats_ = worldmats;
+	//form_ = forms
+
+	for (int i = 0; i < stageWidth; i++)
+	{
+		for (int j = 0; j < stageHeight; j++)
+		{
+			worldmats_[i][j].trans = worldmats[i][j].trans;
+			form_[i][j] = forms[i][j];
+		}
+	}
+
+
+}
+
+
 
 void BlockManager::LoadBlockPosData()
 {

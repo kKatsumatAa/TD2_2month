@@ -62,8 +62,6 @@ public:
 	//重なっていたブロックを元に戻す処理
 	void RepositBlock();
 
-
-
 	//ブロックとブロックの当たり判定
 	bool CollisionBlockToBlock(Vec3 blockPos, Vec3 pos);
 
@@ -84,6 +82,12 @@ public:
 
 	//描画用にY座標をずらす関数
 	void ChangePosY();
+
+	//ステージをセットする
+	void SetStage(const int& stageWidth, const int& stageHeight ,std::vector<std::vector<WorldMat>>& worldmats, std::vector<std::vector<Form>>& forms);
+
+	//ゲッター
+	float GetRadius() { return blockRadius_; };
 
 public:
 
@@ -112,10 +116,6 @@ private:
 	//各ブロック用のワールドトランスフォーム
 	WorldMat worldmat_;
 	std::vector<std::vector<WorldMat>> worldmats_;
-
-	//ワールド変換データ(こっちまだ使ってないけど消さないでほしい)
-	/*WorldMat worldTransform_[blockWidth][blockHeight];
-	WorldMat preWorldTransform_[blockWidth][blockHeight];*/
 
 	//状態変化変数
 	//現在の形
@@ -212,5 +212,7 @@ private:
 
 	//情報を保存したかどうか
 	bool isTurn[blockWidth][blockHeight];
+
+	//読み込んだブロックの形
 };
 
