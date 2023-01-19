@@ -214,5 +214,14 @@ private:
 	bool isTurn[blockWidth][blockHeight];
 
 	//読み込んだブロックの形
+	Form loadForm_;
+	std::vector<std::vector<Block::Form>> loadForms_;
+	//読み込んだブロックの初期座標
+	std::vector<std::vector<WorldMat>> loadWorldmats_;
+
+	//読み込んだステージの長さ
+	float stageWidth_;
+	float stageHeight_;
+
 };
 

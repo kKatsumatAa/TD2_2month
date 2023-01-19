@@ -60,6 +60,8 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 		}
 	}
 
+	
+
 	//ブロックの大きさ
 
 	for (int i = 0; i < blockWidth; i++)
@@ -694,27 +696,15 @@ bool BlockManager::CollisionBlockToBlock(Vec3 blockPos, Vec3 comPos)
 
 void BlockManager::ResetBlock()
 {
-	for (int i = 0; i < blockWidth; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < blockHeight; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
-			//ブロックの座標を設定
-			if (i >= 0)
-			{
-				worldmats_[i][j].trans.x = i * (worldmats_[i][j].scale.x * 2.0f);
-			}
-			if (j >= 0)
-			{
-				worldmats_[i][j].trans.z = j * (worldmats_[i][j].scale.y * 2.0f);
-			}
-
 			//ブロックの種類を設定
-			form_[i][j] = formTmp_[i][j];
+			form_[i][j] = loadForms_[i][j];
+			worldmats_[i][j] = loadWorldmats_[i][j];
 
 			worldmats_[i][j].SetWorld();
-
-			//block_->Initialize(connectEM, normal, button, goal, Socket);
-
 
 			//軸になっているかどうか
 			isAxis_[i][j] = false;
@@ -779,23 +769,46 @@ void BlockManager::ChangePosY()
 //ステージをセット
 void BlockManager::SetStage(const int& stageWidth, const int& stageHeight ,std::vector<std::vector<WorldMat>>& worldmats, std::vector<std::vector<Form>>& forms)
 {
+	stageWidth_ = stageWidth;
+	stageHeight_ = stageHeight;
 
-	//worldmats_ = worldmats;
-	//form_ = forms
+	//読み込んだ時の座標保持用
+	for (int i = 0; i < stageWidth_; i++)
+	{
+		//ブロック型を持てる空のベクタを追加(行列でいうi列)
+		loadWorldmats_.push_back(vector<WorldMat>());
+
+		for (int j = 0; j < stageHeight_; j++)
+		{
+			//ブロックの要素を追加
+			loadWorldmats_[i].push_back(worldmat_);
+		}
+	}
+
+	//読み込んだ形の座標保持用
+	for (int i = 0; i < stageWidth_; i++)
+	{
+		//ブロック型を持てる空のベクタを追加(行列でいうi列)
+		loadForms_.push_back(vector<Form>());
+
+		for (int j = 0; j < stageHeight_; j++)
+		{
+			//ブロックの要素を追加
+			loadForms_[i].push_back(loadForm_);
+		}
+	}
 
 	for (int i = 0; i < stageWidth; i++)
 	{
 		for (int j = 0; j < stageHeight; j++)
 		{
 			worldmats_[i][j].trans = worldmats[i][j].trans;
+			loadWorldmats_[i][j].trans = worldmats[i][j].trans;
 			form_[i][j] = forms[i][j];
+			loadForms_[i][j] = forms[i][j];
 		}
 	}
-
-
 }
-
-
 
 void BlockManager::LoadBlockPosData()
 {
