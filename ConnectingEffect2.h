@@ -23,10 +23,13 @@ private:
 	Vec3 startScale;
 	Vec3 endScale;
 
+	Vec3 startAngle;
+	Vec3 endAngle;
+
 public:
 
 	void Initialize(Vec3 pos, Vec3 startScale, Vec3 endScale
-		, XMFLOAT4 startColor, XMFLOAT4 endColor, int lifeTime);
+		, XMFLOAT4 startColor, XMFLOAT4 endColor, int lifeTime, Vec3 startAngle = { 0,0,0 }, Vec3 endAngle = { 0,0,0 });
 	void Update();
 	void Draw(Camera& camera);
 
@@ -47,7 +50,7 @@ public:
 	void Initialize();
 
 	void GenerateConnectingEffect2(Vec3 pos, Vec3 startScale, Vec3 endScale
-		, XMFLOAT4 startColor, XMFLOAT4 endColor, int lifeTime);
+		, XMFLOAT4 startColor, XMFLOAT4 endColor, int lifeTime, Vec3 startAngle = { 0,0,0 }, Vec3 endAngle = { 0,0,0 });
 	void Update();
 	void Draw(Camera* camera);
 

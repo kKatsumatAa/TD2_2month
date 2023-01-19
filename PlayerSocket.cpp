@@ -20,12 +20,15 @@ void PlayerSocket::OnCollision2(Collider& collider)
 {
 }
 
-void PlayerSocket::Initialize(Model* model)
+void PlayerSocket::Initialize(ConnectingEffect2Manager* connectE2M, float blockRadius, Model* model)
 {
 	assert(model);
 
 	this->model = model;
 	isUsed = false;
+
+	this->connectE2M = connectE2M;
+	this->blockRadius = blockRadius;
 
 	if (obj == nullptr)
 	{
@@ -123,6 +126,15 @@ void StateUsingSocket::Update(Vec3 pos)
 	Vec3 Pos = playerSocket->plugInPosTmp;
 	playerSocket->SetWorldPos({ Pos.x,Pos.y + sinf(effectCount * 0.1f),Pos.z });
 
+	if (effectCount % 240 == 240 / 2)
+	{
+		//エフェクト
+		Vec3 startScale = { playerSocket->blockRadius / 1.5f ,playerSocket->blockRadius * 5.0f,playerSocket->blockRadius / 1.5f };
+		Vec3 endScale = { playerSocket->blockRadius * 0.01f,playerSocket->blockRadius * 100.0f,playerSocket->blockRadius * 0.01f };
+		playerSocket->connectE2M->GenerateConnectingEffect2(playerSocket->GetWorldPos(), startScale, endScale
+			, { 1.0f,1.0f,0,0.9f }, { 1.0f,1.0f,1.0f,0.3f }, 240, { 0,pi * 10.0f,0 });
+	}
+
 	//外部で〃
 	if (!playerSocket->GetIsUsed())
 	{
@@ -133,6 +145,9 @@ void StateUsingSocket::Update(Vec3 pos)
 
 		if (count >= countMax)
 		{
+			//エフェクト消す
+			playerSocket->connectE2M->connectingEffect2s_.clear();
+
 			playerSocket->ChangeState(new StateNormalSocket);
 		}
 	}

@@ -47,7 +47,7 @@ void SceneGame::Initialize()
 	scene->connectEM->Initialize();
 	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
 		, scene->connectE2M.get(), scene->tutorial.get(), scene->model[0], &scene->debugText);
-	scene->playerSocket->Initialize(scene->model[0]);
+	scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
 	scene->tutorial->Initialize();
 }
 
@@ -72,7 +72,7 @@ void SceneGame::Update()
 	{
 		scene->player->Reset();
 		scene->blockManager->ResetBlock();
-		scene->playerSocket->Initialize(scene->model[0]);
+		scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
 		scene->tutorial->Initialize();
 	}
 
@@ -304,7 +304,7 @@ void Scene::Initialize()
 
 	//playerSocket
 	playerSocket = std::make_unique<PlayerSocket>();
-	playerSocket->Initialize(model[0]);
+	playerSocket->Initialize(connectE2M.get(), blockManager->blockRadius_, model[0]);
 
 	//effect2
 	connectE2M = std::make_unique<ConnectingEffect2Manager>();

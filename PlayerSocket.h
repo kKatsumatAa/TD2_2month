@@ -1,5 +1,6 @@
 #pragma once
 #include"Collider.h"
+#include "ConnectingEffect2.h"
 
 class PlayerSocket;
 
@@ -68,9 +69,13 @@ public:
 
 	Vec3 plugInPosTmp;
 
+	ConnectingEffect2Manager* connectE2M;
+
+	float blockRadius = 0;
+
 
 public:
-	void Initialize(Model* model);
+	void Initialize(ConnectingEffect2Manager* connectE2M, float blockRadius, Model* model);
 
 	void Update(Vec3 pos);
 	void Draw(Camera* camera);
