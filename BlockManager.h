@@ -211,6 +211,6 @@ private:
 	bool isUp[blockWidth][blockHeight];
 
 	//î•ñ‚ğ•Û‘¶‚µ‚½‚©‚Ç‚¤‚©
-	bool isTurn[blockWidth][blockHeight] = {false};
+	bool isTurn[blockWidth][blockHeight];
 };
 

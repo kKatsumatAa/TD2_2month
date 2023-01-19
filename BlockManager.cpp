@@ -96,6 +96,11 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 
 			//現在どうなっているか
 			action_[i][j] = Action::None;
+
+			isTurn[i][j] = false;
+
+			beforeTurn_[i][j] = form_[i][j];
+
 		}
 	}
 
@@ -119,12 +124,12 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 void BlockManager::Update()
 {
 
-
-
 	for (int i = 0; i < blockWidth; i++)
 	{
 		for (int j = 0; j < blockHeight; j++)
 		{
+
+
 			//X座標の一つ前の番号を保存
 			prevBlockY = j;
 
@@ -301,7 +306,7 @@ void BlockManager::UpdateConnect(Vec3 pos)
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 				&& action_[i][j] != Action::Connect)
 			{
-				if (form_[i][j] != Form::GOAL)
+				if (form_[i][j] != Form::NONE)
 				{
 					action_[i][j] = Action::Connect;
 
@@ -554,7 +559,7 @@ bool BlockManager::GetIsGoal(Vec3& pos)
 			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
-				//そのブロックの形状はボタンかどうか
+				//そのブロックの形状はかゴールかどうか
 				if (form_[i][j] == Form::GOAL)
 				{
 					return true;
@@ -588,22 +593,23 @@ void BlockManager::UpdateOverlap()
 							beforeTurn_[k][l] = form_[k][l];*/
 
 							//if (form_[i][j] != Form::NONE && form_[k][l] != Form::NONE)
-							if ( form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
+							if (form_[i][j] != Form::NONE && form_[k][l] != Form::NONE)
 							{
 								//if(action_[i][j] == Action::Connect || action_[k][l] == Action::Connect)
 								//重なっているブロック両方を固定ブロック化
-								
-								
+
+
 								//回転させる前の状態を保存
-								if (isTurn[i][j] == false && isTurn[k][l] == false)
+								if (isTurn[i][j] == false || isTurn[k][l] == false)
 								{
 									beforeTurn_[i][j] = form_[i][j];
 									beforeTurn_[k][l] = form_[k][l];
 								}
 
+								//状態をブロックに
 								form_[i][j] = Form::LOCKED;
 								form_[k][l] = Form::LOCKED;
-
+								//変化フラグをオンに
 								isTurn[i][j] = true;
 								isTurn[k][l] = true;
 							}
@@ -619,8 +625,12 @@ void BlockManager::UpdateOverlap()
 					}
 				}
 			}
+
+
 		}
 	}
+
+
 }
 
 //重なっていたブロックを元に戻す処理
@@ -640,23 +650,23 @@ void BlockManager::RepositBlock()
 
 					if (action_[i][j] == Action::Connect)
 					{
-						if (isOverlap == false && form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED)
+						if (isOverlap == false)
 
 							/*if (form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED &&
 								action_[i][j] == Action::Connect )*/
 						{
-							if (form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
+							//バグりやすいのここ！！(回している間はプレイヤーが乗っているボタンは変わらないので、ボタンとの判定が必要)
+							if (form_[i][j] == Form::LOCKED || form_[i][j] == Form::BUTTON && form_[k][l] == Form::LOCKED)
 							{
 								if (i != k || j != l)
 								{
+									//状態変化を元に戻す
 									form_[i][j] = beforeTurn_[i][j];
 									form_[k][l] = beforeTurn_[k][l];
-									/*form_[i][j] = Form::BLOCK;
-									form_[k][l] = Form::BLOCK;*/
 
+									//変化フラグをオフに
 									isTurn[i][j] = false;
 									isTurn[k][l] = false;
-
 								}
 							}
 						}
