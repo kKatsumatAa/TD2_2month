@@ -1,4 +1,18 @@
 #include "GoalEffect.h"
+#include "ParticleManager.h"
+
+//乱数範囲
+static std::uniform_real_distribution<float> scaleDist(0.3f, 2.0f);
+static std::uniform_real_distribution<float> colorDist(0.1f, 1.0f);
+
+
+void GoalEffect::ChangeState(GoalEffectState* state)
+{
+	delete this->state;
+	this->state = state;
+	state->SetGoalEffect(this);
+	this->state->Initialize();
+}
 
 void GoalEffect::Initialize()
 {
@@ -15,43 +29,16 @@ void GoalEffect::Initialize()
 
 	timeRate = 0;
 
+	if (state) { delete state; }
+	state = nullptr;
+
 	isEnd = false;
 }
 
 void GoalEffect::Update()
 {
 	if (isBegine) {
-
-		time++;
-
-		//tが1.0以上になったら次の区間に進む
-		timeRate = time / timeMax;
-
-		if (timeRate >= 1.0f)
-		{
-			if (index < poses.size() - 3)
-			{
-				index++;
-				timeRate -= 1.0f;
-				time = 0;
-			}
-			else
-			{
-				timeRate = 1.0f;
-
-				isEnd = true;
-				//poses.clear();
-
-			}
-		}
-
-		this->goalEffectCamera.viewMat.eye = SplinePosition(poses, index, timeRate);
-		this->goalEffectCamera.viewMat.target = target;
-
-		goalEffectCamera.UpdateViewMatrix();
-
-
-
+		state->Update();
 	}
 }
 
@@ -78,4 +65,86 @@ void GoalEffect::BegineGoalEffect(std::vector<Vec3> poses, Vec3 target, int time
 
 	this->index = 1;
 
+	ChangeState(new StateGoalParticle);
+
+}
+
+
+//-----------------------------------------------------------------------------------
+void GoalEffectState::SetGoalEffect(GoalEffect* goalEffect)
+{
+	this->goalEffect = goalEffect;
+}
+
+//-----------------------------------------------------------------------------------
+void StateGoalParticle::Initialize()
+{
+	for (int i = 0; i < 20; i++)
+	{
+		XMFLOAT4 color = { colorDist(engine),colorDist(engine) ,colorDist(engine) ,colorDist(engine) };
+		XMFLOAT4 color2 = { colorDist(engine),colorDist(engine) ,colorDist(engine) ,colorDist(engine) };
+		float scale = scaleDist(engine);
+
+		ParticleManager::GetInstance()->GenerateRandomParticle(5, 300, scale * 4.0f, goalEffect->target, scale / 1.2f, 0, color, color2);
+	}
+
+	//カメラの位置だけ入れる
+	goalEffect->goalEffectCamera.viewMat.eye = goalEffect->poses[0];
+	goalEffect->goalEffectCamera.viewMat.target = goalEffect->target;
+
+	goalEffect->goalEffectCamera.UpdateViewMatrix();
+}
+
+void StateGoalParticle::Update()
+{
+	count++;
+
+	if (count >= countMax)
+	{
+		goalEffect->ChangeState(new StateGoalCamera);
+	}
+}
+
+void StateGoalParticle::Draw()
+{
+}
+
+//--------------------------------------------------------------------------------------
+void StateGoalCamera::Initialize()
+{
+}
+
+void StateGoalCamera::Update()
+{
+	goalEffect->time++;
+
+	//tが1.0以上になったら次の区間に進む
+	goalEffect->timeRate = goalEffect->time / goalEffect->timeMax;
+
+	if (goalEffect->timeRate >= 1.0f)
+	{
+		if (goalEffect->index < goalEffect->poses.size() - 3)
+		{
+			goalEffect->index++;
+			goalEffect->timeRate -= 1.0f;
+			goalEffect->time = 0;
+		}
+		else
+		{
+			goalEffect->timeRate = 1.0f;
+
+			goalEffect->isEnd = true;
+			//poses.clear();
+
+		}
+	}
+
+	goalEffect->goalEffectCamera.viewMat.eye = SplinePosition(goalEffect->poses, goalEffect->index, goalEffect->timeRate);
+	goalEffect->goalEffectCamera.viewMat.target = goalEffect->target;
+
+	goalEffect->goalEffectCamera.UpdateViewMatrix();
+}
+
+void StateGoalCamera::Draw()
+{
 }

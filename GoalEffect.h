@@ -1,16 +1,67 @@
 #pragma once
 #include"Camera.h"
 
+class GoalEffect;
 
+class GoalEffectState
+{
+protected:
+	GoalEffect* goalEffect = nullptr;
+
+public:
+	void SetGoalEffect(GoalEffect* goalEffect);
+
+	virtual void Initialize() = 0;
+
+	virtual void Update() = 0;
+	virtual void Draw() = 0;
+
+};
+
+//パーティクル
+class StateGoalParticle : public GoalEffectState
+{
+protected:
+	int count = 0;
+	int countMax = 40;
+
+public:
+	void Initialize() override;
+
+	void Update() override;
+	void Draw() override;
+
+};
+
+//カメラ
+class StateGoalCamera : public GoalEffectState
+{
+protected:
+
+
+public:
+	void Initialize() override;
+
+	void Update() override;
+	void Draw() override;
+
+};
+
+//-----------------------------------------------
 class GoalEffect
 {
 private:
 	bool isBegine = false;
 
+	//
+	GoalEffectState* state;
+
+public:
+	Camera goalEffectCamera;
+	bool isEnd = false;
+	Vec3 target;
 	float time = 0;
 	float timeMax = 0;
-
-	Vec3 target;
 
 	std::vector<Vec3> poses;
 
@@ -18,16 +69,8 @@ private:
 
 	float timeRate = 0;
 
-	//時間計測に必要なデータ
-	long long startCount;
-	long long nowCount;
-	long long elapsedCount;//経過カウント数
-
 public:
-	Camera goalEffectCamera;
-	bool isEnd = false;
-
-public:
+	void ChangeState(GoalEffectState* state);
 	void Initialize();
 	void Update();
 	void Draw(Camera* camera);

@@ -54,29 +54,38 @@ void SceneGame::Initialize()
 
 void SceneGame::Update()
 {
-	scene->blockManager->Update();
-
-	scene->connectEM->Update();
-	scene->connectE2M->Update();
-
-	scene->player->Update();
-
-	Vec3 pos = scene->player->GetWorldPos();
-	scene->playerSocket->Update({ pos.x,pos.y + scene->player->GetRadius(),pos.z });
-
-	scene->tutorial->Update();
-
-	ParticleManager::GetInstance()->Update(&scene->camera->viewMat, &scene->camera->projectionMat);
-
-	//リセット
-	if (KeyboardInput::GetInstance().KeyTrigger(DIK_R))
+	if (scene->player->isGoal)
 	{
-		scene->player->Reset();
-		scene->blockManager->ResetBlock();
-		scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
-		scene->tutorial->Initialize();
+		scene->useCamera = &scene->goalE->goalEffectCamera;
+	}
+	else
+	{
+		scene->useCamera = scene->camera.get();
 	}
 
+	if (!scene->player->isGoal) {
+		scene->blockManager->Update();
+
+		scene->connectEM->Update();
+		scene->connectE2M->Update();
+
+		scene->player->Update();
+
+		Vec3 pos = scene->player->GetWorldPos();
+		scene->playerSocket->Update({ pos.x,pos.y + scene->player->GetRadius(),pos.z });
+
+		scene->tutorial->Update();
+
+		//リセット
+		if (KeyboardInput::GetInstance().KeyTrigger(DIK_R))
+		{
+			scene->player->Reset();
+			scene->blockManager->ResetBlock();
+			scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
+			scene->tutorial->Initialize();
+		}
+	}
+	ParticleManager::GetInstance()->Update(&scene->useCamera->viewMat, &scene->useCamera->projectionMat);
 	//シーン遷移
 	if (scene->player->isGoal)
 	{

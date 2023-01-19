@@ -561,6 +561,7 @@ bool BlockManager::GetIsGoal(Vec3& pos, bool isPlayer)
 				//そのブロックの形状はボタンかどうか
 				if (form_[i][j] == Form::GOAL)
 				{
+					//ゴール演出
 					if (isPlayer)
 					{
 						Vec3 goalEyeDistance = worldmats_[i][j].trans - camera->GetEye();
