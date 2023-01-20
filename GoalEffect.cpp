@@ -14,8 +14,10 @@ void GoalEffect::ChangeState(GoalEffectState* state)
 	this->state->Initialize();
 }
 
-void GoalEffect::Initialize()
+void GoalEffect::Initialize(CameraManager* cameraM)
 {
+	this->cameraM = cameraM;
+
 	isBegine = false;
 
 	time = 0;
@@ -89,10 +91,10 @@ void StateGoalParticle::Initialize()
 	}
 
 	//ƒJƒƒ‰‚ÌˆÊ’u‚¾‚¯“ü‚ê‚é
-	goalEffect->goalEffectCamera.viewMat.eye = goalEffect->poses[0];
-	goalEffect->goalEffectCamera.viewMat.target = goalEffect->target;
+	goalEffect->cameraM->goalEffectCamera->viewMat.eye = goalEffect->poses[0];
+	goalEffect->cameraM->goalEffectCamera->viewMat.target = goalEffect->target;
 
-	goalEffect->goalEffectCamera.UpdateViewMatrix();
+	goalEffect->cameraM->goalEffectCamera->UpdateViewMatrix();
 }
 
 void StateGoalParticle::Update()
@@ -139,10 +141,10 @@ void StateGoalCamera::Update()
 		}
 	}
 
-	goalEffect->goalEffectCamera.viewMat.eye = SplinePosition(goalEffect->poses, goalEffect->index, goalEffect->timeRate);
-	goalEffect->goalEffectCamera.viewMat.target = goalEffect->target;
+	goalEffect->cameraM->goalEffectCamera->viewMat.eye = SplinePosition(goalEffect->poses, goalEffect->index, goalEffect->timeRate);
+	goalEffect->cameraM->goalEffectCamera->viewMat.target = goalEffect->target;
 
-	goalEffect->goalEffectCamera.UpdateViewMatrix();
+	goalEffect->cameraM->goalEffectCamera->UpdateViewMatrix();
 }
 
 void StateGoalCamera::Draw()

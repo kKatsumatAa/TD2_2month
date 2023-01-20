@@ -16,7 +16,7 @@ void Player::ChangeStateMove(PlayerState* state)
 }
 
 void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket,
-	ConnectingEffect2Manager* connectE2M, Tutorial* tutorial, Model* model, DebugText* debugText_)
+	ConnectingEffect2Manager* connectE2M, Tutorial* tutorial, CameraManager* cameraM, Model* model, DebugText* debugText_)
 {
 	assert(model);
 
@@ -27,6 +27,7 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 	this->playerSocket = playerSocket;
 	this->connectE2M = connectE2M;
 	this->tutorial = tutorial;
+	this->cameraM = cameraM;
 
 	isPlayer = true;
 	isDead = false;
@@ -236,7 +237,7 @@ void StateNormalMoveP::Update()
 
 			//演出
 			Vec3 scale = player->GetWorldTransForm()->scale;
-			player->GetWorldTransForm()->scale = { scale.x * 1.1f,scale.y * 0.8f,scale.z * 1.1f };
+			player->GetWorldTransForm()->scale = { scale.x * 1.2f,scale.y * 0.6f,scale.z * 1.2f };
 
 			//チュートリアル
 			if (player->tutorial->GetState() == TUTORIAL::MOVE)
@@ -329,6 +330,20 @@ void StateNormalConTurP::Update()
 			player->connectE2M->GenerateConnectingEffect2(player->GetWorldPos(), startScale, endScale
 				, { 1.0f,1.0f,0,0.9f }, { 1.0f,1.0f,1.0f,0.3f }, 40, { 0,pi * 10.0f,0 });
 
+			//カメラ切り替え
+			{
+				player->cameraM->gameTurnCamera->SetEye({ 0 + player->GetWorldPos().x
+					,player->cameraM->gameMainCamera->GetEye().y + 35.0f,
+					0 +player->GetWorldPos().z });
+
+				player->cameraM->gameTurnCamera->SetTarget({ 0 + player->GetWorldPos().x,
+					0,
+					0 +player->GetWorldPos().z });
+				player->cameraM->gameTurnCamera->SetUp({ 0,0,1 });
+				player->cameraM->gameTurnCamera->Update();
+				player->cameraM->usingCamera = player->cameraM->gameTurnCamera.get();
+			}
+
 			player->ChangeStateTurnConnect(new StateConnectP);
 		}
 		else
@@ -395,6 +410,11 @@ void StateConnectP::Update()
 			Vec3 scale = player->GetWorldTransForm()->scale;
 			player->GetWorldTransForm()->scale = { scale.x * 0.1f,scale.y * 2.0f,scale.z * 0.1f };
 
+			//カメラ切り替え
+			{
+				player->cameraM->usingCamera = player->cameraM->gameMainCamera.get();
+			}
+
 			player->ChangeStateTurnConnect(new StateNormalConTurP);
 		}
 	}
@@ -435,6 +455,11 @@ void StateTurnP::Update()
 		//演出
 		Vec3 scale = player->GetWorldTransForm()->scale;
 		player->GetWorldTransForm()->scale = { scale.x * 0.1f,scale.y * 2.0f,scale.z * 0.1f };
+
+		//カメラ切り替え
+		{
+			player->cameraM->usingCamera = player->cameraM->gameMainCamera.get();
+		}
 
 		player->ChangeStateTurnConnect(new StateNormalConTurP);
 	}

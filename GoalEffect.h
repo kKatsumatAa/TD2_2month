@@ -1,5 +1,5 @@
 #pragma once
-#include"Camera.h"
+#include"CameraManager.h"
 
 class GoalEffect;
 
@@ -57,7 +57,7 @@ private:
 	GoalEffectState* state;
 
 public:
-	Camera goalEffectCamera;
+	CameraManager* cameraM;
 	bool isEnd = false;
 	Vec3 target;
 	float time = 0;
@@ -71,7 +71,7 @@ public:
 
 public:
 	void ChangeState(GoalEffectState* state);
-	void Initialize();
+	void Initialize(CameraManager* cameraM);
 	void Update();
 	void Draw(Camera* camera);
 

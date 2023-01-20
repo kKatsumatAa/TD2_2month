@@ -10,6 +10,7 @@
 #include"Player.h"
 #include"BlockManager.h"
 #include"StageManager.h"
+#include"CameraManager.h"
 
 
 
@@ -74,8 +75,7 @@ public:
 	float cameraTarget[3] = { 0 };
 
 
-	std::unique_ptr<Camera> camera;
-	Camera* useCamera;
+	std::unique_ptr<CameraManager> cameraM;
 
 	std::unique_ptr<ConnectingEffectManager> connectEM;
 
