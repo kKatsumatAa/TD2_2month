@@ -9,6 +9,8 @@
 #include"ConnectingEffect.h"
 #include"Player.h"
 #include"BlockManager.h"
+#include"StageManager.h"
+
 
 
 
@@ -86,6 +88,7 @@ public:
 
 	BlockManager* blockManager = nullptr;
 	
+	std::unique_ptr<StageManager> stageManager= nullptr;
 
 public:
 	~Scene();
