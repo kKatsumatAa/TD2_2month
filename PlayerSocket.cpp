@@ -125,15 +125,16 @@ void StateUsingSocket::Update(Vec3 pos)
 
 	Vec3 Pos = playerSocket->plugInPosTmp;
 	playerSocket->SetWorldPos({ Pos.x,Pos.y + sinf(effectCount * 0.1f),Pos.z });
+	playerSocket->GetWorldTransForm()->rot.y = (effectCount * 0.1f);
 
-	if (effectCount == 1)
-	{
-		//エフェクト
-		Vec3 startScale = { playerSocket->blockRadius / 1.5f ,playerSocket->blockRadius * 5.0f,playerSocket->blockRadius / 1.5f };
-		Vec3 endScale = { playerSocket->blockRadius / 2.7f,playerSocket->blockRadius * 100.0f, playerSocket->blockRadius / 2.7f };
-		playerSocket->connectE2M->GenerateConnectingEffect2(playerSocket->GetWorldPos(), endScale, endScale
-			, { 1.0f,1.0f,0,0.6f }, { 1.0f,1.0f,1.0f,0.3f }, 99999, { 0,pi * 800.0f,0 });
-	}
+	//if (effectCount == 1)
+	//{
+	//	//エフェクト
+	//	Vec3 startScale = { playerSocket->blockRadius / 1.5f ,playerSocket->blockRadius * 5.0f,playerSocket->blockRadius / 1.5f };
+	//	Vec3 endScale = { playerSocket->blockRadius / 2.7f,playerSocket->blockRadius * 100.0f, playerSocket->blockRadius / 2.7f };
+	//	playerSocket->connectE2M->GenerateConnectingEffect2(playerSocket->GetWorldPos(), endScale, endScale
+	//		, { 1.0f,1.0f,0,0.6f }, { 1.0f,1.0f,1.0f,0.3f }, 99999, { 0,pi * 800.0f,0 });
+	//}
 
 	//外部で〃
 	if (!playerSocket->GetIsUsed())

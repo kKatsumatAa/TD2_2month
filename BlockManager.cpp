@@ -16,14 +16,14 @@ BlockManager::~BlockManager()
 }
 
 //������
-void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, Camera* camera, GoalEffect* goalEffect,
+void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
 	Model* normal, Model* button, Model* goal, Model* Socket)
 {
 	blocks_.clear();
 	worldmats_.clear();
 
 	this->connectEM = connectEM;
-	this->camera = camera;
+	this->cameraM = cameraM;
 	this->tutorial = tutorial;
 	this->goalEffect = goalEffect;
 	this->goalCameraPoses.clear();
@@ -284,7 +284,7 @@ void BlockManager::RegistAxisButton(const Vec3& pos)
 					axis_pos_.y = worldmats_[i][j].trans.y;
 					axis_pos_.z = worldmats_[i][j].trans.z;
 
-					camera->CameraShake(10, 1.0f);
+					cameraM->usingCamera->CameraShake(15, 1.3f);
 				}
 				else {}
 			}
@@ -310,10 +310,11 @@ void BlockManager::UpdateConnect(Vec3 pos)
 				if (form_[i][j] != Form::NONE)
 				{
 					action_[i][j] = Action::Connect;
+					cameraM->usingCamera->CameraShake(15, 0.53f);
 
 				}
 
-				camera->CameraShake(10, 0.23f);
+				
 
 				////�q���͂���
 				////�{�^�����q�����Ă��Ȃ���Ό��݈ʒu��Ȃ���Ԃɂ���
@@ -362,7 +363,7 @@ bool BlockManager::CheckAxisButton(Vec3 pos)
 			{
 				if (isAxis_[i][j] == false && form_[i][j] == Form::BUTTON)
 				{
-					camera->CameraShake(10, 0.6f);
+					cameraM->usingCamera->CameraShake(15, 1.2f);
 					return true;
 				}
 			}
@@ -465,7 +466,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		if (rotateCount >= rotateCountMax)
 		{
 			isRightRolling = false;
-			camera->CameraShake(10, 0.9f);
+			cameraM->usingCamera->CameraShake(15, 1.5f);
 
 			//�`���[�g���A��
 			if (tutorial->GetState() == TUTORIAL::TURN)
@@ -514,7 +515,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		if (rotateCount >= rotateCountMax)
 		{
 			isLeftRolling = false;
-			camera->CameraShake(10, 0.9f);
+			cameraM->usingCamera->CameraShake(15, 1.5f);
 
 			//�`���[�g���A��
 			if (tutorial->GetState() == TUTORIAL::TURN)
@@ -566,25 +567,30 @@ bool BlockManager::GetIsGoal(Vec3& pos, bool isPlayer)
 					//�S�[�����o
 					if (isPlayer)
 					{
-						Vec3 goalEyeDistance = worldmats_[i][j].trans - camera->GetEye();
+
+
+						Vec3 goalEyeDistance = worldmats_[i][j].trans - cameraM->gameMainCamera->GetEye();
 
 						for (int i = 0; i < 4; i++)
 						{
 							if (i < 2) {
-								goalCameraPoses.push_back(camera->GetEye() + Vec3{ goalEyeDistance.x,goalEyeDistance.y + i * 60.0f ,goalEyeDistance.z } / 4.0f * i);
+								goalCameraPoses.push_back(cameraM->gameMainCamera->GetEye() + Vec3{ goalEyeDistance.x,goalEyeDistance.y + i * 60.0f ,goalEyeDistance.z } / 4.0f * i);
 							}
 							else if (i == 4 - 2)
 							{
-								goalCameraPoses.push_back(camera->GetEye() + Vec3{ goalEyeDistance.x,goalEyeDistance.y - blockRadius_ * 10.0f ,goalEyeDistance.z } / 4.0f * i);
+								goalCameraPoses.push_back(cameraM->gameMainCamera->GetEye() + Vec3{ goalEyeDistance.x,goalEyeDistance.y - blockRadius_ * 10.0f ,goalEyeDistance.z } / 4.0f * i);
 							}
 							else
 							{
-								goalCameraPoses.push_back(camera->GetEye() + goalEyeDistance / 4.0f * i);
+								goalCameraPoses.push_back(cameraM->gameMainCamera->GetEye() + goalEyeDistance / 4.0f * i);
 							}
 						}
 
 						goalEffect->BegineGoalEffect(goalCameraPoses, { worldmats_[i][j].trans.x, worldmats_[i][j].trans.y + blockRadius_ * 2.0f,worldmats_[i][j].trans.z }, 30);
 					}
+
+					//カメラ切り替え
+					cameraM->usingCamera = cameraM->goalEffectCamera.get();
 
 					return true;
 				}

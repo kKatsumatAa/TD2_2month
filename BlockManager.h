@@ -18,7 +18,7 @@ public:
 	~BlockManager();
 
 	//������
-	void Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, Camera* camera, GoalEffect* goalEffect,
+	void Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
 		Model* normal, Model* button, Model* goal, Model* Socket);
 
 	//�X�V
@@ -99,11 +99,11 @@ public:
 
 
 private:
+	CameraManager* cameraM;
+
 	Tutorial* tutorial;
 
 	GoalEffect* goalEffect;
-
-	Camera* camera;
 
 	UINT64 texhandle[10];
 

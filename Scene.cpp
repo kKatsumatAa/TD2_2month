@@ -41,36 +41,39 @@ void SceneTitle::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
-	scene->blockManager->Initialize(scene->connectEM.get(), scene->tutorial.get(), scene->camera.get(),
+	//カメラをゲームのメインカメラに
+	scene->cameraM.get()->usingCamera = scene->cameraM->gameMainCamera.get();
+
+	scene->blockManager->Initialize(scene->connectEM.get(), scene->tutorial.get(), scene->cameraM.get(),
 		scene->goalE.get(), scene->model[1], scene->model[2], scene->model[3], scene->model[4]);
-	scene->camera->Initialize();
 	scene->connectEM->Initialize();
 	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
-		, scene->connectE2M.get(), scene->tutorial.get(), scene->model[0], &scene->debugText);
+		, scene->connectE2M.get(), scene->tutorial.get(), scene->cameraM.get(), scene->model[0], &scene->debugText);
 	scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
 	scene->tutorial->Initialize();
-	scene->goalE->Initialize();
+	scene->goalE->Initialize(scene->cameraM.get());
 	scene->stageManager->Initialize(scene->blockManager);
 }
 
 void SceneGame::Update()
 {
-	if (scene->player->isGoal)
-	{
-		scene->useCamera = &scene->goalE->goalEffectCamera;
-	}
-	else
-	{
-		scene->useCamera = scene->camera.get();
-	}
+	//if (scene->player->isGoal)
+	//{
+	//	scene->cameraM->usingCamera = scene->cameraM->goalEffectCamera.get();
+	//}
+	//else
+	//{
+	//	scene->cameraM->usingCamera = scene->cameraM->goalEffectCamera.get();
+	//}
 
 	if (!scene->player->isGoal) {
-		scene->blockManager->Update();
+		
 
 		scene->connectEM->Update();
 		scene->connectE2M->Update();
 
 		scene->player->Update();
+		scene->blockManager->Update();
 
 		Vec3 pos = scene->player->GetWorldPos();
 		scene->playerSocket->Update({ pos.x,pos.y + scene->player->GetRadius(),pos.z });
@@ -80,13 +83,16 @@ void SceneGame::Update()
 		//リセット
 		if (KeyboardInput::GetInstance().KeyTrigger(DIK_R))
 		{
+			//カメラをゲームのメインカメラに
+			scene->cameraM.get()->usingCamera = scene->cameraM->gameMainCamera.get();
 			scene->player->Reset();
 			scene->blockManager->ResetBlock();
+			scene->connectE2M->Initialize();
 			scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
 			scene->tutorial->Initialize();
 		}
 	}
-	ParticleManager::GetInstance()->Update(&scene->useCamera->viewMat, &scene->useCamera->projectionMat);
+	ParticleManager::GetInstance()->Update(&scene->cameraM.get()->usingCamera->viewMat, &scene->cameraM.get()->usingCamera->projectionMat);
 	//シーン遷移
 	if (scene->player->isGoal)
 	{
@@ -106,21 +112,12 @@ void SceneGame::Update()
 
 void SceneGame::Draw()
 {
-	if (scene->player->isGoal)
-	{
-		scene->useCamera = &scene->goalE->goalEffectCamera;
-	}
-	else
-	{
-		scene->useCamera = scene->camera.get();
-	}
+	scene->blockManager->Draw(scene->cameraM.get()->usingCamera);
 
-	scene->blockManager->Draw(scene->useCamera);
-
-	scene->player->Draw(scene->useCamera);
-	scene->playerSocket->Draw(scene->useCamera);
-	scene->connectEM->Draw(*scene->useCamera);
-	scene->connectE2M->Draw(scene->useCamera);
+	scene->player->Draw(scene->cameraM.get()->usingCamera);
+	scene->playerSocket->Draw(scene->cameraM.get()->usingCamera);
+	scene->connectEM->Draw(*scene->cameraM.get()->usingCamera);
+	scene->connectE2M->Draw(scene->cameraM.get()->usingCamera);
 
 	ParticleManager::GetInstance()->Draw(scene->texhandle[1]);
 }
@@ -226,7 +223,7 @@ void SceneLoad::DrawSprite()
 Scene::~Scene()
 {
 	delete blockManager;
-	camera.reset();
+	cameraM.reset();
 	connectEM.reset();
 	player.reset();
 	playerSocket.reset();
@@ -290,7 +287,7 @@ void Scene::Initialize()
 	
 	//goal
 	goalE = std::make_unique<GoalEffect>();
-	goalE->Initialize();
+	goalE->Initialize(cameraM.get());
 
 	//電気エフェクト
 	connectEM = std::make_unique<ConnectingEffectManager>();
@@ -298,7 +295,7 @@ void Scene::Initialize()
 
 	
 	blockManager = new BlockManager();
-	blockManager->Initialize(connectEM.get(), tutorial.get(), camera.get(), goalE.get(), model[1], model[2], model[3], model[4]);
+	blockManager->Initialize(connectEM.get(), tutorial.get(), cameraM.get(), goalE.get(), model[1], model[2], model[3], model[4]);
 
 	stageManager = std::make_unique<StageManager>();
 	stageManager->Initialize(blockManager);
@@ -326,17 +323,23 @@ void Scene::Initialize()
 
 
 	//カメラ
-	camera = std::make_unique<Camera>();
-	camera->Initialize();
-	camera->SetEye({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 40, -30 });
-	camera->SetTarget({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 0, 0 });
-	camera->UpdateViewMatrix();
 	cameraPosImgui[0] = { blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f };
 	cameraPosImgui[1] = { 35 };
 	cameraPosImgui[2] = { -30 };
 	cameraTarget[0] = { blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f };
 	cameraTarget[1] = { 10 };
 	cameraTarget[2] = { 0 };
+	
+
+	cameraM = std::make_unique<CameraManager>();
+	//ゲームのメインカメラをセット
+	cameraM->usingCamera = cameraM->gameMainCamera.get();
+	//cameraM->gameMainCamera->SetEye({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 40, -30 });
+	//cameraM->gameMainCamera->SetTarget({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 0, 0 });
+	cameraM->usingCamera->SetEye({ cameraPosImgui[0],cameraPosImgui[1],cameraPosImgui[2] });
+	cameraM->usingCamera->SetTarget({ cameraTarget[0],cameraTarget[1],cameraTarget[2] });
+	cameraM->gameMainCamera->UpdateViewMatrix();
+
 
 	//playerSocket
 	playerSocket = std::make_unique<PlayerSocket>();
@@ -348,7 +351,7 @@ void Scene::Initialize()
 
 	//player
 	player = std::make_unique<Player>();
-	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), tutorial.get(), model[0], &debugText);
+	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), tutorial.get(), cameraM.get(),model[0], &debugText);
 
 
 
@@ -385,8 +388,7 @@ void Scene::Update()
 	//imgui
 	imGuiManager->End();
 #endif 
-	camera->SetEye({ cameraPosImgui[0],cameraPosImgui[1],cameraPosImgui[2] });
-	camera->SetTarget({ cameraTarget[0],cameraTarget[1],cameraTarget[2] });
+	
 
 	//丸影
 	lightManager->SetCircleShadowDir(0,
@@ -398,7 +400,7 @@ void Scene::Update()
 	lightManager->SetCircleShadowDistanceCasterLight(0, circleShadowDistance);
 	lightManager->Update();
 
-	camera->Update();
+	cameraM->Update();
 
 	blockManager->Update();
 
