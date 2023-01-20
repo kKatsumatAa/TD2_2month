@@ -573,6 +573,10 @@ bool BlockManager::GetIsGoal(Vec3& pos, bool isPlayer)
 							if (i < 2) {
 								goalCameraPoses.push_back(camera->GetEye() + Vec3{ goalEyeDistance.x,goalEyeDistance.y + i * 60.0f ,goalEyeDistance.z } / 4.0f * i);
 							}
+							else if (i == 4 - 2)
+							{
+								goalCameraPoses.push_back(camera->GetEye() + Vec3{ goalEyeDistance.x,goalEyeDistance.y - blockRadius_ * 10.0f ,goalEyeDistance.z } / 4.0f * i);
+							}
 							else
 							{
 								goalCameraPoses.push_back(camera->GetEye() + goalEyeDistance / 4.0f * i);
@@ -613,7 +617,7 @@ void BlockManager::UpdateOverlap()
 							beforeTurn_[k][l] = form_[k][l];*/
 
 							if (form_[i][j] != Form::NONE && form_[k][l] != Form::NONE)
-							//if (form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
+								//if (form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
 							{
 								//if(action_[i][j] == Action::Connect || action_[k][l] == Action::Connect)
 								//�d�Ȃ��Ă���u���b�N������Œ�u���b�N��
@@ -789,7 +793,7 @@ void BlockManager::ChangePosY()
 }
 
 //�X�e�[�W��Z�b�g
-void BlockManager::SetStage(const int& stageWidth, const int& stageHeight ,std::vector<std::vector<WorldMat>>& worldmats, std::vector<std::vector<Form>>& forms)
+void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::vector<std::vector<WorldMat>>& worldmats, std::vector<std::vector<Form>>& forms)
 {
 	stageWidth_ = stageWidth;
 	stageHeight_ = stageHeight;
