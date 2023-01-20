@@ -83,8 +83,10 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 			}
 			if (j >= 0)
 			{
-				worldmats_[i][j].trans.z = j * (worldmats_[i][j].scale.y * 2.0f);
+				worldmats_[i][j].trans.z = j * (worldmats_[i][j].scale.z * 2.0f);
 			}
+
+			//worldmats_[i][j].trans.y = worldmats_[i][j].scale.y;
 
 			worldmats_[i][j].SetWorld();
 
@@ -98,7 +100,10 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 
 			isTurn[i][j] = false;
 
+
 			beforeTurn_[i][j] = form_[i][j];
+
+			isUp[i][j] = false;
 
 		}
 	}
@@ -132,8 +137,10 @@ void BlockManager::Update()
 			//X���W�̈�O�̔ԍ���ۑ�
 			prevBlockY = j;
 
-			blocks_[i][j]->Updata();
+			DownPosY();
 
+			blocks_[i][j]->Updata();
+			
 		}
 		//Y���W�̈�O�̃u���b�N�ԍ���ۑ�
 		prevBlockX = i;
@@ -186,7 +193,7 @@ void BlockManager::Draw(Camera* camera)
 
 bool BlockManager::CheckPlayerOnBlock(Vec3 pos)
 {
-	bool result;
+	bool result = false;
 
 	for (int i = 0; i < stageWidth_; i++)
 	{
@@ -329,7 +336,7 @@ bool BlockManager::CheckAxisGear(Vec3 pos)
 			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
-				if (isAxis_[i][j] == false && form_[i][j] == Form::GEAR)
+				if (isAxis_[i][j] == false)
 				{
 					cameraM->usingCamera->CameraShake(15, 1.2f);
 					return true;
@@ -498,13 +505,13 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 	if (isLeftRolling == false && isRightRolling == false)
 	{
-
+		//DownPosY();
 		UpdateOverlap();
 	}
 
 	else if (isLeftRolling == true || isRightRolling == true)
 	{
-		ChangePosY();
+		UpPosY();
 		RepositBlock();
 	}
 }
@@ -603,9 +610,26 @@ void BlockManager::UpdateOverlap()
 									beforeTurn_[i][j] = form_[i][j];
 									beforeTurn_[k][l] = form_[k][l];
 
+									isOver[i][j] = true;
+									isOver[k][l] = true;
+
 									//���o
-									blocks_[i][j]->GetWorldTransForm()->scale =
-									{ blocks_[i][j]->GetRadius() * 1.8f,blocks_[i][j]->GetRadius() * 1.8f, blocks_[i][j]->GetRadius() * 1.8f };
+									form_[i][j] = Form::LOCKED;
+									form_[k][l] = Form::LOCKED;
+									
+									if(isUp[i][j] == true)
+									{
+										//ブロックの演出
+										blocks_[i][j]->GetWorldTransForm()->scale =
+										{ blocks_[i][j]->GetRadius() * 1.8f,blocks_[i][j]->GetRadius() * 1.8f, blocks_[i][j]->GetRadius() * 1.8f };
+									}
+									else if(isUp[k][l] == true)
+									{
+										//ブロックの演出
+										blocks_[k][l]->GetWorldTransForm()->scale =
+										{ blocks_[k][l]->GetRadius() * 1.8f,blocks_[k][l]->GetRadius() * 1.8f, blocks_[k][l]->GetRadius() * 1.8f };
+									}
+									
 								}
 
 								//��Ԃ�u���b�N��
@@ -628,6 +652,11 @@ void BlockManager::UpdateOverlap()
 				}
 			}
 
+			/*if(isUp[i][j] == true)
+			{
+				worldmats_[i][j].trans.y = beforeTransY[i][j];
+				isUp[i][j] = false;
+			}*/
 
 		}
 	}
@@ -650,15 +679,16 @@ void BlockManager::RepositBlock()
 
 					//�d�Ȃ肪�O��Č��̏�Ԃɖ߂�����
 
+					//コネクトしているブロックを戻す処理
 					if (action_[i][j] == Action::Connect)
 					{
-						if (isOverlap == false)
+						if (isOverlap == true)
 
 							/*if (form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED &&
 								action_[i][j] == Action::Connect )*/
 						{
 							//�o�O��₷���̂����I�I(�񂵂Ă���Ԃ̓v���C���[������Ă���{�^���͕ς��Ȃ��̂ŁA�{�^���Ƃ̔��肪�K�v)
-							if (form_[i][j] == Form::LOCKED || form_[i][j] == Form::BUTTON && form_[k][l] == Form::LOCKED)
+							if (form_[i][j] == Form::LOCKED)
 							{
 								if (i != k || j != l)
 								{
@@ -672,6 +702,8 @@ void BlockManager::RepositBlock()
 								}
 							}
 						}
+						
+						
 					}
 
 				}
@@ -711,6 +743,11 @@ void BlockManager::ResetBlock()
 
 			//���݂ǂ��Ȃ��Ă��邩
 			action_[i][j] = Action::None;
+
+			beforeTurn_[i][j] = form_[i][j];
+
+			isUp[i][j] = false;
+
 		}
 	}
 
@@ -744,7 +781,7 @@ void BlockManager::GenerateParticleTurnBlock()
 	}
 }
 
-void BlockManager::ChangePosY()
+void BlockManager::UpPosY()
 {
 	for (int i = 0; i < stageWidth_; i++)
 	{
@@ -752,13 +789,40 @@ void BlockManager::ChangePosY()
 		{
 			if (action_[i][j] == Action::Connect)
 			{
-				if (form_[i][j] == Form::BLOCK && isUp[i][j] == false)
+				if (form_[i][j] == Form::BLOCK || form_[i][j] == Form::GEAR)
 				{
-					if (isLeftRolling == true || isRightRolling == true)
+					if(isUp[i][j] == false)
 					{
-						worldmats_[i][j].trans.y -= 0.01;
+						/*blocks_[i][j]->GetWorldTransForm()->trans =
+						{ blocks_[i][j]->GetRadius() * 1.1f,blocks_[i][j]->GetRadius() * 1.1f, blocks_[i][j]->GetRadius() * 1.1f };*/
 
+						beforeTransY[i][j] = worldmats_[i][j].trans.y;
+						worldmats_[i][j].trans.y -= 0.40f;
+							
 						isUp[i][j] = true;
+					}
+				}
+			}
+		}
+	}
+}
+void BlockManager::DownPosY()
+{
+	for(int i = 0; i < stageWidth_; i++)
+	{
+		for(int j = 0; j < stageHeight_; j++)
+		{
+			if(action_[i][j] != Action::Connect)
+			{
+				if(form_[i][j] == Form::BLOCK || form_[i][j] == Form::GEAR)
+				{
+					if(isUp[i][j] == true)
+					{
+						
+						beforeTransY[i][j] = worldmats_[i][j].trans.y;
+						worldmats_[i][j].trans.y += 0.40f;
+
+						isUp[i][j] = false;
 					}
 				}
 			}

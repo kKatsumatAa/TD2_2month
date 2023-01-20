@@ -161,8 +161,6 @@ void SceneClear::Initialize()
 
 void SceneClear::Update()
 {
-
-
 	//シーン遷移
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
