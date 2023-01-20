@@ -37,13 +37,13 @@ public:
 	bool GetPosIsGear(Vec3 pos);
 
 	//�ŏ��Ɍq���{�^����������u���b�N����ɓo�^����֐�
-	void RegistAxisButton(const Vec3& pos);
+	void RegistAxisGear(const Vec3& pos);
 
 	//�u���b�N���m��Ȃ��X�V�֐�
 	void UpdateConnect(Vec3 pos);
 
 	//�q���ۂɗ������Ƃ��낪���ȊO�̃{�^�����ǂ���
-	bool CheckAxisButton(Vec3 pos);
+	bool CheckAxisGear(Vec3 pos);
 
 	//�q����Ă���u���b�N��S���������
 	void ReleseConectedBlock();

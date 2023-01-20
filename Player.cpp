@@ -315,7 +315,7 @@ void StateNormalConTurP::Update()
 			player->isConnect = true;
 
 			//軸を登録
-			player->blockM->RegistAxisButton(player->GetWorldPos());
+			player->blockM->RegistAxisGear(player->GetWorldPos());
 
 			//コンセントをさす
 			player->playerSocket->UseSocket(player->GetWorldPos());
@@ -365,7 +365,7 @@ void StateConnectP::Update()
 	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) || player->bufferedPushSpace) && !player->isMove)
 	{
 		//押したところがボタンだったら
-		if (player->blockM->CheckAxisButton(player->GetWorldPos()))
+		if (player->blockM->CheckAxisGear(player->GetWorldPos()))
 		{
 			//シェイクやめる
 			Vec3 trans = { player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z };

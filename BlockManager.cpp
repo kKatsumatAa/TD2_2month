@@ -260,7 +260,7 @@ bool BlockManager::GetPosIsGear(Vec3 pos)
 }
 
 //�ŏ��Ɍq���{�^����������u���b�N����ɓo�^����֐�
-void BlockManager::RegistAxisButton(const Vec3& pos)
+void BlockManager::RegistAxisGear(const Vec3& pos)
 {
 	//�ŏ��Ƀ{�^����������u���b�N����ɓo�^����֐�
 	//�����Ŏ󂯎�����v���C���[�̍��W���ƂɌ��݈ʒu�̃{�^����ON�ɂ���
@@ -319,7 +319,7 @@ void BlockManager::UpdateConnect(Vec3 pos)
 }
 
 //�q���ۂɗ������Ƃ��낪���ȊO�̃{�^�����ǂ���
-bool BlockManager::CheckAxisButton(Vec3 pos)
+bool BlockManager::CheckAxisGear(Vec3 pos)
 {
 	for (int i = 0; i < stageWidth_; i++)
 	{
