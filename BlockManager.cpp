@@ -246,7 +246,7 @@ bool BlockManager::GetPosIsButton(Vec3 pos)
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
 				//���̃u���b�N�̌`��̓{�^�����ǂ���
-				if (form_[i][j] == Form::BUTTON)
+				if (form_[i][j] == Form::GEAR)
 				{
 					return true;
 				}
@@ -275,7 +275,7 @@ void BlockManager::RegistAxisButton(const Vec3& pos)
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
 				//���̃u���b�N�̌`��̓{�^�����ǂ���
-				if (form_[i][j] == Form::BUTTON && isAxis_[i][j] == false)
+				if (form_[i][j] == Form::GEAR && isAxis_[i][j] == false)
 				{
 					//���o�^����
 					isAxis_[i][j] = true;
@@ -313,37 +313,6 @@ void BlockManager::UpdateConnect(Vec3 pos)
 					cameraM->usingCamera->CameraShake(15, 0.53f);
 
 				}
-
-				
-
-				////�q���͂���
-				////�{�^�����q�����Ă��Ȃ���Ό��݈ʒu��Ȃ���Ԃɂ���
-				//if (form_[i][j] == Form::BUTTON && action_[i][j] == Action::None)
-				//{
-				//	action_[i][j] = Action::Connect;
-				//}
-
-				////�q������(�E�����e�X�g)
-				//if (KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHT) && i < blockWidth - 1)
-				//{
-				//	//�O�u���b�N���q�����Ă���Όq����
-				//	if (action_[i][j] == Action::Connect)
-				//	{
-				//		if (form_[i + 1][j] == Form::BLOCK)
-				//		{
-				//			//�u���b�N�Ȃ�q����
-				//			action_[i + 1][j] = Action::Connect;
-				//			isChanged_ = false;
-				//		}
-				//		else if (form_[i + 1][j] == Form::GEAR)
-				//		{
-				//			//�M�A�Ȃ�q���Ď~�߂�
-				//			action_[i + 1][j] = Action::Connect;
-				//			isChanged_ = false;
-				//			changedAction_ = false;
-				//		}
-				//	}
-				//}
 			}
 
 		}
@@ -361,7 +330,7 @@ bool BlockManager::CheckAxisButton(Vec3 pos)
 			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
-				if (isAxis_[i][j] == false && form_[i][j] == Form::BUTTON)
+				if (isAxis_[i][j] == false && form_[i][j] == Form::GEAR)
 				{
 					cameraM->usingCamera->CameraShake(15, 1.2f);
 					return true;
@@ -690,7 +659,7 @@ void BlockManager::RepositBlock()
 								action_[i][j] == Action::Connect )*/
 						{
 							//�o�O��₷���̂����I�I(�񂵂Ă���Ԃ̓v���C���[������Ă���{�^���͕ς��Ȃ��̂ŁA�{�^���Ƃ̔��肪�K�v)
-							if (form_[i][j] == Form::LOCKED || form_[i][j] == Form::BUTTON && form_[k][l] == Form::LOCKED)
+							if (form_[i][j] == Form::LOCKED || form_[i][j] == Form::GEAR && form_[k][l] == Form::LOCKED)
 							{
 								if (i != k || j != l)
 								{
