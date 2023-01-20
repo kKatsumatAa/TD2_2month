@@ -303,7 +303,7 @@ void StateNormalConTurP::Update()
 	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) || player->bufferedPushSpace) && !player->isMove)
 	{
 		//ボタンがあったら
-		if (player->blockM->GetPosIsButton(player->GetWorldPos()) /*&& !player->isMove*/)
+		if (player->blockM->GetPosIsGear(player->GetWorldPos()) /*&& !player->isMove*/)
 		{
 			//シェイクやめる
 			Vec3 trans = { player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z };

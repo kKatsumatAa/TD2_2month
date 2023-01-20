@@ -8,8 +8,6 @@ void SceneState::SetScene(Scene* scene)
 	this->scene = scene;
 }
 
-
-
 //---------------------------------------------------------------------------------------
 //タイトル
 void SceneTitle::Initialize()
@@ -407,6 +405,7 @@ void Scene::Update()
 	if (KeyboardInput::GetInstance().KeyPush(DIK_0))
 	{
 		stageManager->SetTutorial(13, 13);
+
 	}
 	else if (KeyboardInput::GetInstance().KeyPush(DIK_1))
 	{

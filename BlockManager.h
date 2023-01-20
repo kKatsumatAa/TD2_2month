@@ -34,7 +34,7 @@ public:
 	bool GetPosIsBlock(Vec3 pos);
 
 	//�{�^�������邩�ǂ���
-	bool GetPosIsButton(Vec3 pos);
+	bool GetPosIsGear(Vec3 pos);
 
 	//�ŏ��Ɍq���{�^����������u���b�N����ɓo�^����֐�
 	void RegistAxisButton(const Vec3& pos);

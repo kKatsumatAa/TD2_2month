@@ -235,7 +235,7 @@ bool BlockManager::GetPosIsBlock(Vec3 pos)
 }
 
 //�{�^�������邩�ǂ���
-bool BlockManager::GetPosIsButton(Vec3 pos)
+bool BlockManager::GetPosIsGear(Vec3 pos)
 {
 	for (int i = 0; i < stageWidth_; i++)
 	{
@@ -314,7 +314,6 @@ void BlockManager::UpdateConnect(Vec3 pos)
 
 				}
 			}
-
 		}
 	}
 }
@@ -659,7 +658,7 @@ void BlockManager::RepositBlock()
 								action_[i][j] == Action::Connect )*/
 						{
 							//�o�O��₷���̂����I�I(�񂵂Ă���Ԃ̓v���C���[������Ă���{�^���͕ς��Ȃ��̂ŁA�{�^���Ƃ̔��肪�K�v)
-							if (form_[i][j] == Form::LOCKED || form_[i][j] == Form::GEAR && form_[k][l] == Form::LOCKED)
+							if (form_[i][j] == Form::LOCKED || form_[i][j] == Form::BUTTON && form_[k][l] == Form::LOCKED)
 							{
 								if (i != k || j != l)
 								{

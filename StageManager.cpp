@@ -97,6 +97,7 @@ void StageManager::SetWorldMat(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetTutorial(const int& blockWidth, const int& blockHeight)
 {
+	ResetStage();
 	SetWorldMat(blockWidth, blockHeight);
 
 	//形の設定
@@ -123,6 +124,7 @@ void StageManager::SetTutorial(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetStage1(const int& blockWidth, const int& blockHeight)
 {
+	ResetStage();
 	SetWorldMat(blockWidth, blockHeight);
 
 	//形の設定
@@ -130,7 +132,7 @@ void StageManager::SetStage1(const int& blockWidth, const int& blockHeight)
 	{
 		{Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::NONE,Form::GEAR,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
+		{Form::GEAR,Form::GEAR,Form::NONE,Form::GEAR,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::NONE,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::NONE,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::GEAR,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
@@ -150,6 +152,7 @@ void StageManager::SetStage1(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetStage2(const int& blockWidth, const int& blockHeight)
 {
+	ResetStage();
 	SetWorldMat(blockWidth, blockHeight);
 
 	//形の設定
@@ -166,6 +169,7 @@ void StageManager::SetStage2(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetStage3(const int& blockWidth, const int& blockHeight)
 {
+	ResetStage();
 	SetWorldMat(blockWidth, blockHeight);
 
 	//形の設定
@@ -189,4 +193,9 @@ void StageManager::SetStage3(const int& blockWidth, const int& blockHeight)
 	//行列をセット
 	blockManager_->SetStage(blockWidth, blockHeight, worldmats_, forms_);
 
+}
+
+void StageManager::ResetStage()
+{
+	blockManager_->ResetBlock();
 }

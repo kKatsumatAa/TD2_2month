@@ -35,6 +35,11 @@ public:
 	/// </summary>
 	void SetStage3(const int& blockWidth, const int& blockHeight);
 
+	/// <summary>
+	/// ステージをリセット
+	/// </summary>
+	void ResetStage();
+
 
 	//チュートリアルステージの長さ
 	static const int TutorialWidth = 13;
