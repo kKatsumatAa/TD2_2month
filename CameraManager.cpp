@@ -3,11 +3,13 @@
 CameraManager::CameraManager()
 {
 	usingCamera = new Camera();
+	stageSelectCamera = std::make_unique<Camera>();
 	gameMainCamera = std::make_unique<Camera>();
 	gameTurnCamera = std::make_unique<Camera>();
 	goalEffectCamera = std::make_unique<Camera>();
 
 	usingCamera->Initialize();
+	stageSelectCamera->Initialize();
 	gameMainCamera->Initialize();
 	gameTurnCamera->Initialize();
 	goalEffectCamera->Initialize();
@@ -16,7 +18,7 @@ CameraManager::CameraManager()
 
 CameraManager::~CameraManager()
 {
-
+	stageSelectCamera.reset();
 	gameMainCamera.reset();
 	gameTurnCamera.reset();
 	goalEffectCamera.reset();
@@ -42,6 +44,8 @@ void CameraManager::Update()
 	state->Update();
 
 	usingCamera->Update();
+
+	stageSelectCamera->Update();
 	//ゲーム中メインで使うカメラ
 	gameMainCamera->Update();
 	//ゲーム中、回転時に使うカメラ

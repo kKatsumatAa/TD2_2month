@@ -34,6 +34,82 @@ void SceneTitle::DrawSprite()
 {
 }
 
+//---------------------------------------------------------------------------------------
+//セレクト画面
+void SceneStageSelect::Initialize()
+{
+	this->selectNumMax = scene->stageManager->stageMax;
+	this->selectNum = scene->stageManager->selectStage;
+
+	for (int i = 0; i < this->selectNumMax; i++)
+	{
+		object[i].worldMat->scale = { stageImageRadius,stageImageRadius,1.0f };
+		//object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f),0,0 };
+		object[i].worldMat->SetWorld();
+	}
+	this->isLerpMoving = true;
+}
+
+void SceneStageSelect::Update()
+{
+	//十字キーで選択
+	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_A)) /*&& !this->isLerpMoving*/)
+	{
+		if (this->selectNum > 0)
+		{
+			selectNum--;
+			this->isLerpMoving = true;
+			this->lerpCount = 0;
+		}
+	}
+	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_D)) /*&& !this->isLerpMoving*/)
+	{
+		if (this->selectNum < this->selectNumMax)
+		{
+			selectNum++;
+			this->isLerpMoving = true;
+			this->lerpCount = 0;
+		}
+	}
+
+	//イージングで動かす
+	if (isLerpMoving)
+	{
+		lerpCount++;
+
+		for (int i = 0; i < this->selectNumMax; i++)
+		{
+			object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),0,0 };
+			object[i].worldMat->SetWorld();
+		}
+
+		if (lerpCount >= lerpCountMax)
+		{
+			isLerpMoving = false;
+		}
+	}
+
+	//選択確定
+	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
+	{
+		scene->stageManager->SelectStage(selectNum);
+
+		scene->ChangeState(new SceneGame);
+	}
+}
+
+void SceneStageSelect::Draw()
+{
+	for (int i = 0; i < this->selectNumMax; i++)
+	{
+		object[i].DrawCube3D(object[i].worldMat, &scene->cameraM->usingCamera->viewMat, &scene->cameraM->usingCamera->projectionMat);
+	}
+}
+
+void SceneStageSelect::DrawSprite()
+{
+}
+
 
 //---------------------------------------------------------------------------------------
 //ゲーム
@@ -66,7 +142,7 @@ void SceneGame::Update()
 	//}
 
 	if (!scene->player->isGoal) {
-		
+
 
 		scene->connectEM->Update();
 		scene->connectE2M->Update();
@@ -103,11 +179,12 @@ void SceneGame::Update()
 			scene->ChangeState(new SceneClear);
 		}
 	}
-	/*
-	else if ()
+	//ステージセレクトに戻る
+	else if (KeyboardInput::GetInstance().KeyTrigger(DIK_Q))
 	{
-		scene->ChangeState(new SceneGameOver);
-	}*/
+		scene->cameraM->usingCamera = scene->cameraM->stageSelectCamera.get();
+		scene->ChangeState(new SceneStageSelect);
+	}
 }
 
 void SceneGame::Draw()
@@ -166,7 +243,10 @@ void SceneClear::Update()
 	//シーン遷移
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
-		scene->ChangeState(new SceneGame);
+		//カメラ切り替え
+		scene->cameraM->usingCamera = scene->cameraM->stageSelectCamera.get();
+
+		scene->ChangeState(new SceneStageSelect);
 	}
 }
 
@@ -282,7 +362,7 @@ void Scene::Initialize()
 	//tutorial
 	tutorial = std::make_unique<Tutorial>();
 	tutorial->Initialize();
-	
+
 	//goal
 	goalE = std::make_unique<GoalEffect>();
 	goalE->Initialize(cameraM.get());
@@ -291,13 +371,12 @@ void Scene::Initialize()
 	connectEM = std::make_unique<ConnectingEffectManager>();
 	connectEM->Initialize();
 
-	
+
 	blockManager = new BlockManager();
 	blockManager->Initialize(connectEM.get(), tutorial.get(), cameraM.get(), goalE.get(), model[1], model[2], model[3], model[4]);
 
 	stageManager = std::make_unique<StageManager>();
 	stageManager->Initialize(blockManager);
-	stageManager->SetTutorial(13,13);
 
 
 	//Light
@@ -327,16 +406,16 @@ void Scene::Initialize()
 	cameraTarget[0] = { blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f };
 	cameraTarget[1] = { 10 };
 	cameraTarget[2] = { 0 };
-	
+
 
 	cameraM = std::make_unique<CameraManager>();
 	cameraM->Initialize();
-	//ゲームのメインカメラをセット
-	cameraM->usingCamera = cameraM->gameMainCamera.get();
+	//ステージ選択用のカメラ
+	cameraM->usingCamera = cameraM->stageSelectCamera.get();
 	//cameraM->gameMainCamera->SetEye({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 40, -30 });
 	//cameraM->gameMainCamera->SetTarget({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 0, 0 });
-	cameraM->usingCamera->SetEye({ cameraPosImgui[0],cameraPosImgui[1],cameraPosImgui[2] });
-	cameraM->usingCamera->SetTarget({ cameraTarget[0],cameraTarget[1],cameraTarget[2] });
+	cameraM->gameMainCamera->SetEye({ cameraPosImgui[0],cameraPosImgui[1],cameraPosImgui[2] });
+	cameraM->gameMainCamera->SetTarget({ cameraTarget[0],cameraTarget[1],cameraTarget[2] });
 	cameraM->gameMainCamera->UpdateViewMatrix();
 
 
@@ -350,12 +429,12 @@ void Scene::Initialize()
 
 	//player
 	player = std::make_unique<Player>();
-	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), tutorial.get(), cameraM.get(),model[0], &debugText);
+	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), tutorial.get(), cameraM.get(), model[0], &debugText);
 
 
 
 	//ステート変更
-	ChangeState(new SceneGame);
+	ChangeState(new SceneStageSelect);
 }
 
 int count = 0;
@@ -387,7 +466,7 @@ void Scene::Update()
 	//imgui
 	imGuiManager->End();
 #endif 
-	
+
 
 	//丸影
 	lightManager->SetCircleShadowDir(0,
@@ -403,20 +482,6 @@ void Scene::Update()
 
 	blockManager->Update();
 
-	if (KeyboardInput::GetInstance().KeyPush(DIK_0))
-	{
-		stageManager->SetTutorial(13, 13);
-
-	}
-	else if (KeyboardInput::GetInstance().KeyPush(DIK_1))
-	{
-		stageManager->SetStage1(13, 13);
-	}
-	else if (KeyboardInput::GetInstance().KeyPush(DIK_2))
-	{
-		stageManager->SetStage2(2, 10);
-	}
-	
 
 	state->Update();
 
@@ -444,3 +509,5 @@ void Scene::DrawSprite()
 	imGuiManager->Draw();
 #endif 
 }
+
+

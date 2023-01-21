@@ -1,6 +1,14 @@
 #pragma once
 #include "BlockManager.h"
 
+enum STAGE
+{
+	TUTORIAL,
+	STAGE1,
+	STAGE2,
+	STAGE3,
+};
+
 class StageManager
 {
 	using Form = Block::Form;
@@ -24,7 +32,7 @@ public:
 	/// ステージ1をセット
 	/// </summary>
 	void SetStage1(const int& blockWidth, const int& blockHeight);
-	
+
 	/// <summary>
 	/// ステージ2をセット
 	/// </summary>
@@ -40,6 +48,11 @@ public:
 	/// </summary>
 	void ResetStage();
 
+	/// <summary>
+	/// 引数によってステージ選ぶ
+	/// </summary>
+	/// <param name="stageNum"></param>
+	void SelectStage(int stageNum);
 
 	//チュートリアルステージの長さ
 	static const int TutorialWidth = 13;
@@ -48,6 +61,9 @@ public:
 	static const int stage1Width = 13;
 	static const int stage1Height = 13;
 
+	//ステージ数
+	static const int stageMax = 4;
+	static int selectStage;
 
 private:
 
@@ -68,6 +84,6 @@ private:
 	Form form_;
 	std::vector<std::vector<Block::Form>> forms_;
 
-	
+
 };
 
