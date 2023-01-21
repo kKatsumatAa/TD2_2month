@@ -17,87 +17,87 @@ public:
 
 	~BlockManager();
 
-	//������
+	//初期化
 	void Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
 		Model* normal, Model* button, Model* goal, Model* Socket);
 
-	//�X�V
+	//更新
 	void Update();
 
-	//�`��
+	//描画
 	void Draw(Camera* camera);
 
-	//�v���C���[���u���b�N�̏�ɂ��邩�ǂ���
+	//プレイヤーがブロックの上にいるかどうか
 	bool CheckPlayerOnBlock(Vec3 pos);
 
-	//�X�e�[�W�̊֐��Ő�Ƀu���b�N���邩����(endPos�����)
+	//ステージの関数で先にブロックあるか判定(endPosを引数)
 	bool GetPosIsBlock(Vec3 pos);
 
-	//�{�^�������邩�ǂ���
+	//ボタンがあるかどうか
 	bool GetPosIsGear(Vec3 pos);
 
-	//�ŏ��Ɍq���{�^����������u���b�N����ɓo�^����֐�
+	//最初に繋ぐボタンを押したブロックを軸に登録する関数
 	void RegistAxisGear(const Vec3& pos);
 
-	//�u���b�N���m��Ȃ��X�V�֐�
+	//ブロック同士をつなぐ更新関数
 	void UpdateConnect(Vec3 pos);
 
-	//�q���ۂɗ������Ƃ��낪���ȊO�̃{�^�����ǂ���
+	//繋ぐ際に離したところが軸以外のボタンかどうか
 	bool CheckAxisGear(Vec3 pos);
 
-	//�q����Ă���u���b�N��S���������
+	//繋がれているブロックを全部解除する
 	void ReleseConectedBlock();
 
-	//�L�[�{�[�h�ɂ���ĉ�]
+	//キーボードによって回転
 	void UpdateRotate(Vec3& rotatePos);
 
-	//��]����������
+	//回転中だったら
 	bool GetIsRollingLeftorRight();
 
-	//�S�[�������邩�ǂ���
+	//ゴールがあるかどうか
 	bool GetIsGoal(Vec3& Pos, bool isPlayer = false);
 
-	//�d�Ȃ������̏���
+	//重なった時の処理
 	void UpdateOverlap();
 
-	//�d�Ȃ��Ă����u���b�N����ɖ߂�����
+	//重なっていたブロックを元に戻す処理
 	void RepositBlock();
 
-	//�u���b�N�ƃu���b�N�̓����蔻��
+	//ブロックとブロックの当たり判定
 	bool CollisionBlockToBlock(Vec3 blockPos, Vec3 pos);
 
-	//�i�ސ�ɏd�Ȃ��Ă���u���b�N�����邩�ǂ���
+	//進む先に重なっているブロックがあるかどうか
 	//bool GetIsOverlapBlock(Vec3 pos);
 
-	//�u���b�N���W�ǂݍ���
+	//ブロック座標読み込み
 	void LoadBlockPosData();
 	void UpdateBlockPos();
-	//�u���b�N�̔����֐�
+	//ブロックの発生関数
 	void BlockPop(Vec3 pos);
 
-	//�u���b�N�̃��Z�b�g
+	//ブロックのリセット
 	void ResetBlock();
 
-	//��]���I������Ƃ��Ƀp�[�e�B�N������������
+	//回転し終わったときにパーティクル発生させる
 	void GenerateParticleTurnBlock();
 
-	//�`��p��Y���W����炷�֐�
+	//描画用にY座標をずらす関数
 	void UpPosY();
 
 	void DownPosY();
 
 
-	//�X�e�[�W��Z�b�g����
+	//読み込んだステージをセットする関数
 	void SetStage(const int& stageWidth, const int& stageHeight ,std::vector<std::vector<WorldMat>>& worldmats, std::vector<std::vector<Form>>& forms);
 
-	//�Q�b�^�[
+	//半径を渡す関数
 	float GetRadius() { return blockRadius_; };
 
 public:
 
 	static const int blockWidth = 13;
 	static const int blockHeight = 13;
-	//���a
+	//半径
 	const float blockRadius_ = 1.8f;
 
 
@@ -116,17 +116,17 @@ private:
 
 	std::vector<Vec3> goalCameraPoses;
 
-	//�u���b�N�̓񎟌��z��
+	//ブロックの二次元配列
 	//std::unique_ptr < std::vector <std::vector<Block>> > blocks_ ;
 	Block* block_;
 	std::vector<std::vector<Block*>> blocks_;
 
-	//�e�u���b�N�p�̃��[���h�g�����X�t�H�[��
+	//各ブロック用のワールドトランスフォーム
 	WorldMat worldmat_;
 	std::vector<std::vector<WorldMat>> worldmats_;
 
-	//��ԕω��ϐ�
-	//���݂̌`
+	//状態変化変数
+	//現在の形
 	Form form_[blockWidth][blockHeight];
 
 	Form formTmp_[blockWidth][blockHeight] = {
@@ -146,35 +146,35 @@ private:
 	};
 
 
-	//��]����O�̌`
+	//回転する前の形
 	Form beforeForm_[blockWidth][blockHeight] = { Form::BLOCK };
 
 	Action action_[blockWidth][blockHeight] = { Action::None };
 
-	//���ɂȂ��Ă��邩�ǂ���
+	//軸になっているかどうか
 	bool isAxis_[blockWidth][blockHeight];
 
-	//���ɂȂ��Ă���u���b�N�̍��W
+	//軸になっているブロックの座標
 	Vec3 axis_pos_;
 
-	//�I�����Ă��邩�ǂ���
+	//選択されているかどうか
 	int isCount;
 
-	//�u���b�N�̑傫��
+	//ブロックの大きさ
 	Vec3 scale_;
 
 
-	//�O�̃t���[���ɂ����đI��p�̃u���b�N�̏���ۑ����Ă����ϐ�
+	//前のフレームにおいて選択用のブロックの情報を保存しておく変数
 	int prevBlockX;
 	int prevBlockY;
 
-	//�I��J�[�\���̃N�[���^�C�}�[�̐ݒ莞��
+	//選択カーソルのクールタイマーの設定時間
 	static const int32_t kSelectTime = 17;
 
-	//�I��J�[�\���̃N�[���^�C�}�[
+	//選択カーソルのクールタイマー
 	int32_t selectTimer_ = kSelectTime;
 
-	//�I���Ԃɂ��Ă������
+	//選択状態にしてもいいか
 	bool changedAction_;
 	bool isChanged_;
 
@@ -182,7 +182,7 @@ private:
 
 	Object draw[10];
 
-	//��]
+	//回転
 
 	bool isRightRolling;
 	bool isLeftRolling;
@@ -200,27 +200,27 @@ private:
 	int effectCount = 0;
 	const int effectCountMax = 10;
 
-	//��r�p�ɕۑ����Ă����ϐ�
+	//比較用に保存しておく変数
 	Vec3 comparisonPos[blockWidth][blockHeight];
 
-	//�t�@�C���ǂݍ��ݗp�̕ϐ�
+	//ファイル読み込み用の変数
 	std::stringstream blocksPos;
 
-	//�ҋ@���t���O
+	//待機中フラグ
 	bool isWaitBlock;
-	//�ҋ@���^�C�}�[
+	//待機中タイマー
 	int32_t blockWaitTimer;
 
 	int isOverLap_[blockWidth][blockHeight];
 
-	//��]����O�̌`��
+	//回転する前の形状
 	Form beforeTurn_[blockWidth][blockHeight];
 
 	bool isUp[blockWidth][blockHeight];
 	bool isDown[blockWidth][blockHeight];
 
 
-	//����ۑ��������ǂ���
+	//情報を保存したかどうか
 	bool isTurn[blockWidth][blockHeight];
 
 	//読み込んだブロックの形
