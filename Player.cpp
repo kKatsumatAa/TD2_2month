@@ -332,7 +332,15 @@ void StateNormalConTurP::Update()
 
 			//ƒJƒƒ‰Ø‚è‘Ö‚¦
 			{
-				player->cameraM->gameTurnCamera->SetEye({ 0 + player->GetWorldPos().x
+				player->cameraM->BegineLerpUsingCamera(player->cameraM->usingCamera->GetEye(),
+					{ 0 + player->GetWorldPos().x,player->cameraM->gameMainCamera->GetEye().y + 35.0f,0 + player->GetWorldPos().z },
+					player->cameraM->usingCamera->GetTarget(),
+					{ 0 + player->GetWorldPos().x,0,0 + player->GetWorldPos().z },
+					player->cameraM->usingCamera->GetUp(),
+					{ 0,0,1 },
+					60);
+
+				/*player->cameraM->gameTurnCamera->SetEye({ 0 + player->GetWorldPos().x
 					,player->cameraM->gameMainCamera->GetEye().y + 35.0f,
 					0 +player->GetWorldPos().z });
 
@@ -340,7 +348,8 @@ void StateNormalConTurP::Update()
 					0,
 					0 +player->GetWorldPos().z });
 				player->cameraM->gameTurnCamera->SetUp({ 0,0,1 });
-				player->cameraM->gameTurnCamera->Update();
+				player->cameraM->gameTurnCamera->Update();*/
+
 				player->cameraM->usingCamera = player->cameraM->gameTurnCamera.get();
 			}
 
@@ -412,7 +421,14 @@ void StateConnectP::Update()
 
 			//ƒJƒƒ‰Ø‚è‘Ö‚¦
 			{
-				player->cameraM->usingCamera = player->cameraM->gameMainCamera.get();
+				player->cameraM->BegineLerpUsingCamera(
+					player->cameraM->gameTurnCamera->GetEye(),
+					player->cameraM->gameMainCamera->GetEye(),
+					player->cameraM->gameTurnCamera->GetTarget(),
+					player->cameraM->gameMainCamera->GetTarget(),
+					player->cameraM->gameTurnCamera->GetUp(),
+					player->cameraM->gameMainCamera->GetUp(), 
+					60);
 			}
 
 			player->ChangeStateTurnConnect(new StateNormalConTurP);
@@ -458,7 +474,15 @@ void StateTurnP::Update()
 
 		//ƒJƒƒ‰Ø‚è‘Ö‚¦
 		{
-			player->cameraM->usingCamera = player->cameraM->gameMainCamera.get();
+			player->cameraM->BegineLerpUsingCamera(
+				player->cameraM->gameTurnCamera->GetEye(),
+				player->cameraM->gameMainCamera->GetEye(),
+				player->cameraM->gameTurnCamera->GetTarget(),
+				player->cameraM->gameMainCamera->GetTarget(),
+				player->cameraM->gameTurnCamera->GetUp(),
+				player->cameraM->gameMainCamera->GetUp(),
+				60);
+
 		}
 
 		player->ChangeStateTurnConnect(new StateNormalConTurP);

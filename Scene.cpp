@@ -41,6 +41,7 @@ void SceneGame::Initialize()
 {
 	//カメラをゲームのメインカメラに
 	scene->cameraM.get()->usingCamera = scene->cameraM->gameMainCamera.get();
+	scene->cameraM->Initialize();
 
 	scene->blockManager->Initialize(scene->connectEM.get(), scene->tutorial.get(), scene->cameraM.get(),
 		scene->goalE.get(), scene->model[1], scene->model[2], scene->model[3], scene->model[4]);
@@ -328,6 +329,7 @@ void Scene::Initialize()
 	
 
 	cameraM = std::make_unique<CameraManager>();
+	cameraM->Initialize();
 	//ゲームのメインカメラをセット
 	cameraM->usingCamera = cameraM->gameMainCamera.get();
 	//cameraM->gameMainCamera->SetEye({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 40, -30 });
