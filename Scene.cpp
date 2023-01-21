@@ -84,6 +84,7 @@ void SceneGame::Update()
 		{
 			//カメラをゲームのメインカメラに
 			scene->cameraM.get()->usingCamera = scene->cameraM->gameMainCamera.get();
+			scene->cameraM.get()->Initialize();
 			scene->player->Reset();
 			scene->blockManager->ResetBlock();
 			scene->connectE2M->Initialize();

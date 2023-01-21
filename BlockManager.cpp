@@ -333,10 +333,10 @@ bool BlockManager::CheckAxisGear(Vec3 pos)
 		for (int j = 0; j < stageHeight_; j++)
 		{
 			//�v���C���[������u���b�N��ɂ�����
-			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
-				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
+			if ((worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
+				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z))
 			{
-				if (isAxis_[i][j] == false)
+				if (isAxis_[i][j] == false && form_[i][j] == Form::GEAR)
 				{
 					cameraM->usingCamera->CameraShake(15, 1.2f);
 					return true;
