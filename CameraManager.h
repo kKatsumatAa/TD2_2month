@@ -39,6 +39,8 @@ private:
 public:
 	//ここにいろんなカメラのポインタを入れて、描画時に使う
 	Camera* usingCamera;
+	//選択画面で使う
+	std::unique_ptr<Camera> stageSelectCamera;
 	//ゲーム中メインで使うカメラ
 	std::unique_ptr<Camera> gameMainCamera;
 	//ゲーム中、回転時に使うカメラ

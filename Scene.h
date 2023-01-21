@@ -113,6 +113,28 @@ public:
 	void DrawSprite()override;
 };
 
+class SceneStageSelect : public SceneState
+{
+private:
+	int selectNum = 0;
+	int selectNumMax = 0;
+
+	Object object[15];
+
+	int lerpCount = 0;
+	const int lerpCountMax = 20;
+
+	bool isLerpMoving = false;
+
+	float stageImageRadius = 5.0f;
+
+public:
+	void Initialize()override;
+	void Update()override;
+	void Draw()override;
+	void DrawSprite()override;
+};
+
 class SceneGame : public SceneState
 {
 private:

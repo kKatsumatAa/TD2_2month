@@ -2,6 +2,8 @@
 
 using namespace std;
 
+int StageManager::selectStage = STAGE::TUTORIAL;
+
 void StageManager::Initialize(BlockManager* blockManager)
 {
 	//インスタンスの生成
@@ -37,8 +39,8 @@ void StageManager::Initialize(BlockManager* blockManager)
 		}
 	}
 
-	//ここで最初のステージを設定
-	SetTutorial(13,13);
+	////ここで最初のステージを設定
+	//SetTutorial(13,13);
 }
 
 void StageManager::Update()
@@ -99,6 +101,8 @@ void StageManager::SetWorldMat(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetTutorial(const int& blockWidth, const int& blockHeight)
 {
+	selectStage = STAGE::TUTORIAL;
+
 	ResetStage();
 	SetWorldMat(blockWidth, blockHeight);
 
@@ -126,6 +130,8 @@ void StageManager::SetTutorial(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetStage1(const int& blockWidth, const int& blockHeight)
 {
+	selectStage = STAGE::STAGE1;
+
 	ResetStage();
 	SetWorldMat(blockWidth, blockHeight);
 
@@ -154,6 +160,8 @@ void StageManager::SetStage1(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetStage2(const int& blockWidth, const int& blockHeight)
 {
+	selectStage = STAGE::STAGE2;
+
 	ResetStage();
 	SetWorldMat(blockWidth, blockHeight);
 
@@ -171,6 +179,8 @@ void StageManager::SetStage2(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetStage3(const int& blockWidth, const int& blockHeight)
 {
+	selectStage = STAGE::STAGE3;
+
 	ResetStage();
 	SetWorldMat(blockWidth, blockHeight);
 
@@ -200,4 +210,23 @@ void StageManager::SetStage3(const int& blockWidth, const int& blockHeight)
 void StageManager::ResetStage()
 {
 	blockManager_->ResetBlock();
+}
+
+void StageManager::SelectStage(int stageNum)
+{
+	switch (stageNum)
+	{
+	case STAGE::TUTORIAL:
+		SetTutorial(13, 13);
+		break;
+	case STAGE::STAGE1:
+		SetStage1(13, 13);
+		break;
+	case STAGE::STAGE2:
+		SetStage2(2, 10);
+		break;
+	case STAGE::STAGE3:
+		SetStage3(13, 13);
+		break;
+	}
 }
