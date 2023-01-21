@@ -58,6 +58,8 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 		isTurn = false;
 		isTurnNow = false;
 		moveEndPos = { 0,0,0 };
+		bufferedPushSpace = false;
+		bufferedKeyArrow = BUFFERED_INPUT_ARROW::NONE;
 	}
 
 	//è’ìÀëÆê´
@@ -94,6 +96,8 @@ void Player::Reset()
 		isTurn = false;
 		isTurnNow = false;
 		moveEndPos = { 0,0,0 };
+		bufferedPushSpace = false;
+		bufferedKeyArrow = BUFFERED_INPUT_ARROW::NONE;
 	}
 
 	ChangeStateMove(new StateNormalMoveP);

@@ -92,6 +92,9 @@ void SceneStageSelect::Update()
 	//選択確定
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
+		if (selectNum == STAGE::TUTORIAL) { scene->isTutorial = true; }
+		else                              { scene->isTutorial = false; }
+
 		scene->stageManager->SelectStage(selectNum);
 
 		scene->ChangeState(new SceneGame);
@@ -153,7 +156,10 @@ void SceneGame::Update()
 		Vec3 pos = scene->player->GetWorldPos();
 		scene->playerSocket->Update({ pos.x,pos.y + scene->player->GetRadius(),pos.z });
 
-		scene->tutorial->Update();
+		if (scene->isTutorial)
+		{
+			scene->tutorial->Update();
+		}
 
 		//リセット
 		if (KeyboardInput::GetInstance().KeyTrigger(DIK_R))
@@ -201,7 +207,10 @@ void SceneGame::Draw()
 
 void SceneGame::DrawSprite()
 {
-	scene->tutorial->Draw();
+	if (scene->isTutorial)
+	{
+		scene->tutorial->Draw();
+	}
 }
 
 

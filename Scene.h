@@ -90,6 +90,8 @@ public:
 	
 	std::unique_ptr<StageManager> stageManager= nullptr;
 
+	bool isTutorial = false;
+
 public:
 	~Scene();
 	void ChangeState(SceneState* state);

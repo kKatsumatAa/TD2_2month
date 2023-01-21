@@ -137,7 +137,7 @@ public:
 
 	//êÊçsì¸óÕóp
 	bool bufferedPushSpace = false;
-	int bufferedKeyArrow = BUFFERED_INPUT_ARROW::NONE;
+	int  bufferedKeyArrow = BUFFERED_INPUT_ARROW::NONE;
 
 	Object draw[10];
 	DebugText* debugText_ = nullptr;
@@ -153,7 +153,7 @@ public:
 	CameraManager* cameraM;
 
 
-		void ChangeStateTurnConnect(PlayerState* state);
+	void ChangeStateTurnConnect(PlayerState* state);
 	void ChangeStateMove(PlayerState* state);
 
 	void Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket,
