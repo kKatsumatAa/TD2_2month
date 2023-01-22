@@ -603,7 +603,7 @@ void BlockManager::UpdateOverlap()
 							/*beforeTurn_[i][j] = form_[i][j];
 							beforeTurn_[k][l] = form_[k][l];*/
 
-							if (form_[i][j] != Form::NONE && form_[k][l] != Form::NONE && form_[i][j] != Form::BUTTON && form_[k][l] != Form::BUTTON)
+							if (form_[i][j] != Form::NONE && form_[k][l] != Form::NONE && form_[i][j] != Form::BUTTON && form_[k][l] != Form::BUTTON && form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
 								//if (form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
 							{
 								//if(action_[i][j] == Action::Connect || action_[k][l] == Action::Connect)
@@ -642,7 +642,7 @@ void BlockManager::UpdateOverlap()
 								isTurn[k][l] = true;
 							}
 							//ボタンを押したときの処理
-							else if (form_[i][j] == Form::BUTTON)
+							else if (form_[i][j] == Form::BUTTON && form_[k][l] != Form::GOAL)
 							{
 								if (isTurn[i][j] == false || isTurn[k][l] == false)
 								{
