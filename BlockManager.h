@@ -19,7 +19,7 @@ public:
 
 	//初期化
 	void Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
-		Model* normal, Model* button, Model* goal, Model* Socket);
+		Model* normal, Model* locked, Model* goal, Model* Socket,Model* Button);
 
 	//更新
 	void Update();
@@ -262,7 +262,7 @@ private:
 	bool goDown;
 
 	//通った場所を記憶するためのフラグ
-	bool isMovedElec[blockWidth][blockHeight];
+	bool isElec[blockWidth][blockHeight];
 
 };
 

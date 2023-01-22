@@ -16,8 +16,8 @@ BlockManager::~BlockManager()
 }
 
 //初期化
-void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
-	Model* normal, Model* button, Model* goal, Model* Socket)
+void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tutorial, CameraManager *cameraM, GoalEffect *goalEffect,
+	Model *normal, Model *locked , Model *goal, Model *Socket, Model *button)
 {
 	blocks_.clear();
 	worldmats_.clear();
@@ -30,18 +30,18 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 
 	//std::unique_ptr<Block> newBullet = std::make_unique<Block>();
 
-	if (texhandle[0] == NULL)
+	if(texhandle[0] == NULL)
 	{
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/effect1.png", texhandle[0]);
 	}
 
 	//初期化
-	for (int i = 0; i < blockWidth; i++)
+	for(int i = 0; i < blockWidth; i++)
 	{
 		//ブロック型を持てる空のベクタを追加(行列でいうi列)
-		blocks_.push_back(vector<Block*>());
+		blocks_.push_back(vector<Block *>());
 
-		for (int j = 0; j < blockHeight; j++)
+		for(int j = 0; j < blockHeight; j++)
 		{
 			block_ = new Block;
 			//ブロックの要素を追加
@@ -50,12 +50,12 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 	}
 
 	//ベクタ配列に要素<ワールド行列>を追加
-	for (int i = 0; i < blockWidth; i++)
+	for(int i = 0; i < blockWidth; i++)
 	{
 		//ブロック型を持てる空のベクタを追加(行列でいうi列)
 		worldmats_.push_back(vector<WorldMat>());
 
-		for (int j = 0; j < blockHeight; j++)
+		for(int j = 0; j < blockHeight; j++)
 		{
 			//ブロックの要素を追加
 			worldmats_[i].push_back(worldmat_);
@@ -63,25 +63,25 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 	}
 
 	//ブロックの大きさ
-	for (int i = 0; i < blockWidth; i++)
+	for(int i = 0; i < blockWidth; i++)
 	{
-		for (int j = 0; j < blockHeight; j++)
+		for(int j = 0; j < blockHeight; j++)
 		{
 
 			worldmats_[i][j].scale = { blockRadius_,blockRadius_,blockRadius_ };
 
 			//worldmats_[i][j]->rot = { 0.0f,0.0f,0.0f };
 
-			blocks_[i][j]->Initialize(connectEM, normal, button, goal, Socket);
+			blocks_[i][j]->Initialize(connectEM, normal, locked, goal, Socket,button);
 
 			//ブロックの種類を設定
 
 			//ブロックの座標を設定
-			if (i >= 0)
+			if(i >= 0)
 			{
 				worldmats_[i][j].trans.x = i * (worldmats_[i][j].scale.x * 2.0f);
 			}
-			if (j >= 0)
+			if(j >= 0)
 			{
 				worldmats_[i][j].trans.z = j * (worldmats_[i][j].scale.z * 2.0f);
 			}
@@ -90,7 +90,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 
 			worldmats_[i][j].SetWorld();
 
-			block_->Initialize(connectEM, normal, button, goal, Socket);
+			block_->Initialize(connectEM, normal, locked, goal, Socket, button);
 
 			//軸になっているかどうか
 			isAxis_[i][j] = false;
@@ -109,7 +109,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 
 			pushedCount_ = 0;
 
-			isMovedElec[i][j] = false;
+			isElec[i][j] = false;
 		}
 	}
 
@@ -138,9 +138,9 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 void BlockManager::Update()
 {
 
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
 
 
@@ -164,9 +164,9 @@ void BlockManager::Update()
 	}
 
 	//状態を変える時の遅延
-	if (isChanged_ == false)
+	if(isChanged_ == false)
 	{
-		if (--selectTimer_ <= 0)
+		if(--selectTimer_ <= 0)
 		{
 			isChanged_ = true;
 			selectTimer_ = kSelectTime;
@@ -174,14 +174,14 @@ void BlockManager::Update()
 	}
 }
 
-void BlockManager::Draw(Camera* camera)
+void BlockManager::Draw(Camera *camera)
 {
 	bool isEffect = false;
 	effectCount++;
 
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
 			//Manager.cppで配列で定義したworldTransformの値をBlock.cppのDrawにセット
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
@@ -189,9 +189,9 @@ void BlockManager::Draw(Camera* camera)
 			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j]);
 
 
-			if (action_[i][j] == Action::Connect && effectCount >= effectCountMax)
+			if(action_[i][j] == Action::Connect && effectCount >= effectCountMax)
 			{
-				if (isAxis_[i][j])
+				if(isAxis_[i][j])
 				{
 					connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 15, 3, { 1.0f,0.3f,0.2f,1.0f });
 				}
@@ -205,19 +205,19 @@ void BlockManager::Draw(Camera* camera)
 		}
 	}
 
-	if (isEffect) { effectCount = 0; isEffect = false; }
+	if(isEffect) { effectCount = 0; isEffect = false; }
 }
 
 bool BlockManager::CheckPlayerOnBlock(Vec3 pos)
 {
 	bool result = false;
 
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
 			//プレイヤーがブロックの上にいるかどうか
-			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
+			if(worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
 				result = true;
@@ -235,17 +235,17 @@ bool BlockManager::CheckPlayerOnBlock(Vec3 pos)
 //ステージの関数で先にブロックあるか判定(endPosを引数)
 bool BlockManager::GetPosIsBlock(Vec3 pos)
 {
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
 
 			//プレイヤーがブロックの上にいるかどうか
-			if (worldmats_[i][j].trans.x - blockRadius_ <= pos.x && worldmats_[i][j].trans.x + blockRadius_ >= pos.x
+			if(worldmats_[i][j].trans.x - blockRadius_ <= pos.x && worldmats_[i][j].trans.x + blockRadius_ >= pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ <= pos.z && worldmats_[i][j].trans.z + blockRadius_ >= pos.z)
 			{
 				//そのブロックの形状は普通のブロックかどうか
-				if (form_[i][j] != Form::NONE && form_[i][j] != Form::LOCKED && form_[i][j] != Form::Electric && action_[i][j] != Action::Connect)
+				if(form_[i][j] != Form::NONE && form_[i][j] != Form::LOCKED && form_[i][j] != Form::Electric && action_[i][j] != Action::Connect)
 				{
 					return true;
 				}
@@ -262,16 +262,16 @@ bool BlockManager::GetPosIsBlock(Vec3 pos)
 //ギアがあるかどうか
 bool BlockManager::GetPosIsGear(Vec3 pos)
 {
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
 			//プレイヤーが指定のブロックの上にいるかどうか
-			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
+			if(worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
 				//そのブロックの形状はボタンかどうか
-				if (form_[i][j] == Form::GEAR)
+				if(form_[i][j] == Form::GEAR)
 				{
 					return true;
 				}
@@ -285,22 +285,22 @@ bool BlockManager::GetPosIsGear(Vec3 pos)
 }
 
 //最初に繋ぐボタンを押したブロックを軸に登録する関数
-void BlockManager::RegistAxisGear(const Vec3& pos)
+void BlockManager::RegistAxisGear(const Vec3 &pos)
 {
 	//最初にボタンを押したブロックを軸に登録する関数
 	//引数で受け取ったプレイヤーの座標をもとに現在位置のボタンをONにする
 
 	//プレイヤーの位置にあるブロックを軸にする
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
 			//プレイヤーが指定のブロックの上にいるかどうか
-			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
+			if(worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
 				//そのブロックの形状はボタンかどうか
-				if (form_[i][j] == Form::GEAR && isAxis_[i][j] == false)
+				if(form_[i][j] == Form::GEAR && isAxis_[i][j] == false)
 				{
 					//軸登録する
 					isAxis_[i][j] = true;
@@ -323,16 +323,16 @@ void BlockManager::RegistAxisGear(const Vec3& pos)
 //ブロック同士をつなぐ更新関数
 void BlockManager::UpdateConnect(Vec3 pos)
 {
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
 			//プレイヤーが指定のブロックの上にいるかどうか
-			if ((worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
+			if((worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 				&& action_[i][j] != Action::Connect)
 			{
-				if (form_[i][j] != Form::NONE)
+				if(form_[i][j] != Form::NONE)
 				{
 					action_[i][j] = Action::Connect;
 					cameraM->usingCamera->CameraShake(15, 0.53f);
@@ -346,15 +346,15 @@ void BlockManager::UpdateConnect(Vec3 pos)
 //繋ぐ際に離したところが軸以外のギアかどうか
 bool BlockManager::CheckAxisGear(Vec3 pos)
 {
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
 			//プレイヤーがいるブロック内において
-			if ((worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
+			if((worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z))
 			{
-				if (isAxis_[i][j] == false && form_[i][j] == Form::GEAR)
+				if(isAxis_[i][j] == false && form_[i][j] == Form::GEAR)
 				{
 					cameraM->usingCamera->CameraShake(15, 1.2f);
 					return true;
@@ -370,11 +370,11 @@ bool BlockManager::CheckAxisGear(Vec3 pos)
 //繋がれているブロックを全部解除する
 void BlockManager::ReleseConectedBlock()
 {
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
-			if (action_[i][j] == Action::Connect)
+			if(action_[i][j] == Action::Connect)
 			{
 				//全部何もしていない状態に
 				action_[i][j] = Action::None;
@@ -385,18 +385,18 @@ void BlockManager::ReleseConectedBlock()
 }
 //キーボードによって回転
 
-void BlockManager::UpdateRotate(Vec3& rotatePos)
+void BlockManager::UpdateRotate(Vec3 &rotatePos)
 {
 
-	if (isLeftRolling == false && isRightRolling == false && (KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D)))
+	if(isLeftRolling == false && isRightRolling == false && (KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D)))
 	{
 		isRightRolling = true;
 		rotateCount = 0;
 		angle_ = 0;
 
-		for (int i = 0; i < blockWidth; i++)
+		for(int i = 0; i < blockWidth; i++)
 		{
-			for (int j = 0; j < blockHeight; j++)
+			for(int j = 0; j < blockHeight; j++)
 			{
 				distancePos[i][j] = worldmats_[i][j].trans - axis_pos_;
 			}
@@ -405,15 +405,15 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		distancePosPlayer = rotatePos - axis_pos_;
 	}
 
-	if (isLeftRolling == false && isRightRolling == false && (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A)))
+	if(isLeftRolling == false && isRightRolling == false && (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A)))
 	{
 		isLeftRolling = true;
 		rotateCount = 0;
 		angle_ = 0;
 
-		for (int i = 0; i < blockWidth; i++)
+		for(int i = 0; i < blockWidth; i++)
 		{
-			for (int j = 0; j < blockHeight; j++)
+			for(int j = 0; j < blockHeight; j++)
 			{
 				distancePos[i][j] = worldmats_[i][j].trans - axis_pos_;
 			}
@@ -422,18 +422,18 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		distancePosPlayer = rotatePos - axis_pos_;
 	}
 
-	if (isRightRolling == true)
+	if(isRightRolling == true)
 	{
 		rotateCount++;
 
 		//角度が必要
-		for (int i = 0; i < stageWidth_; i++)
+		for(int i = 0; i < stageWidth_; i++)
 		{
-			for (int j = 0; j < stageHeight_; j++)
+			for(int j = 0; j < stageHeight_; j++)
 			{
 
 				//もしつながっているなら
-				if (action_[i][j] == Action::Connect && isAxis_[i][j] == false)
+				if(action_[i][j] == Action::Connect && isAxis_[i][j] == false)
 				{
 					WorldMat worldMat;
 					worldMat.rot.y = LerpVec3({ angle_, 0, 0 }, { pi / 2.0f,0,0 },
@@ -455,13 +455,13 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		}
 
 
-		if (rotateCount >= rotateCountMax)
+		if(rotateCount >= rotateCountMax)
 		{
 			isRightRolling = false;
 			cameraM->usingCamera->CameraShake(15, 1.5f);
 
 			//チュートリアル
-			if (tutorial->GetState() == TUTORIAL::TURN)
+			if(tutorial->GetState() == TUTORIAL::TURN)
 			{
 				tutorial->AddStateNum();
 			}
@@ -472,17 +472,17 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 	}
 
-	if (isLeftRolling == true)
+	if(isLeftRolling == true)
 	{
 		rotateCount++;
 
 		//角度が必要
-		for (int i = 0; i < stageWidth_; i++)
+		for(int i = 0; i < stageWidth_; i++)
 		{
-			for (int j = 0; j < stageHeight_; j++)
+			for(int j = 0; j < stageHeight_; j++)
 			{
 				//もしつながっているなら
-				if (action_[i][j] == Action::Connect && isAxis_[i][j] == false)
+				if(action_[i][j] == Action::Connect && isAxis_[i][j] == false)
 				{
 					WorldMat worldMat;
 					worldMat.rot.y = LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
@@ -504,13 +504,13 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		}
 
 
-		if (rotateCount >= rotateCountMax)
+		if(rotateCount >= rotateCountMax)
 		{
 			isLeftRolling = false;
 			cameraM->usingCamera->CameraShake(15, 1.5f);
 
 			//チュートリアル
-			if (tutorial->GetState() == TUTORIAL::TURN)
+			if(tutorial->GetState() == TUTORIAL::TURN)
 			{
 				tutorial->AddStateNum();
 			}
@@ -520,13 +520,13 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		}
 	}
 
-	if (isLeftRolling == false && isRightRolling == false)
+	if(isLeftRolling == false && isRightRolling == false)
 	{
 		//DownPosY();
 		UpdateOverlap();
 	}
 
-	else if (isLeftRolling == true || isRightRolling == true)
+	else if(isLeftRolling == true || isRightRolling == true)
 	{
 		UpPosY();
 		RepositBlock();
@@ -535,38 +535,39 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 bool BlockManager::GetIsRollingLeftorRight()
 {
-	if (isLeftRolling || isRightRolling)
+	if(isLeftRolling || isRightRolling)
 	{
 		return true;
 	}
 	return false;
 }
 
-bool BlockManager::GetIsGoal(Vec3& pos, bool isPlayer)
+bool BlockManager::GetIsGoal(Vec3 &pos, bool isPlayer)
 {
 
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
 			//プレイヤーが指定のブロックの上にいるかどうか
-			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
+			if(worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
 				//そのブロックの形状はゴールかどうか
-				if (form_[i][j] == Form::GOAL)
+				if(form_[i][j] == Form::GOAL)
 				{
 					//�S�[�����o
-					if (isPlayer)
+					if(isPlayer)
 					{
 						Vec3 goalEyeDistance = worldmats_[i][j].trans - cameraM->gameMainCamera->GetEye();
 
-						for (int i = 0; i < 4; i++)
+						for(int i = 0; i < 4; i++)
 						{
-							if (i < 2) {
+							if(i < 2)
+							{
 								goalCameraPoses.push_back(cameraM->gameMainCamera->GetEye() + Vec3{ goalEyeDistance.x,goalEyeDistance.y + i * 60.0f ,goalEyeDistance.z } / 4.0f * i);
 							}
-							else if (i == 4 - 2)
+							else if(i == 4 - 2)
 							{
 								goalCameraPoses.push_back(cameraM->gameMainCamera->GetEye() + Vec3{ goalEyeDistance.x,goalEyeDistance.y - blockRadius_ * 10.0f ,goalEyeDistance.z } / 4.0f * i);
 							}
@@ -596,24 +597,24 @@ bool BlockManager::GetIsGoal(Vec3& pos, bool isPlayer)
 //重なった時の処理
 void BlockManager::UpdateOverlap()
 {
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
-			for (int k = 0; k < stageWidth_; k++)
+			for(int k = 0; k < stageWidth_; k++)
 			{
-				for (int l = 0; l < stageHeight_; l++)
+				for(int l = 0; l < stageHeight_; l++)
 				{
 					//重なった時に形を変える処理
-					if (CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans) && form_[k][l] != Form::NONE && form_[i][j] != Form::NONE)
+					if(CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans) && form_[k][l] != Form::NONE && form_[i][j] != Form::NONE)
 					{
 						//同じ座標ではないとき
-						if (i != k || j != l)
+						if(i != k || j != l)
 						{
 							/*beforeTurn_[i][j] = form_[i][j];
 							beforeTurn_[k][l] = form_[k][l];*/
 
-							if (form_[i][j] != Form::NONE && form_[k][l] != Form::NONE && form_[i][j] != Form::BUTTON && form_[k][l] != Form::BUTTON && form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
+							if(form_[i][j] != Form::NONE && form_[k][l] != Form::NONE && form_[i][j] != Form::BUTTON && form_[k][l] != Form::BUTTON && form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
 								//if (form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
 							{
 								//if(action_[i][j] == Action::Connect || action_[k][l] == Action::Connect)
@@ -621,7 +622,7 @@ void BlockManager::UpdateOverlap()
 
 								//ボタンを押さない回転の処理
 								//回転させる前の状態を保存
-								if (isTurn[i][j] == false || isTurn[k][l] == false)
+								if(isTurn[i][j] == false || isTurn[k][l] == false)
 								{
 									beforeTurn_[i][j] = form_[i][j];
 									beforeTurn_[k][l] = form_[k][l];
@@ -630,13 +631,13 @@ void BlockManager::UpdateOverlap()
 									form_[i][j] = Form::LOCKED;
 									form_[k][l] = Form::LOCKED;
 
-									if (isUp[i][j] == true)
+									if(isUp[i][j] == true)
 									{
 										//ブロックの演出
 										blocks_[i][j]->GetWorldTransForm()->scale =
 										{ blocks_[i][j]->GetRadius() * 1.8f,blocks_[i][j]->GetRadius() * 1.8f, blocks_[i][j]->GetRadius() * 1.8f };
 									}
-									else if (isUp[k][l] == true)
+									else if(isUp[k][l] == true)
 									{
 										//ブロックの演出
 										blocks_[k][l]->GetWorldTransForm()->scale =
@@ -652,9 +653,9 @@ void BlockManager::UpdateOverlap()
 								isTurn[k][l] = true;
 							}
 							//ボタンを押したときの処理
-							else if (form_[i][j] == Form::BUTTON && form_[k][l] != Form::GOAL)
+							else if(form_[i][j] == Form::BUTTON && form_[k][l] != Form::GOAL)
 							{
-								if (isTurn[i][j] == false || isTurn[k][l] == false)
+								if(isTurn[i][j] == false || isTurn[k][l] == false)
 								{
 									//ボタンの形はそのままで重なった方を
 									beforeTurn_[i][j] = Form::BUTTON;
@@ -663,13 +664,13 @@ void BlockManager::UpdateOverlap()
 									form_[i][j] = Form::BUTTON;
 									form_[k][l] = Form::LOCKED;
 
-									if (isUp[i][j] == true)
+									if(isUp[i][j] == true)
 									{
 										//ブロックの演出
 										blocks_[i][j]->GetWorldTransForm()->scale =
 										{ blocks_[i][j]->GetRadius() * 1.8f,blocks_[i][j]->GetRadius() * 1.8f, blocks_[i][j]->GetRadius() * 1.8f };
 									}
-									else if (isUp[k][l] == true)
+									else if(isUp[k][l] == true)
 									{
 										//ブロックの演出
 										blocks_[k][l]->GetWorldTransForm()->scale =
@@ -684,7 +685,7 @@ void BlockManager::UpdateOverlap()
 								isTurn[i][j] = true;
 								isTurn[k][l] = true;
 								//押したフラグをONに
-								if (isPushed[i][j] == false)
+								if(isPushed[i][j] == false)
 								{
 									isPushed[i][j] = true;
 									//押された数を増やす
@@ -697,7 +698,7 @@ void BlockManager::UpdateOverlap()
 						}
 
 						//チュートリアル
-						if (tutorial->GetState() == TUTORIAL::OVERLAP)
+						if(tutorial->GetState() == TUTORIAL::OVERLAP)
 						{
 							//tutorial->AddStateNum();
 						}
@@ -711,34 +712,34 @@ void BlockManager::UpdateOverlap()
 //重なっていたブロックを元に戻す処理
 void BlockManager::RepositBlock()
 {
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
-			for (int k = 0; k < stageWidth_; k++)
+			for(int k = 0; k < stageWidth_; k++)
 			{
-				for (int l = 0; l < stageHeight_; l++)
+				for(int l = 0; l < stageHeight_; l++)
 				{
 					bool isOverlap = CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans);
 
 					//重なりが外れて元の状態に戻す処理
 
 					//コネクトしているブロックを戻す処理
-					if (action_[i][j] == Action::Connect)
+					if(action_[i][j] == Action::Connect)
 					{
-						if (isOverlap == true)
+						if(isOverlap == true)
 
 							/*if (form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED &&
 								action_[i][j] == Action::Connect )*/
 						{
 							//重なっていたブロックを
-							if (form_[i][j] == Form::LOCKED)
+							if(form_[i][j] == Form::LOCKED)
 							{
-								if (i != k || j != l)
+								if(i != k || j != l)
 								{
-									if (form_[k][l] == Form::BUTTON)
+									if(form_[k][l] == Form::BUTTON)
 									{
-										if (i != k || j != l)
+										if(i != k || j != l)
 										{
 											form_[i][j] = beforeTurn_[i][j];
 
@@ -747,10 +748,10 @@ void BlockManager::RepositBlock()
 											isTurn[k][l] = false;
 
 											//押したフラグをOFFに
-											if (isPushed[k][l] == true)
+											if(isPushed[k][l] == true)
 											{
 												//押された数を減らす
-												if (pushedCount_ > 0)
+												if(pushedCount_ > 0)
 												{
 													pushedCount_--;
 												}
@@ -791,103 +792,79 @@ void BlockManager::ElectricCollision()
 			//X座標の一つ前の番号を保存
 			prevBlockY = j;
 
-			if(form_[i][j] == Form::Electric)
+			if(form_[i][j] == Form::Electric || isElec[i][j] == true)
 			{
-				if(CollisionBlockToBlock(goalPos, elecPos) == false)
-				{
-					//→右方向の処理
-					if(form_[i + 1][j] != Form::NONE && form_[i + 1][j] != Form::LOCKED)
-					{
-						//一回も通っていなかったら
-						if(isMovedElec[i + 1][j] = false && goRight == true)
-						{
-							elecPos.x += worldmats_[i][j].scale.x * 2.0f;
-							isMovedElec[i + 1][j] = true;
-						}
-						//移動のエフェクト入れたいなら
-						//ここでelecPosに対象の方向に対して、X or Z を入れる。　
-						//右に行ける時ならxに直径分足してあげる。
-						//一回通った場所はもう判定しない(無限ループさせないため)
-						//elecPos = worldmats_[i][j].trans;
-						else
-						{
-							goRight = false;
-							goLeft = true;
-						}
-					}
-					
+				isElec[i][j] = true;
 
-					//←左方向の処理
-					else if(form_[prevBlockX][j] != Form::NONE && form_[prevBlockX][j] != Form::LOCKED && goLeft == true)
+				//電気ブロックから見て→右方向の処理(電気フラグを変える処理)
+				if(form_[i + 1][j] != Form::NONE && form_[i + 1][j] != Form::LOCKED || isElec[i][j] == true)
+				{
+					//一回も通っていなかったら
+					if(isElec[i + 1][j] == false)
 					{
-						if(isMovedElec[prevBlockX][j] = false)
-						{
-							elecPos.x -= worldmats_[i][j].scale.x * 2.0f;
-							isMovedElec[prevBlockX][j] = true;
-						}
-						else
-						{
-							goLeft = false;
-							goUp = true;
-						}
-					}
-					
-					//↑上方向の処理
-					if(form_[i][j + 1] != Form::NONE && form_[i][j + 1] != Form::LOCKED && goUp == true)
-					{
-						elecPos.z += worldmats_[i][j].scale.x * 2.0f;
-					}
-					else
-					{
-						goUp = false;
-						goDown = true;
-					}
-					//↓下方向の処理
-					if(form_[i][prevBlockX] != Form::NONE && form_[i][prevBlockX] != Form::LOCKED && goDown == true)
-					{
-						elecPos.z -= worldmats_[i][j].scale.x * 2.0f;
-					}
-					else
-					{
-						goDown = false;
-						goRight = true;
+						isElec[i + 1][j] = true;
 					}
 
 				}
-			}
-			//上下横判定を取る
-			//そのブロックがLOCKEDとNONE状態のブロックでなければOK
-			// 
-			// 電気ブロックで別で座標を持たせて
-			// 右ダメだったら次は左からフラグで切替
-			// 
-			//bool isOverlap = CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans);
-		}
+				//←左方向の処理(電気フラグを変える処理)
+				if(form_[prevBlockX][j] != Form::NONE && form_[prevBlockX][j] != Form::LOCKED || isElec[i][j] == true)
+				{
+					if(isElec[prevBlockX][j] = false)
+					{
+						isElec[prevBlockX][j] = true;
+					}
 
-		//Y座標の一つ前のブロック番号を保存
-		prevBlockX = i;
+				}
+				//↑上方向の処理(電気フラグを変える処理)
+				if(form_[i][j + 1] != Form::NONE && form_[i][j + 1] != Form::LOCKED || isElec[i][j] == true)
+				{
+					if(isElec[i][j + 1] = false)
+					{
+						isElec[i][j + 1] = true;
+					}
+				}
+				//↓下方向の処理(電気フラグを変える処理)
+				if(form_[i][prevBlockX] != Form::NONE && form_[i][prevBlockX] != Form::LOCKED || isElec[i][j] == true)
+				{
+					if(isElec[i][prevBlockX] = false)
+					{
+						isElec[i][prevBlockX] = true;
+					}
+				}
+			}
+		}
+		//上下横判定を取る
+		//そのブロックがLOCKEDとNONE状態のブロックでなければOK
+		// 
+		// 電気ブロックで別で座標を持たせて
+		// 右ダメだったら次は左からフラグで切替
+		// 
+		//bool isOverlap = CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans);
 	}
 
-	//if(CollisionBlockToBlock(goalPos, elecPos))
-	//{
-	//	//クリアフラグ
-	//	return true;
-	//}
-
-	//return false;
+	//Y座標の一つ前のブロック番号を保存
+	//prevBlockX = i;
 }
+
+//if(CollisionBlockToBlock(goalPos, elecPos))
+//{
+//	//クリアフラグ
+//	return true;
+//}
+
+//return false;
 
 void BlockManager::AppearGoal()
 {
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
 			//もしボタンが押されていたら
 			//ゴールを出現させる
-			if (pushedCount_ >= needGoalCount)
+			if(pushedCount_ >= needGoalCount)
 			{
-				if (isGoal_[i][j] == true && form_[i][j] != Form::GOAL)
+				if(isGoal_[i][j] == true && form_[i][j] != Form::GOAL)
 				{
 					form_[i][j] = Form::GOAL;
 
@@ -915,9 +892,9 @@ void BlockManager::AppearGoal()
 						0.4f, 0, { 1.0f,0.3f,0.2f,1.0f }, { 1.0f,1.0f,0,0 });
 				}
 			}
-			else if (pushedCount_ < needGoalCount)
+			else if(pushedCount_ < needGoalCount)
 			{
-				if (isGoal_[i][j] == true)
+				if(isGoal_[i][j] == true)
 				{
 					form_[i][j] = Form::LOCKED;
 				}
@@ -930,7 +907,7 @@ void BlockManager::AppearGoal()
 //ブロックブロックの矩形の当たり判定
 bool BlockManager::CollisionBlockToBlock(Vec3 blockPos, Vec3 comPos)
 {
-	if (blockPos.x - blockRadius_ < comPos.x && blockPos.x + blockRadius_ > comPos.x
+	if(blockPos.x - blockRadius_ < comPos.x && blockPos.x + blockRadius_ > comPos.x
 		&& blockPos.z - blockRadius_ <comPos.z && blockPos.z + blockRadius_ > comPos.z)
 	{
 		return true;
@@ -944,10 +921,10 @@ bool BlockManager::CollisionBlockToBlock(Vec3 blockPos, Vec3 comPos)
 void BlockManager::ResetBlock()
 {
 	needGoalCount = 0;
-	
-	for (int i = 0; i < stageWidth_; i++)
+
+	for(int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
 			//ブロックの座標を設定
 			form_[i][j] = loadForms_[i][j];
@@ -979,7 +956,7 @@ void BlockManager::ResetBlock()
 			//Y座標を浮かせるフラグを初期化
 			isUp[i][j] = false;
 
-			isMovedElec[i][j] = false;
+			isElec[i][j] = false;
 		}
 	}
 
@@ -1007,11 +984,11 @@ void BlockManager::ResetBlock()
 
 void BlockManager::GenerateParticleTurnBlock()
 {
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
-			if (action_[i][j] == Action::Connect)
+			if(action_[i][j] == Action::Connect)
 			{
 				//パーティクル発生
 				ParticleManager::GetInstance()->GenerateRandomParticle(4, 100, 1.2f, worldmats_[i][j].trans, 0.4f, 0,
@@ -1023,15 +1000,15 @@ void BlockManager::GenerateParticleTurnBlock()
 
 void BlockManager::UpPosY()
 {
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
-			if (action_[i][j] == Action::Connect)
+			if(action_[i][j] == Action::Connect)
 			{
-				if (form_[i][j] == Form::BLOCK || form_[i][j] == Form::GEAR)
+				if(form_[i][j] == Form::BLOCK || form_[i][j] == Form::GEAR)
 				{
-					if (isUp[i][j] == false)
+					if(isUp[i][j] == false)
 					{
 						/*blocks_[i][j]->GetWorldTransForm()->trans =
 						{ blocks_[i][j]->GetRadius() * 1.1f,blocks_[i][j]->GetRadius() * 1.1f, blocks_[i][j]->GetRadius() * 1.1f };*/
@@ -1048,15 +1025,15 @@ void BlockManager::UpPosY()
 }
 void BlockManager::DownPosY()
 {
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
-			if (action_[i][j] != Action::Connect)
+			if(action_[i][j] != Action::Connect)
 			{
-				if (form_[i][j] == Form::BLOCK || form_[i][j] == Form::GEAR)
+				if(form_[i][j] == Form::BLOCK || form_[i][j] == Form::GEAR)
 				{
-					if (isUp[i][j] == true)
+					if(isUp[i][j] == true)
 					{
 
 						beforeTransY[i][j] = worldmats_[i][j].trans.y;
@@ -1071,19 +1048,19 @@ void BlockManager::DownPosY()
 }
 
 //読み込んだステージをセットする関数
-void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::vector<std::vector<WorldMat>>& worldmats, std::vector<std::vector<Form>>& forms)
+void BlockManager::SetStage(const int &stageWidth, const int &stageHeight, std::vector<std::vector<WorldMat>> &worldmats, std::vector<std::vector<Form>> &forms)
 {
 	stageWidth_ = stageWidth;
 	stageHeight_ = stageHeight;
 	needGoalCount = 0;
 
 	//読み込み用ワールド行列を設定
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
 		//ワールド行列型を持てる空のベクタを追加(行列でいうi列)
 		loadWorldmats_.push_back(vector<WorldMat>());
 
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
 			//ワールド行列の要素を追加
 			loadWorldmats_[i].push_back(worldmat_);
@@ -1091,32 +1068,32 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 	}
 
 	//読み込み用の形状を設定
-	for (int i = 0; i < stageWidth_; i++)
+	for(int i = 0; i < stageWidth_; i++)
 	{
 		//形状の型を持てる空のベクタを追加(行列でいうi列)
 		loadForms_.push_back(vector<Form>());
 
-		for (int j = 0; j < stageHeight_; j++)
+		for(int j = 0; j < stageHeight_; j++)
 		{
 			//形状の要素を追加
 			loadForms_[i].push_back(loadForm_);
 		}
 	}
 
-	for (int i = 0; i < stageWidth; i++)
+	for(int i = 0; i < stageWidth; i++)
 	{
-		for (int j = 0; j < stageHeight; j++)
+		for(int j = 0; j < stageHeight; j++)
 		{
 			worldmats_[i][j].trans = worldmats[i][j].trans;
 			loadWorldmats_[i][j].trans = worldmats[i][j].trans;
 			form_[i][j] = forms[i][j];
-			if (form_[i][j] == Form::GOAL)
+			if(form_[i][j] == Form::GOAL)
 			{
 				goalPos = worldmats_[i][j].trans;
 				isGoal_[i][j] = true;
 				form_[i][j] = Form::LOCKED;
 			}
-			else if (form_[i][j] == Form::BUTTON)
+			else if(form_[i][j] == Form::BUTTON)
 			{
 				needGoalCount++;
 				isGoal_[i][j] = false;
@@ -1129,7 +1106,7 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 			{
 				isGoal_[i][j] = false;
 			}
-			
+
 			//引数で受け取った形状を保存。
 			//上記の項目はリセットの際に再設定
 			loadForms_[i][j] = forms[i][j];

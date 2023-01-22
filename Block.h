@@ -37,10 +37,10 @@ private:
 	//Object* objcet_ = nullptr;
 
 	Model* normal_ = nullptr;
+	Model* locked_ = nullptr;
 	Model* button_ = nullptr;
 	Model* goal_ = nullptr;
 	Model* socket_ = nullptr;
-
 
 	//テクスチャハンドル
 	//UINT64 textureHandle_[10];
@@ -66,7 +66,7 @@ public:
 	DebugText* debugText_ = nullptr;
 
 	void Initialize(ConnectingEffectManager* connectEM,
-		Model* normal, Model* button, Model* goal, Model* Socket);
+		Model* normal, Model* locked, Model* goal, Model* Socket,Model* button);
 
 	void Updata(Vec3 pos = { 0,0,0 });
 
