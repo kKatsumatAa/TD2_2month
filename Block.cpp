@@ -73,6 +73,8 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action)
 	}
 
 	if (form == Form::LOCKED) { draw[4].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &button_[0], color); }
+	if (form == Form::Electric) { draw[5].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &button_[0], color); }
+
 
 }
 

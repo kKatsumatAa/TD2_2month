@@ -17,6 +17,7 @@ public:
 		BUTTON,			//ボタン
 		LOCKED,			//固定ブロック
 		GOAL,			//ゴール
+		Electric,
 		NONE,			//何もない状態
 	};
 

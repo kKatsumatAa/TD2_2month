@@ -109,7 +109,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 
 			pushedCount_ = 0;
 
-			
+			isMovedElec[i][j] = false;
 		}
 	}
 
@@ -128,6 +128,11 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 	angle_ = 0;
 
 	effectCount = 0;
+
+	goRight = true;
+	goLeft = false;
+	goUp = false;
+	goDown = false;
 }
 
 void BlockManager::Update()
@@ -145,6 +150,11 @@ void BlockManager::Update()
 			AppearGoal();
 
 			DownPosY();
+
+			if(form_[i][j] == Form::Electric)
+			{
+				worldmats_[i][j].trans = elecPos;
+			}
 
 			blocks_[i][j]->Updata();
 			
@@ -235,7 +245,7 @@ bool BlockManager::GetPosIsBlock(Vec3 pos)
 				&& worldmats_[i][j].trans.z - blockRadius_ <= pos.z && worldmats_[i][j].trans.z + blockRadius_ >= pos.z)
 			{
 				//そのブロックの形状は普通のブロックかどうか
-				if (form_[i][j] != Form::NONE && form_[i][j] != Form::LOCKED && action_[i][j] != Action::Connect)
+				if (form_[i][j] != Form::NONE && form_[i][j] != Form::LOCKED && form_[i][j] != Form::Electric && action_[i][j] != Action::Connect)
 				{
 					return true;
 				}
@@ -771,6 +781,101 @@ void BlockManager::RepositBlock()
 	}
 }
 
+void BlockManager::ElectricCollision()
+{
+	for(int i = 0; i < stageWidth_; i++)
+	{
+		for(int j = 0; j < stageHeight_; j++)
+		{
+			//X座標の一つ前の番号を保存
+			prevBlockY = j;
+
+			if(form_[i][j] == Form::Electric)
+			{
+				if(CollisionBlockToBlock(goalPos, elecPos) == false)
+				{
+					//→右方向の処理
+					if(form_[i + 1][j] != Form::NONE && form_[i + 1][j] != Form::LOCKED)
+					{
+						//一回も通っていなかったら
+						if(isMovedElec[i + 1][j] = false && goRight == true)
+						{
+							elecPos.x += worldmats_[i][j].scale.x * 2.0f;
+							isMovedElec[i + 1][j] = true;
+						}
+						//移動のエフェクト入れたいなら
+						//ここでelecPosに対象の方向に対して、X or Z を入れる。　
+						//右に行ける時ならxに直径分足してあげる。
+						//一回通った場所はもう判定しない(無限ループさせないため)
+						//elecPos = worldmats_[i][j].trans;
+						else
+						{
+							goRight = false;
+							goLeft = true;
+						}
+					}
+					
+
+					//←左方向の処理
+					else if(form_[prevBlockX][j] != Form::NONE && form_[prevBlockX][j] != Form::LOCKED && goLeft == true)
+					{
+						if(isMovedElec[prevBlockX][j] = false)
+						{
+							elecPos.x -= worldmats_[i][j].scale.x * 2.0f;
+							isMovedElec[prevBlockX][j] = true;
+						}
+						else
+						{
+							goLeft = false;
+							goUp = true;
+						}
+					}
+					
+					//↑上方向の処理
+					if(form_[i][j + 1] != Form::NONE && form_[i][j + 1] != Form::LOCKED && goUp == true)
+					{
+						elecPos.z += worldmats_[i][j].scale.x * 2.0f;
+					}
+					else
+					{
+						goUp = false;
+						goDown = true;
+					}
+					//↓下方向の処理
+					if(form_[i][prevBlockX] != Form::NONE && form_[i][prevBlockX] != Form::LOCKED && goDown == true)
+					{
+						elecPos.z -= worldmats_[i][j].scale.x * 2.0f;
+					}
+					else
+					{
+						goDown = false;
+						goRight = true;
+					}
+
+				}
+			}
+			//上下横判定を取る
+			//そのブロックがLOCKEDとNONE状態のブロックでなければOK
+			// 
+			// 電気ブロックで別で座標を持たせて
+			// 右ダメだったら次は左からフラグで切替
+			// 
+			//bool isOverlap = CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans);
+		}
+
+		//Y座標の一つ前のブロック番号を保存
+		prevBlockX = i;
+	}
+
+	//if(CollisionBlockToBlock(goalPos, elecPos))
+	//{
+	//	//クリアフラグ
+	//	return true;
+	//}
+
+	//return false;
+}
+
 void BlockManager::AppearGoal()
 {
 	for(int i = 0; i < stageWidth_; i++)
@@ -834,6 +939,7 @@ void BlockManager::ResetBlock()
 			//Y座標を浮かせるフラグを初期化
 			isUp[i][j] = false;
 
+			isMovedElec[i][j] = false;
 		}
 	}
 
@@ -849,6 +955,13 @@ void BlockManager::ResetBlock()
 	angle_ = 0;
 
 	effectCount = 0;
+
+	//各方向の判定フラグ
+	goRight = true;
+	goLeft = false;
+	goUp = false;
+	goDown = false;
+
 }
 
 void BlockManager::GenerateParticleTurnBlock()
@@ -958,6 +1071,7 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 			form_[i][j] = forms[i][j];
 			if(form_[i][j] == Form::GOAL)
 			{
+				goalPos = worldmats_[i][j].trans;
 				isGoal_[i][j] = true;
 				form_[i][j] = Form::LOCKED;
 			}
@@ -965,6 +1079,10 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 			{
 				needGoalCount++;
 				isGoal_[i][j] = false;
+			}
+			else if(form_[i][j] == Form::Electric)
+			{
+				elecPos = worldmats_[i][j].trans;
 			}
 			else
 			{
@@ -975,114 +1093,113 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 		}
 	}
 }
-
-void BlockManager::LoadBlockPosData()
-{
-	//ファイルを開く
-	std::ifstream file;
-	file.open("Resources\\blockPos.csv");
-	assert(file.is_open());
-
-	//ファイルの内容を文字列ストリームにコピー
-	blocksPos << file.rdbuf();
-
-	//ファイルを閉じる
-	file.close();
-}
-
-void BlockManager::BlockPop(Vec3 pos)
-{
-	//敵の生成
-
-	//ベクタ配列に要素<ブロック>を追加
-	for (int i = 0; i < stageWidth_; i++)
-	{
-		//ブロック型を持てる空のベクタを追加(行列でいうi列)
-		blocks_.push_back(vector<Block*>());
-
-		for (int j = 0; j < stageHeight_; j++)
-		{
-			block_ = new Block;
-			//ブロックの要素を追加
-			blocks_[i].push_back(block_);
-		}
-	}
-
-	for (int i = 0; i < blockWidth; i++)
-	{
-		for (int j = 0; j < blockHeight; j++)
-		{
-			worldmats_[i][j].trans = pos;
-		}
-	}
-}
-
-void BlockManager::UpdateBlockPos()
-{
-	//待機処理
-	if (isWaitBlock)
-	{
-		blockWaitTimer--;
-		if (blockWaitTimer <= 0)
-		{
-			//待機完了
-			isWaitBlock = false;
-		}
-		return;
-	}
-
-	//1行分の文字列を入れる変数
-	std::string line;
-
-	//コマンド実行ループ
-	while (getline(blocksPos, line))
-	{
-		//1行分の文字列をストリームに変換して解析しやすくする
-		std::istringstream line_stream(line);
-
-		std::string word;
-		//,区切りで行の先頭文字列を取得
-		getline(line_stream, word, ',');
-
-		//"//"から始まる行はコメント
-		if (word.find("//") == 0)
-		{
-			//コメント行を飛ばす
-			continue;
-		}
-
-		//POPコマンドcsv
-		if (word.find("POP") == 0)
-		{
-			//X座標
-			getline(line_stream, word, ',');
-			float x = (float)std::atof(word.c_str());
-			//Y座標
-			getline(line_stream, word, ',');
-			float y = (float)std::atof(word.c_str());
-			//Z座標
-			getline(line_stream, word, ',');
-			float z = (float)std::atof(word.c_str());
-
-			//ブロックを発生させる
-			BlockPop(Vec3(x, y, z));
-		}
-		//WAITコマンド
-		else if (word.find("WAIT") == 0)
-		{
-			getline(line_stream, word, ',');
-
-			//待ち時間
-			int32_t waitTime = atoi(word.c_str());
-
-			//待機開始
-			isWaitBlock = true;
-			blockWaitTimer = waitTime;
-
-			//コマンドループを抜ける
-			break;
-		}
-	}
-
-}
-
+//
+//void BlockManager::LoadBlockPosData()
+//{
+//	//ファイルを開く
+//	std::ifstream file;
+//	file.open("Resources\\blockPos.csv");
+//	assert(file.is_open());
+//
+//	//ファイルの内容を文字列ストリームにコピー
+//	blocksPos << file.rdbuf();
+//
+//	//ファイルを閉じる
+//	file.close();
+//}
+//
+//void BlockManager::BlockPop(Vec3 pos)
+//{
+//	//敵の生成
+//
+//	//ベクタ配列に要素<ブロック>を追加
+//	for (int i = 0; i < stageWidth_; i++)
+//	{
+//		//ブロック型を持てる空のベクタを追加(行列でいうi列)
+//		blocks_.push_back(vector<Block*>());
+//
+//		for (int j = 0; j < stageHeight_; j++)
+//		{
+//			block_ = new Block;
+//			//ブロックの要素を追加
+//			blocks_[i].push_back(block_);
+//		}
+//	}
+//
+//	for (int i = 0; i < blockWidth; i++)
+//	{
+//		for (int j = 0; j < blockHeight; j++)
+//		{
+//			worldmats_[i][j].trans = pos;
+//		}
+//	}
+//}
+//
+//void BlockManager::UpdateBlockPos()
+//{
+//	//待機処理
+//	if (isWaitBlock)
+//	{
+//		blockWaitTimer--;
+//		if (blockWaitTimer <= 0)
+//		{
+//			//待機完了
+//			isWaitBlock = false;
+//		}
+//		return;
+//	}
+//
+//	//1行分の文字列を入れる変数
+//	std::string line;
+//
+//	//コマンド実行ループ
+//	while (getline(blocksPos, line))
+//	{
+//		//1行分の文字列をストリームに変換して解析しやすくする
+//		std::istringstream line_stream(line);
+//
+//		std::string word;
+//		//,区切りで行の先頭文字列を取得
+//		getline(line_stream, word, ',');
+//
+//		//"//"から始まる行はコメント
+//		if (word.find("//") == 0)
+//		{
+//			//コメント行を飛ばす
+//			continue;
+//		}
+//
+//		//POPコマンドcsv
+//		if (word.find("POP") == 0)
+//		{
+//			//X座標
+//			getline(line_stream, word, ',');
+//			float x = (float)std::atof(word.c_str());
+//			//Y座標
+//			getline(line_stream, word, ',');
+//			float y = (float)std::atof(word.c_str());
+//			//Z座標
+//			getline(line_stream, word, ',');
+//			float z = (float)std::atof(word.c_str());
+//
+//			//ブロックを発生させる
+//			BlockPop(Vec3(x, y, z));
+//		}
+//		//WAITコマンド
+//		else if (word.find("WAIT") == 0)
+//		{
+//			getline(line_stream, word, ',');
+//
+//			//待ち時間
+//			int32_t waitTime = atoi(word.c_str());
+//
+//			//待機開始
+//			isWaitBlock = true;
+//			blockWaitTimer = waitTime;
+//
+//			//コマンドループを抜ける
+//			break;
+//		}
+//	}
+//
+//}

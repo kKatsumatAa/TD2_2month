@@ -96,6 +96,9 @@ public:
 	//ボタンと重なった時にゴールを出す仕組み
 	void AppearGoal();
 
+	//電気ブロックの判定
+	void ElectricCollision();
+
 public:
 
 	static const int blockWidth = 13;
@@ -133,7 +136,7 @@ private:
 	Form form_[blockWidth][blockHeight];
 
 	Form formTmp_[blockWidth][blockHeight] = {
-		{Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
+		{Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::Electric,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::GEAR,Form::GEAR,Form::NONE,Form::GEAR,Form::GEAR,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::BUTTON,Form::BUTTON,Form::NONE,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
@@ -246,6 +249,20 @@ private:
 	bool isGoal_[blockWidth][blockHeight];
 	//読み込んだボタンの数から必要な押す数を入れておく
 	int needGoalCount;
+
+	//電気ブロック用のワールド座標
+	Vec3 elecPos;
+	//ゴールの保管用ポジション
+	Vec3 goalPos;
+
+	//各方向の判定フラグ
+	bool goRight;
+	bool goLeft;
+	bool goUp;
+	bool goDown;
+
+	//通った場所を記憶するためのフラグ
+	bool isMovedElec[blockWidth][blockHeight];
 
 };
 
