@@ -93,6 +93,9 @@ public:
 	//半径を渡す関数
 	float GetRadius() { return blockRadius_; };
 
+	//ボタンと重なった時にゴールを出す仕組み
+	void AppearGoal();
+
 public:
 
 	static const int blockWidth = 13;
@@ -133,7 +136,7 @@ private:
 		{Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::GEAR,Form::GEAR,Form::NONE,Form::GEAR,Form::GEAR,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::NONE,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
+		{Form::BUTTON,Form::BUTTON,Form::NONE,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::NONE,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::GEAR,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::NONE,Form::GEAR,Form::GEAR,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
@@ -182,9 +185,9 @@ private:
 
 	Object draw[10];
 
-	//回転
-
+	//右回転しているかどうか
 	bool isRightRolling;
+	//左回転
 	bool isLeftRolling;
 
 	int rotateCount;
@@ -210,7 +213,7 @@ private:
 	bool isWaitBlock;
 	//待機中タイマー
 	int32_t blockWaitTimer;
-
+	//各ブロックの当たり判定保存用
 	int isOverLap_[blockWidth][blockHeight];
 
 	//回転する前の形状
@@ -219,8 +222,7 @@ private:
 	bool isUp[blockWidth][blockHeight];
 	bool isDown[blockWidth][blockHeight];
 
-
-	//情報を保存したかどうか
+	//回転したかどうか
 	bool isTurn[blockWidth][blockHeight];
 
 	//読み込んだブロックの形
@@ -233,11 +235,17 @@ private:
 	float stageWidth_;
 	float stageHeight_;
 
-	//重なったかどうか
-	bool isOver[blockWidth][blockHeight];
-
 	//上がる前の座標
 	float beforeTransY[blockWidth][blockHeight];
+
+	//ボタンが押されたかどうか(配列にしているのは複数ボタンに対応するため)
+	bool isPushed[blockWidth][blockHeight];
+	int pushedCount_;
+
+	//ゴールの位置を保存する配列
+	bool isGoal_[blockWidth][blockHeight];
+	//読み込んだボタンの数から必要な押す数を入れておく
+	int needGoalCount;
 
 };
 

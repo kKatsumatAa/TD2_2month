@@ -105,6 +105,11 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 
 			isUp[i][j] = false;
 
+			isPushed[i][j] = false;
+
+			pushedCount_ = 0;
+
+			
 		}
 	}
 
@@ -136,6 +141,8 @@ void BlockManager::Update()
 
 			//X座標の一つ前の番号を保存
 			prevBlockY = j;
+
+			AppearGoal();
 
 			DownPosY();
 
@@ -595,21 +602,18 @@ void BlockManager::UpdateOverlap()
 							/*beforeTurn_[i][j] = form_[i][j];
 							beforeTurn_[k][l] = form_[k][l];*/
 
-							if (form_[i][j] != Form::NONE && form_[k][l] != Form::NONE)
+							if (form_[i][j] != Form::NONE && form_[k][l] != Form::NONE && form_[i][j] != Form::BUTTON && form_[k][l] != Form::BUTTON)
 								//if (form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
 							{
 								//if(action_[i][j] == Action::Connect || action_[k][l] == Action::Connect)
 								//重なっているブロック両方を固定ブロック化
 
-
+								//ボタンを押さない回転の処理
 								//回転させる前の状態を保存
 								if (isTurn[i][j] == false || isTurn[k][l] == false)
 								{
 									beforeTurn_[i][j] = form_[i][j];
 									beforeTurn_[k][l] = form_[k][l];
-
-									isOver[i][j] = true;
-									isOver[k][l] = true;
 
 									//���o
 									form_[i][j] = Form::LOCKED;
@@ -627,7 +631,6 @@ void BlockManager::UpdateOverlap()
 										blocks_[k][l]->GetWorldTransForm()->scale =
 										{ blocks_[k][l]->GetRadius() * 1.8f,blocks_[k][l]->GetRadius() * 1.8f, blocks_[k][l]->GetRadius() * 1.8f };
 									}
-									
 								}
 
 								//重なったところを固定状態に
@@ -637,8 +640,34 @@ void BlockManager::UpdateOverlap()
 								isTurn[i][j] = true;
 								isTurn[k][l] = true;
 							}
+							//ボタンを押したときの処理
+							else if(form_[i][j] == Form::BUTTON)
+							{
+								if(isTurn[i][j] == false || isTurn[k][l] == false)
+								{
+									//ボタンの形はそのままで重なった方を
+									beforeTurn_[i][j] = Form::BUTTON;
+									beforeTurn_[k][l] = form_[k][l];
 
+									form_[i][j] = Form::BUTTON;
+									form_[k][l] = Form::LOCKED;
+								}
 
+								//重なったところを固定状態に
+								form_[i][j] = Form::BUTTON;
+								form_[k][l] = Form::LOCKED;
+								//回転したフラグをONに
+								isTurn[i][j] = true;
+								isTurn[k][l] = true;
+								//押したフラグをONに
+								if(isPushed[i][j] == false)
+								{
+									isPushed[i][j] = true;
+									//押された数を増やす
+									pushedCount_++;
+								}
+							}
+							
 						}
 
 						//チュートリアル
@@ -649,17 +678,8 @@ void BlockManager::UpdateOverlap()
 					}
 				}
 			}
-
-			/*if(isUp[i][j] == true)
-			{
-				worldmats_[i][j].trans.y = beforeTransY[i][j];
-				isUp[i][j] = false;
-			}*/
-
 		}
 	}
-
-
 }
 
 //重なっていたブロックを元に戻す処理
@@ -690,18 +710,44 @@ void BlockManager::RepositBlock()
 							{
 								if (i != k || j != l)
 								{
-									//回転する前の状態に戻す
-									form_[i][j] = beforeTurn_[i][j];
-									form_[k][l] = beforeTurn_[k][l];
+									if(form_[k][l] == Form::BUTTON)
+									{
+										if(i != k || j != l)
+										{
+											form_[i][j] = beforeTurn_[i][j];
 
-									//回転したフラグをOFFに
-									isTurn[i][j] = false;
-									isTurn[k][l] = false;
+											//回転したフラグをOFFに
+											isTurn[i][j] = false;
+											isTurn[k][l] = false;
+
+											//押したフラグをOFFに
+											if(isPushed[k][l] == true)
+											{
+												//押された数を減らす
+												if(pushedCount_ > 0)
+												{
+													pushedCount_--;
+												}
+												isPushed[k][l] = false;
+											}
+										}
+									}
+									else
+									{
+										//回転する前の状態に戻す
+										form_[i][j] = beforeTurn_[i][j];
+										form_[k][l] = beforeTurn_[k][l];
+
+										//回転したフラグをOFFに
+										isTurn[i][j] = false;
+										isTurn[k][l] = false;
+									}
+
+									
 								}
 							}
+							
 						}
-						
-						
 					}
 
 				}
@@ -709,6 +755,33 @@ void BlockManager::RepositBlock()
 		}
 	}
 }
+
+void BlockManager::AppearGoal()
+{
+	for(int i = 0; i < stageWidth_; i++)
+	{
+		for(int j = 0; j < stageHeight_; j++)
+		{
+			//もしボタンが押されていたら
+			//ゴールを出現させる
+			if(pushedCount_ >= needGoalCount)
+			{
+				if(isGoal_[i][j] == true)
+				{
+					form_[i][j] = Form::GOAL;
+				}
+			}
+			else if(pushedCount_ < needGoalCount)
+			{
+				if(isGoal_[i][j] == true)
+				{
+					form_[i][j] = Form::LOCKED;
+				}
+			}
+		}
+	}
+}
+
 
 //ブロックブロックの矩形の当たり判定
 bool BlockManager::CollisionBlockToBlock(Vec3 blockPos, Vec3 comPos)
@@ -795,7 +868,7 @@ void BlockManager::UpPosY()
 						{ blocks_[i][j]->GetRadius() * 1.1f,blocks_[i][j]->GetRadius() * 1.1f, blocks_[i][j]->GetRadius() * 1.1f };*/
 
 						beforeTransY[i][j] = worldmats_[i][j].trans.y;
-						worldmats_[i][j].trans.y -= 0.40f;
+						worldmats_[i][j].trans.y -= 0.20f;
 							
 						isUp[i][j] = true;
 					}
@@ -818,7 +891,7 @@ void BlockManager::DownPosY()
 					{
 						
 						beforeTransY[i][j] = worldmats_[i][j].trans.y;
-						worldmats_[i][j].trans.y += 0.40f;
+						worldmats_[i][j].trans.y += 0.20f;
 
 						isUp[i][j] = false;
 					}
@@ -833,6 +906,7 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 {
 	stageWidth_ = stageWidth;
 	stageHeight_ = stageHeight;
+	needGoalCount = 0;
 
 	//読み込み用ワールド行列を設定
 	for (int i = 0; i < stageWidth_; i++)
@@ -867,6 +941,21 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 			worldmats_[i][j].trans = worldmats[i][j].trans;
 			loadWorldmats_[i][j].trans = worldmats[i][j].trans;
 			form_[i][j] = forms[i][j];
+			if(form_[i][j] == Form::GOAL)
+			{
+				isGoal_[i][j] = true;
+				form_[i][j] = Form::LOCKED;
+			}
+			else if(form_[i][j] == Form::BUTTON)
+			{
+				needGoalCount++;
+				isGoal_[i][j] = false;
+			}
+			else
+			{
+				isGoal_[i][j] = false;
+			}
+			//リセット用に形状を保存
 			loadForms_[i][j] = forms[i][j];
 		}
 	}
