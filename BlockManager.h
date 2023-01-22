@@ -86,7 +86,6 @@ public:
 
 	void DownPosY();
 
-
 	//読み込んだステージをセットする関数
 	void SetStage(const int& stageWidth, const int& stageHeight ,std::vector<std::vector<WorldMat>>& worldmats, std::vector<std::vector<Form>>& forms);
 
@@ -171,8 +170,8 @@ private:
 
 
 	//前のフレームにおいて選択用のブロックの情報を保存しておく変数
-	int prevBlockX;
-	int prevBlockY;
+	/*int prevBlockX;
+	int prevBlockY;*/
 
 	//選択カーソルのクールタイマーの設定時間
 	static const int32_t kSelectTime = 17;

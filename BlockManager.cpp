@@ -17,7 +17,7 @@ BlockManager::~BlockManager()
 
 //初期化
 void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tutorial, CameraManager *cameraM, GoalEffect *goalEffect,
-	Model *normal, Model *locked , Model *goal, Model *Socket, Model *button)
+	Model *normal, Model *locked, Model *goal, Model *Socket, Model *button)
 {
 	blocks_.clear();
 	worldmats_.clear();
@@ -72,7 +72,7 @@ void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tuto
 
 			//worldmats_[i][j]->rot = { 0.0f,0.0f,0.0f };
 
-			blocks_[i][j]->Initialize(connectEM, normal, locked, goal, Socket,button);
+			blocks_[i][j]->Initialize(connectEM, normal, locked, goal, Socket, button);
 
 			//ブロックの種類を設定
 
@@ -133,6 +133,7 @@ void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tuto
 	goLeft = false;
 	goUp = false;
 	goDown = false;
+
 }
 
 void BlockManager::Update()
@@ -142,25 +143,24 @@ void BlockManager::Update()
 	{
 		for(int j = 0; j < stageHeight_; j++)
 		{
+			ElectricCollision();
 
+			
 
-			//X座標の一つ前の番号を保存
-			prevBlockY = j;
-
+			
 			AppearGoal();
 
 			DownPosY();
 
-			if(form_[i][j] == Form::Electric)
+			/*if(form_[i][j] == Form::Electric)
 			{
 				worldmats_[i][j].trans = elecPos;
-			}
+			}*/
 
 			blocks_[i][j]->Updata();
 
 		}
-		//Y座標の一つ前のブロック番号を保存
-		prevBlockX = i;
+		
 	}
 
 	//状態を変える時の遅延
@@ -728,9 +728,6 @@ void BlockManager::RepositBlock()
 					if(action_[i][j] == Action::Connect)
 					{
 						if(isOverlap == true)
-
-							/*if (form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED &&
-								action_[i][j] == Action::Connect )*/
 						{
 							//重なっていたブロックを
 							if(form_[i][j] == Form::LOCKED)
@@ -769,14 +766,10 @@ void BlockManager::RepositBlock()
 										isTurn[i][j] = false;
 										isTurn[k][l] = false;
 									}
-
-
 								}
 							}
-
 						}
 					}
-
 				}
 			}
 		}
@@ -785,54 +778,103 @@ void BlockManager::RepositBlock()
 
 void BlockManager::ElectricCollision()
 {
+	int prevBlockX = 0;
+	int prevBlockY = 0;
+
 	for(int i = 0; i < stageWidth_; i++)
 	{
 		for(int j = 0; j < stageHeight_; j++)
 		{
+			//形状変えないなら|| isElec[i][j] == true
+			
 			//X座標の一つ前の番号を保存
-			prevBlockY = j;
-
-			if(form_[i][j] == Form::Electric || isElec[i][j] == true)
+			//prevBlockY = j;
+			
+			if(form_[i][j] == Form::Electric )
 			{
 				isElec[i][j] = true;
 
-				//電気ブロックから見て→右方向の処理(電気フラグを変える処理)
-				if(form_[i + 1][j] != Form::NONE && form_[i + 1][j] != Form::LOCKED || isElec[i][j] == true)
+				if(isElec[i][j] == true)
 				{
-					//一回も通っていなかったら
-					if(isElec[i + 1][j] == false)
-					{
-						isElec[i + 1][j] = true;
-					}
+					/*int right = i + 1;
+					int up = j + 1;*/
 
-				}
-				//←左方向の処理(電気フラグを変える処理)
-				if(form_[prevBlockX][j] != Form::NONE && form_[prevBlockX][j] != Form::LOCKED || isElec[i][j] == true)
-				{
-					if(isElec[prevBlockX][j] = false)
+					//電気ブロックから見て→右方向の処理(電気フラグを変える処理)
+					if(form_[i + 1][j] != Form::NONE && form_[i + 1][j] != Form::LOCKED)
 					{
-						isElec[prevBlockX][j] = true;
-					}
+						//一回も通っていなかったら
+						if(isElec[i + 1][j] == false)
+						{
+							isElec[i + 1][j] = true;
+							form_[i + 1][j] = Form::Electric;
+						}
 
-				}
-				//↑上方向の処理(電気フラグを変える処理)
-				if(form_[i][j + 1] != Form::NONE && form_[i][j + 1] != Form::LOCKED || isElec[i][j] == true)
-				{
-					if(isElec[i][j + 1] = false)
+					}
+					//←左方向の処理(電気フラグを変える処理)
+					if(i > 0)
 					{
-						isElec[i][j + 1] = true;
+						if(form_[prevBlockX][j] != Form::NONE && form_[prevBlockX][j] != Form::LOCKED)
+						{
+
+							if(isElec[prevBlockX][j] == false)
+							{
+								isElec[prevBlockX][j] = true;
+								form_[prevBlockX][j] = Form::Electric;
+							}
+
+						}
+					}
+				
+					//↑上方向の処理(電気フラグを変える処理)
+					if(form_[i][j + 1] != Form::NONE && form_[i][j + 1] != Form::LOCKED)
+					{
+						
+							if(isElec[i][j + 1] == false)
+							{
+								isElec[i][j + 1] = true;
+								form_[i][j + 1] = Form::Electric;
+							}
+						
+					}
+					if(j > 0)
+					{
+						//↓下方向の処理(電気フラグを変える処理)
+						if(form_[i][prevBlockY] != Form::NONE && form_[i][prevBlockY] != Form::LOCKED)
+						{
+
+							if(isElec[i][prevBlockY] == false)
+							{
+								isElec[i][prevBlockY] = true;
+								form_[i][prevBlockY] = Form::Electric;
+							}
+
+						}
 					}
 				}
-				//↓下方向の処理(電気フラグを変える処理)
-				if(form_[i][prevBlockX] != Form::NONE && form_[i][prevBlockX] != Form::LOCKED || isElec[i][j] == true)
-				{
-					if(isElec[i][prevBlockX] = false)
-					{
-						isElec[i][prevBlockX] = true;
-					}
-				}
+
+			}
+
+			if(prevBlockY >= stageHeight_ - 2)
+			{
+				prevBlockY = 0;
+			}
+			else
+			{
+				prevBlockY = j;
 			}
 		}
+
+		if(prevBlockX >= stageWidth_ - 1)
+		{
+			prevBlockX = 0;
+		}
+		else
+		{
+			prevBlockX = i;
+		}
+		//Y座標の一つ前のブロック番号を保存
+		
+
 		//上下横判定を取る
 		//そのブロックがLOCKEDとNONE状態のブロックでなければOK
 		// 
@@ -937,6 +979,10 @@ void BlockManager::ResetBlock()
 			{
 				needGoalCount++;
 				isGoal_[i][j] = false;
+			}
+			else if(form_[i][j] == Form::Electric)
+			{
+				isElec[i][j] = true;
 			}
 			else
 			{
@@ -1100,7 +1146,7 @@ void BlockManager::SetStage(const int &stageWidth, const int &stageHeight, std::
 			}
 			else if(form_[i][j] == Form::Electric)
 			{
-				elecPos = worldmats_[i][j].trans;
+				isElec[i][j] = true;
 			}
 			else
 			{
