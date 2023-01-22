@@ -838,12 +838,28 @@ bool BlockManager::CollisionBlockToBlock(Vec3 blockPos, Vec3 comPos)
 
 void BlockManager::ResetBlock()
 {
+	needGoalCount = 0;
+	
 	for (int i = 0; i < stageWidth_; i++)
 	{
 		for (int j = 0; j < stageHeight_; j++)
 		{
 			//ブロックの座標を設定
 			form_[i][j] = loadForms_[i][j];
+			if(form_[i][j] == Form::GOAL)
+			{
+				isGoal_[i][j] = true;
+				form_[i][j] = Form::LOCKED;
+			}
+			else if(form_[i][j] == Form::BUTTON)
+			{
+				needGoalCount++;
+				isGoal_[i][j] = false;
+			}
+			else
+			{
+				isGoal_[i][j] = false;
+			}
 			worldmats_[i][j] = loadWorldmats_[i][j];
 
 			worldmats_[i][j].SetWorld();
@@ -873,6 +889,7 @@ void BlockManager::ResetBlock()
 	angle_ = 0;
 
 	effectCount = 0;
+	pushedCount_ = 0;
 }
 
 void BlockManager::GenerateParticleTurnBlock()
@@ -994,7 +1011,9 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 			{
 				isGoal_[i][j] = false;
 			}
-			//リセット用に形状を保存
+			
+			//引数で受け取った形状を保存。
+			//上記の項目はリセットの際に再設定
 			loadForms_[i][j] = forms[i][j];
 		}
 	}
