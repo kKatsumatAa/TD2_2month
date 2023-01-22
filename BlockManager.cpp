@@ -651,6 +651,19 @@ void BlockManager::UpdateOverlap()
 
 									form_[i][j] = Form::BUTTON;
 									form_[k][l] = Form::LOCKED;
+
+									if(isUp[i][j] == true)
+									{
+										//ブロックの演出
+										blocks_[i][j]->GetWorldTransForm()->scale =
+										{ blocks_[i][j]->GetRadius() * 1.8f,blocks_[i][j]->GetRadius() * 1.8f, blocks_[i][j]->GetRadius() * 1.8f };
+									}
+									else if(isUp[k][l] == true)
+									{
+										//ブロックの演出
+										blocks_[k][l]->GetWorldTransForm()->scale =
+										{ blocks_[k][l]->GetRadius() * 1.8f,blocks_[k][l]->GetRadius() * 1.8f, blocks_[k][l]->GetRadius() * 1.8f };
+									}
 								}
 
 								//重なったところを固定状態に
@@ -666,6 +679,8 @@ void BlockManager::UpdateOverlap()
 									//押された数を増やす
 									pushedCount_++;
 								}
+
+								
 							}
 							
 						}
