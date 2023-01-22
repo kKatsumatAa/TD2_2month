@@ -35,6 +35,10 @@ void GoalEffect::Initialize(CameraManager* cameraM)
 	state = nullptr;
 
 	isEnd = false;
+
+	this->particleCountMax = 0;
+	this->particleCoolTmp = 0;
+	this->particleCool = 0;
 }
 
 void GoalEffect::Update()
@@ -48,7 +52,7 @@ void GoalEffect::Draw(Camera* camera)
 {
 }
 
-void GoalEffect::BegineGoalEffect(std::vector<Vec3> poses, Vec3 target, int time)
+void GoalEffect::BegineGoalEffect(std::vector<Vec3> poses, Vec3 target, int time, int particleCount, int particleCool)
 {
 	//ˆê”ÔÅ‰‚ÆÅŒã‚É“¯‚¶‚Ì‚ğ“ü‚ê‚éˆ—‚ğÈ‚­‚½‚ß
 	std::vector<Vec3> Poses;
@@ -67,6 +71,11 @@ void GoalEffect::BegineGoalEffect(std::vector<Vec3> poses, Vec3 target, int time
 
 	this->index = 1;
 
+	this->particleCountMax = particleCount;
+	this->particleCoolTmp = particleCool;
+	this->particleCool = particleCool;
+
+
 	ChangeState(new StateGoalParticle);
 
 }
@@ -81,15 +90,6 @@ void GoalEffectState::SetGoalEffect(GoalEffect* goalEffect)
 //-----------------------------------------------------------------------------------
 void StateGoalParticle::Initialize()
 {
-	for (int i = 0; i < 20; i++)
-	{
-		XMFLOAT4 color = { colorDist(engine),colorDist(engine) ,colorDist(engine) ,colorDist(engine) };
-		XMFLOAT4 color2 = { colorDist(engine),colorDist(engine) ,colorDist(engine) ,colorDist(engine) };
-		float scale = scaleDist(engine);
-
-		ParticleManager::GetInstance()->GenerateRandomParticle(5, 300, scale * 4.0f, goalEffect->target, scale / 1.2f, 0, color, color2);
-	}
-
 	//ƒJƒƒ‰‚ÌˆÊ’u‚¾‚¯“ü‚ê‚é
 	goalEffect->cameraM->goalEffectCamera->viewMat.eye = goalEffect->poses[0];
 	goalEffect->cameraM->goalEffectCamera->viewMat.target = goalEffect->target;
@@ -99,11 +99,31 @@ void StateGoalParticle::Initialize()
 
 void StateGoalParticle::Update()
 {
-	count++;
+	goalEffect->particleCool++;
 
-	if (count >= countMax)
+	if (goalEffect->particleCool >= goalEffect->particleCoolTmp && particleCount < goalEffect->particleCountMax)
 	{
-		goalEffect->ChangeState(new StateGoalCamera);
+		goalEffect->particleCool = 0;
+		particleCount++;
+
+		for (int i = 0; i < 10; i++)
+		{
+			XMFLOAT4 color = { colorDist(engine),colorDist(engine) ,colorDist(engine) ,colorDist(engine) };
+			XMFLOAT4 color2 = { colorDist(engine),colorDist(engine) ,colorDist(engine) ,colorDist(engine) };
+			float scale = scaleDist(engine);
+
+			ParticleManager::GetInstance()->GenerateRandomParticle(5, 300, scale * 4.0f, goalEffect->target, scale / 1.2f, 0, color, color2);
+		}
+	}
+
+	if (particleCount >= goalEffect->particleCountMax)
+	{
+		count++;
+
+		if (count >= countMax)
+		{
+			goalEffect->ChangeState(new StateGoalCamera);
+		}
 	}
 }
 
