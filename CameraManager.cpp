@@ -35,6 +35,8 @@ void CameraManager::Initialize()
 {
 	lerpCount = 0;
 	lerpCountMax = 0;
+	afterCount = 0;
+	afterCamera = nullptr;
 
 	ChangeUsingCameraState(new UsingCameraNormalState);
 }
@@ -54,7 +56,7 @@ void CameraManager::Update()
 	goalEffectCamera->Update();
 }
 
-void CameraManager::BegineLerpUsingCamera(Vec3 startEye, Vec3 endEye, Vec3 startTarget, Vec3 endTarget, Vec3 startUp, Vec3 endUp,int time)
+void CameraManager::BegineLerpUsingCamera(Vec3 startEye, Vec3 endEye, Vec3 startTarget, Vec3 endTarget, Vec3 startUp, Vec3 endUp, int time, Camera* afterCamera, int afterCount)
 {
 	this->startEye = startEye;
 	this->endEye = endEye;
@@ -64,6 +66,8 @@ void CameraManager::BegineLerpUsingCamera(Vec3 startEye, Vec3 endEye, Vec3 start
 	this->endUp = endUp;
 	this->lerpCountMax = time;
 	this->lerpCount = 0;
+	this->afterCamera = afterCamera;
+	this->afterCount = afterCount;
 
 	ChangeUsingCameraState(new UsingCameraLerpMoveState);
 }
@@ -87,7 +91,10 @@ void UsingCameraLerpMoveState::Update()
 {
 	float t = (float)cameraM->lerpCount / (float)cameraM->lerpCountMax;
 
-	cameraM->lerpCount++;
+	if (cameraM->lerpCount < cameraM->lerpCountMax)
+	{
+		cameraM->lerpCount++;
+	}
 
 	cameraM->usingCamera->SetEye(LerpVec3(cameraM->startEye, cameraM->endEye, EaseOut(t)));
 	cameraM->usingCamera->SetUp(LerpVec3(cameraM->startUp, cameraM->endUp, EaseOut(t)));
@@ -96,6 +103,17 @@ void UsingCameraLerpMoveState::Update()
 
 	if (cameraM->lerpCount >= cameraM->lerpCountMax)
 	{
-		cameraM->ChangeUsingCameraState(new UsingCameraNormalState);
+		cameraM->afterCount--;
+
+		if (cameraM->afterCount <= 0)
+		{
+
+			if (cameraM->afterCamera)
+			{
+				cameraM->usingCamera = cameraM->afterCamera;
+			}
+
+			cameraM->ChangeUsingCameraState(new UsingCameraNormalState);
+		}
 	}
 }

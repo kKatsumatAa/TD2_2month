@@ -23,7 +23,8 @@ class StateGoalParticle : public GoalEffectState
 {
 protected:
 	int count = 0;
-	int countMax = 40;
+	int countMax = 30;
+	int particleCount = 0;
 
 public:
 	void Initialize() override;
@@ -69,12 +70,17 @@ public:
 
 	float timeRate = 0;
 
+	//パーティクル用
+	int particleCountMax = 0;
+	int particleCoolTmp = 0;
+	int particleCool = 0;
+
 public:
 	void ChangeState(GoalEffectState* state);
 	void Initialize(CameraManager* cameraM);
 	void Update();
 	void Draw(Camera* camera);
 
-	void BegineGoalEffect(std::vector<Vec3> poses, Vec3 target, int time);
+	void BegineGoalEffect(std::vector<Vec3> poses, Vec3 target, int time, int particleCount = 1, int particleCool = 10);
 };
 

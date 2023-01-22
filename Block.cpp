@@ -1,4 +1,5 @@
 #include "Block.h"
+#include "ParticleManager.h"
 
 const int blockWidth = 13;
 const int blockHeight = 13;
@@ -40,6 +41,9 @@ void Block::Updata(Vec3 pos)
 	if (worldTransform_.scale.x > scaleTmp) { worldTransform_.scale.x -= 0.05f; }
 	if (worldTransform_.scale.y > scaleTmp) { worldTransform_.scale.y -= 0.05f; }
 	if (worldTransform_.scale.z > scaleTmp) { worldTransform_.scale.z -= 0.05f; }
+	if (worldTransform_.scale.x < scaleTmp) { worldTransform_.scale.x += 0.025f; }
+	if (worldTransform_.scale.y < scaleTmp) { worldTransform_.scale.y += 0.025f; }
+	if (worldTransform_.scale.z < scaleTmp) { worldTransform_.scale.z += 0.025f; }
 
 	//block_.SetWorldPos(pos);
 	worldTransform_.SetWorld();
@@ -62,7 +66,7 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action)
 
 	if (form == Form::BLOCK) { draw[0].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color); }
 	if (form == Form::BUTTON) { draw[1].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &goal_[0], color); }
-	if (form == Form::GEAR) { draw[2].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &socket_[0],color); }
+	if (form == Form::GEAR) { draw[2].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &socket_[0], color); }
 	if (form == Form::GOAL) {
 		count++;
 		if (count % 240 == 0 || count % 240 == 10 || count % 240 == 20 || count % 240 == 30)
@@ -84,6 +88,12 @@ void Block::OnCollision(Collider& collider)
 
 void Block::OnCollision2(Collider& collider)
 {
+}
+
+void Block::SetScale(const Vec3& scale)
+{
+	worldTransform_.scale = scale;
+	worldTransform_.SetWorld();
 }
 
 void Block::SetWorldPos(Vec3& pos)
