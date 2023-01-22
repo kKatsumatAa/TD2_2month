@@ -98,6 +98,9 @@ public:
 	//電気ブロックの判定
 	void ElectricCollision();
 
+	//隣接しているかどうか
+	bool BlockJunction(Vec3 Pos1, Vec3 Pos2);
+	
 public:
 
 	static const int blockWidth = 13;

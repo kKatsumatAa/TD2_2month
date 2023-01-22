@@ -1,5 +1,6 @@
 #include "BlockManager.h"
 #include <fstream>
+#include <complex>
 #include "ParticleManager.h"
 
 
@@ -143,25 +144,19 @@ void BlockManager::Update()
 	{
 		for(int j = 0; j < stageHeight_; j++)
 		{
-			ElectricCollision();
 
-			
-
-			
 			AppearGoal();
 
 			DownPosY();
 
-			/*if(form_[i][j] == Form::Electric)
-			{
-				worldmats_[i][j].trans = elecPos;
-			}*/
-
 			blocks_[i][j]->Updata();
 
 		}
-		
+
 	}
+
+	ElectricCollision();
+
 
 	//状態を変える時の遅延
 	if(isChanged_ == false)
@@ -188,8 +183,8 @@ void BlockManager::Draw(Camera *camera)
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
 			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j]);
 
-
-			if(action_[i][j] == Action::Connect && effectCount >= effectCountMax)
+			if(isElec[i][j] == true && effectCount >= effectCountMax)
+				//if(action_[i][j] == Action::Connect && effectCount >= effectCountMax)
 			{
 				if(isAxis_[i][j])
 				{
@@ -530,6 +525,7 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 	{
 		UpPosY();
 		RepositBlock();
+
 	}
 }
 
@@ -645,12 +641,19 @@ void BlockManager::UpdateOverlap()
 									}
 								}
 
+								////重なったところを電気が通るように
+								//if(isElec[i][j] == true && isElec[k][l] == false)
+								//{
+								//	isElec[k][l] = true;
+								//}
+
 								//重なったところを固定状態に
 								form_[i][j] = Form::LOCKED;
 								form_[k][l] = Form::LOCKED;
 								//回転したフラグをONに
 								isTurn[i][j] = true;
 								isTurn[k][l] = true;
+
 							}
 							//ボタンを押したときの処理
 							else if(form_[i][j] == Form::BUTTON && form_[k][l] != Form::GOAL)
@@ -678,6 +681,12 @@ void BlockManager::UpdateOverlap()
 									}
 								}
 
+								////重なったところを電気が通るように
+								//if(isElec[i][j] == true && isElec[k][l] == false)
+								//{
+								//	isElec[k][l] = true;
+								//}
+
 								//重なったところを固定状態に
 								form_[i][j] = Form::BUTTON;
 								form_[k][l] = Form::LOCKED;
@@ -692,15 +701,72 @@ void BlockManager::UpdateOverlap()
 									pushedCount_++;
 								}
 
-
 							}
 
+							//チュートリアル
+							if(tutorial->GetState() == TUTORIAL::OVERLAP)
+							{
+								//tutorial->AddStateNum();
+							}
 						}
-
-						//チュートリアル
-						if(tutorial->GetState() == TUTORIAL::OVERLAP)
+					}
+					if(isElec[i][j] == true && form_[i][j] != Form::NONE && form_[i][j] != Form::LOCKED)
+					{
+						//同じ座標ではないとき
+						if(i != k || j != l)
 						{
-							//tutorial->AddStateNum();
+							//右
+							if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans))
+							{
+								//電気ブロックから見て→右方向の処理(電気フラグを変える処理)
+								if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+								{
+									//一回も通っていなかったら
+									if(isElec[k][l] == false)
+									{
+										isElec[k][l] = true;
+									}
+								}
+							}
+							//左
+							if(BlockJunction(worldmats_[k][l].trans, worldmats_[i][j].trans))
+							{
+								//電気ブロックから見て→左方向の処理(電気フラグを変える処理)
+								if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+								{
+									//一回も通っていなかったら
+									if(isElec[k][l] == false)
+									{
+										isElec[k][l] = true;
+									}
+								}
+							}
+							//上
+							if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans))
+							{
+								//電気ブロックから見て→上方向の処理(電気フラグを変える処理)
+								if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+								{
+									//一回も通っていなかったら
+									if(isElec[k][l] == false)
+									{
+										isElec[k][l] = true;
+									}
+								}
+							}
+							//下
+							if(BlockJunction(worldmats_[k][l].trans, worldmats_[i][j].trans))
+							{
+								//電気ブロックから見て→下方向の処理(電気フラグを変える処理)
+								if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+								{
+									//一回も通っていなかったら
+									if(isElec[k][l] == false)
+									{
+										isElec[k][l] = true;
+									}
+								}
+							}
 						}
 					}
 				}
@@ -785,73 +851,116 @@ void BlockManager::ElectricCollision()
 	{
 		for(int j = 0; j < stageHeight_; j++)
 		{
+			//for(int k = 0; k < stageWidth_; k++)
+			//{
+			//	for(int l = 0; l < stageHeight_; l++)
+			//	{
+			//		//右
+			//		if(BlockJunction(worldmats_[i][j].trans.x, worldmats_[k][l].trans.x))
+			//		{
+
+			//		}
+			//		//左
+			//		if(BlockJunction(worldmats_[k][l].trans.x, worldmats_[i][j].trans.x))
+			//		{
+
+			//		}
+			//		//上
+			//		if(BlockJunction(worldmats_[i][j].trans.y, worldmats_[k][l].trans.y))
+			//		{
+
+			//		}
+			//		//下
+			//		if(BlockJunction(worldmats_[k][l].trans.y, worldmats_[i][j].trans.y))
+			//		{
+
+			//		}
+
+
+			//	}
+			//}
 			//形状変えないなら|| isElec[i][j] == true
-			
+
 			//X座標の一つ前の番号を保存
 			//prevBlockY = j;
-			
-			if(form_[i][j] == Form::Electric )
+
+			if(form_[i][j] == Form::Electric)
 			{
 				isElec[i][j] = true;
+			}
 
-				if(isElec[i][j] == true)
+			if(isElec[i][j] == true)
+			{
+				/*int right = i + 1;
+				int up = j + 1;*/
+
+				//電気ブロックから見て→右方向の処理(電気フラグを変える処理)
+				if(form_[i + 1][j] != Form::NONE && form_[i + 1][j] != Form::LOCKED)
 				{
-					/*int right = i + 1;
-					int up = j + 1;*/
-
-					//電気ブロックから見て→右方向の処理(電気フラグを変える処理)
-					if(form_[i + 1][j] != Form::NONE && form_[i + 1][j] != Form::LOCKED)
+					//一回も通っていなかったら
+					if(isElec[i + 1][j] == false)
 					{
-						//一回も通っていなかったら
-						if(isElec[i + 1][j] == false)
+						isElec[i + 1][j] = true;
+						/*if(form_[i + 1][j] != Form::BUTTON && form_[i + 1][j] != Form::GEAR)
 						{
-							isElec[i + 1][j] = true;
 							form_[i + 1][j] = Form::Electric;
-						}
-
+						}*/
+						//form_[i + 1][j] = Form::Electric;
 					}
-					//←左方向の処理(電気フラグを変える処理)
-					if(i > 0)
-					{
-						if(form_[prevBlockX][j] != Form::NONE && form_[prevBlockX][j] != Form::LOCKED)
-						{
 
-							if(isElec[prevBlockX][j] == false)
+				}
+				//←左方向の処理(電気フラグを変える処理)
+				if(i > 0)
+				{
+					if(form_[prevBlockX][j] != Form::NONE && form_[prevBlockX][j] != Form::LOCKED)
+					{
+
+						if(isElec[prevBlockX][j] == false)
+						{
+							isElec[prevBlockX][j] = true;
+
+							/*if(form_[prevBlockX][j] != Form::BUTTON && form_[prevBlockX][j] != Form::GEAR)
 							{
-								isElec[prevBlockX][j] = true;
 								form_[prevBlockX][j] = Form::Electric;
-							}
-
+							}*/
+							//form_[prevBlockX][j] = Form::Electric;
 						}
-					}
-				
-					//↑上方向の処理(電気フラグを変える処理)
-					if(form_[i][j + 1] != Form::NONE && form_[i][j + 1] != Form::LOCKED)
-					{
-						
-							if(isElec[i][j + 1] == false)
-							{
-								isElec[i][j + 1] = true;
-								form_[i][j + 1] = Form::Electric;
-							}
-						
-					}
-					if(j > 0)
-					{
-						//↓下方向の処理(電気フラグを変える処理)
-						if(form_[i][prevBlockY] != Form::NONE && form_[i][prevBlockY] != Form::LOCKED)
-						{
 
-							if(isElec[i][prevBlockY] == false)
-							{
-								isElec[i][prevBlockY] = true;
-								form_[i][prevBlockY] = Form::Electric;
-							}
-
-						}
 					}
 				}
 
+				//↑上方向の処理(電気フラグを変える処理)
+				if(form_[i][j + 1] != Form::NONE && form_[i][j + 1] != Form::LOCKED)
+				{
+
+					if(isElec[i][j + 1] == false)
+					{
+						isElec[i][j + 1] = true;
+						/*if(form_[i][j + 1] != Form::BUTTON && form_[i][j + 1] != Form::GEAR)
+						{
+							form_[i][j + 1] = Form::Electric;
+						}*/
+						//form_[i][j + 1] = Form::Electric;
+					}
+
+				}
+				if(j > 0)
+				{
+					//↓下方向の処理(電気フラグを変える処理)
+					if(form_[i][prevBlockY] != Form::NONE && form_[i][prevBlockY] != Form::LOCKED)
+					{
+
+						if(isElec[i][prevBlockY] == false)
+						{
+							isElec[i][prevBlockY] = true;
+							/*if(form_[i][prevBlockY] != Form::BUTTON && form_[i][prevBlockY] != Form::GEAR)
+							{
+								form_[i][prevBlockY] = Form::Electric;
+							}*/
+							//form_[i][prevBlockY] = Form::Electric;
+						}
+					}
+				}
 			}
 
 			if(prevBlockY >= stageHeight_ - 2)
@@ -864,6 +973,7 @@ void BlockManager::ElectricCollision()
 			}
 		}
 
+		//Y座標の一つ前のブロック番号を保存
 		if(prevBlockX >= stageWidth_ - 1)
 		{
 			prevBlockX = 0;
@@ -872,20 +982,9 @@ void BlockManager::ElectricCollision()
 		{
 			prevBlockX = i;
 		}
-		//Y座標の一つ前のブロック番号を保存
-		
-
-		//上下横判定を取る
-		//そのブロックがLOCKEDとNONE状態のブロックでなければOK
-		// 
-		// 電気ブロックで別で座標を持たせて
-		// 右ダメだったら次は左からフラグで切替
-		// 
-		//bool isOverlap = CollisionBlockToBlock(worldmats_[i][j].trans, worldmats_[k][l].trans);
 	}
 
-	//Y座標の一つ前のブロック番号を保存
-	//prevBlockX = i;
+
 }
 
 //if(CollisionBlockToBlock(goalPos, elecPos))
@@ -953,6 +1052,38 @@ bool BlockManager::CollisionBlockToBlock(Vec3 blockPos, Vec3 comPos)
 		&& blockPos.z - blockRadius_ <comPos.z && blockPos.z + blockRadius_ > comPos.z)
 	{
 		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+//隣接しているかどうか
+bool BlockManager::BlockJunction(Vec3 Pos1, Vec3 Pos2)
+{
+	//誤差修正用
+	float EPSILON = 0.1;
+
+	//右(Pos2が右)
+	//上(Pos2が上)
+	float resultX = Pos2.x - Pos1.x;
+	float resultY = Pos2.y - Pos1.y;
+	float resultZ = Pos2.z - Pos1.z;
+
+
+	float distanceX = std::abs(resultX);
+	float distanceY = std::abs(resultY);
+	float distanceZ = std::abs(resultZ);
+
+
+	if(distanceX <= blockRadius_ * 2 + EPSILON)
+	{
+		if(distanceZ <= blockRadius_ * 2 + EPSILON)
+		{
+			//隣接している
+			return true;
+		}
 	}
 	else
 	{
