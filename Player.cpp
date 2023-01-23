@@ -161,33 +161,34 @@ void Player::OnCollision(Collider& collider)
 
 Player& Player::operator=(const Player& obj)
 {
-	this->model_ = obj.model_;
-	//this->textureHandle = obj.textureHandle;
-	this->stateMove  = obj.stateMove;
-	this->stateConnectTurn  = obj.stateConnectTurn;
-	//this->scaleTmp = obj.scaleTmp;
-	this->posYTmp  = obj.posYTmp;
+	this->Initialize(obj.moveDistance, obj.blockM, obj.playerSocket, obj.connectE2M, obj.tutorial, obj.cameraM, obj.model_, obj.debugText_);
+
+	//*this->model_ = *obj.model_;
+	//*this->textureHandle = *obj.textureHandle;
+	*this->stateMove =  *obj.stateMove;
+	*this->stateConnectTurn = *obj.stateConnectTurn;//deleteされちゃうものはポインタの中身だけ
+	this->posYTmp = obj.posYTmp;
 	this->posXTmp = obj.posXTmp;
-	this->isMove  = obj.isMove;
-	this->isWantToMove  = obj.isWantToMove;
-	this->isMoveNow  = obj.isMoveNow;
-	this->isConnect  = obj.isConnect;
-	this->isWantToConnect  = obj.isWantToConnect;
-	this->isCennectNow  = obj.isCennectNow;
-	this->isTurn  = obj.isTurn;
-	this->isisWantToTurn  = obj.isisWantToTurn;
-	this->isTurnNow  = obj.isTurnNow;
-	this->isGoal  = obj.isGoal;
+	this->isMove = obj.isMove;
+	this->isWantToMove = obj.isWantToMove;
+	this->isMoveNow = obj.isMoveNow;
+	this->isConnect = obj.isConnect;
+	this->isWantToConnect = obj.isWantToConnect;
+	this->isCennectNow = obj.isCennectNow;
+	this->isTurn = obj.isTurn;
+	this->isisWantToTurn = obj.isisWantToTurn;
+	this->isTurnNow = obj.isTurnNow;
+	this->isGoal = obj.isGoal;
 	this->moveDistance = obj.moveDistance;
 	this->moveEndPos = obj.moveEndPos;
 	this->moveStartPos = obj.moveStartPos;
-	this->bufferedPushSpace  = obj.bufferedPushSpace;
-	this->bufferedKeyArrow  = obj.bufferedKeyArrow;
+	this->bufferedPushSpace = obj.bufferedPushSpace;
+	this->bufferedKeyArrow = obj.bufferedKeyArrow;
 	//this->draw = obj.draw;
-	this->debugText_  = obj.debugText_;
+	//*this->debugText_ = *obj.debugText_;
 	this->blockM = obj.blockM;
 	this->playerSocket = obj.playerSocket;
-	this->connectE2M = obj.connectE2M;
+	//this->connectE2M = obj.connectE2M;
 	this->tutorial = obj.tutorial;
 	this->cameraM = obj.cameraM;
 

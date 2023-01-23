@@ -2,7 +2,7 @@
 
 GetBackManager::~GetBackManager()
 {
-	saveDatas.clear();
+	saveDatas_.clear();
 }
 
 GetBackManager* GetBackManager::GetInstance()
@@ -11,41 +11,55 @@ GetBackManager* GetBackManager::GetInstance()
 	return &instance;
 }
 
-void GetBackManager::Initialize(Player* player, PlayerSocket* playerSocket, BlockManager* blockManager)
+void GetBackManager::Initialize(Player* player, PlayerSocket* playerSocket, BlockManager* blockManager, CameraManager* cameraM)
 {
-	saveDatas.clear();
+	saveDatas_.clear();
 
 	player_ = player;
 	playerSocket_ = playerSocket;
 	blockManager_ = blockManager;
+	cameraManager_ = cameraM;
 
-	saveData.player.operator=(*player);
-	saveData.playerSocket = *playerSocket;
-	saveData.blockManager.operator=(* blockManager);
-
-	//初期の状態を登録
-	saveDatas.push_back(saveData);
+	SaveDatas();
 }
 
 void GetBackManager::SaveDatas()
 {
-	saveData.player.operator=(*player_);
-	saveData.playerSocket = *playerSocket_;
-	saveData.blockManager.operator=(*blockManager_);
+	saveData = new SaveData;
 
-	saveDatas.push_back(saveData);
+	//新たに場所を確保してそこにコピー
+	saveData->player = new Player();
+	saveData->playerSocket = new PlayerSocket;
+	saveData->blockManager = new BlockManager;
+	saveData->cameraManager = new CameraManager;
+	//中身のみコピー(ポインターを渡しても同じものなので)
+	saveData->player->operator=(*player_);
+	*saveData->playerSocket = *playerSocket_;
+	saveData->blockManager->operator=(*blockManager_);
+	saveData->cameraManager->operator=(*cameraManager_);
+
+	saveDatas_.push_back(saveData);
+}
+
+void GetBackManager::Update()
+{
+	return;
 }
 
 
 
 void GetBackManager::GetBack()
 {
-	if (saveDatas.size())
+	if (saveDatas_.size() > 0)
 	{
-		player_->operator=(saveDatas.end()->player);
-		*playerSocket_ = saveDatas.end()->playerSocket;
-		blockManager_->operator=(saveDatas.end()->blockManager);
+		std::list<SaveData*>::iterator itr = saveDatas_.end();
+		itr--;
 
-		saveDatas.erase(saveDatas.end());
+		player_->operator=(*(**itr).player);
+		*playerSocket_ = *(**itr).playerSocket;
+		blockManager_->operator=(*(**itr).blockManager);
+		cameraManager_->operator=(*(**itr).cameraManager);
+
+		saveDatas_.pop_back();
 	}
 }

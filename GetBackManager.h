@@ -7,13 +7,14 @@
 class SaveData
 {
 public:
-	Player player;
-	PlayerSocket playerSocket;
-	BlockManager blockManager;
+	Player* player = nullptr;
+	PlayerSocket* playerSocket = nullptr;
+	BlockManager* blockManager = nullptr;
+	CameraManager* cameraManager = nullptr;
 
 public:
-	SaveData(const SaveData& obj){};
-	SaveData(){}
+	SaveData(const SaveData& obj) {};
+	SaveData() {}
 };
 
 /// <summary>
@@ -22,19 +23,18 @@ public:
 class GetBackManager
 {
 private:
-	GetBackManager(){}
+	GetBackManager() {}
 	~GetBackManager();
 
 	//一手戻すときにこのポインタにセーブした情報入れる
-	 Player* player_;
-	 PlayerSocket* playerSocket_;
-	 BlockManager* blockManager_;
+	Player* player_;
+	PlayerSocket* playerSocket_;
+	BlockManager* blockManager_;
+	CameraManager* cameraManager_;
 
+	SaveData* saveData;
 
-
-	 SaveData saveData;
-
-	 std::list<SaveData> saveDatas;
+	std::list<SaveData*> saveDatas_;
 
 public:
 	//コピーコンストラクタを無効
@@ -44,12 +44,14 @@ public:
 	//インスタンスを取得（シングルトン）
 	static GetBackManager* GetInstance();
 
-	 void Initialize(Player* player, PlayerSocket* playerSocket, BlockManager* blockManager);
+	void Initialize(Player* player, PlayerSocket* playerSocket, BlockManager* blockManager, CameraManager* cameraM);
 
 	//現在の状態をセーブ
-	 void SaveDatas();
+	void SaveDatas();
+
+	void Update();
 
 	//一手戻る
-	 void GetBack();
+	void GetBack();
 };
 

@@ -7,6 +7,9 @@ using namespace std;
 
 BlockManager& BlockManager::operator=(const BlockManager& obj)
 {
+	//this->Initialize(obj.connectEM,obj.tutorial,obj.cameraM,obj.goalEffect,)
+
+	//ポインタは削除される可能性があるので中身のみコピー
 	this->cameraM = obj.cameraM;
 	this->tutorial = obj.tutorial;
 	this->goalEffect = obj.goalEffect;

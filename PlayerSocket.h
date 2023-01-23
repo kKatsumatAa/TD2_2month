@@ -75,6 +75,9 @@ public:
 
 
 public:
+	PlayerSocket(){}
+	PlayerSocket(const PlayerSocket& obj) {};
+
 	void Initialize(ConnectingEffect2Manager* connectE2M, float blockRadius, Model* model);
 
 	void Update(Vec3 pos);
@@ -95,5 +98,8 @@ public:
 	void OnCollision(Collider& collider)override;
 	//
 	void OnCollision2(Collider& collider)override;
+
+
+	PlayerSocket& operator=(const PlayerSocket& obj);
 };
 
