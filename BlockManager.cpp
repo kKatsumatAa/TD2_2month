@@ -116,8 +116,6 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 	//その他の設定
 	isCount = 1;
 
-	changedAction_ = false;
-	isChanged_ = false;
 	//回転
 
 	isRightRolling = false;
@@ -137,29 +135,12 @@ void BlockManager::Update()
 	{
 		for (int j = 0; j < stageHeight_; j++)
 		{
-
-
-			//X座標の一つ前の番号を保存
-			prevBlockY = j;
-
 			AppearGoal();
 
 			DownPosY();
 
 			blocks_[i][j]->Updata();
 
-		}
-		//Y座標の一つ前のブロック番号を保存
-		prevBlockX = i;
-	}
-
-	//状態を変える時の遅延
-	if (isChanged_ == false)
-	{
-		if (--selectTimer_ <= 0)
-		{
-			isChanged_ = true;
-			selectTimer_ = kSelectTime;
 		}
 	}
 }
@@ -844,6 +825,8 @@ void BlockManager::ResetBlock()
 	{
 		for (int j = 0; j < stageHeight_; j++)
 		{
+			worldmats_[i][j] = loadWorldmats_[i][j];
+
 			//ブロックの座標を設定
 			form_[i][j] = loadForms_[i][j];
 			if(form_[i][j] == Form::GOAL)
@@ -860,8 +843,7 @@ void BlockManager::ResetBlock()
 			{
 				isGoal_[i][j] = false;
 			}
-			worldmats_[i][j] = loadWorldmats_[i][j];
-
+			
 			worldmats_[i][j].SetWorld();
 
 			//軸になっているかどうか
@@ -874,13 +856,12 @@ void BlockManager::ResetBlock()
 			//Y座標を浮かせるフラグを初期化
 			isUp[i][j] = false;
 
+			//押されているかどうか
+			isPushed[i][j] = false;
 		}
 	}
 
-	changedAction_ = false;
-	isChanged_ = false;
 	//回転
-
 	isRightRolling = false;
 	isLeftRolling = false;
 

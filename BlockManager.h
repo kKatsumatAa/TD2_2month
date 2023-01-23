@@ -166,21 +166,6 @@ private:
 	//ブロックの大きさ
 	Vec3 scale_;
 
-
-	//前のフレームにおいて選択用のブロックの情報を保存しておく変数
-	int prevBlockX;
-	int prevBlockY;
-
-	//選択カーソルのクールタイマーの設定時間
-	static const int32_t kSelectTime = 17;
-
-	//選択カーソルのクールタイマー
-	int32_t selectTimer_ = kSelectTime;
-
-	//選択状態にしてもいいか
-	bool changedAction_;
-	bool isChanged_;
-
 	Vec3 transforms[blockWidth][blockHeight];
 
 	Object draw[10];
