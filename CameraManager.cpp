@@ -37,6 +37,7 @@ void CameraManager::Initialize()
 	lerpCountMax = 0;
 	afterCount = 0;
 	afterCamera = nullptr;
+	isLerpMoving = false;
 
 	ChangeUsingCameraState(new UsingCameraNormalState);
 }
@@ -68,6 +69,7 @@ void CameraManager::BegineLerpUsingCamera(Vec3 startEye, Vec3 endEye, Vec3 start
 	this->lerpCount = 0;
 	this->afterCamera = afterCamera;
 	this->afterCount = afterCount;
+	isLerpMoving = true;
 
 	ChangeUsingCameraState(new UsingCameraLerpMoveState);
 }
@@ -92,6 +94,7 @@ CameraManager& CameraManager::operator=(const CameraManager& obj)
 	this->lerpCount = obj.lerpCount;
 	if (afterCamera) { *this->afterCamera = *obj.afterCamera; }
 	this->afterCount = obj.afterCount;
+	this->isLerpMoving = obj.isLerpMoving;
 
 	return *this;
 }
@@ -107,7 +110,10 @@ void UsingCameraState::SetCameraM(CameraManager* cameraM)
 //-------------------------------------------------------------------------------------------------------
 void UsingCameraNormalState::Update()
 {
-
+	if (cameraM->isLerpMoving)
+	{
+		cameraM->ChangeUsingCameraState(new UsingCameraLerpMoveState);
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------

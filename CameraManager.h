@@ -58,6 +58,8 @@ public:
 	int lerpCountMax = 0;
 	Vec3 startEye, endEye, startTarget, endTarget, startUp, endUp;
 
+	bool isLerpMoving = false;
+
 public://ŠÖ”
 	CameraManager();
 	~CameraManager();
