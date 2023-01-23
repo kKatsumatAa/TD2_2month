@@ -14,6 +14,7 @@ class BlockManager
 	using Action = Block::Action;
 
 public:
+	BlockManager& operator=(const BlockManager& obj);
 
 	~BlockManager();
 

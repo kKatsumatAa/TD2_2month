@@ -159,6 +159,41 @@ void Player::OnCollision(Collider& collider)
 {
 }
 
+Player& Player::operator=(const Player& obj)
+{
+	this->model_ = obj.model_;
+	//this->textureHandle = obj.textureHandle;
+	this->stateMove  = obj.stateMove;
+	this->stateConnectTurn  = obj.stateConnectTurn;
+	//this->scaleTmp = obj.scaleTmp;
+	this->posYTmp  = obj.posYTmp;
+	this->posXTmp = obj.posXTmp;
+	this->isMove  = obj.isMove;
+	this->isWantToMove  = obj.isWantToMove;
+	this->isMoveNow  = obj.isMoveNow;
+	this->isConnect  = obj.isConnect;
+	this->isWantToConnect  = obj.isWantToConnect;
+	this->isCennectNow  = obj.isCennectNow;
+	this->isTurn  = obj.isTurn;
+	this->isisWantToTurn  = obj.isisWantToTurn;
+	this->isTurnNow  = obj.isTurnNow;
+	this->isGoal  = obj.isGoal;
+	this->moveDistance = obj.moveDistance;
+	this->moveEndPos = obj.moveEndPos;
+	this->moveStartPos = obj.moveStartPos;
+	this->bufferedPushSpace  = obj.bufferedPushSpace;
+	this->bufferedKeyArrow  = obj.bufferedKeyArrow;
+	//this->draw = obj.draw;
+	this->debugText_  = obj.debugText_;
+	this->blockM = obj.blockM;
+	this->playerSocket = obj.playerSocket;
+	this->connectE2M = obj.connectE2M;
+	this->tutorial = obj.tutorial;
+	this->cameraM = obj.cameraM;
+
+	return *this;
+}
+
 void Player::OnCollision2(Collider& collider)
 {
 }
@@ -431,7 +466,7 @@ void StateConnectP::Update()
 					player->cameraM->gameTurnCamera->GetTarget(),
 					player->cameraM->gameMainCamera->GetTarget(),
 					player->cameraM->gameTurnCamera->GetUp(),
-					player->cameraM->gameMainCamera->GetUp(), 
+					player->cameraM->gameMainCamera->GetUp(),
 					60);
 			}
 

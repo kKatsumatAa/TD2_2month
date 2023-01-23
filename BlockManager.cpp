@@ -5,6 +5,68 @@
 
 using namespace std;
 
+BlockManager& BlockManager::operator=(const BlockManager& obj)
+{
+	this->cameraM = obj.cameraM;
+	this->tutorial = obj.tutorial;
+	this->goalEffect = obj.goalEffect;
+	this->model_ = obj.model_;
+	this->goalCameraPoses = obj.goalCameraPoses;
+	this->block_ = obj.block_;
+	this->blocks_ = obj.blocks_;
+	this->worldmat_ = obj.worldmat_;
+	this->worldmats_ = obj.worldmats_;
+	this->axis_pos_ = obj.axis_pos_;
+	this->isCount = obj.isCount;
+	this->scale_ = obj.scale_;
+	this->prevBlockX = obj.prevBlockX;
+	this->prevBlockY = obj.prevBlockY;
+	this->selectTimer_ = obj.selectTimer_;
+	this->changedAction_ = obj.changedAction_;
+	this->isChanged_ = obj.isChanged_;
+	this->isRightRolling = obj.isRightRolling;
+	this->isLeftRolling = obj.isLeftRolling;
+	this->rotateCount = obj.rotateCount;
+	this->angle_ = obj.angle_;
+	this->distancePosPlayer = obj.distancePosPlayer;
+	this->connectEM = obj.connectEM;
+	this->effectCount = obj.effectCount;
+	this->isWaitBlock = obj.isWaitBlock;
+	this->blockWaitTimer = obj.blockWaitTimer;
+	this->loadForm_ = obj.loadForm_;
+	this->loadForms_ = obj.loadForms_;
+	this->loadWorldmats_ = obj.loadWorldmats_;
+	this->stageWidth_ = obj.stageWidth_;
+	this->stageHeight_ = obj.stageHeight_;
+	this->pushedCount_ = obj.pushedCount_;
+	this->needGoalCount = obj.needGoalCount;
+
+	for (int i = 0; i < blockWidth; i++)
+	{
+		for (int j = 0; j < blockHeight; j++)
+		{
+			this->isGoal_[i][j] = obj.isGoal_[i][j];
+			this->beforeTransY[i][j] = obj.beforeTransY[i][j];
+			this->isPushed[i][j] = obj.isPushed[i][j];
+			this->isOverLap_[i][j] = obj.isOverLap_[i][j];
+			this->beforeTurn_[i][j] = obj.beforeTurn_[i][j];
+			this->isUp[i][j] = obj.isUp[i][j];
+			this->isDown[i][j] = obj.isDown[i][j];
+			this->isTurn[i][j] = obj.isTurn[i][j];
+			this->distancePos[i][j] = obj.distancePos[i][j];
+			this->comparisonPos[i][j] = obj.comparisonPos[i][j];
+			this->transforms[i][j] = obj.transforms[i][j];
+			this->beforeForm_[i][j] = obj.beforeForm_[i][j];
+			this->action_[i][j] = obj.action_[i][j];
+			this->isAxis_[i][j] = obj.isAxis_[i][j];
+			this->form_[i][j] = obj.form_[i][j];
+			this->formTmp_[i][j] = obj.formTmp_[i][j];
+		}
+	}
+
+	return *this;
+}
+
 BlockManager::~BlockManager()
 {
 
@@ -839,19 +901,19 @@ bool BlockManager::CollisionBlockToBlock(Vec3 blockPos, Vec3 comPos)
 void BlockManager::ResetBlock()
 {
 	needGoalCount = 0;
-	
+
 	for (int i = 0; i < stageWidth_; i++)
 	{
 		for (int j = 0; j < stageHeight_; j++)
 		{
 			//ブロックの座標を設定
 			form_[i][j] = loadForms_[i][j];
-			if(form_[i][j] == Form::GOAL)
+			if (form_[i][j] == Form::GOAL)
 			{
 				isGoal_[i][j] = true;
 				form_[i][j] = Form::LOCKED;
 			}
-			else if(form_[i][j] == Form::BUTTON)
+			else if (form_[i][j] == Form::BUTTON)
 			{
 				needGoalCount++;
 				isGoal_[i][j] = false;
@@ -1011,7 +1073,7 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 			{
 				isGoal_[i][j] = false;
 			}
-			
+
 			//引数で受け取った形状を保存。
 			//上記の項目はリセットの際に再設定
 			loadForms_[i][j] = forms[i][j];

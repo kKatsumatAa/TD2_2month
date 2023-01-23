@@ -440,7 +440,7 @@ void Scene::Initialize()
 	player = std::make_unique<Player>();
 	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), tutorial.get(), cameraM.get(), model[0], &debugText);
 
-
+	GetBackManager::GetInstance()->Initialize(player.get(), playerSocket.get(), blockManager);
 
 	//ステート変更
 	ChangeState(new SceneStageSelect);
