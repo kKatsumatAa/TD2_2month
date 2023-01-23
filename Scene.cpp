@@ -131,19 +131,12 @@ void SceneGame::Initialize()
 	scene->tutorial->Initialize();
 	scene->goalE->Initialize(scene->cameraM.get());
 	scene->stageManager->Initialize(scene->blockManager);
+
+	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager,scene->cameraM.get());
 }
 
 void SceneGame::Update()
 {
-	//if (scene->player->isGoal)
-	//{
-	//	scene->cameraM->usingCamera = scene->cameraM->goalEffectCamera.get();
-	//}
-	//else
-	//{
-	//	scene->cameraM->usingCamera = scene->cameraM->goalEffectCamera.get();
-	//}
-
 	if (!scene->player->isGoal) {
 
 
@@ -172,6 +165,11 @@ void SceneGame::Update()
 			scene->connectE2M->Initialize();
 			scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
 			scene->tutorial->Initialize();
+			GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager,scene->cameraM.get());
+		}
+		if (KeyboardInput::GetInstance().KeyTrigger(DIK_Z))
+		{
+			GetBackManager::GetInstance()->GetBack();
 		}
 	}
 	ParticleManager::GetInstance()->Update(&scene->cameraM.get()->usingCamera->viewMat, &scene->cameraM.get()->usingCamera->projectionMat);
@@ -440,7 +438,7 @@ void Scene::Initialize()
 	player = std::make_unique<Player>();
 	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), tutorial.get(), cameraM.get(), model[0], &debugText);
 
-
+	//GetBackManager::GetInstance()->Initialize(player.get(), playerSocket.get(), blockManager);
 
 	//ステート変更
 	ChangeState(new SceneStageSelect);

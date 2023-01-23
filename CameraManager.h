@@ -70,4 +70,7 @@ public://ŠÖ”
 
 	//ˆÚ“®‚ÌüŒ`•âŠ®‚ğn‚ß‚é
 	void BegineLerpUsingCamera(Vec3 startEye, Vec3 endEye, Vec3 startTarget, Vec3 endTarget, Vec3 startUp, Vec3 endUp, int time, Camera* afterCamera = nullptr, int afterCount = 0);
+
+
+	CameraManager& operator=(const CameraManager& obj);
 };

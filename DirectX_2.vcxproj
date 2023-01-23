@@ -161,6 +161,7 @@
     <ClCompile Include="DebugText.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="DirLight.cpp" />
+    <ClCompile Include="GetBackManager.cpp" />
     <ClCompile Include="GoalEffect.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="DebugText.h" />
     <ClInclude Include="DirectX.h" />
     <ClInclude Include="DirLight.h" />
+    <ClInclude Include="GetBackManager.h" />
     <ClInclude Include="GoalEffect.h" />
     <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="KeyboardInput.h" />

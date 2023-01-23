@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "GetBackManager.h"
 
 
 void Player::ChangeStateTurnConnect(PlayerState* state)
@@ -159,6 +160,45 @@ void Player::OnCollision(Collider& collider)
 {
 }
 
+Player& Player::operator=(const Player& obj)
+{
+	this->Initialize(obj.moveDistance, obj.blockM, obj.playerSocket, obj.connectE2M, obj.tutorial, obj.cameraM, obj.model_, obj.debugText_);
+
+	//*this->model_ = *obj.model_;
+	//*this->textureHandle = *obj.textureHandle;
+	*this->stateMove = *obj.stateMove;
+	*this->stateConnectTurn = *obj.stateConnectTurn;//deleteされちゃうものはポインタの中身だけ
+	this->posYTmp = obj.posYTmp;
+	this->posXTmp = obj.posXTmp;
+	this->isMove = obj.isMove;
+	this->isWantToMove = obj.isWantToMove;
+	this->isMoveNow = obj.isMoveNow;
+	this->isConnect = obj.isConnect;
+	this->isWantToConnect = obj.isWantToConnect;
+	this->isCennectNow = obj.isCennectNow;
+	this->isTurn = obj.isTurn;
+	this->isisWantToTurn = obj.isisWantToTurn;
+	this->isTurnNow = obj.isTurnNow;
+	this->isGoal = obj.isGoal;
+	this->moveDistance = obj.moveDistance;
+	this->moveEndPos = obj.moveEndPos;
+	this->moveStartPos = obj.moveStartPos;
+	this->bufferedPushSpace = obj.bufferedPushSpace;
+	this->bufferedKeyArrow = obj.bufferedKeyArrow;
+	//this->draw = obj.draw;
+	//*this->debugText_ = *obj.debugText_;
+	this->blockM = obj.blockM;
+	this->playerSocket = obj.playerSocket;
+	//this->connectE2M = obj.connectE2M;
+	this->tutorial = obj.tutorial;
+	this->cameraM = obj.cameraM;
+	this->worldTransform_ = obj.worldTransform_;
+	this->worldTransform_.SetWorld();
+	this->velocity = obj.velocity;
+
+	return *this;
+}
+
 void Player::OnCollision2(Collider& collider)
 {
 }
@@ -249,6 +289,9 @@ void StateNormalMoveP::Update()
 				player->tutorial->AddStateNum();
 			}
 
+			//一手戻る機能に記録
+			GetBackManager::GetInstance()->SaveDatas();
+
 			player->ChangeStateMove(new StateMoveP);
 		}
 		//無かった時
@@ -291,6 +334,7 @@ void StateMoveP::Update()
 	{
 		player->isMove = false;
 		player->posXTmp = player->GetWorldPos().x;
+
 		player->ChangeStateMove(new StateNormalMoveP);
 	}
 }
@@ -303,8 +347,13 @@ void StateMoveP::Draw(Camera* camera, Model* model)
 //--------------------------------------------------------------------------
 void StateNormalConTurP::Update()
 {
+	if (player->isConnect)
+	{
+		player->ChangeStateTurnConnect(new StateConnectP);
+	}
+
 	//繋ぐ
-	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) || player->bufferedPushSpace) && !player->isMove)
+	else if (((KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) || player->bufferedPushSpace) && !player->isMove))
 	{
 		//ボタンがあったら
 		if (player->blockM->GetPosIsGear(player->GetWorldPos()) /*&& !player->isMove*/)
@@ -358,6 +407,9 @@ void StateNormalConTurP::Update()
 			}
 
 			player->ChangeStateTurnConnect(new StateConnectP);
+		
+			//一手戻る機能に記録
+			GetBackManager::GetInstance()->SaveDatas();
 		}
 		else
 		{
@@ -375,7 +427,12 @@ void StateConnectP::Update()
 {
 	player->blockM->UpdateConnect(player->GetWorldPos());
 
-	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) || player->bufferedPushSpace) && !player->isMove)
+	if (player->isTurnNow)
+	{
+		player->ChangeStateTurnConnect(new StateTurnP);
+	}
+
+	else if ((KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) || player->bufferedPushSpace) && !player->isMove)
 	{
 		//押したところがボタンだったら
 		if (player->blockM->CheckAxisGear(player->GetWorldPos()))
@@ -407,6 +464,9 @@ void StateConnectP::Update()
 			}
 
 			player->ChangeStateTurnConnect(new StateTurnP);
+
+			//一手戻る機能に記録
+			GetBackManager::GetInstance()->SaveDatas();
 		}
 		else
 		{
@@ -431,7 +491,7 @@ void StateConnectP::Update()
 					player->cameraM->gameTurnCamera->GetTarget(),
 					player->cameraM->gameMainCamera->GetTarget(),
 					player->cameraM->gameTurnCamera->GetUp(),
-					player->cameraM->gameMainCamera->GetUp(), 
+					player->cameraM->gameMainCamera->GetUp(),
 					60);
 			}
 
