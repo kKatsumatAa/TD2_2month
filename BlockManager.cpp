@@ -1044,9 +1044,7 @@ void BlockManager::AppearGoal()
 					}
 				}
 			}
-			else if (pushedCount_ < needGoalCount)
-				}
-			}
+			
 			else if (pushedCount_ < needGoalCount)
 			{
 				if(isGoal_[i][j] == true)
@@ -1119,20 +1117,16 @@ void BlockManager::ResetBlock()
 			form_[i][j] = loadForms_[i][j];
 			
 			if(form_[i][j] == Form::BUTTON)
+			{
+				needGoalCount++;
+			}
 			else if(form_[i][j] == Form::Electric)
 			{
 				isElec[i][j] = true;
 			}
-			else
-			{
-				isGoal_[i][j] = false;
-			}
-			worldmats_[i][j] = loadWorldmats_[i][j];
-
 			
 			isGoal_[i][j] = false;
 			
-			}
 			worldmats_[i][j] = loadWorldmats_[i][j];
 
 			worldmats_[i][j].SetWorld();
@@ -1146,6 +1140,9 @@ void BlockManager::ResetBlock()
 			beforeTurn_[i][j] = form_[i][j];
 			//押されているかどうか
 			isPushed[i][j] = false;
+			isElec[i][j] = false;
+			//Y座標を浮かせるフラグを初期化
+			isUp[i][j] = false;
 		}
 	}
 
@@ -1164,10 +1161,7 @@ void BlockManager::ResetBlock()
 					form_[i][j] = Form::LOCKED;
 				}
 			}
-			isElec[i][j] = false;
-			//Y座標を浮かせるフラグを初期化
-			isUp[i][j] = false;
-
+			
 		}
 	}
 
@@ -1292,16 +1286,20 @@ void BlockManager::SetStage(const int &stageWidth, const int &stageHeight, std::
 	{
 		for(int j = 0; j < stageHeight; j++)
 		{
-			
+			worldmats_[i][j].trans = worldmats[i][j].trans;
+			loadWorldmats_[i][j].trans = worldmats[i][j].trans;
+			form_[i][j] = forms[i][j];
+
 			if (form_[i][j] == Form::BUTTON)
-				form_[i][j] = Form::LOCKED;
+			{
+				needGoalCount++;
 			}
-			else if (form_[i][j] == Form::BUTTON)
-			
+			else if(form_[i][j] == Form::Electric)
+			{
+				isElec[i][j] = true;
+			}
+
 			isGoal_[i][j] = false;
-			
-				isGoal_[i][j] = false;
-			}
 			
 			//引数で受け取った形状を保存。
 			//上記の項目はリセットの際に再設定
