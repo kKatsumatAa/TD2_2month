@@ -845,6 +845,81 @@ void BlockManager::RepositBlock()
 							}
 						}
 					}
+					if(isElec[i][j] == true && form_[i][j] != Form::NONE && form_[i][j] != Form::LOCKED)
+					{
+						//同じ座標ではないとき
+						if(i != k || j != l)
+						{
+							//右
+							if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans))
+							{
+								//電気ブロックから見て→右方向の処理(電気フラグを変える処理)
+								if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+								{
+									//一回も通っていなかったら
+								}
+							}
+							else
+							{
+								//一回も通っていなかったら
+								if(isElec[k][l] == true)
+								{
+									isElec[k][l] = false;
+								}
+							}
+							//左
+							if(BlockJunction(worldmats_[k][l].trans, worldmats_[i][j].trans))
+							{
+								//電気ブロックから見て→左方向の処理(電気フラグを変える処理)
+								if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+								{
+									//一回も通っていなかったら
+								}
+							}
+							else
+							{
+								//一回も通っていなかったら
+								if(isElec[k][l] == true)
+								{
+									isElec[k][l] = false;
+								}
+							}
+							//上
+							if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans))
+							{
+								//電気ブロックから見て→上方向の処理(電気フラグを変える処理)
+								if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+								{
+									//一回も通っていなかったら
+								}
+							}
+							else
+							{
+								//一回も通っていなかったら
+								if(isElec[k][l] == true)
+								{
+									isElec[k][l] = false;
+								}
+							}
+							//下
+							if(BlockJunction(worldmats_[k][l].trans, worldmats_[i][j].trans))
+							{
+								//電気ブロックから見て→下方向の処理(電気フラグを変える処理)
+								if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+								{
+									//一回も通っていなかったら
+								}
+							}
+							else
+							{
+								//一回も通っていなかったら
+								if(isElec[k][l] == true)
+								{
+									isElec[k][l] = false;
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -1023,6 +1098,9 @@ void BlockManager::AppearGoal()
 
 
 						blocks_[i][j]->SetScale({ 0,0,0 });
+
+						//カメラ演出
+						Vec3 goalPos = worldmats_[i][j].trans;
 
 						cameraM->BegineLerpUsingCamera(cameraM->usingCamera->GetEye(),
 							{ goalPos.x,goalPos.y + blockRadius_ * 4.0f,goalPos.z - blockRadius_ * 8.0f },
