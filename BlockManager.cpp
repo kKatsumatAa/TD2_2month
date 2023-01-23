@@ -117,8 +117,6 @@ void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tuto
 	//その他の設定
 	isCount = 1;
 
-	changedAction_ = false;
-	isChanged_ = false;
 	//回転
 
 	isRightRolling = false;
@@ -327,7 +325,7 @@ void BlockManager::UpdateConnect(Vec3 pos)
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 				&& action_[i][j] != Action::Connect)
 			{
-				if(form_[i][j] != Form::NONE)
+				if (form_[i][j] != Form::NONE && form_[i][j] != Form::BUTTON)
 				{
 					action_[i][j] = Action::Connect;
 					cameraM->usingCamera->CameraShake(15, 0.53f);
@@ -610,20 +608,23 @@ void BlockManager::UpdateOverlap()
 							/*beforeTurn_[i][j] = form_[i][j];
 							beforeTurn_[k][l] = form_[k][l];*/
 
-							if(form_[i][j] != Form::NONE && form_[k][l] != Form::NONE && form_[i][j] != Form::BUTTON && form_[k][l] != Form::BUTTON && form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
+							if (form_[i][j] != Form::NONE && form_[k][l] != Form::NONE && form_[i][j] != Form::BUTTON && form_[k][l] != Form::BUTTON)
 								//if (form_[i][j] != Form::GOAL && form_[k][l] != Form::GOAL)
 							{
-								//if(action_[i][j] == Action::Connect || action_[k][l] == Action::Connect)
 								//重なっているブロック両方を固定ブロック化
 
 								//ボタンを押さない回転の処理
 								//回転させる前の状態を保存
 								if(isTurn[i][j] == false || isTurn[k][l] == false)
 								{
+									if(form_[i][j] == Form::GOAL || form_[k][l] == Form::GOAL)
+									{
+										isPopGoal = false;
+									}
+
 									beforeTurn_[i][j] = form_[i][j];
 									beforeTurn_[k][l] = form_[k][l];
 
-									//���o
 									form_[i][j] = Form::LOCKED;
 									form_[k][l] = Form::LOCKED;
 
@@ -793,7 +794,10 @@ void BlockManager::RepositBlock()
 					//コネクトしているブロックを戻す処理
 					if(action_[i][j] == Action::Connect)
 					{
-						if(isOverlap == true)
+						if (isOverlap == true)
+
+							/*if (form_[i][j] == Form::LOCKED && form_[k][l] == Form::LOCKED &&
+								action_[i][j] == Action::Connect )*/
 						{
 							//重なっていたブロックを
 							if(form_[i][j] == Form::LOCKED)
@@ -827,6 +831,11 @@ void BlockManager::RepositBlock()
 										//回転する前の状態に戻す
 										form_[i][j] = beforeTurn_[i][j];
 										form_[k][l] = beforeTurn_[k][l];
+
+										if(form_[i][j] == Form::GOAL || form_[k][l] == Form::GOAL)
+										{
+											isPopGoal = true;
+										}
 
 										//回転したフラグをOFFに
 										isTurn[i][j] = false;
@@ -1007,33 +1016,38 @@ void BlockManager::AppearGoal()
 			{
 				if(isGoal_[i][j] == true && form_[i][j] != Form::GOAL)
 				{
-					form_[i][j] = Form::GOAL;
+					if(isTurn[i][j] == false)
+					{
+						isPopGoal = true;
+						form_[i][j] = Form::GOAL;
 
-					blocks_[i][j]->SetScale({ 0,0,0 });
 
-					//カメラ演出
-					Vec3 goalPos = worldmats_[i][j].trans;
+						blocks_[i][j]->SetScale({ 0,0,0 });
 
-					cameraM->BegineLerpUsingCamera(cameraM->usingCamera->GetEye(),
-						{ goalPos.x,goalPos.y + blockRadius_ * 4.0f,goalPos.z - blockRadius_ * 8.0f },
-						cameraM->usingCamera->GetTarget(),
-						{ goalPos.x,goalPos.y + blockRadius_ * 2.0f,goalPos.z },
-						cameraM->usingCamera->GetUp(),
-						{ 0,1.0f,0 },
-						90,
-						cameraM->usingCamera,
-						50
-					);
-					cameraM->usingCamera = cameraM->goalEffectCamera.get();
-					cameraM->Update();
-					cameraM->usingCamera->CameraShake(30, 1.0f);
-					//エフェクト
-					ParticleManager::GetInstance()->GenerateRandomParticle(50, 120, 0.5f,
-						{ worldmats_[i][j].trans.x,worldmats_[i][j].trans.y + blockRadius_ * 2.0f, worldmats_[i][j].trans.z },
-						0.4f, 0, { 1.0f,0.3f,0.2f,1.0f }, { 1.0f,1.0f,0,0 });
+						cameraM->BegineLerpUsingCamera(cameraM->usingCamera->GetEye(),
+							{ goalPos.x,goalPos.y + blockRadius_ * 4.0f,goalPos.z - blockRadius_ * 8.0f },
+							cameraM->usingCamera->GetTarget(),
+							{ goalPos.x,goalPos.y + blockRadius_ * 2.0f,goalPos.z },
+							cameraM->usingCamera->GetUp(),
+							{ 0,1.0f,0 },
+							90,
+							cameraM->usingCamera,
+							50
+						);
+						cameraM->usingCamera = cameraM->goalEffectCamera.get();
+						cameraM->Update();
+						cameraM->usingCamera->CameraShake(30, 1.0f);
+						//エフェクト
+						ParticleManager::GetInstance()->GenerateRandomParticle(50, 120, 0.5f,
+							{ worldmats_[i][j].trans.x,worldmats_[i][j].trans.y + blockRadius_ * 2.0f, worldmats_[i][j].trans.z },
+							0.4f, 0, { 1.0f,0.3f,0.2f,1.0f }, { 1.0f,1.0f,0,0 });
+					}
 				}
 			}
-			else if(pushedCount_ < needGoalCount)
+			else if (pushedCount_ < needGoalCount)
+				}
+			}
+			else if (pushedCount_ < needGoalCount)
 			{
 				if(isGoal_[i][j] == true)
 				{
@@ -1099,18 +1113,12 @@ void BlockManager::ResetBlock()
 	{
 		for(int j = 0; j < stageHeight_; j++)
 		{
+			worldmats_[i][j] = loadWorldmats_[i][j];
+
 			//ブロックの座標を設定
 			form_[i][j] = loadForms_[i][j];
-			if(form_[i][j] == Form::GOAL)
-			{
-				isGoal_[i][j] = true;
-				form_[i][j] = Form::LOCKED;
-			}
-			else if(form_[i][j] == Form::BUTTON)
-			{
-				needGoalCount++;
-				isGoal_[i][j] = false;
-			}
+			
+			if(form_[i][j] == Form::BUTTON)
 			else if(form_[i][j] == Form::Electric)
 			{
 				isElec[i][j] = true;
@@ -1118,6 +1126,12 @@ void BlockManager::ResetBlock()
 			else
 			{
 				isGoal_[i][j] = false;
+			}
+			worldmats_[i][j] = loadWorldmats_[i][j];
+
+			
+			isGoal_[i][j] = false;
+			
 			}
 			worldmats_[i][j] = loadWorldmats_[i][j];
 
@@ -1130,17 +1144,34 @@ void BlockManager::ResetBlock()
 			action_[i][j] = Action::None;
 			//回転させる前の状態に、読み込んだ状態を入れる
 			beforeTurn_[i][j] = form_[i][j];
-			//Y座標を浮かせるフラグを初期化
-			isUp[i][j] = false;
-
-			isElec[i][j] = false;
+			//押されているかどうか
+			isPushed[i][j] = false;
 		}
 	}
 
-	changedAction_ = false;
-	isChanged_ = false;
-	//回転
+	//ボタンのあるステージと分ける場合、場合分け用
+	for(int i = 0; i < stageWidth_; i++)
+	{
+		for(int j = 0; j < stageHeight_; j++)
+		{
+			//ボタンがあればゴールを隠す
+			if(needGoalCount > 0)
+			{
+				if(form_[i][j] == Form::GOAL)
+				{
+					isPopGoal = false;
+					isGoal_[i][j] = true;
+					form_[i][j] = Form::LOCKED;
+				}
+			}
+			isElec[i][j] = false;
+			//Y座標を浮かせるフラグを初期化
+			isUp[i][j] = false;
 
+		}
+	}
+
+	//回転
 	isRightRolling = false;
 	isLeftRolling = false;
 
@@ -1261,32 +1292,38 @@ void BlockManager::SetStage(const int &stageWidth, const int &stageHeight, std::
 	{
 		for(int j = 0; j < stageHeight; j++)
 		{
-			worldmats_[i][j].trans = worldmats[i][j].trans;
-			loadWorldmats_[i][j].trans = worldmats[i][j].trans;
-			form_[i][j] = forms[i][j];
-			if(form_[i][j] == Form::GOAL)
-			{
-				goalPos = worldmats_[i][j].trans;
-				isGoal_[i][j] = true;
+			
+			if (form_[i][j] == Form::BUTTON)
 				form_[i][j] = Form::LOCKED;
 			}
-			else if(form_[i][j] == Form::BUTTON)
-			{
-				needGoalCount++;
+			else if (form_[i][j] == Form::BUTTON)
+			
+			isGoal_[i][j] = false;
+			
 				isGoal_[i][j] = false;
 			}
-			else if(form_[i][j] == Form::Electric)
-			{
-				isElec[i][j] = true;
-			}
-			else
-			{
-				isGoal_[i][j] = false;
-			}
-
+			
 			//引数で受け取った形状を保存。
 			//上記の項目はリセットの際に再設定
 			loadForms_[i][j] = forms[i][j];
+		}
+	}
+
+	//ボタンのあるステージと分ける場合、場合分け用
+	for(int i = 0; i < stageWidth_; i++)
+	{
+		for(int j = 0; j < stageHeight_; j++)
+		{
+			if(needGoalCount > 0)
+			{
+				if(form_[i][j] == Form::GOAL)
+				{
+					//ボタンのあるステージと分ける場合、場合分け必要
+					isPopGoal = false;
+					isGoal_[i][j] = true;
+					form_[i][j] = Form::LOCKED;
+				}
+			}
 		}
 	}
 }

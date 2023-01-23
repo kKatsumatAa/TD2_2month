@@ -266,5 +266,8 @@ private:
 	//通った場所を記憶するためのフラグ
 	bool isElec[blockWidth][blockHeight];
 
+	//ゴールが出現しているかどうか
+	bool isPopGoal;
+
 };
 
