@@ -1,7 +1,7 @@
 # Blender 3.3.1 MTL File: 'Mesh_NormalTile_01.blend'
 # www.blender.org
 
-newmtl Material_NormalBlock_BC
+newmtl Material
 Ns 250.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
