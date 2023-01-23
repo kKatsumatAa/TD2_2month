@@ -33,6 +33,8 @@ PlayerSocket& PlayerSocket::operator=(const PlayerSocket& obj)
 	this->plugInPosTmp = obj.plugInPosTmp;
 	//*this->connectE2M = *obj.connectE2M;
 	this->blockRadius = obj.blockRadius;
+	this->worldTransform_ = obj.worldTransform_;
+	this->velocity = obj.velocity;
 
 	return *this;
 }

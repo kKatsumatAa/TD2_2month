@@ -1,6 +1,7 @@
 #include "BlockManager.h"
 #include <fstream>
 #include "ParticleManager.h"
+#include "GetBackManager.h"
 
 
 using namespace std;
@@ -523,6 +524,9 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 			//パーティクル発生
 			GenerateParticleTurnBlock();
+
+			//一手戻る機能にセーブする
+			GetBackManager::GetInstance()->SaveDatas();
 		}
 
 	}
@@ -572,6 +576,9 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 			//パーティクル発生
 			GenerateParticleTurnBlock();
+
+			//一手戻る機能にセーブする
+			GetBackManager::GetInstance()->SaveDatas();
 		}
 	}
 
@@ -862,9 +869,9 @@ void BlockManager::AppearGoal()
 						{ goalPos.x,goalPos.y + blockRadius_ * 2.0f,goalPos.z },
 						cameraM->usingCamera->GetUp(),
 						{ 0,1.0f,0 },
-						90,
+						60,
 						cameraM->usingCamera,
-						50
+						35
 					);
 					cameraM->usingCamera = cameraM->goalEffectCamera.get();
 					cameraM->Update();

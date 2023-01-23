@@ -90,7 +90,7 @@ CameraManager& CameraManager::operator=(const CameraManager& obj)
 	this->endUp = obj.endUp;
 	this->lerpCountMax = obj.lerpCountMax;
 	this->lerpCount = obj.lerpCount;
-	//*this->afterCamera = *obj.afterCamera;
+	if (afterCamera) { *this->afterCamera = *obj.afterCamera; }
 	this->afterCount = obj.afterCount;
 
 	return *this;

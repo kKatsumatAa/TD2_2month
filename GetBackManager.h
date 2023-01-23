@@ -7,14 +7,15 @@
 class SaveData
 {
 public:
-	Player* player = nullptr;
-	PlayerSocket* playerSocket = nullptr;
-	BlockManager* blockManager = nullptr;
-	CameraManager* cameraManager = nullptr;
+	Player player ;
+	PlayerSocket playerSocket ;
+	BlockManager blockManager ;
+	CameraManager cameraManager ;
 
 public:
 	SaveData(const SaveData& obj) {};
 	SaveData() {}
+	~SaveData();
 };
 
 /// <summary>
