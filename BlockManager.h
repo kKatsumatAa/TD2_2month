@@ -232,5 +232,8 @@ private:
 	//読み込んだボタンの数から必要な押す数を入れておく
 	int needGoalCount;
 
+	//ゴールが出現しているかどうか
+	bool isPopGoal;
+
 };
 
