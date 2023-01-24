@@ -184,7 +184,7 @@ void SceneGame::Update()
 		}
 	}
 	//ステージセレクトに戻る
-	else if (KeyboardInput::GetInstance().KeyTrigger(DIK_Q))
+	else if (KeyboardInput::GetInstance().KeyTrigger(DIK_Q)|| KeyboardInput::GetInstance().KeyTrigger(DIK_ESCAPE))
 	{
 		scene->cameraM->usingCamera = scene->cameraM->stageSelectCamera.get();
 		scene->ChangeState(new SceneStageSelect);
