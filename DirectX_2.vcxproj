@@ -185,6 +185,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteCommon.cpp" />
     <ClCompile Include="StageManager.cpp" />
+    <ClCompile Include="StageSelectManager.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="Util.cpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteCommon.h" />
     <ClInclude Include="StageManager.h" />
+    <ClInclude Include="StageSelectManager.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="Util.h" />
