@@ -429,6 +429,9 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 	if (isLeftRolling == false && isRightRolling == false && (KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D)))
 	{
+		//一手戻る機能にセーブする
+		GetBackManager::GetInstance()->SaveDatas();
+
 		isRightRolling = true;
 		rotateCount = 0;
 		angle_ = 0;
@@ -446,6 +449,9 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 	if (isLeftRolling == false && isRightRolling == false && (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A)))
 	{
+		//一手戻る機能にセーブする
+		GetBackManager::GetInstance()->SaveDatas();
+
 		isLeftRolling = true;
 		rotateCount = 0;
 		angle_ = 0;
@@ -507,9 +513,6 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 			//パーティクル発生
 			GenerateParticleTurnBlock();
-
-			//一手戻る機能にセーブする
-			GetBackManager::GetInstance()->SaveDatas();
 		}
 
 	}
@@ -559,9 +562,6 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 			//パーティクル発生
 			GenerateParticleTurnBlock();
-
-			//一手戻る機能にセーブする
-			GetBackManager::GetInstance()->SaveDatas();
 		}
 	}
 
@@ -855,14 +855,14 @@ void BlockManager::AppearGoal()
 						//カメラ演出
 						Vec3 goalPos = worldmats_[i][j].trans;
 
-						cameraM->BegineLerpUsingCamera(cameraM->usingCamera->GetEye(),
+						cameraM->BegineLerpUsingCamera(cameraM->gameMainCamera->GetEye(),
 							{ goalPos.x,goalPos.y + blockRadius_ * 4.0f,goalPos.z - blockRadius_ * 8.0f },
-							cameraM->usingCamera->GetTarget(),
+							cameraM->gameMainCamera->GetTarget(),
 							{ goalPos.x,goalPos.y + blockRadius_ * 2.0f,goalPos.z },
-							cameraM->usingCamera->GetUp(),
+							cameraM->gameMainCamera->GetUp(),
 							{ 0,1.0f,0 },
 							90,
-							cameraM->usingCamera,
+							cameraM->gameMainCamera.get(),
 							50
 						);
 						cameraM->usingCamera = cameraM->goalEffectCamera.get();

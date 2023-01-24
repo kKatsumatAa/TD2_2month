@@ -92,7 +92,7 @@ CameraManager& CameraManager::operator=(const CameraManager& obj)
 	this->endUp = obj.endUp;
 	this->lerpCountMax = obj.lerpCountMax;
 	this->lerpCount = obj.lerpCount;
-	if (afterCamera) { *this->afterCamera = *obj.afterCamera; }
+	if (obj.afterCamera) { this->afterCamera = obj.afterCamera; }
 	this->afterCount = obj.afterCount;
 	this->isLerpMoving = obj.isLerpMoving;
 
@@ -142,6 +142,8 @@ void UsingCameraLerpMoveState::Update()
 			{
 				cameraM->usingCamera = cameraM->afterCamera;
 			}
+
+			cameraM->isLerpMoving = false;
 
 			cameraM->ChangeUsingCameraState(new UsingCameraNormalState);
 		}
