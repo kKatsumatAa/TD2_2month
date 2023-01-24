@@ -20,18 +20,13 @@ void GetBackManager::Initialize(Player* player, PlayerSocket* playerSocket, Bloc
 	blockManager_ = blockManager;
 	cameraManager_ = cameraM;
 
-	SaveDatas();
+	//SaveDatas();
 }
 
 void GetBackManager::SaveDatas()
 {
 	saveData = new SaveData;
 
-	//新たに場所を確保してそこにコピー
-	/*saveData->player = new Player();
-	saveData->playerSocket = new PlayerSocket;
-	saveData->blockManager = new BlockManager;
-	saveData->cameraManager = new CameraManager;*/
 	//中身のみコピー(ポインターを渡しても同じものなので)
 	saveData->player.operator=(*player_);
 	saveData->playerSocket = *playerSocket_;
@@ -70,8 +65,4 @@ void GetBackManager::GetBack()
 //-----------------------------
 SaveData::~SaveData()
 {
-	//delete this->blockManager;
-	//delete this->cameraManager;
-	//delete this->player;
-	//delete this->playerSocket;
 }
