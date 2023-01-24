@@ -302,7 +302,7 @@ void Scene::Initialize()
 		TextureManager::LoadGraph(L"Resources/ascii.png", debugTextHandle);
 		TextureManager::LoadGraph(L"Resources/image/effect1.png", texhandle[1]);
 		//クリア
-		TextureManager::LoadGraph(L"Resources/image/Temp_GameClearScene.png", texhandle[2]);
+		TextureManager::LoadGraph(L"Resources/image/clear.png", texhandle[2]);
 	}
 
 	//model
