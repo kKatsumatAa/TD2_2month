@@ -38,79 +38,29 @@ void SceneTitle::DrawSprite()
 //セレクト画面
 void SceneStageSelect::Initialize()
 {
-	this->selectNumMax = scene->stageManager->stageMax;
-	this->selectNum = scene->stageManager->selectStage;
-
-	for (int i = 0; i < this->selectNumMax; i++)
-	{
-		object[i].worldMat->scale = { stageImageRadius,stageImageRadius,1.0f };
-		//object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f),0,0 };
-		object[i].worldMat->SetWorld();
-	}
-	this->isLerpMoving = true;
+	scene->lightManager->SetCircleShadowActive(0, false);
+	scene->stageSelectM->Initialize(scene->stageManager.get());
 }
 
 void SceneStageSelect::Update()
 {
-	//十字キーで選択
-	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_A)) /*&& !this->isLerpMoving*/)
+	scene->stageSelectM->Update();
+
+	//選択されたら
+	if (scene->stageSelectM->isSelect)
 	{
-		if (this->selectNum > 0)
-		{
-			selectNum--;
-			this->isLerpMoving = true;
-			this->lerpCount = 0;
-		}
-	}
-	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_D)) /*&& !this->isLerpMoving*/)
-	{
-		if (this->selectNum < this->selectNumMax)
-		{
-			selectNum++;
-			this->isLerpMoving = true;
-			this->lerpCount = 0;
-		}
-	}
-
-	//イージングで動かす
-	if (isLerpMoving)
-	{
-		lerpCount++;
-
-		for (int i = 0; i < this->selectNumMax; i++)
-		{
-			object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),0,0 };
-			object[i].worldMat->SetWorld();
-		}
-
-		if (lerpCount >= lerpCountMax)
-		{
-			isLerpMoving = false;
-		}
-	}
-
-	//選択確定
-	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
-	{
-		if (selectNum == STAGE::TUTORIAL) { scene->isTutorial = true; }
-		else                              { scene->isTutorial = false; }
-
-		scene->stageManager->SelectStage(selectNum);
-
 		scene->ChangeState(new SceneGame);
 	}
 }
 
 void SceneStageSelect::Draw()
 {
-	for (int i = 0; i < this->selectNumMax; i++)
-	{
-		object[i].DrawCube3D(object[i].worldMat, &scene->cameraM->usingCamera->viewMat, &scene->cameraM->usingCamera->projectionMat);
-	}
+	scene->stageSelectM->Draw(scene->cameraM.get());
 }
 
 void SceneStageSelect::DrawSprite()
 {
+	scene->stageSelectM->DrawSprite();
 }
 
 
@@ -118,6 +68,9 @@ void SceneStageSelect::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
+	//丸影
+	scene->lightManager->SetCircleShadowActive(0, true);
+
 	//カメラをゲームのメインカメラに
 	scene->cameraM.get()->usingCamera = scene->cameraM->gameMainCamera.get();
 	scene->cameraM->Initialize();
@@ -149,7 +102,7 @@ void SceneGame::Update()
 		Vec3 pos = scene->player->GetWorldPos();
 		scene->playerSocket->Update({ pos.x,pos.y + scene->player->GetRadius(),pos.z });
 
-		if (scene->isTutorial)
+		if (scene->stageSelectM->isTutorial)
 		{
 			scene->tutorial->Update();
 		}
@@ -184,7 +137,7 @@ void SceneGame::Update()
 		}
 	}
 	//ステージセレクトに戻る
-	else if (KeyboardInput::GetInstance().KeyTrigger(DIK_Q))
+	else if (KeyboardInput::GetInstance().KeyTrigger(DIK_Q)|| KeyboardInput::GetInstance().KeyTrigger(DIK_ESCAPE))
 	{
 		scene->cameraM->usingCamera = scene->cameraM->stageSelectCamera.get();
 		scene->ChangeState(new SceneStageSelect);
@@ -205,7 +158,7 @@ void SceneGame::Draw()
 
 void SceneGame::DrawSprite()
 {
-	if (scene->isTutorial)
+	if (scene->stageSelectM->isTutorial)
 	{
 		scene->tutorial->Draw();
 	}
@@ -315,6 +268,8 @@ Scene::~Scene()
 	connectE2M.reset();
 	tutorial.reset();
 	goalE.reset();
+	stageSelectM.reset();
+	stageManager.reset();
 	imGuiManager->Finalize();
 	delete imGuiManager;
 	delete lightManager;
@@ -347,7 +302,7 @@ void Scene::Initialize()
 		TextureManager::LoadGraph(L"Resources/ascii.png", debugTextHandle);
 		TextureManager::LoadGraph(L"Resources/image/effect1.png", texhandle[1]);
 		//クリア
-		TextureManager::LoadGraph(L"Resources/image/Temp_GameClearScene.png", texhandle[2]);
+		TextureManager::LoadGraph(L"Resources/image/clear.png", texhandle[2]);
 	}
 
 	//model
@@ -395,8 +350,9 @@ void Scene::Initialize()
 	//3Dオブジェクトにライトをセット(全体で一つを共有)
 	Object::SetLight(lightManager);
 	lightManager->SetDirLightActive(0, true);
-	lightManager->SetDirLightActive(1, false);
+	lightManager->SetDirLightActive(1, true);
 	lightManager->SetDirLightActive(2, false);
+	lightManager->SetDirLightDir(1,XMVectorSet(0,0,1.0f,0));
 	//点光源
 	for (int i = 0; i < 6; i++)
 	{
@@ -438,7 +394,9 @@ void Scene::Initialize()
 	player = std::make_unique<Player>();
 	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), tutorial.get(), cameraM.get(), model[0], &debugText);
 
-	//GetBackManager::GetInstance()->Initialize(player.get(), playerSocket.get(), blockManager);
+	//ステージセレクトマネージャー
+	stageSelectM = std::make_unique<StageSelectManager>();
+	stageSelectM->Initialize(stageManager.get());
 
 	//ステート変更
 	ChangeState(new SceneStageSelect);
