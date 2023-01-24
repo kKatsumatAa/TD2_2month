@@ -110,15 +110,17 @@ void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tuto
 
 			pushedCount_ = 0;
 
-			if(form_[i][j] == Form::Electric)
+			/*if(form_[i][j] == Form::Electric)
 			{
 				isElec[i][j] = true;
 			}
 			else
 			{
 				isElec[i][j] = false;
-			}
+			}*/
 
+			//電気初期化
+			InitializeElectric();
 		}
 	}
 
@@ -453,7 +455,19 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 					rotatePos.x = axis_pos_.x + GetVec3xM4(distancePosPlayer, worldMat.matWorld, 0).x;
 
 					rotatePos.z = axis_pos_.z + GetVec3xM4(distancePosPlayer, worldMat.matWorld, 0).z;
+
+					/*if(isElec[i][j] == true)
+					{
+						isElec[i][j] = false;
+					}*/
 				}
+
+			/*	if(isAxis_[i][j] == true)
+				{
+					isElec[i][j] = false;
+				}*/
+
+				
 			}
 		}
 
@@ -502,7 +516,16 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 
 					rotatePos.z = axis_pos_.z + GetVec3xM4(distancePosPlayer, worldMat.matWorld, 0).z;
 
+					/*if(isElec[i][j] == true)
+					{
+						isElec[i][j] = false;
+					}*/
 				}
+
+				/*if(isAxis_[i][j] == true)
+				{
+					isElec[i][j] = false;
+				}*/
 			}
 		}
 
@@ -528,10 +551,23 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 		//DownPosY();
 
 		UpdateOverlap();
-		/*if(isLeftRolling == false && isRightRolling == false)
+		
+		//再判定用に一旦リセットする
+		for(int i = 0; i < stageWidth_; i++)
 		{
-			UpdateElectric();
-		}*/
+			for(int j = 0; j < stageHeight_; j++)
+			{
+				/*if(isAxis_[i][j] == true)
+				{
+					isElec[i][j] = false;
+				}
+				if(isTurn[i][j] == true)
+				{
+					isElec[i][j] = false;
+				}*/
+				//isElec[i][j] = false;
+			}
+		}
 
 	}
 
@@ -544,6 +580,14 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 		{
 			for(int j = 0; j < stageHeight_; j++)
 			{
+				/*if(isAxis_[i][j] == true)
+				{
+					isElec[i][j] = false;
+				}
+				if(isTurn[i][j] == true)
+				{
+					isElec[i][j] = false;
+				}*/
 				isElec[i][j] = false;
 			}
 		}
@@ -574,7 +618,7 @@ bool BlockManager::GetIsGoal(Vec3 &pos, bool isPlayer)
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
 				//そのブロックの形状はゴールかどうか
-				if(form_[i][j] == Form::GOAL)
+				if(form_[i][j] == Form::GOAL && isElec[i][j] == true)
 				{
 					//�S�[�����o
 					if(isPlayer)
@@ -763,9 +807,6 @@ void BlockManager::UpdateOverlap()
 						//同じ座標ではないとき
 						if(i != k || j != l)
 						{
-
-							
-
 							if(isElec[i][j] == true && form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
 							{
 								isElec[k][l] = true;
@@ -774,150 +815,8 @@ void BlockManager::UpdateOverlap()
 							{
 								isElec[k][l] = false;
 							}
-
-							/*if(isAxis_[i][j] == true)
-							{
-								isElec[i][j] = false;
-							}
-
-							if(isTurn[k][l] == true)
-							{
-								isElec[k][l] = false;
-							}
-							if(isTurn[i][j] == true)
-							{
-								isElec[i][j] = false;
-							}*/
-
 						}
 					}
-
-
-
-					////電気をつなぐ処理
-					//if(isElec[i][j] == true && form_[i][j] != Form::NONE && form_[i][j] != Form::LOCKED)
-					//{
-					//	//同じ座標ではないとき
-					//	if(i != k || j != l)
-					//	{
-					//		//右
-					//		if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
-					//		{
-					//			//電気ブロックから見て→右方向の処理(電気フラグを変える処理)
-					//			if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
-					//			{
-					//				//ここで四方のブロックを判別する
-					//				//斜め防止用
-					//				//一回も通っていなかったら
-					//				/*if(form_[k + 1][l] != Form::NONE && form_[k + 1][l] != Form::LOCKED && isElec[k + 1][l] == true)
-					//				{
-					//					isElec[k][l] = true;
-					//				}
-					//				if(form_[k][l + 1] == Form::NONE && form_[k][l + 1] != Form::LOCKED && isElec[k][l + 1] == true)
-					//				{
-					//					isElec[k][l] = true;
-					//				}
-					//				if(form_[prevBlockX][l] == Form::NONE && form_[prevBlockX][l] != Form::LOCKED && isElec[prevBlockX][l] == true)
-					//				{
-					//					isElec[k][l] = true;
-					//				}
-					//				if(form_[k][prevBlockY] == Form::NONE && form_[k][prevBlockY] != Form::LOCKED && isElec[k][prevBlockY] == true)
-					//				{
-					//					isElec[k][l] = true;
-					//				}*/
-
-					//				//isElec[k][l] = true;
-
-					//				////一回も通っていなかったら
-					//				//if(isElec[k][l] == false)
-					//				//{
-					//				//	isElec[k][l] = true;
-					//				//}
-					//			}
-					//		}
-					//		//左
-					//		if(BlockJunction(worldmats_[k][l].trans, worldmats_[i][j].trans))
-					//		{
-					//			//電気ブロックから見て→左方向の処理(電気フラグを変える処理)
-					//			if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
-					//			{
-					//				//一回も通っていなかったら
-					//				/*if(form_[k + 1][l] != Form::NONE && form_[k + 1][l] != Form::LOCKED && isElec[k + 1][l] == true)
-					//				{
-					//					isElec[k][l] = true;
-					//				}
-					//				if(form_[k][l + 1] != Form::NONE && form_[k][l + 1] != Form::LOCKED && isElec[k][l + 1] == true)
-					//				{
-					//					isElec[k][l] = true;
-					//				}
-					//				if(form_[prevBlockX][l] != Form::NONE && form_[prevBlockX][l] != Form::LOCKED && isElec[prevBlockX][l] == true)
-					//				{
-					//					isElec[k][l] = true;
-					//				}
-					//				if(form_[k][prevBlockY] != Form::NONE && form_[k][prevBlockY] != Form::LOCKED && isElec[k][prevBlockY] == true)
-					//				{
-					//					isElec[k][l] = true;
-					//				}*/
-
-					//				//isElec[k][l] = true;
-					//			}
-					//		}
-					//		//上
-					//		if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans))
-					//		{
-					//			//電気ブロックから見て→上方向の処理(電気フラグを変える処理)
-					//			if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
-					//			{
-					//				//一回も通っていなかったら
-					//				/*if(form_[k + 1][l] != Form::NONE && form_[k + 1][l] != Form::LOCKED && isElec[k + 1][l] == true)
-					//				{
-					//					isElec[k][l] = true;
-					//				}
-					//				if(form_[k][l + 1] != Form::NONE && form_[k][l + 1] != Form::LOCKED && isElec[k][l + 1] == true)
-					//				{
-					//					isElec[k][l] = true;
-					//				}
-					//				if(form_[prevBlockX][l] != Form::NONE && form_[prevBlockX][l] != Form::LOCKED && isElec[prevBlockX][l] == true)
-					//				{
-					//					isElec[k][l] = true;
-					//				}
-					//				if(form_[k][prevBlockY] != Form::NONE && form_[k][prevBlockY] != Form::LOCKED && isElec[k][prevBlockY] == true)
-					//				{
-					//					isElec[k][l] = true;
-					//				}*/
-
-					//				//isElec[k][l] = true;
-					//			}
-					//		}
-					//		//下
-					//		if(BlockJunction(worldmats_[k][l].trans, worldmats_[i][j].trans))
-					//		{
-					//			//電気ブロックから見て→下方向の処理(電気フラグを変える処理)
-					//			if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
-					//			{
-					//				//一回も通っていなかったら
-					//				/*if(form_[k + 1][l] != Form::NONE && form_[k + 1][l] != Form::LOCKED && isElec[k + 1][l] == true)
-					//				{
-					//					isElec[k][l] = true;
-					//				}
-					//				if(form_[k][l + 1] != Form::NONE && form_[k][l + 1] != Form::LOCKED && isElec[k][l + 1] == true)
-					//				{
-					//					isElec[k][l] = true;
-					//				}
-					//				if(form_[prevBlockX][l] != Form::NONE && form_[prevBlockX][l] != Form::LOCKED && isElec[prevBlockX][l] == true)
-					//				{
-					//					isElec[k][l] = true;
-					//				}
-					//				if(form_[k][prevBlockY] != Form::NONE && form_[k][prevBlockY] != Form::LOCKED && isElec[k][prevBlockY] == true)
-					//				{
-					//					isElec[k][l] = true;
-					//				}*/
-
-					//				//isElec[k][l] = true;
-					//			}
-					//		}
-					//	}
-					//}
 				}
 			}
 
@@ -941,6 +840,8 @@ void BlockManager::UpdateOverlap()
 			prevBlockX = i;
 		}
 	}
+
+
 }
 
 //重なっていたブロックを元に戻す処理
@@ -1026,101 +927,6 @@ void BlockManager::RepositBlock()
 							}
 						}
 					}
-
-					//isElec[i][j] = false;
-
-					if(isElec[i][j] == true && form_[i][j] != Form::NONE && form_[i][j] != Form::LOCKED)
-					{
-						//同じ座標ではないとき
-						if(i != k || j != l)
-						{
-
-							////右
-							//if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans))
-							//{
-							//	//電気ブロックから見て→右方向の処理(電気フラグを変える処理)
-							//	if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
-							//	{
-							//		//一回も通っていなかったら
-							//		if(isElec[k][l] == true)
-							//		{
-							//			isElec[k][l] = false;
-							//		}
-							//	}
-							//}
-							//else
-							//{
-							//	//一回も通っていたら
-							//	if(isElec[k][l] == true)
-							//	{
-							//		isElec[k][l] = false;
-							//	}
-							//}
-							////左
-							//if(BlockJunction(worldmats_[k][l].trans, worldmats_[i][j].trans))
-							//{
-							//	//電気ブロックから見て→左方向の処理(電気フラグを変える処理)
-							//	if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
-							//	{
-							//		//一回も通っていたら
-							//		if(isElec[k][l] == true)
-							//		{
-							//			isElec[k][l] = false;
-							//		}
-							//	}
-							//}
-							//else
-							//{
-							//	//一回も通っていなかったら
-							//	if(isElec[k][l] == true)
-							//	{
-							//		isElec[k][l] = false;
-							//	}
-							//}
-							////上
-							//if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans))
-							//{
-							//	//電気ブロックから見て→上方向の処理(電気フラグを変える処理)
-							//	if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
-							//	{
-							//		//一回も通っていたら
-							//		if(isElec[k][l] == true)
-							//		{
-							//			isElec[k][l] = false;
-							//		}
-							//	}
-							//}
-							//else
-							//{
-							//	//一回も通っていたら
-							//	if(isElec[k][l] == true)
-							//	{
-							//		isElec[k][l] = false;
-							//	}
-							//}
-							////下
-							//if(BlockJunction(worldmats_[k][l].trans, worldmats_[i][j].trans))
-							//{
-							//	//電気ブロックから見て→下方向の処理(電気フラグを変える処理)
-							//	if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
-							//	{
-							//		//一回も通っていなかったら
-							//		if(isElec[k][l] == true)
-							//		{
-							//			isElec[k][l] = false;
-							//		}
-							//	}
-							//}
-							//else
-							//{
-							//	//一回も通っていたら
-							//	if(isElec[k][l] == true)
-							//	{
-							//		isElec[k][l] = false;
-							//	}
-							//}
-						}
-					}
 				}
 			}
 		}
@@ -1128,130 +934,130 @@ void BlockManager::RepositBlock()
 
 }
 
-//電気ブロックからの電気をつける関数
-void BlockManager::ElectricCollision()
+//電気ブロックからの電気をつける初期化
+void BlockManager::InitializeElectric()
 {
-	//int prevBlockX = 0;
-	//int prevBlockY = 0;
+	int prevBlockX = 0;
+	int prevBlockY = 0;
 
-	//for(int i = 0; i < stageWidth_; i++)
-	//{
-	//	for(int j = 0; j < stageHeight_; j++)
-	//	{
-	//		//電気ブロックのところを電気が通っているように
-	//		if(form_[i][j] == Form::Electric)
-	//		{
-	//			isElec[i][j] = true;
-	//		}
+	for(int i = 0; i < stageWidth_; i++)
+	{
+		for(int j = 0; j < stageHeight_; j++)
+		{
+			//電気ブロックのところを電気が通っているように
+			if(form_[i][j] == Form::Electric)
+			{
+				isElec[i][j] = true;
+			}
 
-	//		if(isElec[i][j] == true)
-	//		{
-	//			//電気が通ってるブロックから見て、電気を通せるブロックがあるなら電気を通す
-	//			if(form_[i + 1][j] != Form::NONE && form_[i + 1][j] != Form::LOCKED)
-	//			{
-	//				//通っていなかったら
-	//				if(isElec[i + 1][j] == false)
-	//				{
-	//					isElec[i + 1][j] = true;
-	//					/*if(form_[i + 1][j] != Form::BUTTON && form_[i + 1][j] != Form::GEAR)
-	//					{
-	//						form_[i + 1][j] = Form::Electric;
-	//					}*/
-	//					//form_[i + 1][j] = Form::Electric;
-	//				}
-	//			}
-	//			else if(form_[i + 1][j] == Form::NONE || form_[i + 1][j] == Form::LOCKED)
-	//			{
-	//				isElec[i + 1][j] = false;
-	//			}
-	//			//←左方向の処理(電気フラグを変える処理)
+			if(isElec[i][j] == true)
+			{
+				//電気が通ってるブロックから見て、電気を通せるブロックがあるなら電気を通す
+				if(form_[i + 1][j] != Form::NONE && form_[i + 1][j] != Form::LOCKED)
+				{
+					//通っていなかったら
+					if(isElec[i + 1][j] == false)
+					{
+						isElec[i + 1][j] = true;
+						/*if(form_[i + 1][j] != Form::BUTTON && form_[i + 1][j] != Form::GEAR)
+						{
+							form_[i + 1][j] = Form::Electric;
+						}*/
+						//form_[i + 1][j] = Form::Electric;
+					}
+				}
+				else if(form_[i + 1][j] == Form::NONE || form_[i + 1][j] == Form::LOCKED)
+				{
+					isElec[i + 1][j] = false;
+				}
+				//←左方向の処理(電気フラグを変える処理)
 
-	//			if(form_[prevBlockX][j] != Form::NONE && form_[prevBlockX][j] != Form::LOCKED)
-	//			{
-	//				if(isElec[prevBlockX][j] == false)
-	//				{
-	//					isElec[prevBlockX][j] = true;
+				if(form_[prevBlockX][j] != Form::NONE && form_[prevBlockX][j] != Form::LOCKED)
+				{
+					if(isElec[prevBlockX][j] == false)
+					{
+						isElec[prevBlockX][j] = true;
 
-	//					/*if(form_[prevBlockX][j] != Form::BUTTON && form_[prevBlockX][j] != Form::GEAR)
-	//					{
-	//						form_[prevBlockX][j] = Form::Electric;
-	//					}*/
-	//					//form_[prevBlockX][j] = Form::Electric;
-	//				}
-	//			}
+						/*if(form_[prevBlockX][j] != Form::BUTTON && form_[prevBlockX][j] != Form::GEAR)
+						{
+							form_[prevBlockX][j] = Form::Electric;
+						}*/
+						//form_[prevBlockX][j] = Form::Electric;
+					}
+				}
 
-	//			else if(form_[prevBlockX][j] == Form::NONE || form_[prevBlockX][j] == Form::LOCKED)
-	//			{
-	//				isElec[prevBlockX][j] = false;
-	//			}
+				else if(form_[prevBlockX][j] == Form::NONE || form_[prevBlockX][j] == Form::LOCKED)
+				{
+					isElec[prevBlockX][j] = false;
+				}
 
-	//			//↑上方向の処理(電気フラグを変える処理)
-	//			if(form_[i][j + 1] != Form::NONE && form_[i][j + 1] != Form::LOCKED)
-	//			{
+				//↑上方向の処理(電気フラグを変える処理)
+				if(form_[i][j + 1] != Form::NONE && form_[i][j + 1] != Form::LOCKED)
+				{
 
-	//				if(isElec[i][j + 1] == false)
-	//				{
-	//					isElec[i][j + 1] = true;
-	//					/*if(form_[i][j + 1] != Form::BUTTON && form_[i][j + 1] != Form::GEAR)
-	//					{
-	//						form_[i][j + 1] = Form::Electric;
-	//					}*/
-	//					//form_[i][j + 1] = Form::Electric;
-	//				}
+					if(isElec[i][j + 1] == false)
+					{
+						isElec[i][j + 1] = true;
+						/*if(form_[i][j + 1] != Form::BUTTON && form_[i][j + 1] != Form::GEAR)
+						{
+							form_[i][j + 1] = Form::Electric;
+						}*/
+						//form_[i][j + 1] = Form::Electric;
+					}
 
-	//			}
-	//			else if(form_[i][j + 1] == Form::NONE || form_[i][j + 1] == Form::LOCKED)
-	//			{
-	//				isElec[i][j + 1] = false;
-	//			}
+				}
+				else if(form_[i][j + 1] == Form::NONE || form_[i][j + 1] == Form::LOCKED)
+				{
+					isElec[i][j + 1] = false;
+				}
 
-	//			//↓下方向の処理(電気フラグを変える処理)
-	//			if(form_[i][prevBlockY] != Form::NONE && form_[i][prevBlockY] != Form::LOCKED)
-	//			{
+				//↓下方向の処理(電気フラグを変える処理)
+				if(form_[i][prevBlockY] != Form::NONE && form_[i][prevBlockY] != Form::LOCKED)
+				{
 
-	//				if(isElec[i][prevBlockY] == false)
-	//				{
-	//					isElec[i][prevBlockY] = true;
-	//					/*if(form_[i][prevBlockY] != Form::BUTTON && form_[i][prevBlockY] != Form::GEAR)
-	//					{
-	//						form_[i][prevBlockY] = Form::Electric;
-	//					}*/
-	//					//form_[i][prevBlockY] = Form::Electric;
-	//				}
-	//			}
-	//			else if(form_[i][prevBlockY] == Form::NONE || form_[i][prevBlockY] == Form::LOCKED)
-	//			{
-	//				isElec[i][prevBlockY] = false;
-	//			}
+					if(isElec[i][prevBlockY] == false)
+					{
+						isElec[i][prevBlockY] = true;
+						/*if(form_[i][prevBlockY] != Form::BUTTON && form_[i][prevBlockY] != Form::GEAR)
+						{
+							form_[i][prevBlockY] = Form::Electric;
+						}*/
+						//form_[i][prevBlockY] = Form::Electric;
+					}
+				}
+				else if(form_[i][prevBlockY] == Form::NONE || form_[i][prevBlockY] == Form::LOCKED)
+				{
+					isElec[i][prevBlockY] = false;
+				}
 
-	//		}
+			}
 
-	//		//どこも電気が繋がっていなかったらOFFにする
-	//		if(isElec[i][prevBlockY] == false && isElec[i][j + 1] == false && isElec[prevBlockX][j] == false && isElec[i + 1][j] == false)
-	//		{
-	//			isElec[i][j] = false;
-	//		}
+			//どこも電気が繋がっていなかったらOFFにする
+			if(isElec[i][prevBlockY] == false && isElec[i][j + 1] == false && isElec[prevBlockX][j] == false && isElec[i + 1][j] == false)
+			{
+				isElec[i][j] = false;
+			}
 
-	//		if(prevBlockY >= stageHeight_ - 2)
-	//		{
-	//			prevBlockY = 0;
-	//		}
-	//		else
-	//		{
-	//			prevBlockY = j;
-	//		}
-	//	}
+			if(prevBlockY >= stageHeight_ - 2)
+			{
+				prevBlockY = 0;
+			}
+			else
+			{
+				prevBlockY = j;
+			}
+		}
 
-	//	//Y座標の一つ前のブロック番号を保存
-	//	if(prevBlockX >= stageWidth_ - 1)
-	//	{
-	//		prevBlockX = 0;
-	//	}
-	//	else
-	//	{
-	//		prevBlockX = i;
-	//	}
-	//}
+		//Y座標の一つ前のブロック番号を保存
+		if(prevBlockX >= stageWidth_ - 1)
+		{
+			prevBlockX = 0;
+		}
+		else
+		{
+			prevBlockX = i;
+		}
+	}
 
 	//電気ブロックの位置から繋げているので
 	//その前の[i][j]では値がtrueにならず

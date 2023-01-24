@@ -96,7 +96,7 @@ public:
 	void AppearGoal();
 
 	//電気ブロックの判定
-	void ElectricCollision();
+	void InitializeElectric();
 
 	//電気ブロックの更新処理
 	void UpdateElectric();
