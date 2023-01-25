@@ -36,6 +36,8 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 	this->distancePosPlayer = obj.distancePosPlayer;
 	this->connectEM = obj.connectEM;
 	this->effectCount = obj.effectCount;
+	this->effectCount2 = obj.effectCount2;
+
 	this->isWaitBlock = obj.isWaitBlock;
 	this->blockWaitTimer = obj.blockWaitTimer;
 	this->loadForm_ = obj.loadForm_;
@@ -74,6 +76,7 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 			this->form_[i][j] = obj.form_[i][j];
 			this->formTmp_[i][j] = obj.formTmp_[i][j];
 			this->isElec[i][j] = obj.isElec[i][j];
+			this->isDecisionElec[i][j] = obj.isDecisionElec[i][j];
 		}
 	}
 
@@ -218,6 +221,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 	angle_ = 0;
 
 	effectCount = 0;
+	effectCount2 = 0;
 
 	isPopedGoal = false;
 
@@ -301,7 +305,11 @@ void BlockManager::Update()
 void BlockManager::Draw(Camera* camera)
 {
 	bool isEffect = false;
+	bool isEffect2 = false;
+
 	effectCount++;
+	effectCount2++;
+
 
 	for (int i = 0; i < stageWidth_; i++)
 	{
@@ -330,12 +338,14 @@ void BlockManager::Draw(Camera* camera)
 			{
 				connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 15, 3, { 0.3f,0.3f,1.0f,0.95f });
 
-				isEffect = true;
+				isEffect2 = true;
 			}
 		}
 	}
 
 	if (isEffect) { effectCount = 0; isEffect = false; }
+	if (isEffect2) { effectCount2 = 0; isEffect2 = false; }
+
 }
 
 bool BlockManager::CheckPlayerOnBlock(Vec3 pos)
@@ -765,30 +775,30 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 		//}
 
-		for (int i = 0; i < stageWidth_; i++)
-		{
-			for (int j = 0; j < stageHeight_; j++)
-			{
-				for (int k = 0; k < stageWidth_; k++)
-				{
-					for (int l = 0; l < stageHeight_; l++)
-					{
-						if (BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
-						{
-							//同じ座標ではないとき
-							if (i != k || j != l)
-							{
-								if (isDecisionElec[i][j] == true && form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
-								{
-									isElec[k][l] = true;
-									isDecisionElec[i][j] = false;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+		//for (int i = 0; i < stageWidth_; i++)
+		//{
+		//	for (int j = 0; j < stageHeight_; j++)
+		//	{
+		//		for (int k = 0; k < stageWidth_; k++)
+		//		{
+		//			for (int l = 0; l < stageHeight_; l++)
+		//			{
+		//				if (BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
+		//				{
+		//					//同じ座標ではないとき
+		//					if (i != k || j != l)
+		//					{
+		//						if (isDecisionElec[i][j] == true && form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+		//						{
+		//							isElec[k][l] = true;
+		//							isDecisionElec[i][j] = false;
+		//						}
+		//					}
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
 
 		RepositBlock();
 	}
@@ -1007,12 +1017,12 @@ void BlockManager::UpdateOverlap()
 							if (isElec[i][j] == true && form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
 							{
 								isElec[k][l] = true;
-								isDecisionElec[k][l] = true;
+								//isDecisionElec[k][l] = true;
 							}
 							else if (form_[k][l] == Form::NONE || form_[k][l] == Form::LOCKED)
 							{
 								isElec[k][l] = false;
-								isDecisionElec[k][l] = false;
+								//isDecisionElec[k][l] = false;
 							}
 						}
 					}
@@ -1568,6 +1578,8 @@ void BlockManager::ResetBlock()
 
 			//Y座標を浮かせるフラグを初期化
 			isUp[i][j] = false;
+
+			isDecisionElec[i][j] = false;
 		}
 	}
 
@@ -1735,6 +1747,8 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 			//引数で受け取った形状を保存。
 			//上記の項目はリセットの際に再設定
 			loadForms_[i][j] = forms[i][j];
+
+			isDecisionElec[i][j] = false;
 		}
 	}
 
