@@ -45,6 +45,8 @@ BlockManager &BlockManager::operator=(const BlockManager &obj)
 	this->stageHeight_ = obj.stageHeight_;
 	this->pushedCount_ = obj.pushedCount_;
 	this->needGoalCount = obj.needGoalCount;
+	this->isPopGoal = obj.isPopGoal;
+	this->goalPos = obj.goalPos;
 
 	for(int i = 0; i < blockWidth; i++)
 	{
@@ -66,6 +68,7 @@ BlockManager &BlockManager::operator=(const BlockManager &obj)
 			this->isAxis_[i][j] = obj.isAxis_[i][j];
 			this->form_[i][j] = obj.form_[i][j];
 			this->formTmp_[i][j] = obj.formTmp_[i][j];
+			this->isElec[i][j] = obj.isElec[i][j];
 		}
 	}
 
@@ -206,11 +209,7 @@ void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tuto
 
 	effectCount = 0;
 
-	goRight = true;
-	goLeft = false;
-	goUp = false;
-	goDown = false;
-
+	
 }
 
 void BlockManager::Update()
@@ -484,16 +483,6 @@ void BlockManager::ReleseConectedBlock()
 void BlockManager::UpdateRotate(Vec3 &rotatePos)
 {
 	//回転させる前の座標を保存
-	if(isLeftRolling == false && isRightRolling == false)
-	{
-		for(int i = 0; i < blockWidth; i++)
-		{
-			for(int j = 0; j < blockHeight; j++)
-			{
-				preTransform[i][j] = worldmats_[i][j].trans;
-			}
-		}
-	}
 
 	if(isLeftRolling == false && isRightRolling == false && (KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D)))
 	{
@@ -1564,12 +1553,6 @@ void BlockManager::ResetBlock()
 	angle_ = 0;
 
 	effectCount = 0;
-
-	//各方向の判定フラグ
-	goRight = true;
-	goLeft = false;
-	goUp = false;
-	goDown = false;
 
 	pushedCount_ = 0;
 }

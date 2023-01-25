@@ -262,12 +262,6 @@ private:
 	//ゴールの保管用ポジション
 	Vec3 goalPos;
 
-	//各方向の判定フラグ
-	bool goRight;
-	bool goLeft;
-	bool goUp;
-	bool goDown;
-
 	//通った場所を記憶するためのフラグ
 	bool isElec[blockWidth][blockHeight];
 	bool isDecisionElec[blockWidth][blockHeight];
@@ -275,15 +269,5 @@ private:
 	//ゴールが出現しているかどうか
 	bool isPopGoal;
 
-	struct ditanceAndNum
-	{
-		float distance;
-		int num;
-		int X;
-		int Y;
-
-	};
-
-	Vec3 preTransform[blockWidth][blockHeight];
 };
 
