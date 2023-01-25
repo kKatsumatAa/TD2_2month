@@ -102,6 +102,7 @@ public:
 	void Draw();
 	void DrawSprite();
 
+	void StopAllWave();
 };
 
 class SceneTitle : public SceneState

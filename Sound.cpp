@@ -3,7 +3,7 @@
 IXAudio2MasteringVoice* Sound::masterVoice;
 ComPtr<IXAudio2> Sound::xAudio2_;
 std::map < std::string, Sound::SoundData> Sound::soundDatas_;
-std::string Sound::directoryPath_ = "Resources/sound/";
+std::string Sound::directoryPath_ = "Resources/Sounds/";
 
 Sound::Sound()
 {
