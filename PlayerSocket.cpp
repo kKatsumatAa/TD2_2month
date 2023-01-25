@@ -20,6 +20,25 @@ void PlayerSocket::OnCollision2(Collider& collider)
 {
 }
 
+PlayerSocket& PlayerSocket::operator=(const PlayerSocket& obj)
+{
+	this->Initialize(obj.connectE2M, obj.blockRadius, obj.model);
+
+	/**this->model = *obj.model;
+	*this->obj = *obj.obj;*/
+	this->isUsed = obj.isUsed;
+	*this->state = *obj.state;
+	this->startPos = obj.startPos;
+	this->endPos = obj.endPos;
+	this->plugInPosTmp = obj.plugInPosTmp;
+	//*this->connectE2M = *obj.connectE2M;
+	this->blockRadius = obj.blockRadius;
+	this->worldTransform_ = obj.worldTransform_;
+	this->velocity = obj.velocity;
+
+	return *this;
+}
+
 void PlayerSocket::Initialize(ConnectingEffect2Manager* connectE2M, float blockRadius, Model* model)
 {
 	assert(model);

@@ -161,6 +161,7 @@
     <ClCompile Include="DebugText.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="DirLight.cpp" />
+    <ClCompile Include="GetBackManager.cpp" />
     <ClCompile Include="GoalEffect.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
@@ -184,6 +185,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteCommon.cpp" />
     <ClCompile Include="StageManager.cpp" />
+    <ClCompile Include="StageSelectManager.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="Util.cpp" />
@@ -212,6 +214,7 @@
     <ClInclude Include="DebugText.h" />
     <ClInclude Include="DirectX.h" />
     <ClInclude Include="DirLight.h" />
+    <ClInclude Include="GetBackManager.h" />
     <ClInclude Include="GoalEffect.h" />
     <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="KeyboardInput.h" />
@@ -234,6 +237,7 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteCommon.h" />
     <ClInclude Include="StageManager.h" />
+    <ClInclude Include="StageSelectManager.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="Util.h" />

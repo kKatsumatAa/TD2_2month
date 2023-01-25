@@ -2,9 +2,75 @@
 #include <fstream>
 #include <complex>
 #include "ParticleManager.h"
+#include "GetBackManager.h"
 
 
 using namespace std;
+
+BlockManager& BlockManager::operator=(const BlockManager& obj)
+{
+	//this->Initialize(obj.connectEM,obj.tutorial,obj.cameraM,obj.goalEffect,)
+
+	//ポインタは削除される可能性があるので中身のみコピー
+	this->cameraM = obj.cameraM;
+	this->tutorial = obj.tutorial;
+	this->goalEffect = obj.goalEffect;
+	this->model_ = obj.model_;
+	this->goalCameraPoses = obj.goalCameraPoses;
+	this->block_ = obj.block_;
+	this->blocks_ = obj.blocks_;
+	this->worldmat_ = obj.worldmat_;
+	this->worldmats_ = obj.worldmats_;
+	this->axis_pos_ = obj.axis_pos_;
+	this->isCount = obj.isCount;
+	this->scale_ = obj.scale_;
+	//this->prevBlockX = obj.prevBlockX;
+	//this->prevBlockY = obj.prevBlockY;
+	//this->selectTimer_ = obj.selectTimer_;
+	//this->changedAction_ = obj.changedAction_;
+	//this->isChanged_ = obj.isChanged_;
+	this->isRightRolling = obj.isRightRolling;
+	this->isLeftRolling = obj.isLeftRolling;
+	this->rotateCount = obj.rotateCount;
+	this->angle_ = obj.angle_;
+	this->distancePosPlayer = obj.distancePosPlayer;
+	this->connectEM = obj.connectEM;
+	this->effectCount = obj.effectCount;
+	this->isWaitBlock = obj.isWaitBlock;
+	this->blockWaitTimer = obj.blockWaitTimer;
+	this->loadForm_ = obj.loadForm_;
+	this->loadForms_ = obj.loadForms_;
+	this->loadWorldmats_ = obj.loadWorldmats_;
+	this->stageWidth_ = obj.stageWidth_;
+	this->stageHeight_ = obj.stageHeight_;
+	this->pushedCount_ = obj.pushedCount_;
+	this->needGoalCount = obj.needGoalCount;
+
+	for (int i = 0; i < blockWidth; i++)
+	{
+		for (int j = 0; j < blockHeight; j++)
+		{
+			this->isGoal_[i][j] = obj.isGoal_[i][j];
+			this->beforeTransY[i][j] = obj.beforeTransY[i][j];
+			this->isPushed[i][j] = obj.isPushed[i][j];
+			this->isOverLap_[i][j] = obj.isOverLap_[i][j];
+			this->beforeTurn_[i][j] = obj.beforeTurn_[i][j];
+			this->isUp[i][j] = obj.isUp[i][j];
+			this->isDown[i][j] = obj.isDown[i][j];
+			this->isTurn[i][j] = obj.isTurn[i][j];
+			this->distancePos[i][j] = obj.distancePos[i][j];
+			this->comparisonPos[i][j] = obj.comparisonPos[i][j];
+			this->transforms[i][j] = obj.transforms[i][j];
+			this->beforeForm_[i][j] = obj.beforeForm_[i][j];
+			this->action_[i][j] = obj.action_[i][j];
+			this->isAxis_[i][j] = obj.isAxis_[i][j];
+			this->form_[i][j] = obj.form_[i][j];
+			this->formTmp_[i][j] = obj.formTmp_[i][j];
+		}
+	}
+
+	return *this;
+}
 
 BlockManager::~BlockManager()
 {
@@ -431,6 +497,9 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 
 	if(isLeftRolling == false && isRightRolling == false && (KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D)))
 	{
+		//一手戻る機能にセーブする
+		GetBackManager::GetInstance()->SaveDatas();
+
 		isRightRolling = true;
 		rotateCount = 0;
 		angle_ = 0;
@@ -448,6 +517,9 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 
 	if(isLeftRolling == false && isRightRolling == false && (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A)))
 	{
+		//一手戻る機能にセーブする
+		GetBackManager::GetInstance()->SaveDatas();
+
 		isLeftRolling = true;
 		rotateCount = 0;
 		angle_ = 0;
@@ -1296,14 +1368,14 @@ void BlockManager::AppearGoal()
 						//カメラ演出
 						Vec3 goalPos = worldmats_[i][j].trans;
 
-						cameraM->BegineLerpUsingCamera(cameraM->usingCamera->GetEye(),
+						cameraM->BegineLerpUsingCamera(cameraM->gameMainCamera->GetEye(),
 							{ goalPos.x,goalPos.y + blockRadius_ * 4.0f,goalPos.z - blockRadius_ * 8.0f },
-							cameraM->usingCamera->GetTarget(),
+							cameraM->gameMainCamera->GetTarget(),
 							{ goalPos.x,goalPos.y + blockRadius_ * 2.0f,goalPos.z },
-							cameraM->usingCamera->GetUp(),
+							cameraM->gameMainCamera->GetUp(),
 							{ 0,1.0f,0 },
 							90,
-							cameraM->usingCamera,
+							cameraM->gameMainCamera.get(),
 							50
 						);
 						cameraM->usingCamera = cameraM->goalEffectCamera.get();

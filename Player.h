@@ -171,6 +171,9 @@ public:
 	void OnCollision(Collider& collider)override;
 	//
 	void OnCollision2(Collider& collider)override;
+
+
+	Player& operator=(const Player& obj);
 };
 
 

@@ -11,6 +11,8 @@
 #include"BlockManager.h"
 #include"StageManager.h"
 #include"CameraManager.h"
+#include"GetBackManager.h"
+#include"StageSelectManager.h"
 
 
 
@@ -87,10 +89,9 @@ public:
 	std::unique_ptr<Tutorial> tutorial;
 
 	BlockManager* blockManager = nullptr;
-	
-	std::unique_ptr<StageManager> stageManager= nullptr;
 
-	bool isTutorial = false;
+	std::unique_ptr<StageManager> stageManager = nullptr;
+	std::unique_ptr<StageSelectManager>stageSelectM;
 
 public:
 	~Scene();
@@ -100,7 +101,7 @@ public:
 	void Update();
 	void Draw();
 	void DrawSprite();
-	
+
 };
 
 class SceneTitle : public SceneState
@@ -118,17 +119,7 @@ public:
 class SceneStageSelect : public SceneState
 {
 private:
-	int selectNum = 0;
-	int selectNumMax = 0;
 
-	Object object[15];
-
-	int lerpCount = 0;
-	const int lerpCountMax = 20;
-
-	bool isLerpMoving = false;
-
-	float stageImageRadius = 5.0f;
 
 public:
 	void Initialize()override;

@@ -37,6 +37,7 @@ void CameraManager::Initialize()
 	lerpCountMax = 0;
 	afterCount = 0;
 	afterCamera = nullptr;
+	isLerpMoving = false;
 
 	ChangeUsingCameraState(new UsingCameraNormalState);
 }
@@ -68,8 +69,34 @@ void CameraManager::BegineLerpUsingCamera(Vec3 startEye, Vec3 endEye, Vec3 start
 	this->lerpCount = 0;
 	this->afterCamera = afterCamera;
 	this->afterCount = afterCount;
+	isLerpMoving = true;
 
 	ChangeUsingCameraState(new UsingCameraLerpMoveState);
+}
+
+CameraManager& CameraManager::operator=(const CameraManager& obj)
+{
+	this->Initialize();
+
+	*this->state = *obj.state;//ステートなど、ポインタは削除される可能性があるので中身のみコピー
+	this->usingCamera = obj.usingCamera;
+	*this->stageSelectCamera.get() = *obj.stageSelectCamera.get();
+	*this->gameMainCamera.get() = *obj.gameMainCamera.get();
+	*this->gameTurnCamera.get() = *obj.gameTurnCamera.get();
+	*this->goalEffectCamera.get() = *obj.goalEffectCamera.get();
+	this->startEye = obj.startEye;
+	this->endEye = obj.endEye;
+	this->startTarget = obj.startTarget;
+	this->endTarget = obj.endTarget;
+	this->startUp = obj.startUp;
+	this->endUp = obj.endUp;
+	this->lerpCountMax = obj.lerpCountMax;
+	this->lerpCount = obj.lerpCount;
+	if (obj.afterCamera) { this->afterCamera = obj.afterCamera; }
+	this->afterCount = obj.afterCount;
+	this->isLerpMoving = obj.isLerpMoving;
+
+	return *this;
 }
 
 
@@ -83,7 +110,10 @@ void UsingCameraState::SetCameraM(CameraManager* cameraM)
 //-------------------------------------------------------------------------------------------------------
 void UsingCameraNormalState::Update()
 {
-
+	if (cameraM->isLerpMoving)
+	{
+		cameraM->ChangeUsingCameraState(new UsingCameraLerpMoveState);
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------
@@ -112,6 +142,8 @@ void UsingCameraLerpMoveState::Update()
 			{
 				cameraM->usingCamera = cameraM->afterCamera;
 			}
+
+			cameraM->isLerpMoving = false;
 
 			cameraM->ChangeUsingCameraState(new UsingCameraNormalState);
 		}
