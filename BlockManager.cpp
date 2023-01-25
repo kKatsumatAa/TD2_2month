@@ -48,6 +48,10 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 	this->isPopGoal = obj.isPopGoal;
 	this->goalPos = obj.goalPos;
 	//isPopedGoal はやんなくて良い
+	this->isPopGoalEffect = obj.isPopGoalEffect;
+	this->goalPopX = obj.goalPopX;
+	this->goalPopY = obj.goalPopY;
+
 
 	for (int i = 0; i < blockWidth; i++)
 	{
@@ -100,6 +104,8 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 	this->tutorial = tutorial;
 	this->goalEffect = goalEffect;
 	this->goalCameraPoses.clear();
+
+
 
 	//std::unique_ptr<Block> newBullet = std::make_unique<Block>();
 
@@ -215,6 +221,10 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 	effectCount = 0;
 
 	isPopedGoal = false;
+
+	this->isPopGoalEffect = false;
+	//this->goalPopX = 0;
+	//this->goalPopY = 0;
 }
 
 void BlockManager::Update()
@@ -271,6 +281,21 @@ void BlockManager::Update()
 			isChanged_ = true;
 			selectTimer_ = kSelectTime;
 		}
+	}
+
+	//カメラ演出の後にゴール出現
+	if (cameraM != nullptr &&(cameraM->isLerpEnd && cameraM->isLerpMoving && isPopGoal && isPopGoalEffect))
+	{
+		isPopedGoal = true;
+		isPopGoalEffect = false;
+		isPopGoal = false;
+		form_[goalPopX][goalPopY] = Form::GOAL;
+		blocks_[goalPopX][goalPopY]->SetScale({ 0,0,0 });
+
+		//エフェクト
+		ParticleManager::GetInstance()->GenerateRandomParticle(50, 120, 0.5f,
+			{ worldmats_[goalPopX][goalPopY].trans.x,worldmats_[goalPopX][goalPopY].trans.y + blockRadius_ * 2.0f, worldmats_[goalPopX][goalPopY].trans.z },
+			0.4f, 0, { 1.0f,0.3f,0.2f,1.0f }, { 1.0f,1.0f,0,0 });
 	}
 }
 
@@ -1385,19 +1410,19 @@ void BlockManager::AppearGoal()
 		{
 			//もしボタンが押されていたら
 			//ゴールを出現させる
-			if (pushedCount_ >= needGoalCount)
+			if (pushedCount_ >= needGoalCount && isPopGoal == false)
 			{
 				if (isGoal_[i][j] == true && form_[i][j] != Form::GOAL)
 				{
 					if (isTurn[i][j] == false)
 					{
 						isPopGoal = true;
-						form_[i][j] = Form::GOAL;
+
+						goalPopX = i; goalPopY = j;
 
 						//ステージで一回のみ
 						if (!isPopedGoal)
 						{
-							isPopedGoal = true;
 
 							//カメラ演出
 							Vec3 goalPos = worldmats_[i][j].trans;
@@ -1415,15 +1440,25 @@ void BlockManager::AppearGoal()
 							cameraM->usingCamera = cameraM->goalEffectCamera.get();
 							cameraM->Update();
 							cameraM->usingCamera->CameraShake(30, 1.0f);
-							
+						}
+						else
+						{
+							//カメラ演出
+							Vec3 goalPos = worldmats_[i][j].trans;
+
+							cameraM->BegineLerpUsingCamera(cameraM->gameTurnCamera->GetEye(),
+								cameraM->gameTurnCamera->GetEye(),
+								cameraM->gameTurnCamera->GetTarget(),
+								cameraM->gameTurnCamera->GetTarget(),
+								cameraM->gameTurnCamera->GetUp(),
+								cameraM->gameTurnCamera->GetUp(),
+								2,
+								cameraM->gameTurnCamera.get(),
+								1
+							);
 						}
 
-						blocks_[i][j]->SetScale({ 0,0,0 });
-
-						//エフェクト
-						ParticleManager::GetInstance()->GenerateRandomParticle(50, 120, 0.5f,
-							{ worldmats_[i][j].trans.x,worldmats_[i][j].trans.y + blockRadius_ * 2.0f, worldmats_[i][j].trans.z },
-							0.4f, 0, { 1.0f,0.3f,0.2f,1.0f }, { 1.0f,1.0f,0,0 });
+						isPopGoalEffect = true;
 
 						//チュートリアル
 						if (tutorial->GetState() == TUTORIAL::BUTTON && tutorial->GetStateNum() == 0)
@@ -1574,6 +1609,8 @@ void BlockManager::ResetBlock()
 
 	//リセットは戻す
 	isPopedGoal = false;
+
+	this->isPopGoalEffect = false;
 }
 
 void BlockManager::GenerateParticleTurnBlock()

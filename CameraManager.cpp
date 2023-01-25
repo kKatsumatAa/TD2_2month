@@ -143,6 +143,7 @@ void UsingCameraLerpMoveState::Update()
 	if (cameraM->lerpCount >= cameraM->lerpCountMax)
 	{
 		cameraM->afterCount--;
+		cameraM->isLerpMoving = false;
 
 		if (cameraM->afterCount <= 0)
 		{
@@ -152,7 +153,7 @@ void UsingCameraLerpMoveState::Update()
 				cameraM->usingCamera = cameraM->afterCamera;
 			}
 
-			cameraM->isLerpMoving = false;
+			
 
 			cameraM->ChangeUsingCameraState(new UsingCameraNormalState);
 		}
