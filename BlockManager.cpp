@@ -120,8 +120,10 @@ void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tuto
 			}*/
 
 			//電気初期化
-			InitializeElectric();
+			
 		}
+
+		InitializeElectric();
 	}
 
 	//その他の設定
@@ -147,26 +149,49 @@ void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tuto
 
 void BlockManager::Update()
 {
+	////再判定用に一旦リセットする
+	//for(int i = 0; i < stageWidth_; i++)
+	//{
+	//	for(int j = 0; j < stageHeight_; j++)
+	//	{
+	//		/*if(isAxis_[i][j] == true)
+	//		{
+	//			isElec[i][j] = false;
+	//		}
+	//		if(isTurn[i][j] == true)
+	//		{
+	//			isElec[i][j] = false;
+	//		}*/
+	//		isElec[i][j] = false;
+	//	}
+	//}
+
+	//for(int i = 0; i < stageWidth_; i++)
+	//{
+	//	for(int j = 0; j < stageHeight_; j++)
+	//	{
+	//		if(form_[i][j] == Form::Electric)
+	//		{
+	//			isElec[i][j] = true;
+	//		}
+	//	}
+	//}
+
 	for(int i = 0; i < stageWidth_; i++)
 	{
 		for(int j = 0; j < stageHeight_; j++)
 		{
-
+			//ゴールの出現
 			AppearGoal();
-
+			//演出用にY座標を下げる
 			DownPosY();
 
 			blocks_[i][j]->Updata();
 
 		}
-
 	}
 
-	if(isLeftRolling == false && isRightRolling == false)
-	{
-		UpdateElectric();
-	}
-
+	//ConectElec();	
 
 	//状態を変える時の遅延
 	if(isChanged_ == false)
@@ -392,6 +417,17 @@ void BlockManager::ReleseConectedBlock()
 
 void BlockManager::UpdateRotate(Vec3 &rotatePos)
 {
+	//回転させる前の座標を保存
+	if(isLeftRolling == false && isRightRolling == false)
+	{
+		for(int i = 0; i < blockWidth; i++)
+		{
+			for(int j = 0; j < blockHeight; j++)
+			{
+				preTransform[i][j] = worldmats_[i][j].trans;
+			}
+		}
+	}
 
 	if(isLeftRolling == false && isRightRolling == false && (KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D)))
 	{
@@ -421,6 +457,8 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 			for(int j = 0; j < blockHeight; j++)
 			{
 				distancePos[i][j] = worldmats_[i][j].trans - axis_pos_;
+
+				
 			}
 		}
 
@@ -459,17 +497,29 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 					
 				}
 
-				if(action_[i][j] == Action::Connect)
+				/*if(action_[i][j] == Action::Connect)
 				{
 					isElec[i][j] = false;
 				}
 
-			/*	if(isAxis_[i][j] == true)
+				if(isAxis_[i][j] == true)
 				{
 					isElec[i][j] = false;
 				}*/
+			}
+		}
 
-				
+		for(int i = 0; i < stageWidth_; i++)
+		{
+			for(int j = 0; j < stageHeight_; j++)
+			{
+				for(int k = 0; k < stageWidth_; k++)
+				{
+					for(int l = 0; l < stageHeight_; l++)
+					{
+
+					}
+				}
 			}
 		}
 
@@ -524,10 +574,29 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 					}*/
 				}
 
-				/*if(isAxis_[i][j] == true)
+				/*if(action_[i][j] == Action::Connect)
+				{
+					isElec[i][j] = false;
+				}
+
+				if(isAxis_[i][j] == true)
 				{
 					isElec[i][j] = false;
 				}*/
+			}
+		}
+
+		for(int i = 0; i < stageWidth_; i++)
+		{
+			for(int j = 0; j < stageHeight_; j++)
+			{
+				for(int k = 0; k < stageWidth_; k++)
+				{
+					for(int l = 0; l < stageHeight_; l++)
+					{
+
+					}
+				}
 			}
 		}
 
@@ -550,47 +619,47 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 
 	if(isLeftRolling == false && isRightRolling == false)
 	{
-		//DownPosY();
-
 		UpdateOverlap();
-		
-		//再判定用に一旦リセットする
-		for(int i = 0; i < stageWidth_; i++)
-		{
-			for(int j = 0; j < stageHeight_; j++)
-			{
-				/*if(isAxis_[i][j] == true)
-				{
-					isElec[i][j] = false;
-				}
-				if(isTurn[i][j] == true)
-				{
-					isElec[i][j] = false;
-				}*/
-				//isElec[i][j] = false;
-			}
-		}
-
 	}
-
 	else if(isLeftRolling == true || isRightRolling == true)
 	{
 		UpPosY();
 
-		//再判定用に一旦リセットする
+		//毎フレーム行う
 		for(int i = 0; i < stageWidth_; i++)
 		{
 			for(int j = 0; j < stageHeight_; j++)
 			{
-				/*if(isAxis_[i][j] == true)
+				for(int k = 1; k < stageWidth_ - 1; k++)
 				{
-					isElec[i][j] = false;
+					//隣接しているかどうか
+					if(BlockJunction(worldmats_[i][j].trans, worldmats_[i][k].trans) == true)
+					{
+						//同じ座標ではないとき
+						//隣接しているブロックが繋がるブロックなら繋げる。
+						if(isElec[i][j] == true && form_[i][k] != Form::NONE && form_[i][k] != Form::LOCKED)
+						{
+							isElec[i][k] = true;
+						}
+						//それ以外は通らないように
+						else
+						{
+							isElec[i][k] = false;
+						}
+					}
+
+					if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][j].trans) == true)
+					{
+						if(isElec[i][j] == true && form_[k][j] != Form::NONE && form_[k][j] != Form::LOCKED)
+						{
+							isElec[k][j] = true;
+						}
+						else
+						{
+							isElec[k][j] = false;
+						}
+					}
 				}
-				if(isTurn[i][j] == true)
-				{
-					isElec[i][j] = false;
-				}*/
-				//isElec[i][j] = false;
 			}
 		}
 
@@ -776,14 +845,14 @@ void BlockManager::UpdateOverlap()
 								isTurn[i][j] = true;
 								isTurn[k][l] = true;
 
-								if(isTurn[i][j] == true)
+								/*if(isTurn[i][j] == true)
 								{
 									isElec[i][j] = false;
 								}
 								if(isTurn[k][l] == true)
 								{
 									isElec[k][l] = false;
-								}
+								}*/
 
 								//押したフラグをONに
 								if(isPushed[i][j] == false)
@@ -844,6 +913,143 @@ void BlockManager::UpdateOverlap()
 	}
 
 
+}
+
+void BlockManager::ConectElec()
+{
+	//std::list<ditanceAndNum> distance;
+
+	//Vec3 elecPos;
+
+	//for(int i = 0; i < stageWidth_; i++)
+	//{
+	//	for(int j = 0; j < stageHeight_; j++)
+	//	{
+	//		if(form_[i][j] == Form::Electric)
+	//		{
+ //				elecPos = worldmats_[i][j].trans;
+	//		}
+	//	}
+	//}
+
+	//for(int i = 0; i < stageWidth_; i++)
+	//{
+	//	for(int j = 0; j < stageHeight_; j++)
+	//	{
+	//		if(form_[i][j] != Form::Electric && form_[i][j] != Form::NONE)
+	//		{
+	//			ditanceAndNum a = { (worldmats_[i][j].trans - elecPos).GetLength(), 0, i, j };
+
+	//			distance.push_back(a);
+	//		}
+	//	}
+	//}
+
+	//std::list<ditanceAndNum> distance2;
+
+	//std::list<ditanceAndNum>::iterator itr;
+
+	//itr = distance.begin();
+
+	//for(int i = 0; i < distance.size(); i++)
+	//{
+	//	if(i == 0)
+	//	{
+	//		distance2.push_back(*itr);
+	//	}
+	//	else
+	//	{
+	//		std::list<ditanceAndNum>::iterator itr2;
+
+	//		itr2 = distance2.begin();
+
+	//		for(int j = 0; j < distance2.size(); j++)
+	//		{
+	//			//小さかったらその前に入れる
+	//			if(itr->distance <= itr2->distance )
+	//			{
+	//				//itr2--;
+	//				distance2.insert(itr2, *itr);
+	//				break;
+	//			}
+	//			//大きいかったら
+	//			else if(itr->distance > itr2->distance)
+	//			{
+	//				itr2++;
+	//			}
+	//		}
+	//		
+	//	}
+	//}
+
+	//std::sort(distance.begin(), distance.end());
+
+	//毎フレーム行う
+	//for(int i = 0; i < stageWidth_; i++)
+	//{
+	//	for(int j = 0; j < stageHeight_; j++)
+	//	{
+	//		for(int k = 0; k < stageWidth_; k++)
+	//		{
+	//			for(int l = 0; l < stageHeight_; l++)
+	//			{
+	//				//もし[i][j]が[k][l]番のブロックと隣接していたら
+	//				if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
+	//				{
+	//					//同じ座標ではないとき
+	//					if(i != k || j != l)
+	//					{
+	//						if(isElec[i][j] == true && form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+	//						{
+	//							isElec[k][l] = true;
+	//						}
+	//						else if(form_[k][l] == Form::NONE || form_[k][l] == Form::LOCKED)
+	//						{
+	//							isElec[k][l] = false;
+	//						}
+	//					}
+	//				}
+
+	//			}
+	//		}
+	//	}
+	//}
+
+	//毎フレーム行う
+	for(int i = 0; i < stageWidth_; i++)
+	{
+		for(int j = 0; j < stageHeight_; j++)
+		{
+			for(int k = 1; k < stageWidth_ - 1; k++)
+			{
+				if(BlockJunction(worldmats_[i][j].trans, worldmats_[i][k].trans) == true)
+				{
+					//同じ座標ではないとき
+					
+					if(isElec[i][j] == true && form_[i][k] != Form::NONE && form_[i][k] != Form::LOCKED)
+					{
+							isElec[i][k] = true;
+					}
+					/*else 
+					{
+							isElec[i][k] = false;
+					}*/
+				}
+
+				if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][j].trans) == true)
+				{
+					if(isElec[i][j] == true && form_[k][j] != Form::NONE && form_[k][j] != Form::LOCKED)
+					{
+						isElec[k][j] = true;
+					}
+					/*else 
+					{
+						isElec[k][j] = false;
+					}*/
+				}
+			}
+		}
+	}
 }
 
 //重なっていたブロックを元に戻す処理
@@ -1067,33 +1273,6 @@ void BlockManager::InitializeElectric()
 	//再度for文を繰り返す。
 }
 
-void BlockManager::UpdateElectric()
-{
-	//for(int i = 0; i < stageWidth_; i++)
-	//{
-	//	for(int j = 0; j < stageHeight_; j++)
-	//	{
-	//		isElec[i][j] = false;
-	//	}
-	//}
-
-	////下からたどっていくので
-	////電気ブロックの[i]または[j]の数分
-	////関数を繰り返し実行する必要がある
-	//ElectricCollision();
-	//ElectricCollision();
-	//ElectricCollision();
-
-}
-
-//if(CollisionBlockToBlock(goalPos, elecPos))
-//{
-//	//クリアフラグ
-//	return true;
-//}
-
-//return false;
-
 void BlockManager::AppearGoal()
 {
 	for(int i = 0; i < stageWidth_; i++)
@@ -1175,21 +1354,21 @@ bool BlockManager::BlockJunction(Vec3 Pos1, Vec3 Pos2)
 	float resultZ = Pos2.z - Pos1.z;
 
 	//各方向の距離
-	float distanceX = std::abs(resultX);
-	float distanceZ = std::abs(resultZ);
+	float distanceX = std::fabs(resultX);
+	float distanceZ = std::fabs(resultZ);
 
 	//中心座標との距離
-	float distance = std::sqrt((distanceX * 2) + (distanceZ * 2));
+	Vec3 disvec = { distanceX,0,distanceZ };
+	float distance = disvec.GetLength();
 
 	//斜めの対策用に距離で比較
 	if(distance <= blockRadius_ * 2 + EPSILON)
 	{
 		return true;
 	}
-	else
-	{
-		return false;
-	}
+	
+	return false;
+	
 }
 
 void BlockManager::ResetBlock()
@@ -1258,6 +1437,8 @@ void BlockManager::ResetBlock()
 			}
 
 		}
+		//電気の初期化
+		InitializeElectric();
 	}
 
 	//回転

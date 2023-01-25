@@ -98,11 +98,12 @@ public:
 	//電気ブロックの判定
 	void InitializeElectric();
 
-	//電気ブロックの更新処理
-	void UpdateElectric();
-
 	//隣接しているかどうか
 	bool BlockJunction(Vec3 Pos1, Vec3 Pos2);
+
+	void ConectElec();
+
+	void SerchDistance();
 	
 public:
 
@@ -272,5 +273,15 @@ private:
 	//ゴールが出現しているかどうか
 	bool isPopGoal;
 
+	struct ditanceAndNum
+	{
+		float distance;
+		int num;
+		int X;
+		int Y;
+
+	};
+
+	Vec3 preTransform[blockWidth][blockHeight];
 };
 
