@@ -47,6 +47,7 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 	this->needGoalCount = obj.needGoalCount;
 	this->isPopGoal = obj.isPopGoal;
 	this->goalPos = obj.goalPos;
+	//isPopedGoal はやんなくて良い
 
 	for (int i = 0; i < blockWidth; i++)
 	{
@@ -212,7 +213,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 
 	effectCount = 0;
 
-
+	isPopedGoal = false;
 }
 
 void BlockManager::Update()
@@ -1392,25 +1393,32 @@ void BlockManager::AppearGoal()
 						isPopGoal = true;
 						form_[i][j] = Form::GOAL;
 
+						//ステージで一回のみ
+						if (!isPopedGoal)
+						{
+							isPopedGoal = true;
+
+							//カメラ演出
+							Vec3 goalPos = worldmats_[i][j].trans;
+
+							cameraM->BegineLerpUsingCamera(cameraM->gameTurnCamera->GetEye(),
+								{ goalPos.x,goalPos.y + blockRadius_ * 4.0f,goalPos.z - blockRadius_ * 8.0f },
+								cameraM->gameTurnCamera->GetTarget(),
+								{ goalPos.x,goalPos.y + blockRadius_ * 2.0f,goalPos.z },
+								cameraM->gameTurnCamera->GetUp(),
+								{ 0,1.0f,0 },
+								90,
+								cameraM->gameTurnCamera.get(),
+								50
+							);
+							cameraM->usingCamera = cameraM->goalEffectCamera.get();
+							cameraM->Update();
+							cameraM->usingCamera->CameraShake(30, 1.0f);
+							
+						}
 
 						blocks_[i][j]->SetScale({ 0,0,0 });
 
-						//カメラ演出
-						Vec3 goalPos = worldmats_[i][j].trans;
-
-						cameraM->BegineLerpUsingCamera(cameraM->gameTurnCamera->GetEye(),
-							{ goalPos.x,goalPos.y + blockRadius_ * 4.0f,goalPos.z - blockRadius_ * 8.0f },
-							cameraM->gameTurnCamera->GetTarget(),
-							{ goalPos.x,goalPos.y + blockRadius_ * 2.0f,goalPos.z },
-							cameraM->gameTurnCamera->GetUp(),
-							{ 0,1.0f,0 },
-							90,
-							cameraM->gameTurnCamera.get(),
-							50
-						);
-						cameraM->usingCamera = cameraM->goalEffectCamera.get();
-						cameraM->Update();
-						cameraM->usingCamera->CameraShake(30, 1.0f);
 						//エフェクト
 						ParticleManager::GetInstance()->GenerateRandomParticle(50, 120, 0.5f,
 							{ worldmats_[i][j].trans.x,worldmats_[i][j].trans.y + blockRadius_ * 2.0f, worldmats_[i][j].trans.z },
@@ -1560,6 +1568,9 @@ void BlockManager::ResetBlock()
 	effectCount = 0;
 
 	pushedCount_ = 0;
+
+	//リセットは戻す
+	isPopedGoal = false;
 }
 
 void BlockManager::GenerateParticleTurnBlock()

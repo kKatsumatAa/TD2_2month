@@ -41,6 +41,7 @@ void SceneStageSelect::Initialize()
 	scene->lightManager->SetCircleShadowActive(0, false);
 	scene->stageSelectM->Initialize(scene->stageManager.get());
 	scene->cameraM->Initialize();
+	scene->tutorial->Initialize();
 }
 
 void SceneStageSelect::Update()

@@ -38,6 +38,7 @@ void CameraManager::Initialize()
 	afterCount = 0;
 	afterCamera = nullptr;
 	isLerpMoving = false;
+	isLerpEnd = false;
 
 	ChangeUsingCameraState(new UsingCameraNormalState);
 }
@@ -70,6 +71,7 @@ void CameraManager::BegineLerpUsingCamera(Vec3 startEye, Vec3 endEye, Vec3 start
 	this->afterCamera = afterCamera;
 	this->afterCount = afterCount;
 	isLerpMoving = true;
+	isLerpEnd = false;
 
 	ChangeUsingCameraState(new UsingCameraLerpMoveState);
 
@@ -132,6 +134,11 @@ void UsingCameraLerpMoveState::Update()
 	cameraM->usingCamera->SetUp(LerpVec3(cameraM->startUp, cameraM->endUp, EaseOut(t)));
 	cameraM->usingCamera->SetTarget(LerpVec3(cameraM->startTarget, cameraM->endTarget, EaseOut(t)));
 
+	//終了する1フレーム前に演出等入れる用
+	if (cameraM->lerpCount >= cameraM->lerpCountMax - 1)
+	{
+		cameraM->isLerpEnd = true;
+	}
 
 	if (cameraM->lerpCount >= cameraM->lerpCountMax)
 	{

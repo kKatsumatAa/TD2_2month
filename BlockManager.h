@@ -270,5 +270,7 @@ private:
 	//ゴールが出現しているかどうか
 	bool isPopGoal;
 
+	//一回のみゴール出現演出
+	bool isPopedGoal = false;
 };
 

@@ -83,8 +83,10 @@ void StageSelectManager::Update()
 	//‘I‘ðŠm’è
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
-		isTutorial = true;
-
+		if (selectNum < STAGE::STAGE3)
+		{
+			isTutorial = true;
+		}
 		isSelect = true;
 
 		stageM->SelectStage(selectNum);
