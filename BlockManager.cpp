@@ -87,7 +87,8 @@ BlockManager::~BlockManager()
 
 //初期化
 void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tutorial, CameraManager *cameraM, GoalEffect *goalEffect,
-	Model *normal, Model *locked, Model *goal, Model *Socket, Model *button, Model *disconnectedBlock, Model *disconnectedButton, Model *disconnectedSocketBlock)
+	Model *normal, Model *locked, Model *goal, Model *Socket, Model *button, Model *disconnectedBlock,
+	Model *disconnectedButton, Model *disconnectedSocketBlock, Model* electricBlock)
 {
 	blocks_.clear();
 	worldmats_.clear();
@@ -143,7 +144,7 @@ void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tuto
 			//worldmats_[i][j]->rot = { 0.0f,0.0f,0.0f };
 
 			blocks_[i][j]->Initialize(connectEM, normal, locked, goal, Socket, button, disconnectedBlock,
-				disconnectedButton, disconnectedSocketBlock);
+				disconnectedButton, disconnectedSocketBlock,electricBlock);
 
 			//ブロックの種類を設定
 
@@ -162,7 +163,7 @@ void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tuto
 			worldmats_[i][j].SetWorld();
 
 			block_->Initialize(connectEM, normal, locked, goal, Socket, button, disconnectedBlock,
-				disconnectedButton, disconnectedSocketBlock);
+				disconnectedButton, disconnectedSocketBlock, electricBlock);
 
 			//軸になっているかどうか
 			isAxis_[i][j] = false;
@@ -295,6 +296,13 @@ void BlockManager::Draw(Camera *camera)
 				{
 					connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 10, 1, { 1.0f,1.0f,0,1.0 });
 				}
+
+				isEffect = true;
+			}
+
+			if(form_[i][j] == Form::Electric)
+			{
+				connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 15, 3, { 0.3f,0.3f,1.0f,0.95f });
 
 				isEffect = true;
 			}

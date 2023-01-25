@@ -11,7 +11,7 @@ Block::~Block()
 
 void Block::Initialize(ConnectingEffectManager* connectEM,
 	Model* normal, Model* locked, Model* goal, Model* socket,Model* button,Model* disconnectedBlock, 
-	Model *disconnectedButton, Model *disconnectedSocketBlock)
+	Model *disconnectedButton, Model *disconnectedSocketBlock, Model* electricBlock)
 {
 	assert(normal);
 	assert(locked);
@@ -27,6 +27,7 @@ void Block::Initialize(ConnectingEffectManager* connectEM,
 	disconnectedBlock_ = disconnectedBlock;
 	disconnectedButton_ = disconnectedButton;
 	disconnectedSocketBlock_ = disconnectedSocketBlock;
+	electricBlock_ = electricBlock;
 
 	//this->debugText_ = debugText_;
 
@@ -92,7 +93,7 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 	{
 		if(form == Form::BLOCK) 
 		{
-			draw[0].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color); 
+			draw[3].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color); 
 		}
 		if(form == Form::GEAR) 
 		{
@@ -120,7 +121,15 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 	}
 
 	if (form == Form::LOCKED) { draw[4].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &locked_[0], color); }
-	if (form == Form::Electric) { draw[5].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &locked_[0], color); }
+
+	if (form == Form::Electric) 
+	{
+		color = { 0.9f,0.9f,0.9f,0.95f };
+
+		draw[9].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color);
+		worldTransform_.trans.y = 0.2;
+		draw[5].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &electricBlock_[0], color); 
+	}
 
 }
 

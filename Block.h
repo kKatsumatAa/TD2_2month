@@ -44,6 +44,7 @@ private:
 	Model* disconnectedBlock_ = nullptr;
 	Model* disconnectedButton_ = nullptr;
 	Model* disconnectedSocketBlock_ = nullptr;
+	Model* electricBlock_ = nullptr;
 
 
 
@@ -72,7 +73,7 @@ public:
 
 	void Initialize(ConnectingEffectManager* connectEM,
 		Model* normal, Model* locked, Model* goal, Model* Socket,Model* button, Model* disconnectedBlock,
-		Model *disconnectedButton, Model *disconnectedSocketBlock);
+		Model *disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock);
 
 	void Updata(Vec3 pos = { 0,0,0 });
 
