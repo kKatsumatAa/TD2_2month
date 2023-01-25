@@ -78,7 +78,7 @@ public:
 
 	void Updata(Vec3 pos = { 0,0,0 });
 
-	void Draw(Camera* camera, UINT64* texhandle, int form, Action action,bool isElec);
+	void Draw(Camera* camera, UINT64* texhandle, int form, Action action,bool isElec,WorldMat goalMat);
 
 	void SetWorldPos(const Vec3& pos) { worldTransform_.trans = pos; };
 

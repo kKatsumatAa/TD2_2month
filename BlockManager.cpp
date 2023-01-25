@@ -49,6 +49,7 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 	this->needGoalCount = obj.needGoalCount;
 	this->isPopGoal = obj.isPopGoal;
 	this->goalPos = obj.goalPos;
+	this->goalMat = obj.goalMat;
 	//isPopedGoal はやんなくて良い
 	this->isPopGoalEffect = obj.isPopGoalEffect;
 	this->goalPopX = obj.goalPopX;
@@ -272,10 +273,11 @@ void BlockManager::Update()
 			blocks_[i][j]->Updata();
 
 		}
+		//ConectElec();
 	}
 
-	//ConectElec();	
-
+	
+	
 	//状態を変える時の遅延
 	if (isChanged_ == false)
 	{
@@ -318,7 +320,7 @@ void BlockManager::Draw(Camera* camera)
 			//Manager.cppで配列で定義したworldTransformの値をBlock.cppのDrawにセット
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
-			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j], isElec[i][j]);
+			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j], isElec[i][j],goalMat);
 
 			if (action_[i][j] == Action::Connect && effectCount >= effectCountMax)
 			{
@@ -334,7 +336,7 @@ void BlockManager::Draw(Camera* camera)
 				isEffect = true;
 			}
 
-			if (form_[i][j] == Form::Electric)
+			if (form_[i][j] == Form::Electric && form_[i][j] != Form::GOAL)
 			{
 				connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 15, 3, { 0.3f,0.3f,1.0f,0.95f });
 
@@ -1173,6 +1175,14 @@ void BlockManager::ConectElec()
 					{
 						isElec[i][k] = true;
 					}
+					else if(form_[i][k] == Form::NONE || form_[i][k] == Form::LOCKED)
+					{
+						isElec[i][k] = false;
+					}
+					else if(form_[i][k] == Form::BUTTON && isPushed[i][k] == true)
+					{
+						isElec[i][k] = false;
+					}
 					/*else
 					{
 							isElec[i][k] = false;
@@ -1184,6 +1194,14 @@ void BlockManager::ConectElec()
 					if (isElec[i][j] == true && form_[k][j] != Form::NONE && form_[k][j] != Form::LOCKED)
 					{
 						isElec[k][j] = true;
+					}
+					else if(form_[k][j] == Form::NONE || form_[k][j] == Form::LOCKED)
+					{
+						isElec[k][j] = false;
+					}
+					else if(form_[k][j] == Form::BUTTON && isPushed[k][j] == true)
+					{
+						isElec[k][j] = false;
 					}
 					/*else
 					{
@@ -1564,6 +1582,11 @@ void BlockManager::ResetBlock()
 				isElec[i][j] = false;
 			}
 
+			//ゴールのワールド行列
+			if(form_[i][j] == Form::GOAL)
+			{
+				goalMat = worldmats_[i][j];
+			}
 
 			isGoal_[i][j] = false;
 
@@ -1745,6 +1768,12 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 			else
 			{
 				isElec[i][j] = false;
+			}
+
+			//ゴールのワールド行列
+			if(form_[i][j] == Form::GOAL)
+			{
+				goalMat = worldmats_[i][j];
 			}
 
 			isGoal_[i][j] = false;

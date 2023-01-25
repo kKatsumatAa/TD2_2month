@@ -56,7 +56,7 @@ void Block::Updata(Vec3 pos)
 	worldTransform_.SetWorld();
 }
 
-void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec)
+void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec, WorldMat goalMat)
 {
 	//‰¼•\Ž¦
 	if (action == Action::Connect) 
@@ -96,11 +96,14 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 			/*ParticleManager::GetInstance()->GenerateRandomParticle(2, 60, 0.6f, { worldTransform_.trans.x,worldTransform_.trans.y + radius_ * 4.8f,worldTransform_.trans.z },
 				0.2f, 0, { 0,1.0f,0.5f,1.0f }, { 0,0,0,0 });*/
 
+			/*goalMat.trans.y = -0.5;
+			draw[11].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &normal_[0], color);*/
 			count++;
 			if(count % 240 == 0 || count % 240 == 10 || count % 240 == 20 || count % 240 == 30)
 			{
 				worldTransform_.scale = { scaleTmp + scaleTmp / 4.0f,scaleTmp + scaleTmp / 4.0f ,scaleTmp + scaleTmp / 4.0f };
 			}
+			worldTransform_.trans.y = 0.2;
 			draw[4].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &goal_[0], color);
 		}
 	}
@@ -122,11 +125,14 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 		}
 		if(form == Form::GOAL)
 		{
+			/*goalMat.trans.y = -0.5;
+			draw[11].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &normal_[0], color);*/
 			count++;
 			if(count % 240 == 0 || count % 240 == 10 || count % 240 == 20 || count % 240 == 30)
 			{
 				worldTransform_.scale = { scaleTmp + scaleTmp / 4.0f,scaleTmp + scaleTmp / 4.0f ,scaleTmp + scaleTmp / 4.0f };
 			}
+			worldTransform_.trans.y = 0.2;
 			draw[10].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &doorGoalClosed_[0], color);
 		}
 

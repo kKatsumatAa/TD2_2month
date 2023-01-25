@@ -265,6 +265,7 @@ private:
 	Vec3 elecPos;
 	//ゴールの保管用ポジション
 	Vec3 goalPos;
+	WorldMat goalMat;
 
 	//通った場所を記憶するためのフラグ
 	bool isElec[blockWidth][blockHeight];
