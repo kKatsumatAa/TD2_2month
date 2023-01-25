@@ -59,6 +59,7 @@ public:
 	Vec3 startEye, endEye, startTarget, endTarget, startUp, endUp;
 
 	bool isLerpMoving = false;
+	bool isLerpEnd = false;
 
 public://ŠÖ”
 	CameraManager();
