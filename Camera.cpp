@@ -107,7 +107,7 @@ void Camera::UpdateViewMatrix()
 	// ビュー行列に平行移動成分を設定
 	viewMat.matView.r[3] = translation;
 
-#pragma region 全方向ビルボード行列の計算
+#pragma region Temp
 	// ビルボード行列
 	matBillboard.r[0] = cameraAxisX;
 	matBillboard.r[1] = cameraAxisY;
@@ -115,7 +115,7 @@ void Camera::UpdateViewMatrix()
 	matBillboard.r[3] = XMVectorSet(0, 0, 0, 1);
 #pragma region
 
-#pragma region Y軸回りビルボード行列の計算
+#pragma region Pessi
 	// カメラX軸、Y軸、Z軸
 	XMVECTOR ybillCameraAxisX, ybillCameraAxisY, ybillCameraAxisZ;
 
