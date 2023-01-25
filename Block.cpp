@@ -10,7 +10,7 @@ Block::~Block()
 }
 
 void Block::Initialize(ConnectingEffectManager* connectEM,
-	Model* normal, Model* locked, Model* goal, Model* socket,Model* button,Model* electric)
+	Model* normal, Model* locked, Model* goal, Model* socket,Model* button,Model* disconnectedBlock)
 {
 	assert(normal);
 	assert(locked);
@@ -23,7 +23,7 @@ void Block::Initialize(ConnectingEffectManager* connectEM,
 	button_ = button;
 	goal_ = goal;
 	socket_ = socket;
-	electric_ = electric;
+	disconnectedBlock_ = disconnectedBlock;
 
 	//this->debugText_ = debugText_;
 
@@ -71,7 +71,7 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 
 	if(isElec == true)
 	{
-		color = { 0.5f,0.5f,0.85f,0.95f };
+		//color = { 0.65f,0.65f,0.85f,0.95f };
 
 		if(form == Form::BLOCK) { draw[0].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color); }
 		if(form == Form::BUTTON) { draw[6].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color); }
@@ -84,9 +84,9 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 	}
 	else
 	{
-		color = { 0.1f,0.1f,0.1f,0.95f };
+		color = { 0.6f,0.6f,0.6f,1.0f };
 
-		if(form == Form::BLOCK) { draw[0].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color); }
+		if(form == Form::BLOCK) { draw[0].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color); }
 		if(form == Form::BUTTON) { draw[6].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color); }
 		if(form == Form::BUTTON) 
 		{ 
@@ -111,7 +111,7 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 	}
 
 	if (form == Form::LOCKED) { draw[4].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &locked_[0], color); }
-	if (form == Form::Electric) { draw[5].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &electric_[0], color); }
+	if (form == Form::Electric) { draw[5].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &locked_[0], color); }
 
 
 }
