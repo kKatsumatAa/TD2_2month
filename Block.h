@@ -41,6 +41,8 @@ private:
 	Model* button_ = nullptr;
 	Model* goal_ = nullptr;
 	Model* socket_ = nullptr;
+	Model* electric_ = nullptr;
+
 
 	//テクスチャハンドル
 	//UINT64 textureHandle_[10];
@@ -66,11 +68,11 @@ public:
 	DebugText* debugText_ = nullptr;
 
 	void Initialize(ConnectingEffectManager* connectEM,
-		Model* normal, Model* locked, Model* goal, Model* Socket,Model* button);
+		Model* normal, Model* locked, Model* goal, Model* Socket,Model* button, Model* electric);
 
 	void Updata(Vec3 pos = { 0,0,0 });
 
-	void Draw(Camera* camera, UINT64* texhandle, int form, Action action);
+	void Draw(Camera* camera, UINT64* texhandle, int form, Action action,bool isElec);
 
 	void SetWorldPos(const Vec3& pos) { worldTransform_.trans = pos; };
 

@@ -20,7 +20,7 @@ public:
 
 	//初期化
 	void Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
-		Model* normal, Model* locked, Model* goal, Model* Socket,Model* Button);
+		Model* normal, Model* locked, Model* goal, Model* Socket,Model* Button,Model* electric);
 
 	//更新
 	void Update();
@@ -270,6 +270,7 @@ private:
 
 	//通った場所を記憶するためのフラグ
 	bool isElec[blockWidth][blockHeight];
+	bool isDecisionElec[blockWidth][blockHeight];
 
 	//ゴールが出現しているかどうか
 	bool isPopGoal;

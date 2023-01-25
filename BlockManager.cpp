@@ -7,7 +7,7 @@
 
 using namespace std;
 
-BlockManager& BlockManager::operator=(const BlockManager& obj)
+BlockManager &BlockManager::operator=(const BlockManager &obj)
 {
 	//this->Initialize(obj.connectEM,obj.tutorial,obj.cameraM,obj.goalEffect,)
 
@@ -46,9 +46,9 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 	this->pushedCount_ = obj.pushedCount_;
 	this->needGoalCount = obj.needGoalCount;
 
-	for (int i = 0; i < blockWidth; i++)
+	for(int i = 0; i < blockWidth; i++)
 	{
-		for (int j = 0; j < blockHeight; j++)
+		for(int j = 0; j < blockHeight; j++)
 		{
 			this->isGoal_[i][j] = obj.isGoal_[i][j];
 			this->beforeTransY[i][j] = obj.beforeTransY[i][j];
@@ -84,7 +84,7 @@ BlockManager::~BlockManager()
 
 //初期化
 void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tutorial, CameraManager *cameraM, GoalEffect *goalEffect,
-	Model *normal, Model *locked, Model *goal, Model *Socket, Model *button)
+	Model *normal, Model *locked, Model *goal, Model *Socket, Model *button, Model *electric)
 {
 	blocks_.clear();
 	worldmats_.clear();
@@ -139,7 +139,7 @@ void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tuto
 
 			//worldmats_[i][j]->rot = { 0.0f,0.0f,0.0f };
 
-			blocks_[i][j]->Initialize(connectEM, normal, locked, goal, Socket, button);
+			blocks_[i][j]->Initialize(connectEM, normal, locked, goal, Socket, button, electric);
 
 			//ブロックの種類を設定
 
@@ -157,7 +157,7 @@ void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tuto
 
 			worldmats_[i][j].SetWorld();
 
-			block_->Initialize(connectEM, normal, locked, goal, Socket, button);
+			block_->Initialize(connectEM, normal, locked, goal, Socket, button, electric);
 
 			//軸になっているかどうか
 			isAxis_[i][j] = false;
@@ -186,7 +186,7 @@ void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tuto
 			}*/
 
 			//電気初期化
-			
+
 		}
 
 		InitializeElectric();
@@ -282,7 +282,7 @@ void BlockManager::Draw(Camera *camera)
 			//Manager.cppで配列で定義したworldTransformの値をBlock.cppのDrawにセット
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
-			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j]);
+			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j], isElec[i][j]);
 
 			if(isElec[i][j] == true && effectCount >= effectCountMax)
 				//if(action_[i][j] == Action::Connect && effectCount >= effectCountMax)
@@ -530,7 +530,7 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 			{
 				distancePos[i][j] = worldmats_[i][j].trans - axis_pos_;
 
-				
+
 			}
 		}
 
@@ -566,7 +566,7 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 
 					rotatePos.z = axis_pos_.z + GetVec3xM4(distancePosPlayer, worldMat.matWorld, 0).z;
 
-					
+
 				}
 
 				/*if(action_[i][j] == Action::Connect)
@@ -666,7 +666,6 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 				{
 					for(int l = 0; l < stageHeight_; l++)
 					{
-
 					}
 				}
 			}
@@ -697,38 +696,80 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 	{
 		UpPosY();
 
+		/*if(rotateCount >= rotateCountMax - 1)
+		{*/
+			for(int i = 0; i < stageWidth_; i++)
+			{
+				for(int j = 0; j < stageHeight_; j++)
+				{
+					isElec[i][j] = false;
+				}
+			}
+		//}
+
+		
+
 		//毎フレーム行う
+		//for(int l = 0; l < stageWidth_; l++)
+		//{
+		//	for(int i = 0; i < stageWidth_; i++)
+		//	{
+		//		for(int j = 0; j < stageHeight_; j++)
+		//		{
+		//			for(int k = 1; k < stageWidth_ - 1; k++)
+		//			{
+		//				//隣接しているかどうか
+		//				if(BlockJunction(worldmats_[i][j].trans, worldmats_[i][k].trans) == true)
+		//				{
+		//					//同じ座標ではないとき
+		//					//隣接しているブロックが繋がるブロックなら繋げる。
+		//					if(isDecisionElec[i][j] == true && form_[i][k] != Form::NONE && form_[i][k] != Form::LOCKED)
+		//					{
+		//						isElec[i][k] = true;
+		//					}
+		//					//それ以外は通らないように
+		//					else
+		//					{
+		//						isElec[i][k] = false;
+		//					}
+		//				}
+
+		//				if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][j].trans) == true)
+		//				{
+		//					if(isDecisionElec[i][j] == true && form_[k][j] != Form::NONE && form_[k][j] != Form::LOCKED)
+		//					{
+		//						isElec[k][j] = true;
+		//					}
+		//					else
+		//					{
+		//						isElec[k][j] = false;
+		//					}
+		//				}
+		//			}
+		//		}
+		//	}
+
+		//}
+
 		for(int i = 0; i < stageWidth_; i++)
 		{
 			for(int j = 0; j < stageHeight_; j++)
 			{
-				for(int k = 1; k < stageWidth_ - 1; k++)
+				for(int k = 0; k < stageWidth_; k++)
 				{
-					//隣接しているかどうか
-					if(BlockJunction(worldmats_[i][j].trans, worldmats_[i][k].trans) == true)
+					for(int l = 0; l < stageHeight_; l++)
 					{
-						//同じ座標ではないとき
-						//隣接しているブロックが繋がるブロックなら繋げる。
-						if(isElec[i][j] == true && form_[i][k] != Form::NONE && form_[i][k] != Form::LOCKED)
+						if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
 						{
-							isElec[i][k] = true;
-						}
-						//それ以外は通らないように
-						else
-						{
-							isElec[i][k] = false;
-						}
-					}
-
-					if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][j].trans) == true)
-					{
-						if(isElec[i][j] == true && form_[k][j] != Form::NONE && form_[k][j] != Form::LOCKED)
-						{
-							isElec[k][j] = true;
-						}
-						else
-						{
-							isElec[k][j] = false;
+							//同じ座標ではないとき
+							if(i != k || j != l)
+							{
+								if(isDecisionElec[i][j] == true && form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+								{
+									isElec[k][l] = true;
+									isDecisionElec[i][j] = false;
+								}
+							}
 						}
 					}
 				}
@@ -736,7 +777,6 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 		}
 
 		RepositBlock();
-
 	}
 }
 
@@ -953,10 +993,12 @@ void BlockManager::UpdateOverlap()
 							if(isElec[i][j] == true && form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
 							{
 								isElec[k][l] = true;
+								isDecisionElec[k][l] = true;
 							}
 							else if(form_[k][l] == Form::NONE || form_[k][l] == Form::LOCKED)
 							{
 								isElec[k][l] = false;
+								isDecisionElec[k][l] = false;
 							}
 						}
 					}
@@ -1097,12 +1139,12 @@ void BlockManager::ConectElec()
 				if(BlockJunction(worldmats_[i][j].trans, worldmats_[i][k].trans) == true)
 				{
 					//同じ座標ではないとき
-					
+
 					if(isElec[i][j] == true && form_[i][k] != Form::NONE && form_[i][k] != Form::LOCKED)
 					{
-							isElec[i][k] = true;
+						isElec[i][k] = true;
 					}
-					/*else 
+					/*else
 					{
 							isElec[i][k] = false;
 					}*/
@@ -1114,7 +1156,7 @@ void BlockManager::ConectElec()
 					{
 						isElec[k][j] = true;
 					}
-					/*else 
+					/*else
 					{
 						isElec[k][j] = false;
 					}*/
@@ -1438,9 +1480,9 @@ bool BlockManager::BlockJunction(Vec3 Pos1, Vec3 Pos2)
 	{
 		return true;
 	}
-	
+
 	return false;
-	
+
 }
 
 void BlockManager::ResetBlock()
