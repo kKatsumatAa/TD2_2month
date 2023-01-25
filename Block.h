@@ -45,6 +45,7 @@ private:
 	Model* disconnectedButton_ = nullptr;
 	Model* disconnectedSocketBlock_ = nullptr;
 	Model* electricBlock_ = nullptr;
+	Model* doorGoalClosed_ = nullptr;
 
 
 
@@ -68,12 +69,12 @@ public:
 
 	~Block();
 
-	Object draw[10];
+	Object draw[15];
 	DebugText* debugText_ = nullptr;
 
 	void Initialize(ConnectingEffectManager* connectEM,
 		Model* normal, Model* locked, Model* goal, Model* Socket,Model* button, Model* disconnectedBlock,
-		Model *disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock);
+		Model *disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model *doorGoalClosed);
 
 	void Updata(Vec3 pos = { 0,0,0 });
 

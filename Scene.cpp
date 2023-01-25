@@ -84,7 +84,7 @@ void SceneGame::Initialize()
 
 	scene->blockManager->Initialize(scene->connectEM.get(), scene->tutorial.get(), scene->cameraM.get(),
 		scene->goalE.get(), scene->model[1], scene->model[2], scene->model[3], scene->model[4], scene->model[5], scene->model[6],
-		scene->model[8], scene->model[9], scene->model[10]);
+		scene->model[8], scene->model[9], scene->model[10],scene->model[11]);
 	scene->connectEM->Initialize();
 	scene->connectE2M->Initialize();
 	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
@@ -317,6 +317,7 @@ Scene::~Scene()
 	delete model[8];
 	delete model[9];
 	delete model[10];
+	delete model[11];
 
 }
 
@@ -358,6 +359,7 @@ void Scene::Initialize()
 	model[8] = Model::LoadFromOBJ("DisconnectedButton");
 	model[9] = Model::LoadFromOBJ("DisconnectedSocketBlock");
 	model[10] = Model::LoadFromOBJ("ElectricBlock");
+	model[11] = Model::LoadFromOBJ("DoorGoal_Closed");
 
 
 
@@ -381,7 +383,7 @@ void Scene::Initialize()
 
 
 	blockManager = new BlockManager();
-	blockManager->Initialize(connectEM.get(), tutorial.get(), cameraM.get(), goalE.get(), model[1], model[2], model[3], model[4], model[5], model[6], model[8], model[9], model[10]);
+	blockManager->Initialize(connectEM.get(), tutorial.get(), cameraM.get(), goalE.get(), model[1], model[2], model[3], model[4], model[5], model[6], model[8], model[9], model[10],model[11]);
 
 	stageManager = std::make_unique<StageManager>();
 	stageManager->Initialize(blockManager, tutorial.get());

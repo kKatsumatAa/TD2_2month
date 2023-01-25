@@ -93,7 +93,7 @@ BlockManager::~BlockManager()
 //初期化
 void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
 	Model* normal, Model* locked, Model* goal, Model* Socket, Model* button, Model* disconnectedBlock,
-	Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock)
+	Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock,Model* doorGoalClosed)
 {
 	blocks_.clear();
 	worldmats_.clear();
@@ -151,7 +151,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 			//worldmats_[i][j]->rot = { 0.0f,0.0f,0.0f };
 
 			blocks_[i][j]->Initialize(connectEM, normal, locked, goal, Socket, button, disconnectedBlock,
-				disconnectedButton, disconnectedSocketBlock, electricBlock);
+				disconnectedButton, disconnectedSocketBlock, electricBlock, doorGoalClosed);
 
 			//ブロックの種類を設定
 
@@ -170,7 +170,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, Tutorial* tuto
 			worldmats_[i][j].SetWorld();
 
 			block_->Initialize(connectEM, normal, locked, goal, Socket, button, disconnectedBlock,
-				disconnectedButton, disconnectedSocketBlock, electricBlock);
+				disconnectedButton, disconnectedSocketBlock, electricBlock, doorGoalClosed);
 
 			//軸になっているかどうか
 			isAxis_[i][j] = false;
