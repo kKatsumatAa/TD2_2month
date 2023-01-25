@@ -108,21 +108,21 @@ void SceneGame::Update()
 {
 	if (!scene->player->isGoal) {
 
-
-		scene->connectEM->Update();
-		scene->connectE2M->Update();
-
-		scene->player->Update();
-		scene->blockManager->Update();
-
-		Vec3 pos = scene->player->GetWorldPos();
-		scene->playerSocket->Update({ pos.x,pos.y,pos.z });
-
-		if (scene->stageSelectM->isTutorial)
+		//特定のカメラ演出時は動かさない
+		if (!scene->blockManager->isPopGoalEffect)
 		{
-			scene->tutorial->Update();
-		}
+			scene->player->Update();
+			scene->blockManager->Update();
 
+			Vec3 pos = scene->player->GetWorldPos();
+			scene->playerSocket->Update({ pos.x,pos.y,pos.z });
+
+			if (scene->stageSelectM->isTutorial)
+			{
+				scene->tutorial->Update();
+			}
+		}
+		
 		//リセット
 		if (KeyboardInput::GetInstance().KeyTrigger(DIK_R))
 		{
@@ -152,6 +152,8 @@ void SceneGame::Update()
 			GetBackManager::GetInstance()->GetBack();
 		}
 	}
+	scene->connectEM->Update();
+	scene->connectE2M->Update();
 	ParticleManager::GetInstance()->Update(&scene->cameraM.get()->usingCamera->viewMat, &scene->cameraM.get()->usingCamera->projectionMat);
 	//シーン遷移
 	if (scene->player->isGoal)

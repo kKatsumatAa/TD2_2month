@@ -91,6 +91,11 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 		}
 		if(form == Form::GOAL)
 		{
+			connectEM->GenerateRandomConnectingEffect({ worldTransform_.trans.x,worldTransform_.trans.y + radius_ * 4.0f,worldTransform_.trans.z }
+			, radius_*2.0f, radius_, 5, 1, { 0.1f,0.2,1.0f,0.5f });
+			/*ParticleManager::GetInstance()->GenerateRandomParticle(2, 60, 0.6f, { worldTransform_.trans.x,worldTransform_.trans.y + radius_ * 4.8f,worldTransform_.trans.z },
+				0.2f, 0, { 0,1.0f,0.5f,1.0f }, { 0,0,0,0 });*/
+
 			count++;
 			if(count % 240 == 0 || count % 240 == 10 || count % 240 == 20 || count % 240 == 30)
 			{
