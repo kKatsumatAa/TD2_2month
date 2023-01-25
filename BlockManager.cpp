@@ -70,6 +70,7 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 			this->form_[i][j] = obj.form_[i][j];
 			this->formTmp_[i][j] = obj.formTmp_[i][j];
 			this->isElec[i][j] = obj.isElec[i][j];
+			this->isDecisionElec[i][j] = obj.isDecisionElec[i][j];
 		}
 	}
 
@@ -1533,6 +1534,8 @@ void BlockManager::ResetBlock()
 
 			//Y座標を浮かせるフラグを初期化
 			isUp[i][j] = false;
+
+			isDecisionElec[i][j] = false;
 		}
 	}
 
@@ -1698,6 +1701,8 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 			//引数で受け取った形状を保存。
 			//上記の項目はリセットの際に再設定
 			loadForms_[i][j] = forms[i][j];
+
+			isDecisionElec[i][j] = false;
 		}
 	}
 
