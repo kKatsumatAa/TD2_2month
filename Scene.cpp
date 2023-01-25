@@ -68,6 +68,11 @@ void SceneStageSelect::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
+	//ステージ
+	objWallFloor.worldMat->trans = { { scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f },0,0 };
+	objWallFloor.worldMat->scale = { scene->blockManager->blockRadius_ * 5.0f,scene->blockManager->blockRadius_ * 5.0f,scene->blockManager->blockRadius_ * 5.0f };
+	objWallFloor.worldMat->SetWorld();
+
 	//丸影
 	scene->lightManager->SetCircleShadowActive(0, true);
 
@@ -85,7 +90,15 @@ void SceneGame::Initialize()
 	scene->goalE->Initialize(scene->cameraM.get());
 	scene->stageManager->Initialize(scene->blockManager);
 
-	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager,scene->cameraM.get());
+	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get());
+
+	//カメラ位置セット
+	scene->cameraM->gameMainCamera->SetEye({ { scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f }
+	,35,-30 });
+	scene->cameraM->gameMainCamera->SetTarget({ scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f
+		,10
+		,0 });
+	scene->cameraM->gameMainCamera->UpdateViewMatrix();
 }
 
 void SceneGame::Update()
@@ -118,7 +131,7 @@ void SceneGame::Update()
 			scene->connectE2M->Initialize();
 			scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
 			scene->tutorial->Initialize();
-			GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager,scene->cameraM.get());
+			GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get());
 		}
 		if (KeyboardInput::GetInstance().KeyTrigger(DIK_Z))
 		{
@@ -137,7 +150,7 @@ void SceneGame::Update()
 		}
 	}
 	//ステージセレクトに戻る
-	else if (KeyboardInput::GetInstance().KeyTrigger(DIK_Q)|| KeyboardInput::GetInstance().KeyTrigger(DIK_ESCAPE))
+	else if (KeyboardInput::GetInstance().KeyTrigger(DIK_Q) || KeyboardInput::GetInstance().KeyTrigger(DIK_ESCAPE))
 	{
 		scene->cameraM->usingCamera = scene->cameraM->stageSelectCamera.get();
 		scene->ChangeState(new SceneStageSelect);
@@ -146,6 +159,9 @@ void SceneGame::Update()
 
 void SceneGame::Draw()
 {
+	objWallFloor.DrawModel(objWallFloor.worldMat, &scene->cameraM.get()->usingCamera->viewMat, &scene->cameraM.get()->usingCamera->projectionMat,
+		scene->model[5],{0.7f,0.7f,0.7f,1.0f});
+
 	scene->blockManager->Draw(scene->cameraM.get()->usingCamera);
 
 	scene->player->Draw(scene->cameraM.get()->usingCamera);
@@ -154,6 +170,8 @@ void SceneGame::Draw()
 	scene->connectE2M->Draw(scene->cameraM.get()->usingCamera);
 
 	ParticleManager::GetInstance()->Draw(scene->texhandle[1]);
+
+
 }
 
 void SceneGame::DrawSprite()
@@ -279,6 +297,7 @@ Scene::~Scene()
 	delete model[2];
 	delete model[3];
 	delete model[4];
+	delete model[5];
 
 }
 
@@ -313,6 +332,7 @@ void Scene::Initialize()
 	model[2] = Model::LoadFromOBJ("Mesh_ButtonTile_01");
 	model[3] = Model::LoadFromOBJ("Mesh_GoalTile_01");
 	model[4] = Model::LoadFromOBJ("Mesh_SocketTile_01");
+	model[5] = Model::LoadFromOBJ("FloorAndWall");
 
 	//imgui
 	imGuiManager = new ImGuiManager();
@@ -352,7 +372,7 @@ void Scene::Initialize()
 	lightManager->SetDirLightActive(0, true);
 	lightManager->SetDirLightActive(1, true);
 	lightManager->SetDirLightActive(2, false);
-	lightManager->SetDirLightDir(1,XMVectorSet(0,0,1.0f,0));
+	lightManager->SetDirLightDir(1, XMVectorSet(0, 0, 1.0f, 0));
 	//点光源
 	for (int i = 0; i < 6; i++)
 	{
@@ -361,25 +381,13 @@ void Scene::Initialize()
 	//丸影
 	lightManager->SetCircleShadowActive(0, true);
 
-
-	//カメラ
-	cameraPosImgui[0] = { blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f };
-	cameraPosImgui[1] = { 35 };
-	cameraPosImgui[2] = { -30 };
-	cameraTarget[0] = { blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f };
-	cameraTarget[1] = { 10 };
-	cameraTarget[2] = { 0 };
-
-
 	cameraM = std::make_unique<CameraManager>();
 	cameraM->Initialize();
 	//ステージ選択用のカメラ
 	cameraM->usingCamera = cameraM->stageSelectCamera.get();
 	//cameraM->gameMainCamera->SetEye({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 40, -30 });
 	//cameraM->gameMainCamera->SetTarget({ blockManager->blockWidth / 2.0f * blockManager->blockRadius_ * 2.0f, 0, 0 });
-	cameraM->gameMainCamera->SetEye({ cameraPosImgui[0],cameraPosImgui[1],cameraPosImgui[2] });
-	cameraM->gameMainCamera->SetTarget({ cameraTarget[0],cameraTarget[1],cameraTarget[2] });
-	cameraM->gameMainCamera->UpdateViewMatrix();
+
 
 
 	//playerSocket

@@ -65,6 +65,9 @@ public:
 	static const int stageMax = 4;
 	static int selectStage;
 
+	//外部で参照するための
+	int stageWidth = 0;
+
 private:
 
 	//ステージ名

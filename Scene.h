@@ -131,7 +131,7 @@ public:
 class SceneGame : public SceneState
 {
 private:
-
+	Object objWallFloor;
 
 public:
 	void Initialize()override;
