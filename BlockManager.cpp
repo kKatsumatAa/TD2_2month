@@ -456,10 +456,12 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 
 					rotatePos.z = axis_pos_.z + GetVec3xM4(distancePosPlayer, worldMat.matWorld, 0).z;
 
-					/*if(isElec[i][j] == true)
-					{
-						isElec[i][j] = false;
-					}*/
+					
+				}
+
+				if(action_[i][j] == Action::Connect)
+				{
+					isElec[i][j] = false;
 				}
 
 			/*	if(isAxis_[i][j] == true)
@@ -588,7 +590,7 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 				{
 					isElec[i][j] = false;
 				}*/
-				isElec[i][j] = false;
+				//isElec[i][j] = false;
 			}
 		}
 
