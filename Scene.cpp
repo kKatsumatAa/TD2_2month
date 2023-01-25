@@ -40,6 +40,7 @@ void SceneStageSelect::Initialize()
 {
 	scene->lightManager->SetCircleShadowActive(0, false);
 	scene->stageSelectM->Initialize(scene->stageManager.get());
+	scene->cameraM->Initialize();
 }
 
 void SceneStageSelect::Update()
@@ -69,7 +70,7 @@ void SceneStageSelect::DrawSprite()
 void SceneGame::Initialize()
 {
 	//ステージ
-	objWallFloor.worldMat->trans = { { scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f },0,0 };
+	objWallFloor.worldMat->trans = { { scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f },-scene->blockManager->blockRadius_,0 };
 	objWallFloor.worldMat->scale = { scene->blockManager->blockRadius_ * 5.0f,scene->blockManager->blockRadius_ * 5.0f,scene->blockManager->blockRadius_ * 5.0f };
 	objWallFloor.worldMat->SetWorld();
 
@@ -84,6 +85,7 @@ void SceneGame::Initialize()
 		scene->goalE.get(), scene->model[1], scene->model[2], scene->model[3], scene->model[4], scene->model[5], scene->model[6],
 		scene->model[8], scene->model[9], scene->model[10]);
 	scene->connectEM->Initialize();
+	scene->connectE2M->Initialize();
 	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
 		, scene->connectE2M.get(), scene->tutorial.get(), scene->cameraM.get(), scene->model[0], &scene->debugText);
 	scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
@@ -113,7 +115,7 @@ void SceneGame::Update()
 		scene->blockManager->Update();
 
 		Vec3 pos = scene->player->GetWorldPos();
-		scene->playerSocket->Update({ pos.x,pos.y + scene->player->GetRadius(),pos.z });
+		scene->playerSocket->Update({ pos.x,pos.y,pos.z });
 
 		if (scene->stageSelectM->isTutorial)
 		{

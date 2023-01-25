@@ -7,6 +7,7 @@ static enum TUTORIAL
 	CONNECT,  //繋ぐ
 	TURN,     //回転
 	OVERLAP,  //重なる
+	GETBACK,  //一手戻る
 	BUTTON,   //ボタン
 	ELECTRIC, //電気ブロック
 	LAST      //終わり
@@ -155,6 +156,27 @@ private:
 
 public:
 	OverlapTutorial();
+
+
+	void AddNum()override { num++; }
+	int GetNum()override { return num; }
+	int GetMaxNum()override { return numMax; }
+
+	void Update() override;
+	void Draw() override;
+};
+
+// 一手戻る
+class GetBackTutorial : public TutorialState
+{
+private:
+
+	const int numMax = 2;
+	int texhandle[5];
+	Object sprite[5];
+
+public:
+	GetBackTutorial();
 
 
 	void AddNum()override { num++; }
