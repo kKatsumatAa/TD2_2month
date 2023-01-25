@@ -384,16 +384,18 @@ bool BlockManager::GetPosIsBlock(Vec3 pos)
 			if (worldmats_[i][j].trans.x - blockRadius_ <= pos.x && worldmats_[i][j].trans.x + blockRadius_ >= pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ <= pos.z && worldmats_[i][j].trans.z + blockRadius_ >= pos.z)
 			{
+				if(form_[i][j] == Form::GOAL && isElec[i][j] == false)
+				{
+					return false;
+				}
 				//そのブロックの形状は普通のブロックかどうか
-				if (form_[i][j] != Form::NONE && form_[i][j] != Form::LOCKED && form_[i][j] != Form::Electric && action_[i][j] != Action::Connect)
+				else if (form_[i][j] != Form::NONE && form_[i][j] != Form::LOCKED && form_[i][j] != Form::Electric && action_[i][j] != Action::Connect)
 				{
 					if (isPushed[i][j] == false)
 					{
 						return true;
 					}
-
 				}
-
 			}
 		}
 	}
@@ -401,7 +403,6 @@ bool BlockManager::GetPosIsBlock(Vec3 pos)
 	//playerがどのブロックにもいない
 	return false;
 }
-
 
 //ギアがあるかどうか
 bool BlockManager::GetPosIsGear(Vec3 pos)
@@ -1023,6 +1024,10 @@ void BlockManager::UpdateOverlap()
 							{
 								isElec[k][l] = false;
 								//isDecisionElec[k][l] = false;
+							}
+							else if(form_[k][l] == Form::BUTTON && isPushed[k][l] == true)
+							{
+								isElec[k][l] = false;
 							}
 						}
 					}
