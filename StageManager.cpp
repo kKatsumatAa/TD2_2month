@@ -101,6 +101,7 @@ void StageManager::SetWorldMat(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetTutorial(const int& blockWidth, const int& blockHeight)
 {
+	stageWidth = blockWidth;
 	selectStage = STAGE::TUTORIAL;
 
 	ResetStage();
@@ -130,6 +131,7 @@ void StageManager::SetTutorial(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetStage1(const int& blockWidth, const int& blockHeight)
 {
+	stageWidth = blockWidth;
 	selectStage = STAGE::STAGE1;
 
 	ResetStage();
@@ -160,6 +162,7 @@ void StageManager::SetStage1(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetStage2(const int& blockWidth, const int& blockHeight)
 {
+	stageWidth = blockWidth;
 	selectStage = STAGE::STAGE2;
 
 	ResetStage();
@@ -179,6 +182,7 @@ void StageManager::SetStage2(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetStage3(const int& blockWidth, const int& blockHeight)
 {
+	stageWidth = blockWidth;
 	selectStage = STAGE::STAGE3;
 
 	ResetStage();
