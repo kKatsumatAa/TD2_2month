@@ -171,7 +171,7 @@ class GetBackTutorial : public TutorialState
 {
 private:
 
-	const int numMax = 2;
+	const int numMax = 1;
 	int texhandle[5];
 	Object sprite[5];
 
