@@ -1399,14 +1399,14 @@ void BlockManager::AppearGoal()
 						//カメラ演出
 						Vec3 goalPos = worldmats_[i][j].trans;
 
-						cameraM->BegineLerpUsingCamera(cameraM->gameMainCamera->GetEye(),
+						cameraM->BegineLerpUsingCamera(cameraM->gameTurnCamera->GetEye(),
 							{ goalPos.x,goalPos.y + blockRadius_ * 4.0f,goalPos.z - blockRadius_ * 8.0f },
-							cameraM->gameMainCamera->GetTarget(),
+							cameraM->gameTurnCamera->GetTarget(),
 							{ goalPos.x,goalPos.y + blockRadius_ * 2.0f,goalPos.z },
-							cameraM->gameMainCamera->GetUp(),
+							cameraM->gameTurnCamera->GetUp(),
 							{ 0,1.0f,0 },
 							90,
-							cameraM->gameMainCamera.get(),
+							cameraM->gameTurnCamera.get(),
 							50
 						);
 						cameraM->usingCamera = cameraM->goalEffectCamera.get();
