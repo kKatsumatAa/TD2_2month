@@ -160,7 +160,7 @@ void SceneGame::Update()
 void SceneGame::Draw()
 {
 	objWallFloor.DrawModel(objWallFloor.worldMat, &scene->cameraM.get()->usingCamera->viewMat, &scene->cameraM.get()->usingCamera->projectionMat,
-		scene->model[5],{0.7f,0.7f,0.7f,1.0f});
+		scene->model[7],{0.7f,0.7f,0.7f,1.0f});
 
 	scene->blockManager->Draw(scene->cameraM.get()->usingCamera);
 
@@ -299,7 +299,7 @@ Scene::~Scene()
 	delete model[4];
 	delete model[5];
 	delete model[6];
-
+	delete model[7];
 }
 
 void Scene::ChangeState(SceneState* state)
@@ -336,7 +336,7 @@ void Scene::Initialize()
 	model[5] = Model::LoadFromOBJ("Button");
 	model[6] = Model::LoadFromOBJ("DisconnectedBlock");
 	
-	model[5] = Model::LoadFromOBJ("FloorAndWall");
+	model[7] = Model::LoadFromOBJ("FloorAndWall");
 
 	//imgui
 	imGuiManager = new ImGuiManager();

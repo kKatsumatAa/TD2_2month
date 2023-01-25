@@ -696,8 +696,8 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 	{
 		UpPosY();
 
-		/*if(rotateCount >= rotateCountMax - 1)
-		{*/
+		if(rotateCount >= rotateCountMax - 1)
+		{
 			for(int i = 0; i < stageWidth_; i++)
 			{
 				for(int j = 0; j < stageHeight_; j++)
@@ -705,7 +705,7 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 					isElec[i][j] = false;
 				}
 			}
-		//}
+		}
 
 		
 
