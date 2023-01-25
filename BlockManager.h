@@ -212,6 +212,8 @@ private:
 	ConnectingEffectManager* connectEM;
 
 	int effectCount = 0;
+	int effectCount2 = 0;
+
 	const int effectCountMax = 10;
 
 	//比較用に保存しておく変数
