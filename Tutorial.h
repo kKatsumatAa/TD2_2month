@@ -7,6 +7,8 @@ static enum TUTORIAL
 	CONNECT,  //繋ぐ
 	TURN,     //回転
 	OVERLAP,  //重なる
+	BUTTON,   //ボタン
+	ELECTRIC, //電気ブロック
 	LAST      //終わり
 };
 
@@ -51,7 +53,14 @@ public:
 	Object sprite[5];
 
 	void Update();
+	//最初のチュートリアルの
 	void Initialize();
+	//ボタンのチュートリアル
+	void ButtonInitialize();
+	//電気ブロックのチュートリアル
+	void ElectricInitialize();
+
+
 	void Draw();
 
 	int GetState() { return state2; }
@@ -146,6 +155,48 @@ private:
 
 public:
 	OverlapTutorial();
+
+
+	void AddNum()override { num++; }
+	int GetNum()override { return num; }
+	int GetMaxNum()override { return numMax; }
+
+	void Update() override;
+	void Draw() override;
+};
+
+//ボタン
+class ButtonTutorial : public TutorialState
+{
+private:
+
+	const int numMax = 2;
+	int texhandle[5];
+	Object sprite[5];
+
+public:
+	ButtonTutorial();
+
+
+	void AddNum()override { num++; }
+	int GetNum()override { return num; }
+	int GetMaxNum()override { return numMax; }
+
+	void Update() override;
+	void Draw() override;
+};
+
+//電気ブロック
+class ElectricTutorial : public TutorialState
+{
+private:
+
+	const int numMax = 1;
+	int texhandle[5];
+	Object sprite[5];
+
+public:
+	ElectricTutorial();
 
 
 	void AddNum()override { num++; }

@@ -16,7 +16,7 @@ class StageManager
 public:
 
 	//初期化
-	void Initialize(BlockManager* blockManager);
+	void Initialize(BlockManager* blockManager,Tutorial* tutorial);
 
 	//更新
 	void Update();
@@ -70,10 +70,13 @@ public:
 
 private:
 
+
+	Tutorial* tutorial;
+
 	//ステージ名
 	enum Stage
 	{
-		Tutorial,
+		TUTORIAL,
 		Stage1,
 
 	};
@@ -86,7 +89,6 @@ private:
 
 	Form form_;
 	std::vector<std::vector<Block::Form>> forms_;
-
 
 };
 

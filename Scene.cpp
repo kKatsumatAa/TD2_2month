@@ -81,15 +81,14 @@ void SceneGame::Initialize()
 	scene->cameraM->Initialize();
 
 	scene->blockManager->Initialize(scene->connectEM.get(), scene->tutorial.get(), scene->cameraM.get(),
-		scene->goalE.get(), scene->model[1], scene->model[2], scene->model[3], scene->model[4],scene->model[5],scene->model[6],
-		scene->model[8], scene->model[9],scene->model[10]);
+		scene->goalE.get(), scene->model[1], scene->model[2], scene->model[3], scene->model[4], scene->model[5], scene->model[6],
+		scene->model[8], scene->model[9], scene->model[10]);
 	scene->connectEM->Initialize();
 	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
 		, scene->connectE2M.get(), scene->tutorial.get(), scene->cameraM.get(), scene->model[0], &scene->debugText);
 	scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
-	scene->tutorial->Initialize();
 	scene->goalE->Initialize(scene->cameraM.get());
-	scene->stageManager->Initialize(scene->blockManager);
+	scene->stageManager->Initialize(scene->blockManager, scene->tutorial.get());
 
 	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get());
 
@@ -131,7 +130,18 @@ void SceneGame::Update()
 			scene->blockManager->ResetBlock();
 			scene->connectE2M->Initialize();
 			scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
-			scene->tutorial->Initialize();
+			if (scene->stageManager->selectStage == STAGE::TUTORIAL)
+			{
+				scene->tutorial->Initialize();
+			}
+			if (scene->stageManager->selectStage == STAGE::STAGE1)
+			{
+				scene->tutorial->ButtonInitialize();
+			}
+			if (scene->stageManager->selectStage == STAGE::STAGE2)
+			{
+				scene->tutorial->ElectricInitialize();
+			}
 			GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get());
 		}
 		if (KeyboardInput::GetInstance().KeyTrigger(DIK_Z))
@@ -161,7 +171,7 @@ void SceneGame::Update()
 void SceneGame::Draw()
 {
 	objWallFloor.DrawModel(objWallFloor.worldMat, &scene->cameraM.get()->usingCamera->viewMat, &scene->cameraM.get()->usingCamera->projectionMat,
-		scene->model[7],{0.7f,0.7f,0.7f,1.0f});
+		scene->model[7], { 0.7f,0.7f,0.7f,1.0f });
 
 	scene->blockManager->Draw(scene->cameraM.get()->usingCamera);
 
@@ -340,7 +350,7 @@ void Scene::Initialize()
 	model[4] = Model::LoadFromOBJ("Mesh_SocketTile_01");
 	model[5] = Model::LoadFromOBJ("Button");
 	model[6] = Model::LoadFromOBJ("DisconnectedBlock");
-	
+
 	model[7] = Model::LoadFromOBJ("FloorAndWall");
 	model[8] = Model::LoadFromOBJ("DisconnectedButton");
 	model[9] = Model::LoadFromOBJ("DisconnectedSocketBlock");
@@ -357,7 +367,6 @@ void Scene::Initialize()
 
 	//tutorial
 	tutorial = std::make_unique<Tutorial>();
-	tutorial->Initialize();
 
 	//goal
 	goalE = std::make_unique<GoalEffect>();
@@ -369,10 +378,10 @@ void Scene::Initialize()
 
 
 	blockManager = new BlockManager();
-	blockManager->Initialize(connectEM.get(), tutorial.get(), cameraM.get(), goalE.get(), model[1], model[2], model[3], model[4],model[5],model[6],model[8],model[9],model[10]);
+	blockManager->Initialize(connectEM.get(), tutorial.get(), cameraM.get(), goalE.get(), model[1], model[2], model[3], model[4], model[5], model[6], model[8], model[9], model[10]);
 
 	stageManager = std::make_unique<StageManager>();
-	stageManager->Initialize(blockManager);
+	stageManager->Initialize(blockManager, tutorial.get());
 
 
 	//Light

@@ -4,11 +4,13 @@ using namespace std;
 
 int StageManager::selectStage = STAGE::TUTORIAL;
 
-void StageManager::Initialize(BlockManager* blockManager)
+void StageManager::Initialize(BlockManager* blockManager
+	,Tutorial* tutorial)
 {
 	//インスタンスの生成
 	//blockManager_ = std::make_unique<BlockManager>();
 	blockManager_ = blockManager;
+	this->tutorial = tutorial;
 
 	int tutorialWidth = 13;
 	int tutorialHeight = 13;
@@ -101,6 +103,7 @@ void StageManager::SetWorldMat(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetTutorial(const int& blockWidth, const int& blockHeight)
 {
+	this->tutorial->Initialize();
 	stageWidth = blockWidth;
 	selectStage = STAGE::TUTORIAL;
 
@@ -131,6 +134,7 @@ void StageManager::SetTutorial(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetStage1(const int& blockWidth, const int& blockHeight)
 {
+	this->tutorial->ButtonInitialize();
 	stageWidth = blockWidth;
 	selectStage = STAGE::STAGE1;
 
@@ -142,14 +146,14 @@ void StageManager::SetStage1(const int& blockWidth, const int& blockHeight)
 	{
 		{Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::GEAR,Form::GEAR,Form::NONE,Form::GEAR,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
+		{Form::GEAR,Form::GEAR,Form::BUTTON,Form::GEAR,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::NONE,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::NONE,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::GEAR,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::NONE,Form::GEAR,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::BLOCK,Form::BLOCK,Form::GOAL,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
+		{Form::NONE,Form::NONE,Form::BLOCK,Form::BLOCK,Form::GOAL,Form::Electric,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
@@ -162,6 +166,7 @@ void StageManager::SetStage1(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetStage2(const int& blockWidth, const int& blockHeight)
 {
+	this->tutorial->ElectricInitialize();
 	stageWidth = blockWidth;
 	selectStage = STAGE::STAGE2;
 
