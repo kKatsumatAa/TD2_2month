@@ -240,7 +240,7 @@ void SceneClear::Initialize()
 {
 	//音
 	scene->StopAllWave();
-	//Sound::GetInstance().PlayWave("Stage_BGM.wav", 0.5f, true);
+	Sound::GetInstance().PlayWave("game-victory-sound-effect.wav", 0.5f);
 }
 
 void SceneClear::Update()
@@ -351,6 +351,7 @@ void Scene::Initialize()
 		Sound::GetInstance().Initialize("Resources/Sounds/");
 		Sound::GetInstance().LoadWave("Stage_BGM.wav", false);
 		Sound::GetInstance().LoadWave("LevelSelect.wav", false);
+		Sound::GetInstance().LoadWave("game-victory-sound-effect.wav", false);
 	}
 
 	//白い画像
