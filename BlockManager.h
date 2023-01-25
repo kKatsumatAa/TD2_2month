@@ -21,7 +21,7 @@ public:
 	//初期化
 	void Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
 		Model* normal, Model* locked, Model* goal, Model* Socket,Model* Button,Model* disconnectedBlock,
-		Model* disconnectedButton,Model* disconnectedSocketBlock,Model* electricBlock);
+		Model* disconnectedButton,Model* disconnectedSocketBlock,Model* electricBlock,Model* doorGoalClosed);
 
 	//更新
 	void Update();
