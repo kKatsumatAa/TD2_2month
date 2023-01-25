@@ -42,6 +42,9 @@ private:
 	Model* goal_ = nullptr;
 	Model* socket_ = nullptr;
 	Model* disconnectedBlock_ = nullptr;
+	Model* disconnectedButton_ = nullptr;
+	Model* disconnectedSocketBlock_ = nullptr;
+
 
 
 	//テクスチャハンドル
@@ -68,7 +71,8 @@ public:
 	DebugText* debugText_ = nullptr;
 
 	void Initialize(ConnectingEffectManager* connectEM,
-		Model* normal, Model* locked, Model* goal, Model* Socket,Model* button, Model* disconnectedBlock);
+		Model* normal, Model* locked, Model* goal, Model* Socket,Model* button, Model* disconnectedBlock,
+		Model *disconnectedButton, Model *disconnectedSocketBlock);
 
 	void Updata(Vec3 pos = { 0,0,0 });
 

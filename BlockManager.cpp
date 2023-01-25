@@ -87,7 +87,7 @@ BlockManager::~BlockManager()
 
 //初期化
 void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tutorial, CameraManager *cameraM, GoalEffect *goalEffect,
-	Model *normal, Model *locked, Model *goal, Model *Socket, Model *button, Model *disconnectedBlock)
+	Model *normal, Model *locked, Model *goal, Model *Socket, Model *button, Model *disconnectedBlock, Model *disconnectedButton, Model *disconnectedSocketBlock)
 {
 	blocks_.clear();
 	worldmats_.clear();
@@ -142,7 +142,8 @@ void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tuto
 
 			//worldmats_[i][j]->rot = { 0.0f,0.0f,0.0f };
 
-			blocks_[i][j]->Initialize(connectEM, normal, locked, goal, Socket, button, disconnectedBlock);
+			blocks_[i][j]->Initialize(connectEM, normal, locked, goal, Socket, button, disconnectedBlock,
+				disconnectedButton, disconnectedSocketBlock);
 
 			//ブロックの種類を設定
 
@@ -160,7 +161,8 @@ void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tuto
 
 			worldmats_[i][j].SetWorld();
 
-			block_->Initialize(connectEM, normal, locked, goal, Socket, button, disconnectedBlock);
+			block_->Initialize(connectEM, normal, locked, goal, Socket, button, disconnectedBlock,
+				disconnectedButton, disconnectedSocketBlock);
 
 			//軸になっているかどうか
 			isAxis_[i][j] = false;
@@ -287,7 +289,7 @@ void BlockManager::Draw(Camera *camera)
 			{
 				if(isAxis_[i][j])
 				{
-					connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 15, 3, { 1.0f,0.3f,0.2f,1.0f });
+					connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 15, 3, { 1.0f,0.3f,0.2f,0.95f });
 				}
 				else
 				{
@@ -632,21 +634,7 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 
 					rotatePos.z = axis_pos_.z + GetVec3xM4(distancePosPlayer, worldMat.matWorld, 0).z;
 
-					/*if(isElec[i][j] == true)
-					{
-						isElec[i][j] = false;
-					}*/
 				}
-
-				/*if(action_[i][j] == Action::Connect)
-				{
-					isElec[i][j] = false;
-				}
-
-				if(isAxis_[i][j] == true)
-				{
-					isElec[i][j] = false;
-				}*/
 			}
 		}
 
