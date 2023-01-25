@@ -105,7 +105,10 @@ public:
 
 	void ConectElec();
 
-	void SerchDistance();
+	//電気を生成し終わったか確認
+	bool GetCheckElec() { return isCheckElec_; };
+
+	void SetCheckElec() { isCheckElec_ = false, checkCount = 0; };
 	
 public:
 	bool isPopGoalEffect = false;
@@ -278,5 +281,9 @@ private:
 	bool isPopedGoal = false;
 
 	int  goalPopX, goalPopY;
+
+	bool isCheckElec_ = false;
+
+	int checkCount = 0;
 };
 

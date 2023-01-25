@@ -513,7 +513,7 @@ void StateTurnP::Update()
 	player->GetWorldTransForm()->scale = { scale.x ,scale.y * 1.3f,scale.z };
 
 	//‰ñ“]I‚í‚é
-	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) && !player->blockM->GetIsRollingLeftorRight())
+	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) && !player->blockM->GetIsRollingLeftorRight() && player->blockM->GetCheckElec())
 	{
 		//ˆêŽè–ß‚é‹@”\‚É‹L˜^
 		GetBackManager::GetInstance()->SaveDatas();
@@ -548,6 +548,8 @@ void StateTurnP::Update()
 				player->cameraM->gameMainCamera->GetUp(),
 				60);
 		}
+
+		player->blockM->SetCheckElec();
 
 		player->ChangeStateTurnConnect(new StateNormalConTurP);
 	}
