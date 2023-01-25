@@ -81,7 +81,7 @@ void SceneGame::Initialize()
 	scene->cameraM->Initialize();
 
 	scene->blockManager->Initialize(scene->connectEM.get(), scene->tutorial.get(), scene->cameraM.get(),
-		scene->goalE.get(), scene->model[1], scene->model[2], scene->model[3], scene->model[4]);
+		scene->goalE.get(), scene->model[1], scene->model[2], scene->model[3], scene->model[4],scene->model[5],scene->model[6]);
 	scene->connectEM->Initialize();
 	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
 		, scene->connectE2M.get(), scene->tutorial.get(), scene->cameraM.get(), scene->model[0], &scene->debugText);
@@ -298,6 +298,7 @@ Scene::~Scene()
 	delete model[3];
 	delete model[4];
 	delete model[5];
+	delete model[6];
 
 }
 
@@ -329,9 +330,12 @@ void Scene::Initialize()
 
 	model[0] = Model::LoadFromOBJ("Player");
 	model[1] = Model::LoadFromOBJ("Mesh_NormalTile_01");
-	model[2] = Model::LoadFromOBJ("Mesh_ButtonTile_01");
+	model[2] = Model::LoadFromOBJ("Mesh_ButtonTile_01");//固定ブロックに変える
 	model[3] = Model::LoadFromOBJ("Mesh_GoalTile_01");
 	model[4] = Model::LoadFromOBJ("Mesh_SocketTile_01");
+	model[5] = Model::LoadFromOBJ("Button");
+	model[6] = Model::LoadFromOBJ("DisconnectedBlock");
+	
 	model[5] = Model::LoadFromOBJ("FloorAndWall");
 
 	//imgui
@@ -355,7 +359,7 @@ void Scene::Initialize()
 
 
 	blockManager = new BlockManager();
-	blockManager->Initialize(connectEM.get(), tutorial.get(), cameraM.get(), goalE.get(), model[1], model[2], model[3], model[4]);
+	blockManager->Initialize(connectEM.get(), tutorial.get(), cameraM.get(), goalE.get(), model[1], model[2], model[3], model[4],model[5],model[6]);
 
 	stageManager = std::make_unique<StageManager>();
 	stageManager->Initialize(blockManager);

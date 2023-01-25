@@ -20,7 +20,7 @@ public:
 
 	//初期化
 	void Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
-		Model* normal, Model* button, Model* goal, Model* Socket);
+		Model* normal, Model* locked, Model* goal, Model* Socket,Model* Button,Model* electric);
 
 	//更新
 	void Update();
@@ -87,7 +87,6 @@ public:
 
 	void DownPosY();
 
-
 	//読み込んだステージをセットする関数
 	void SetStage(const int& stageWidth, const int& stageHeight ,std::vector<std::vector<WorldMat>>& worldmats, std::vector<std::vector<Form>>& forms);
 
@@ -97,6 +96,16 @@ public:
 	//ボタンと重なった時にゴールを出す仕組み
 	void AppearGoal();
 
+	//電気ブロックの判定
+	void InitializeElectric();
+
+	//隣接しているかどうか
+	bool BlockJunction(Vec3 Pos1, Vec3 Pos2);
+
+	void ConectElec();
+
+	void SerchDistance();
+	
 public:
 
 	static const int blockWidth = 13;
@@ -134,14 +143,14 @@ private:
 	Form form_[blockWidth][blockHeight];
 
 	Form formTmp_[blockWidth][blockHeight] = {
-		{Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
+		{Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::Electric,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::GEAR,Form::GEAR,Form::NONE,Form::GEAR,Form::GEAR,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::BUTTON,Form::BUTTON,Form::NONE,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::NONE,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::GEAR,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::NONE,Form::GEAR,Form::GEAR,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
+		{Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::BLOCK,Form::BLOCK,Form::GOAL,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
@@ -166,6 +175,21 @@ private:
 
 	//ブロックの大きさ
 	Vec3 scale_;
+
+
+	//前のフレームにおいて選択用のブロックの情報を保存しておく変数
+	/*int prevBlockX;
+	int prevBlockY;*/
+
+	//選択カーソルのクールタイマーの設定時間
+	static const int32_t kSelectTime = 17;
+
+	//選択カーソルのクールタイマー
+	int32_t selectTimer_ = kSelectTime;
+
+	//選択状態にしてもいいか
+	bool changedAction_;
+	bool isChanged_;
 
 	Vec3 transforms[blockWidth][blockHeight];
 
@@ -233,8 +257,33 @@ private:
 	//読み込んだボタンの数から必要な押す数を入れておく
 	int needGoalCount;
 
+	//電気ブロック用のワールド座標
+	Vec3 elecPos;
+	//ゴールの保管用ポジション
+	Vec3 goalPos;
+
+	//各方向の判定フラグ
+	bool goRight;
+	bool goLeft;
+	bool goUp;
+	bool goDown;
+
+	//通った場所を記憶するためのフラグ
+	bool isElec[blockWidth][blockHeight];
+	bool isDecisionElec[blockWidth][blockHeight];
+
 	//ゴールが出現しているかどうか
 	bool isPopGoal;
 
+	struct ditanceAndNum
+	{
+		float distance;
+		int num;
+		int X;
+		int Y;
+
+	};
+
+	Vec3 preTransform[blockWidth][blockHeight];
 };
 

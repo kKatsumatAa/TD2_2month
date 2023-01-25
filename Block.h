@@ -17,6 +17,7 @@ public:
 		BUTTON,			//ボタン
 		LOCKED,			//固定ブロック
 		GOAL,			//ゴール
+		Electric,		//電気出力ブロック
 		NONE,			//何もない状態
 	};
 
@@ -36,9 +37,11 @@ private:
 	//Object* objcet_ = nullptr;
 
 	Model* normal_ = nullptr;
+	Model* locked_ = nullptr;
 	Model* button_ = nullptr;
 	Model* goal_ = nullptr;
 	Model* socket_ = nullptr;
+	Model* electric_ = nullptr;
 
 
 	//テクスチャハンドル
@@ -65,11 +68,11 @@ public:
 	DebugText* debugText_ = nullptr;
 
 	void Initialize(ConnectingEffectManager* connectEM,
-		Model* normal, Model* button, Model* goal, Model* Socket);
+		Model* normal, Model* locked, Model* goal, Model* Socket,Model* button, Model* electric);
 
 	void Updata(Vec3 pos = { 0,0,0 });
 
-	void Draw(Camera* camera, UINT64* texhandle, int form, Action action);
+	void Draw(Camera* camera, UINT64* texhandle, int form, Action action,bool isElec);
 
 	void SetWorldPos(const Vec3& pos) { worldTransform_.trans = pos; };
 
