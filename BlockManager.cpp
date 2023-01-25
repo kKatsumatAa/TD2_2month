@@ -87,7 +87,7 @@ BlockManager::~BlockManager()
 
 //初期化
 void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tutorial, CameraManager *cameraM, GoalEffect *goalEffect,
-	Model *normal, Model *locked, Model *goal, Model *Socket, Model *button, Model *electric)
+	Model *normal, Model *locked, Model *goal, Model *Socket, Model *button, Model *disconnectedBlock)
 {
 	blocks_.clear();
 	worldmats_.clear();
@@ -142,7 +142,7 @@ void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tuto
 
 			//worldmats_[i][j]->rot = { 0.0f,0.0f,0.0f };
 
-			blocks_[i][j]->Initialize(connectEM, normal, locked, goal, Socket, button, electric);
+			blocks_[i][j]->Initialize(connectEM, normal, locked, goal, Socket, button, disconnectedBlock);
 
 			//ブロックの種類を設定
 
@@ -160,7 +160,7 @@ void BlockManager::Initialize(ConnectingEffectManager *connectEM, Tutorial *tuto
 
 			worldmats_[i][j].SetWorld();
 
-			block_->Initialize(connectEM, normal, locked, goal, Socket, button, electric);
+			block_->Initialize(connectEM, normal, locked, goal, Socket, button, disconnectedBlock);
 
 			//軸になっているかどうか
 			isAxis_[i][j] = false;
@@ -283,8 +283,7 @@ void BlockManager::Draw(Camera *camera)
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
 			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j], isElec[i][j]);
 
-			if(isElec[i][j] == true && effectCount >= effectCountMax)
-				//if(action_[i][j] == Action::Connect && effectCount >= effectCountMax)
+			if(action_[i][j] == Action::Connect && effectCount >= effectCountMax)
 			{
 				if(isAxis_[i][j])
 				{
@@ -342,7 +341,11 @@ bool BlockManager::GetPosIsBlock(Vec3 pos)
 				//そのブロックの形状は普通のブロックかどうか
 				if(form_[i][j] != Form::NONE && form_[i][j] != Form::LOCKED && form_[i][j] != Form::Electric && action_[i][j] != Action::Connect)
 				{
-					return true;
+					if(isPushed[i][j] == false)
+					{
+						return true;
+					}
+					
 				}
 
 			}

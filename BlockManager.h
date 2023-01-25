@@ -20,7 +20,7 @@ public:
 
 	//初期化
 	void Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
-		Model* normal, Model* locked, Model* goal, Model* Socket,Model* Button,Model* electric);
+		Model* normal, Model* locked, Model* goal, Model* Socket,Model* Button,Model* disconnectedBlock);
 
 	//更新
 	void Update();
