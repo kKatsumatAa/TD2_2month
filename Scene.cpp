@@ -42,6 +42,10 @@ void SceneStageSelect::Initialize()
 	scene->stageSelectM->Initialize(scene->stageManager.get());
 	scene->cameraM->Initialize();
 	scene->tutorial->Initialize();
+
+	//音
+	scene->StopAllWave();
+	Sound::GetInstance().PlayWave("LevelSelect.wav", 0.5f, true);
 }
 
 void SceneStageSelect::Update()
@@ -84,7 +88,7 @@ void SceneGame::Initialize()
 
 	scene->blockManager->Initialize(scene->connectEM.get(), scene->tutorial.get(), scene->cameraM.get(),
 		scene->goalE.get(), scene->model[1], scene->model[2], scene->model[3], scene->model[4], scene->model[5], scene->model[6],
-		scene->model[8], scene->model[9], scene->model[10],scene->model[11]);
+		scene->model[8], scene->model[9], scene->model[10], scene->model[11]);
 	scene->connectEM->Initialize();
 	scene->connectE2M->Initialize();
 	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
@@ -102,6 +106,10 @@ void SceneGame::Initialize()
 		,10
 		,0 });
 	scene->cameraM->gameMainCamera->UpdateViewMatrix();
+
+	//音
+	scene->StopAllWave();
+	Sound::GetInstance().PlayWave("Stage_BGM.wav", 0.5f, true);
 }
 
 void SceneGame::Update()
@@ -122,7 +130,7 @@ void SceneGame::Update()
 				scene->tutorial->Update();
 			}
 		}
-		
+
 		//リセット
 		if (KeyboardInput::GetInstance().KeyTrigger(DIK_R))
 		{
@@ -230,6 +238,9 @@ void SceneGameOver::DrawSprite()
 //----------------------------------------------------------------------------------------
 void SceneClear::Initialize()
 {
+	//音
+	scene->StopAllWave();
+	//Sound::GetInstance().PlayWave("Stage_BGM.wav", 0.5f, true);
 }
 
 void SceneClear::Update()
@@ -335,6 +346,13 @@ void Scene::ChangeState(SceneState* state)
 
 void Scene::Initialize()
 {
+	//音
+	{
+		Sound::GetInstance().Initialize("Resources/Sounds/");
+		Sound::GetInstance().LoadWave("Stage_BGM.wav", false);
+		Sound::GetInstance().LoadWave("LevelSelect.wav", false);
+	}
+
 	//白い画像
 	TextureManager::GetInstance().LoadGraph(L"Resources/image/white.png", TextureManager::GetInstance().whiteTexHandle);
 
@@ -385,7 +403,7 @@ void Scene::Initialize()
 
 
 	blockManager = new BlockManager();
-	blockManager->Initialize(connectEM.get(), tutorial.get(), cameraM.get(), goalE.get(), model[1], model[2], model[3], model[4], model[5], model[6], model[8], model[9], model[10],model[11]);
+	blockManager->Initialize(connectEM.get(), tutorial.get(), cameraM.get(), goalE.get(), model[1], model[2], model[3], model[4], model[5], model[6], model[8], model[9], model[10], model[11]);
 
 	stageManager = std::make_unique<StageManager>();
 	stageManager->Initialize(blockManager, tutorial.get());
@@ -511,6 +529,12 @@ void Scene::DrawSprite()
 	//imgui
 	imGuiManager->Draw();
 #endif 
+}
+
+void Scene::StopAllWave()
+{
+	Sound::GetInstance().StopWave("LevelSelect.wav");
+	Sound::GetInstance().StopWave("Stage_BGM.wav");
 }
 
 
