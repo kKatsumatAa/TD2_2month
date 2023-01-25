@@ -804,7 +804,7 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 
 				if(form_[i][j] == Form::Electric)
 				{
-					isElec[i][prerotateY] = true;
+					//isElec[i][prerotateY] = true;
 				}
 
 				prerotateY = j;
@@ -1476,7 +1476,7 @@ bool BlockManager::BlockJunction(Vec3 Pos1, Vec3 Pos2)
 	float distance = disvec.GetLength();
 
 	//斜めの対策用に距離で比較
-	if(distance <= blockRadius_ * 2 )
+	if(distance <= blockRadius_ * 2 + EPSILON)
 	{
 		return true;
 	}
