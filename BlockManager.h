@@ -108,6 +108,7 @@ public:
 	void SerchDistance();
 	
 public:
+	bool isPopGoalEffect = false;
 
 	static const int blockWidth = 13;
 	static const int blockHeight = 13;
@@ -274,7 +275,7 @@ private:
 
 	//一回のみゴール出現演出
 	bool isPopedGoal = false;
-	bool isPopGoalEffect = false;
+
 	int  goalPopX, goalPopY;
 };
 
