@@ -274,6 +274,13 @@ void BlockManager::Update()
 
 			blocks_[i][j]->Updata();
 
+			if(action_[i][j] == Action::Connect)
+			{
+				if(isLeftRolling == true && isRightRolling == true)
+				{
+					isElec[i][j] = false;
+				}	
+			}
 		}
 	}
 
@@ -478,7 +485,7 @@ void BlockManager::UpdateConnect(Vec3 pos)
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 				&& action_[i][j] != Action::Connect)
 			{
-				if(form_[i][j] != Form::NONE && form_[i][j] != Form::BUTTON)
+				if(form_[i][j] != Form::NONE && form_[i][j] != Form::BUTTON && form_[i][j] != Form::GOAL && beforeTurn_[i][j] != Form::GOAL)
 				{
 					action_[i][j] = Action::Connect;
 					cameraM->usingCamera->CameraShake(15, 0.53f);
@@ -529,8 +536,8 @@ void BlockManager::ReleseConectedBlock()
 		}
 	}
 }
-//キーボードによって回転
 
+//キーボードによって回転
 void BlockManager::UpdateRotate(Vec3 &rotatePos)
 {
 	int prerotateX = 0;
@@ -595,7 +602,7 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 			{
 
 				//もしつながっているなら
-				if(action_[i][j] == Action::Connect && isAxis_[i][j] == false)
+				if(action_[i][j] == Action::Connect && isAxis_[i][j] == false && beforeTurn_[i][j] != Form::GOAL)
 				{
 					WorldMat worldMat;
 					worldMat.rot.y = LerpVec3({ angle_, 0, 0 }, { pi / 2.0f,0,0 },
@@ -692,7 +699,7 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 			for(int j = 0; j < stageHeight_; j++)
 			{
 				//もしつながっているなら
-				if(action_[i][j] == Action::Connect && isAxis_[i][j] == false)
+				if(action_[i][j] == Action::Connect && isAxis_[i][j] == false && beforeTurn_[i][j] != Form::GOAL)
 				{
 					WorldMat worldMat;
 					worldMat.rot.y = LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
@@ -733,7 +740,6 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 	{
 		UpdateOverlap();
 		ConectElec();
-		
 	}
 	else if(isLeftRolling == true || isRightRolling == true)
 	{
@@ -741,6 +747,7 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 
 		if(rotateCount >= rotateCountMax - 1)
 		{
+			//一回全部OFFにする
 			for(int i = 0; i < stageWidth_; i++)
 			{
 				for(int j = 0; j < stageHeight_; j++)
@@ -750,18 +757,22 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 			}
 		}
 
+		
 		for(int i = 0; i < stageWidth_; i++)
 		{
 			for(int j = 0; j < stageHeight_; j++)
 			{
+				//電気ブロックの位置のスイッチをONにする
 				if(form_[i][j] == Form::Electric)
 				{
 					isElec[i][j] = true;
 				}
+
 				for(int k = 0; k < stageWidth_; k++)
 				{
 					for(int l = 0; l < stageHeight_; l++)
 					{
+						//隣接判定
 						if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
 						{
 							//同じ座標ではないとき
@@ -785,6 +796,15 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 								{
 									isElec[k][l] = false;
 								}
+								else if(isTurn[i][j] == true)
+								{
+									isElec[i][j] = false;
+								}
+								else if(isTurn[k][l] == true)
+								{
+									isElec[k][l] = false;
+								}
+
 							}
 						}
 
@@ -799,8 +819,22 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 								isElec[k][l] = false;
 							}
 						}
+
+						if(action_[i][j] == Action::Connect)
+						{
+							if(isLeftRolling == true && isRightRolling == true)
+							{
+								isElec[i][j] = false;
+							}
+						}
 					}
 				}
+
+				if(isTurn[i][j] == true)
+				{
+					isElec[i][j] = false;
+				}
+
 
 				if(form_[i][j] == Form::Electric)
 				{
@@ -830,7 +864,6 @@ bool BlockManager::GetIsRollingLeftorRight()
 
 bool BlockManager::GetIsGoal(Vec3 &pos, bool isPlayer)
 {
-
 	for(int i = 0; i < stageWidth_; i++)
 	{
 		for(int j = 0; j < stageHeight_; j++)
@@ -842,7 +875,6 @@ bool BlockManager::GetIsGoal(Vec3 &pos, bool isPlayer)
 				//そのブロックの形状はゴールかどうか
 				if(form_[i][j] == Form::GOAL && isElec[i][j] == true)
 				{
-					//�S�[�����o
 					if(isPlayer)
 					{
 						Vec3 goalEyeDistance = worldmats_[i][j].trans - cameraM->gameMainCamera->GetEye();
@@ -1047,6 +1079,15 @@ void BlockManager::UpdateOverlap()
 							{
 								isElec[k][l] = false;
 							}
+							/*else if(isTurn[i][j] == true)
+							{
+								isElec[i][j] = false;
+							}
+							else if(isTurn[k][l] == true)
+							{
+								isElec[k][l] = false;
+							}*/
+
 						}
 					}
 
@@ -1099,8 +1140,6 @@ void BlockManager::ConectElec()
 			{
 				for(int l = 0; l < stageHeight_; l++)
 				{
-					
-
 					//もし[i][j]が[k][l]番のブロックと隣接していたら
 					if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
 					{
@@ -1460,13 +1499,13 @@ bool BlockManager::CollisionBlockToBlock(Vec3 blockPos, Vec3 comPos)
 bool BlockManager::BlockJunction(Vec3 Pos1, Vec3 Pos2)
 {
 	//誤差修正用
-	float EPSILON = 0.00005;
+	float EPSILON = 0.005f;
 
 	//右(Pos2が右)
 	//上(Pos2が上)
-	float resultX = Pos2.x - Pos1.x;
-	float resultZ = Pos2.z - Pos1.z;
-
+	float resultX = (Pos2.x) - (Pos1.x);
+	float resultZ = (Pos2.z ) - (Pos1.z );
+	
 	//各方向の距離
 	float distanceX = std::fabs(resultX);
 	float distanceZ = std::fabs(resultZ);
@@ -1538,6 +1577,8 @@ void BlockManager::ResetBlock()
 			isUp[i][j] = false;
 
 			isDecisionElec[i][j] = false;
+
+			isTurn[i][j] = false;
 		}
 	}
 
