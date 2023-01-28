@@ -40,7 +40,7 @@ class StateMoveP : public PlayerState
 {
 private:
 	int count = 0;
-	const int countMax = 20;
+	const int countMax = 15;
 
 
 

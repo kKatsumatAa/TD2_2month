@@ -1,4 +1,5 @@
 #include "PlayerSocket.h"
+#include "ParticleManager.h"
 
 
 void PlayerSocket::ChangeState(PlayerSocketState* state)
@@ -154,6 +155,10 @@ void StateUsingSocket::Update(Vec3 pos)
 	//	playerSocket->connectE2M->GenerateConnectingEffect2(playerSocket->GetWorldPos(), endScale, endScale
 	//		, { 1.0f,1.0f,0,0.6f }, { 1.0f,1.0f,1.0f,0.3f }, 99999, { 0,pi * 800.0f,0 });
 	//}
+	if (effectCount % 5 == 0)
+	{
+		ParticleManager::GetInstance()->GenerateRandomParticle(10, 30, 0.4f, playerSocket->GetWorldPos(), 0.4f, 0, { 1.0f,1.0f,0,0.7f }, { 0,0,0,0.1f });
+	}
 
 	//ŠO•”‚ÅV
 	if (!playerSocket->GetIsUsed())

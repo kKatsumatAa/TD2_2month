@@ -206,7 +206,7 @@ private:
 	bool isLeftRolling;
 
 	int rotateCount;
-	const int rotateCountMax = 40;
+	const int rotateCountMax = 30;
 
 	float angle_;
 
