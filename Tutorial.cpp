@@ -19,7 +19,6 @@ void Tutorial::Initialize()
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Button.png", texhandle[BUTTON]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Goal.png", texhandle[BUTTON + 1]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_ElectlicBlock.png", texhandle[ELECTRIC + 1]);
-		TextureManager::LoadGraph(L"Resources/image/restart.png", texhandle[ELECTRIC + 2]);
 	}
 
 
@@ -44,7 +43,6 @@ void Tutorial::ButtonInitialize()
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Button.png", texhandle[BUTTON]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Goal.png", texhandle[BUTTON + 1]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_ElectlicBlock.png", texhandle[ELECTRIC + 1]);
-		TextureManager::LoadGraph(L"Resources/image/restart.png", texhandle[ELECTRIC + 2]);
 
 	}
 
@@ -70,7 +68,6 @@ void Tutorial::ElectricInitialize()
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Button.png", texhandle[BUTTON]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Goal.png", texhandle[BUTTON + 1]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_ElectlicBlock.png", texhandle[ELECTRIC + 1]);
-		TextureManager::LoadGraph(L"Resources/image/restart.png", texhandle[ELECTRIC + 2]);
 	}
 
 
@@ -85,8 +82,6 @@ void Tutorial::Update()
 void Tutorial::Draw()
 {
 	state->Draw();
-
-	sprite[0].DrawBoxSprite({ 10,10,0 }, 1.0f, { 1.0f,1.0f,1.0f,1.0f }, texhandle[ELECTRIC + 2]);
 }
 
 

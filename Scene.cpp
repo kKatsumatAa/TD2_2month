@@ -204,6 +204,9 @@ void SceneGame::DrawSprite()
 	{
 		scene->tutorial->Draw();
 	}
+
+	obj[0].DrawBoxSprite({ 10,10,0 }, 1.0f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[3]);
+	obj[1].DrawBoxSprite({ 110,10,0 }, 1.0f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
 }
 
 
@@ -363,6 +366,9 @@ void Scene::Initialize()
 		TextureManager::LoadGraph(L"Resources/image/effect1.png", texhandle[1]);
 		//クリア
 		TextureManager::LoadGraph(L"Resources/image/clear.png", texhandle[2]);
+		//ゲーム中のリセット,一手戻る
+		TextureManager::LoadGraph(L"Resources/image/z.png", texhandle[3]);
+		TextureManager::LoadGraph(L"Resources/image/restart.png", texhandle[4]);
 	}
 
 	//model
