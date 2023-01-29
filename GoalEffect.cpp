@@ -75,9 +75,9 @@ void GoalEffect::BegineGoalEffect(std::vector<Vec3> poses, Vec3 target, int time
 	this->particleCoolTmp = particleCool;
 	this->particleCool = particleCool;
 
-
 	ChangeState(new StateGoalParticle);
 
+	Update();
 }
 
 

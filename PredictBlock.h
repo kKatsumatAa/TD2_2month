@@ -1,16 +1,20 @@
 #pragma once
 #include "Collider.h"
-class PredictBlock :
-    public Collider
+class PredictBlock
 {
 private:
-    Object obj;
+	Object obj;
+	int count = 0;
+	Model* model;
 
+	WorldMat worldTransform_;
+
+	bool isRight = false;
 
 public:
-    void Initialize(Vec3 pos, Vec3 scale);
-    void Update(int count);
-    void Draw(Camera* camera);
+	void Initialize(Vec3 pos, Vec3 scale, bool isRight, Model* model);
+	void Update(int count);
+	void Draw(Camera* camera);
 };
 
 
@@ -18,14 +22,21 @@ public:
 class PredictBlockManager
 {
 private:
-    std::list<std::unique_ptr<PredictBlock>> predictBlocks_;
+
+
 
 public:
-    void Initialize();
-    void Update();
-    void Draw(Camera* camera);
+	int count = 0;
+	std::list<PredictBlock> predictBlocks_;
 
-    void AddPredictBlock(Vec3 pos, Vec3 scale);
-    void ClearPredictBlock();
+
+	//PredictBlockManager& operator=( PredictBlockManager& obj);
+
+	void Initialize();
+	void Update();
+	void Draw(Camera* camera);
+
+	void AddPredictBlock(Vec3 pos, Vec3 scale, bool isRight, Model* model);
+	void ClearPredictBlock();
 };
 
