@@ -176,6 +176,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerSocket.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="PredictBlock.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="ProjectionMat.cpp" />
     <ClCompile Include="Quaternion.cpp" />
@@ -228,6 +229,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerSocket.h" />
     <ClInclude Include="PointLight.h" />
+    <ClInclude Include="PredictBlock.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="ProjectionMat.h" />
     <ClInclude Include="Quaternion.h" />

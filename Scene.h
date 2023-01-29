@@ -92,6 +92,7 @@ public:
 
 	std::unique_ptr<StageManager> stageManager = nullptr;
 	std::unique_ptr<StageSelectManager>stageSelectM;
+	std::unique_ptr<PredictBlockManager>predictBlockManager;
 
 public:
 	~Scene();

@@ -1,4 +1,5 @@
 #include "StageSelectManager.h"
+#include "ParticleManager.h"
 
 void StageSelectManager::Initialize(StageManager* stageM)
 {
@@ -48,6 +49,8 @@ void StageSelectManager::Update()
 	{
 		if (this->selectNum > 0)
 		{
+			ParticleManager::GetInstance()->GenerateRandomParticle(20, 120, 3.0f, object[selectNum].worldMat->trans, 1.0f, 0.1f, { 1.0f,1.0f,0,0.7f }, { 0,0,0,0 });
+
 			selectNum--;
 			this->isLerpMoving = true;
 			this->lerpCount = 0;
@@ -57,6 +60,8 @@ void StageSelectManager::Update()
 	{
 		if (this->selectNum < this->selectNumMax - 1)
 		{
+			ParticleManager::GetInstance()->GenerateRandomParticle(20, 120, 2.0f, object[selectNum].worldMat->trans, 1.0f, 0.1f, { 1.0f,1.0f,0,0.7f }, { 0,0,0,0 });
+
 			selectNum++;
 			this->isLerpMoving = true;
 			this->lerpCount = 0;
