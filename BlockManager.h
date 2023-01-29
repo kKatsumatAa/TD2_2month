@@ -292,5 +292,8 @@ private:
 	bool isCheckElec_ = false;
 
 	int checkCount = 0;
+
+	//ゴールがブロックとつながっているかどうか
+	bool isConectedGoal;
 };
 

@@ -62,7 +62,7 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 		this->predictBlockM = new PredictBlockManager();
 	}
 	*this->predictBlockM = *obj.predictBlockM;
-
+	this->isConectedGoal = obj.isConectedGoal;
 
 	for (int i = 0; i < blockWidth; i++)
 	{
@@ -219,6 +219,36 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockMa
 		InitializeElectric();
 	}
 
+	isConectedGoal = false;
+
+	//繋がっているフラグ初期化
+	for(int i = 0; i < stageWidth_; i++)
+	{
+		for(int j = 0; j < stageHeight_; j++)
+		{
+			for(int k = 0; k < stageWidth_; k++)
+			{
+				for(int l = 0; l < stageHeight_; l++)
+				{
+					//同じ番号を防ぐ
+					if(i == k && j == l) {}
+					else
+					{
+						if(form_[i][j] == Form::GOAL)
+						{
+							//もし[i][j]がゴールの時に[k][l]番のブロックと隣接していたら
+							if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
+							{
+								isConectedGoal = true;
+							}
+						}
+					}
+
+				}
+			}
+		}
+	}
+
 	//その他の設定
 	isCount = 1;
 
@@ -235,6 +265,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockMa
 	effectCount2 = 0;
 
 	isPopedGoal = false;
+	
 
 	this->isPopGoalEffect = false;
 	//this->goalPopX = 0;
@@ -290,6 +321,15 @@ void BlockManager::Update()
 				}	
 			}
 		}
+	}
+
+	if(isConectedGoal == true)
+	{
+		form_[6][0] = Form::GOAL;
+	}
+	else
+	{
+		form_[6][0] = Form::BLOCK;
 	}
 
 	//状態を変える時の遅延
@@ -954,6 +994,7 @@ void BlockManager::UpdateOverlap()
 									if (form_[i][j] == Form::GOAL || form_[k][l] == Form::GOAL)
 									{
 										isPopGoal = false;
+										isConectedGoal = false;
 									}
 
 									beforeTurn_[i][j] = form_[i][j];
@@ -1061,6 +1102,8 @@ void BlockManager::UpdateOverlap()
 						}
 					}
 
+					
+
 					//もし[i][j]が[k][l]番のブロックと隣接していたら
 					if (BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
 					{
@@ -1081,6 +1124,7 @@ void BlockManager::UpdateOverlap()
 							{
 								isElec[k][l] = false;
 							}
+
 							/*else if(isTurn[i][j] == true)
 							{
 								isElec[i][j] = false;
@@ -1313,6 +1357,7 @@ void BlockManager::RepositBlock()
 										if (form_[i][j] == Form::GOAL || form_[k][l] == Form::GOAL)
 										{
 											isPopGoal = true;
+
 										}
 
 										/*if(isTurn[i][j] == true)
@@ -1328,6 +1373,19 @@ void BlockManager::RepositBlock()
 										isTurn[k][l] = false;
 									}
 								}
+							}
+						}
+					}
+
+					if(form_[i][j] == Form::GOAL || form_[k][l] == Form::GOAL)
+					{
+						//同じ座標ではないとき
+						if(i != k || j != l)
+						{
+							//もしゴールがブロックと隣接していたら
+							if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
+							{
+								isConectedGoal = true;
 							}
 						}
 					}
@@ -1541,6 +1599,7 @@ void BlockManager::AppearGoal()
 				if (isGoal_[i][j] == true)
 				{
 					form_[i][j] = Form::LOCKED;
+					isConectedGoal = false;
 				}
 			}
 		}
@@ -1663,10 +1722,39 @@ void BlockManager::ResetBlock()
 					form_[i][j] = Form::LOCKED;
 				}
 			}
-
 		}
 		//電気の初期化
 		InitializeElectric();
+	}
+
+	isConectedGoal = false;
+
+	//繋がっているフラグ初期化
+	for(int i = 0; i < stageWidth_; i++)
+	{
+		for(int j = 0; j < stageHeight_; j++)
+		{
+			for(int k = 0; k < stageWidth_; k++)
+			{
+				for(int l = 0; l < stageHeight_; l++)
+				{
+					//同じ番号を防ぐ
+					if(i == k && j == l){}
+					else
+					{
+						if(form_[i][j] == Form::GOAL)
+						{
+							//もし[i][j]がゴールの時に[k][l]番のブロックと隣接していたら
+							if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
+							{
+								isConectedGoal = true;
+							}
+						}
+					}
+					
+				}
+			}
+		}
 	}
 
 	//回転
