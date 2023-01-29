@@ -52,6 +52,8 @@ void SceneStageSelect::Update()
 {
 	scene->stageSelectM->Update();
 
+	ParticleManager::GetInstance()->Update(&scene->cameraM.get()->usingCamera->viewMat, &scene->cameraM.get()->usingCamera->projectionMat);
+
 	//選択されたら
 	if (scene->stageSelectM->isSelect)
 	{
@@ -62,6 +64,8 @@ void SceneStageSelect::Update()
 void SceneStageSelect::Draw()
 {
 	scene->stageSelectM->Draw(scene->cameraM.get());
+
+	ParticleManager::GetInstance()->Draw(scene->texhandle[1]);
 }
 
 void SceneStageSelect::DrawSprite()
