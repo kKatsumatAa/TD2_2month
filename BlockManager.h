@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include "GoalEffect.h"
+#include "PredictBlock.h"
 
 
 class BlockManager
@@ -19,9 +20,9 @@ public:
 	~BlockManager();
 
 	//初期化
-	void Initialize(ConnectingEffectManager* connectEM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
-		Model* normal, Model* locked, Model* goal, Model* Socket,Model* Button,Model* disconnectedBlock,
-		Model* disconnectedButton,Model* disconnectedSocketBlock,Model* electricBlock,Model* doorGoalClosed);
+	void Initialize(ConnectingEffectManager* connectEM, PredictBlockManager* pBM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
+		Model* normal, Model* locked, Model* goal, Model* Socket, Model* Button, Model* disconnectedBlock,
+		Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed);
 
 	//更新
 	void Update();
@@ -89,7 +90,7 @@ public:
 	void DownPosY();
 
 	//読み込んだステージをセットする関数
-	void SetStage(const int& stageWidth, const int& stageHeight ,std::vector<std::vector<WorldMat>>& worldmats, std::vector<std::vector<Form>>& forms);
+	void SetStage(const int& stageWidth, const int& stageHeight, std::vector<std::vector<WorldMat>>& worldmats, std::vector<std::vector<Form>>& forms);
 
 	//半径を渡す関数
 	float GetRadius() { return blockRadius_; };
@@ -109,7 +110,9 @@ public:
 	bool GetCheckElec() { return isCheckElec_; };
 
 	void SetCheckElec() { isCheckElec_ = false, checkCount = 0; };
-	
+
+	void GeneratePredictBlock();
+
 public:
 	bool isPopGoalEffect = false;
 
@@ -118,8 +121,12 @@ public:
 	//半径
 	const float blockRadius_ = 1.8f;
 
-
+	PredictBlockManager* predictBlockM;
 private:
+	Model* normal; Model* locked; Model* goal; Model* Socket; Model* button; Model* disconnectedBlock;
+	Model* disconnectedButton; Model* disconnectedSocketBlock; Model* electricBlock; Model* doorGoalClosed;
+
+
 	CameraManager* cameraM;
 
 	Tutorial* tutorial;

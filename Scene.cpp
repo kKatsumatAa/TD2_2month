@@ -52,6 +52,8 @@ void SceneStageSelect::Update()
 {
 	scene->stageSelectM->Update();
 
+	ParticleManager::GetInstance()->Update(&scene->cameraM.get()->usingCamera->viewMat, &scene->cameraM.get()->usingCamera->projectionMat);
+
 	//選択されたら
 	if (scene->stageSelectM->isSelect)
 	{
@@ -62,6 +64,8 @@ void SceneStageSelect::Update()
 void SceneStageSelect::Draw()
 {
 	scene->stageSelectM->Draw(scene->cameraM.get());
+
+	ParticleManager::GetInstance()->Draw(scene->texhandle[1]);
 }
 
 void SceneStageSelect::DrawSprite()
@@ -74,6 +78,8 @@ void SceneStageSelect::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
+	scene->predictBlockManager->Initialize();
+
 	//ステージ
 	objWallFloor.worldMat->trans = { { scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f },-scene->blockManager->blockRadius_,0 };
 	objWallFloor.worldMat->scale = { scene->blockManager->blockRadius_ * 5.0f,scene->blockManager->blockRadius_ * 5.0f,scene->blockManager->blockRadius_ * 5.0f };
@@ -86,7 +92,7 @@ void SceneGame::Initialize()
 	scene->cameraM.get()->usingCamera = scene->cameraM->gameMainCamera.get();
 	scene->cameraM->Initialize();
 
-	scene->blockManager->Initialize(scene->connectEM.get(), scene->tutorial.get(), scene->cameraM.get(),
+	scene->blockManager->Initialize(scene->connectEM.get(), scene->predictBlockManager.get(), scene->tutorial.get(), scene->cameraM.get(),
 		scene->goalE.get(), scene->model[1], scene->model[2], scene->model[3], scene->model[4], scene->model[5], scene->model[6],
 		scene->model[8], scene->model[9], scene->model[10], scene->model[11]);
 	scene->connectEM->Initialize();
@@ -129,6 +135,7 @@ void SceneGame::Update()
 			{
 				scene->tutorial->Update();
 			}
+			scene->predictBlockManager->Update();
 		}
 
 		//リセット
@@ -192,6 +199,8 @@ void SceneGame::Draw()
 	scene->playerSocket->Draw(scene->cameraM.get()->usingCamera);
 	scene->connectEM->Draw(*scene->cameraM.get()->usingCamera);
 	scene->connectE2M->Draw(scene->cameraM.get()->usingCamera);
+
+	scene->predictBlockManager->Draw(scene->cameraM.get()->usingCamera);
 
 	ParticleManager::GetInstance()->Draw(scene->texhandle[1]);
 
@@ -394,6 +403,10 @@ void Scene::Initialize()
 	imGuiManager = new ImGuiManager();
 	imGuiManager->Initialize();
 
+	//予測線用
+	predictBlockManager = std::make_unique<PredictBlockManager>();
+	predictBlockManager->Initialize();
+
 	//パーティクル
 	ParticleManager::GetInstance()->Initialize();
 
@@ -410,7 +423,8 @@ void Scene::Initialize()
 
 
 	blockManager = new BlockManager();
-	blockManager->Initialize(connectEM.get(), tutorial.get(), cameraM.get(), goalE.get(), model[1], model[2], model[3], model[4], model[5], model[6], model[8], model[9], model[10], model[11]);
+	blockManager->Initialize(connectEM.get(), predictBlockManager.get(), tutorial.get(), cameraM.get(), goalE.get(), 
+		model[1], model[2], model[3], model[4], model[5], model[6], model[8], model[9], model[10], model[11]);
 
 	stageManager = std::make_unique<StageManager>();
 	stageManager->Initialize(blockManager, tutorial.get());

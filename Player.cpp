@@ -551,6 +551,9 @@ void StateTurnP::Update()
 
 		player->blockM->SetCheckElec();
 
+		//—\‘ªüÁ‚·
+		player->blockM->predictBlockM->ClearPredictBlock();
+
 		player->ChangeStateTurnConnect(new StateNormalConTurP);
 	}
 
