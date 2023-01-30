@@ -65,6 +65,7 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 	this->isConectedGoal = obj.isConectedGoal;
 	this->isChangedConectGoal = obj.isChangedConectGoal;
 	this->isElecConectedGoal = obj.isElecConectedGoal;
+	this->isStopElecConectedGoal = obj.isStopElecConectedGoal;
 
 	for (int i = 0; i < blockWidth; i++)
 	{
@@ -258,18 +259,24 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockMa
 	{
 		for(int j = 0; j < stageHeight_; j++)
 		{
-			//もしゴールに電気が通っていて
-			if(isElec[i][j] == true && form_[i][j] == Form::GOAL)
+			//もしゴールに電気が通っていて道が繋がっているなら
+			if(isElec[i][j] == true && form_[i][j] == Form::GOAL && isConectedGoal == true)
 			{
-				//道が繋がっているなら
-				if(isConectedGoal == true)
-				{
-					//ゴールできるフラグON
-					isElecConectedGoal = true;
-				}
+				isStopElecConectedGoal = true;
+				//ゴールできるフラグON
+				isElecConectedGoal = true;
+			}
+			else if(isStopElecConectedGoal == false)
+			{
+				//ゴールできるフラグON
+				isElecConectedGoal = false;
 			}
 		}
 	}
+
+	//for文のストッパーをリセットする
+	isStopElecConectedGoal = false;
+	
 
 	//その他の設定
 	isCount = 1;
@@ -343,20 +350,22 @@ void BlockManager::Update()
 				}	
 			}
 
-			//もしゴールに電気が通っていて
-			if(isElec[i][j] == true && form_[i][j] == Form::GOAL)
+			//もしゴールに電気が通っていて道が繋がっているなら
+			if(isElec[i][j] == true && form_[i][j] == Form::GOAL && isConectedGoal == true)
 			{
-				//道が繋がっているなら
-				if(isConectedGoal == true)
-				{
-					//ゴールできるフラグON
-					isElecConectedGoal = true;
-				}
+				isStopElecConectedGoal = true;
+				//ゴールできるフラグON
+				isElecConectedGoal = true;
+			}
+			else if(isStopElecConectedGoal == false)
+			{
+				//ゴールできるフラグON
+				isElecConectedGoal = false;
 			}
 		}
 	}
 
-	if(isConectedGoal == true)
+	if(isElecConectedGoal == true)
 	{
 		form_[6][0] = Form::GOAL;
 	}
@@ -364,6 +373,10 @@ void BlockManager::Update()
 	{
 		form_[6][0] = Form::BLOCK;
 	}
+
+	//for文のストッパーをリセットする
+	isStopElecConectedGoal = false;
+	
 
 	//状態を変える時の遅延
 	if (isChanged_ == false)
@@ -1240,10 +1253,8 @@ void BlockManager::UpdateOverlap()
 	}
 
 	//for文のストッパーをリセットする
-	if(isChangedConectGoal == true)
-	{
-		isChangedConectGoal = false;
-	}
+	isChangedConectGoal = false;
+	
 
 	/*if(checkCount > 11)
 	{
@@ -1486,10 +1497,7 @@ void BlockManager::RepositBlock()
 	}
 
 	//for文のストッパーをリセットする
-	if(isChangedConectGoal == true)
-	{
-		isChangedConectGoal = false;
-	}
+	isChangedConectGoal = false;
 
 }
 
@@ -1860,19 +1868,26 @@ void BlockManager::ResetBlock()
 	{
 		for(int j = 0; j < stageHeight_; j++)
 		{
-			//もしゴールに電気が通っていて
-			if(isElec[i][j] == true && form_[i][j] == Form::GOAL)
+			//もしゴールに電気が通っていて道が繋がっているなら
+			if(isElec[i][j] == true && form_[i][j] == Form::GOAL && isConectedGoal == true)
 			{
-				//道が繋がっているなら
-				if(isConectedGoal == true)
-				{
-					//ゴールできるフラグON
-					isElecConectedGoal = true;
-				}
+				isStopElecConectedGoal = true;
+				//ゴールできるフラグON
+				isElecConectedGoal = true;
+			}
+			else if(isStopElecConectedGoal == false)
+			{
+				//ゴールできるフラグON
+				isElecConectedGoal = false;
 			}
 		}
 	}
 	
+	//for文のストッパーをリセットする
+	if(isStopElecConectedGoal == true)
+	{
+		isStopElecConectedGoal = false;
+	}
 
 	//回転
 	isRightRolling = false;

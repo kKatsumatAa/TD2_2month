@@ -299,6 +299,8 @@ private:
 	bool isChangedConectGoal = false;
 	//ゴールに電気が入っていて、ゴールができる状態のフラグ
 	bool isElecConectedGoal = false;
+	//ゴール判定用のfor文のストッパー
+	bool isStopElecConectedGoal = false;
 
 };
 
