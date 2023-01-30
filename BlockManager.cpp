@@ -64,6 +64,7 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 	*this->predictBlockM = *obj.predictBlockM;
 	this->isConectedGoal = obj.isConectedGoal;
 	this->isChangedConectGoal = obj.isChangedConectGoal;
+	this->isElecConectedGoal = obj.isElecConectedGoal;
 
 	for (int i = 0; i < blockWidth; i++)
 	{
@@ -242,10 +243,29 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockMa
 							if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
 							{
 								isConectedGoal = true;
+								isChangedConectGoal = true;
 							}
 						}
 					}
 
+				}
+			}
+		}
+	}
+
+
+	for(int i = 0; i < stageWidth_; i++)
+	{
+		for(int j = 0; j < stageHeight_; j++)
+		{
+			//もしゴールに電気が通っていて
+			if(isElec[i][j] == true && form_[i][j] == Form::GOAL)
+			{
+				//道が繋がっているなら
+				if(isConectedGoal == true)
+				{
+					//ゴールできるフラグON
+					isElecConectedGoal = true;
 				}
 			}
 		}
@@ -1835,6 +1855,24 @@ void BlockManager::ResetBlock()
 			}
 		}
 	}
+
+	for(int i = 0; i < stageWidth_; i++)
+	{
+		for(int j = 0; j < stageHeight_; j++)
+		{
+			//もしゴールに電気が通っていて
+			if(isElec[i][j] == true && form_[i][j] == Form::GOAL)
+			{
+				//道が繋がっているなら
+				if(isConectedGoal == true)
+				{
+					//ゴールできるフラグON
+					isElecConectedGoal = true;
+				}
+			}
+		}
+	}
+	
 
 	//回転
 	isRightRolling = false;
