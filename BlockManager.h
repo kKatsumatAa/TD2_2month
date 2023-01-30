@@ -295,5 +295,7 @@ private:
 
 	//ゴールがブロックとつながっているかどうか
 	bool isConectedGoal;
+
+	bool isChangedConectGoal = false;
 };
 
