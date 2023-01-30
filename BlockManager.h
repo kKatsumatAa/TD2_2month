@@ -297,6 +297,7 @@ private:
 	bool isConectedGoal;
 	//ゴール判定用のfor文のストッパー
 	bool isChangedConectGoal = false;
+	//ゴールに電気が入っていて、ゴールができる状態のフラグ
 	bool isElecConectedGoal = false;
 
 };
