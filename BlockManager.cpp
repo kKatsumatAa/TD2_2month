@@ -322,6 +322,17 @@ void BlockManager::Update()
 					isElec[i][j] = false;
 				}	
 			}
+
+			//もしゴールに電気が通っていて
+			if(isElec[i][j] == true && form_[i][j] == Form::GOAL)
+			{
+				//道が繋がっているなら
+				if(isConectedGoal == true)
+				{
+					//ゴールできるフラグON
+					isElecConectedGoal = true;
+				}
+			}
 		}
 	}
 
@@ -1208,6 +1219,12 @@ void BlockManager::UpdateOverlap()
 		}
 	}
 
+	//for文のストッパーをリセットする
+	if(isChangedConectGoal == true)
+	{
+		isChangedConectGoal = false;
+	}
+
 	/*if(checkCount > 11)
 	{
 		isCheckElec_ = true;
@@ -1448,9 +1465,10 @@ void BlockManager::RepositBlock()
 		}
 	}
 
+	//for文のストッパーをリセットする
 	if(isChangedConectGoal == true)
 	{
-		isConectedGoal = false;
+		isChangedConectGoal = false;
 	}
 
 }

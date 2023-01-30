@@ -295,7 +295,9 @@ private:
 
 	//ゴールがブロックとつながっているかどうか
 	bool isConectedGoal;
-
+	//ゴール判定用のfor文のストッパー
 	bool isChangedConectGoal = false;
+	bool isElecConectedGoal = false;
+
 };
 
