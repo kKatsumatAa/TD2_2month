@@ -87,7 +87,7 @@ public:
 
 	void DrawInitialize();
 
-	void DrawUpdate(const XMFLOAT4& winRGBA = { 0.1f,0.25f,0.5f,0.0f });
+	void DrawUpdate(const XMFLOAT4& winRGBA = { 0.01f,0.0f,0.1f,1.0f });
 
 	void DrawUpdate2();
 

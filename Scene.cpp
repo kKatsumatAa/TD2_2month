@@ -81,9 +81,10 @@ void SceneGame::Initialize()
 	scene->predictBlockManager->Initialize();
 
 	//ステージ
-	objWallFloor.worldMat->trans = { { scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f },-scene->blockManager->blockRadius_,0 };
-	objWallFloor.worldMat->scale = { scene->blockManager->blockRadius_ * 5.0f,scene->blockManager->blockRadius_ * 5.0f,scene->blockManager->blockRadius_ * 5.0f };
-	objWallFloor.worldMat->SetWorld();
+	objWallFloor[0].worldMat->trans = { {scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f - scene->blockManager->blockRadius_}
+	,-scene->blockManager->blockRadius_ / 2.0f,0 };
+	objWallFloor[0].worldMat->scale = { scene->blockManager->blockRadius_ ,scene->blockManager->blockRadius_ ,scene->blockManager->blockRadius_ };
+	objWallFloor[0].worldMat->SetWorld();
 
 	//丸影
 	scene->lightManager->SetCircleShadowActive(0, true);
@@ -190,7 +191,7 @@ void SceneGame::Update()
 
 void SceneGame::Draw()
 {
-	objWallFloor.DrawModel(objWallFloor.worldMat, &scene->cameraM.get()->usingCamera->viewMat, &scene->cameraM.get()->usingCamera->projectionMat,
+	objWallFloor[0].DrawModel(objWallFloor[0].worldMat, &scene->cameraM.get()->usingCamera->viewMat, &scene->cameraM.get()->usingCamera->projectionMat,
 		scene->model[7], { 0.7f,0.7f,0.7f,1.0f });
 
 	scene->blockManager->Draw(scene->cameraM.get()->usingCamera);
@@ -343,6 +344,7 @@ Scene::~Scene()
 	delete model[9];
 	delete model[10];
 	delete model[11];
+	delete model[12];
 
 }
 
@@ -391,11 +393,12 @@ void Scene::Initialize()
 	model[5] = Model::LoadFromOBJ("Button");
 	model[6] = Model::LoadFromOBJ("DisconnectedBlock");
 
-	model[7] = Model::LoadFromOBJ("FloorAndWall");
+	model[7] = Model::LoadFromOBJ("Floor");
 	model[8] = Model::LoadFromOBJ("DisconnectedButton");
 	model[9] = Model::LoadFromOBJ("DisconnectedSocketBlock");
 	model[10] = Model::LoadFromOBJ("ElectricBlock");
 	model[11] = Model::LoadFromOBJ("DoorGoal_Closed");
+	model[12] = Model::LoadFromOBJ("Wall");
 
 
 
@@ -423,7 +426,7 @@ void Scene::Initialize()
 
 
 	blockManager = new BlockManager();
-	blockManager->Initialize(connectEM.get(), predictBlockManager.get(), tutorial.get(), cameraM.get(), goalE.get(), 
+	blockManager->Initialize(connectEM.get(), predictBlockManager.get(), tutorial.get(), cameraM.get(), goalE.get(),
 		model[1], model[2], model[3], model[4], model[5], model[6], model[8], model[9], model[10], model[11]);
 
 	stageManager = std::make_unique<StageManager>();

@@ -133,7 +133,7 @@ public:
 class SceneGame : public SceneState
 {
 private:
-	Object objWallFloor;
+	Object objWallFloor[2];
 	Object obj[5];
 
 public:
