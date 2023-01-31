@@ -513,7 +513,7 @@ void Scene::Update()
 
 		ImGui::Begin("Elec");
 		//ImGui::SetWindowPos("Elec", ImVec2(100, 100));
-		ImGui::SetWindowSize("Elec", ImVec2(600, 800));
+		ImGui::SetWindowSize("Elec", ImVec2(400, 800));
 		
 		for(int i = 0; i < 13; i++)
 		{
