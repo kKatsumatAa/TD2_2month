@@ -513,15 +513,12 @@ void Scene::Update()
 
 		ImGui::Begin("Elec");
 		//ImGui::SetWindowPos("Elec", ImVec2(100, 100));
-		ImGui::SetWindowSize("Elec", ImVec2(200, 800));
+		ImGui::SetWindowSize("Elec", ImVec2(600, 800));
 		
 		for(int i = 0; i < 13; i++)
 		{
-			for(int j = 0; j < 13; j++)
-			{
-				ImGui::Text("%d : %d",i,j);
-				ImGui::InputInt("isElec", &elec[i][j], 0.0f);
-			}
+			ImGui::Text("%d",i);
+			ImGui::InputInt13("isElec", elec[i], 0.0f);
 		}
 		
 		ImGui::End();

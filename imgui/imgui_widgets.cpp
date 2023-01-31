@@ -3513,6 +3513,11 @@ bool ImGui::InputInt4(const char* label, int v[4], ImGuiInputTextFlags flags)
     return InputScalarN(label, ImGuiDataType_S32, v, 4, NULL, NULL, "%d", flags);
 }
 
+bool ImGui::InputInt13(const char* label, int v[4], ImGuiInputTextFlags flags)
+{
+    return InputScalarN(label, ImGuiDataType_S32, v, 13, NULL, NULL, "%d", flags);
+}
+
 bool ImGui::InputDouble(const char* label, double* v, double step, double step_fast, const char* format, ImGuiInputTextFlags flags)
 {
     flags |= ImGuiInputTextFlags_CharsScientific;
