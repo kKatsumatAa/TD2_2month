@@ -6,6 +6,7 @@
 #include <sstream>
 #include "GoalEffect.h"
 #include "PredictBlock.h"
+#include "ImGuiManager.h"
 
 
 class BlockManager
@@ -73,8 +74,8 @@ public:
 	//bool GetIsOverlapBlock(Vec3 pos);
 
 	//ブロック座標読み込み
-	void LoadBlockPosData();
-	void UpdateBlockPos();
+	//void LoadBlockPosData();
+	//void UpdateBlockPos();
 	//ブロックの発生関数
 	void BlockPop(Vec3 pos);
 
@@ -113,6 +114,11 @@ public:
 
 	void GeneratePredictBlock();
 
+	//電気確認用Imguiへのゲッター
+	bool GetIsElec() const{ return &isElec; }
+
+	void SetElec(int elec[13][13]);
+
 public:
 	bool isPopGoalEffect = false;
 
@@ -125,7 +131,6 @@ public:
 private:
 	Model* normal; Model* locked; Model* goal; Model* Socket; Model* button; Model* disconnectedBlock;
 	Model* disconnectedButton; Model* disconnectedSocketBlock; Model* electricBlock; Model* doorGoalClosed;
-
 
 	CameraManager* cameraM;
 
@@ -256,8 +261,8 @@ private:
 	std::vector<std::vector<WorldMat>> loadWorldmats_;
 
 	//読み込んだステージの長さ
-	float stageWidth_;
-	float stageHeight_;
+	int stageWidth_;
+	int stageHeight_;
 
 	//上がる前の座標
 	float beforeTransY[blockWidth][blockHeight];

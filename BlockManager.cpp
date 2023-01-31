@@ -1,5 +1,5 @@
 #include "BlockManager.h"
-#include <fstream>
+//#include <fstream>
 #include <complex>
 #include "ParticleManager.h"
 #include "GetBackManager.h"
@@ -928,7 +928,6 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 									{
 										isConectedGoal = true;
 									}
-									
 								}
 							}
 						}
@@ -988,15 +987,15 @@ bool BlockManager::GetIsGoal(Vec3& pos, bool isPlayer)
 						{
 							if (i < 2)
 							{
-								goalCameraPoses.push_back(cameraM->gameMainCamera->GetEye() + Vec3{ goalEyeDistance.x,goalEyeDistance.y + i * 60.0f ,goalEyeDistance.z } / 4.0f * i);
+								goalCameraPoses.push_back(cameraM->gameMainCamera->GetEye() + Vec3{ goalEyeDistance.x,goalEyeDistance.y + i * 60.0f ,goalEyeDistance.z } / 4.0f * float(i));
 							}
 							else if (i == 4 - 2)
 							{
-								goalCameraPoses.push_back(cameraM->gameMainCamera->GetEye() + Vec3{ goalEyeDistance.x,goalEyeDistance.y - blockRadius_ * 10.0f ,goalEyeDistance.z } / 4.0f * i);
+								goalCameraPoses.push_back(cameraM->gameMainCamera->GetEye() + Vec3{ goalEyeDistance.x,goalEyeDistance.y - blockRadius_ * 10.0f ,goalEyeDistance.z } / 4.0f * float(i));
 							}
 							else
 							{
-								goalCameraPoses.push_back(cameraM->gameMainCamera->GetEye() + goalEyeDistance / 4.0f * i);
+								goalCameraPoses.push_back(cameraM->gameMainCamera->GetEye() + goalEyeDistance / 4.0f * float(i));
 							}
 						}
 
@@ -2068,6 +2067,23 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 		}
 	}
 }
+
+void BlockManager::SetElec(int elec[13][13])
+{
+
+	//全ての壁の座標を渡す
+	for(int i = 0; i < blockWidth; i++)
+	{
+		for(int j = 0; j < blockHeight; j++)
+		{
+			//ワールド行列の平行移動成分を取得(ワールド座標)
+			//blockPos[i][j] = worldTransforms_[i][j].translation_;
+			elec[i][j] = isElec[i][j];
+		}
+	}
+
+}
+
 //
 //void BlockManager::LoadBlockPosData()
 //{

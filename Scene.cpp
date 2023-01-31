@@ -491,20 +491,39 @@ void Scene::Update()
 	//imgui
 	imGuiManager->Begin();
 
+	//{
+	//	//デモ
+	//	ImGui::ShowDemoWindow();
+
+	//	static bool a = true;
+	//	ImGui::Begin("circleShadow", &a, ImGuiWindowFlags_MenuBar);
+
+	//	ImGui::InputFloat3("cameraPos", cameraPosImgui);
+	//	ImGui::InputFloat3("cameraTarget", cameraTarget);
+	//	/*ImGui::InputFloat2("circleShadowFactorAngle", circleShadowFactorAngle);
+	//	ImGui::InputFloat("distanceLight", &circleShadowDistance);*/
+
+	//	ImGui::End();
+	//}
+
+	//ブロックウインドウの表示
 	{
-		//デモ
-		ImGui::ShowDemoWindow();
+		
+		blockManager->SetElec(elec);
 
-
-
-		static bool a = true;
-		ImGui::Begin("circleShadow", &a, ImGuiWindowFlags_MenuBar);
-
-		ImGui::InputFloat3("cameraPos", cameraPosImgui);
-		ImGui::InputFloat3("cameraTarget", cameraTarget);
-		/*ImGui::InputFloat2("circleShadowFactorAngle", circleShadowFactorAngle);
-		ImGui::InputFloat("distanceLight", &circleShadowDistance);*/
-
+		ImGui::Begin("Elec");
+		//ImGui::SetWindowPos("Elec", ImVec2(100, 100));
+		ImGui::SetWindowSize("Elec", ImVec2(200, 800));
+		
+		for(int i = 0; i < 13; i++)
+		{
+			for(int j = 0; j < 13; j++)
+			{
+				ImGui::Text("%d : %d",i,j);
+				ImGui::InputInt("isElec", &elec[i][j], 0.0f);
+			}
+		}
+		
 		ImGui::End();
 	}
 

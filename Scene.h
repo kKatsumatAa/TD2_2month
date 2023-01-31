@@ -76,6 +76,9 @@ public:
 	float cameraPosImgui[3] = { 0 };
 	float cameraTarget[3] = { 0 };
 
+	//エレキ確認用
+	int elec[13][13];
+
 
 	std::unique_ptr<CameraManager> cameraM;
 
