@@ -515,46 +515,50 @@ void StateTurnP::Update()
 	//回転終わる
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) && !player->blockM->GetIsRollingLeftorRight() && player->blockM->GetCheckElec())
 	{
-		//一手戻る機能に記録
-		GetBackManager::GetInstance()->SaveDatas();
-
-		//先行
-		player->bufferedKeyArrow = NONE;
-
-		player->isTurnNow = false;
-		//繋がれているブロックを全部解除するステージ関数()
-		player->blockM->ReleseConectedBlock();
-		//コンセントを抜く
-		player->playerSocket->FinishSocket(player->GetWorldPos());
-
-		player->isConnect = false;
-
-		player->bufferedPushSpace = false;
-
-		//演出
-		Vec3 scale = player->GetWorldTransForm()->scale;
-		player->GetWorldTransForm()->scale = { scale.x * 0.1f,scale.y * 2.0f,scale.z * 0.1f };
-
-		//カメラ切り替え
+		if(player->blockM->GetisLockedBlock(player->GetWorldPos()) == false)
 		{
-			player->cameraM->usingCamera = player->cameraM->gameTurnCamera.get();
+			//一手戻る機能に記録
+			GetBackManager::GetInstance()->SaveDatas();
 
-			player->cameraM->BegineLerpUsingCamera(
-				player->cameraM->gameTurnCamera->GetEye(),
-				player->cameraM->gameMainCamera->GetEye(),
-				player->cameraM->gameTurnCamera->GetTarget(),
-				player->cameraM->gameMainCamera->GetTarget(),
-				player->cameraM->gameTurnCamera->GetUp(),
-				player->cameraM->gameMainCamera->GetUp(),
-				60);
+			//先行
+			player->bufferedKeyArrow = NONE;
+
+			player->isTurnNow = false;
+			//繋がれているブロックを全部解除するステージ関数()
+			player->blockM->ReleseConectedBlock();
+			//コンセントを抜く
+			player->playerSocket->FinishSocket(player->GetWorldPos());
+
+			player->isConnect = false;
+
+			player->bufferedPushSpace = false;
+
+			//演出
+			Vec3 scale = player->GetWorldTransForm()->scale;
+			player->GetWorldTransForm()->scale = { scale.x * 0.1f,scale.y * 2.0f,scale.z * 0.1f };
+
+			//カメラ切り替え
+			{
+				player->cameraM->usingCamera = player->cameraM->gameTurnCamera.get();
+
+				player->cameraM->BegineLerpUsingCamera(
+					player->cameraM->gameTurnCamera->GetEye(),
+					player->cameraM->gameMainCamera->GetEye(),
+					player->cameraM->gameTurnCamera->GetTarget(),
+					player->cameraM->gameMainCamera->GetTarget(),
+					player->cameraM->gameTurnCamera->GetUp(),
+					player->cameraM->gameMainCamera->GetUp(),
+					60);
+			}
+
+			player->blockM->SetCheckElec();
+
+			//予測線消す
+			player->blockM->predictBlockM->ClearPredictBlock();
+
+			player->ChangeStateTurnConnect(new StateNormalConTurP);
 		}
-
-		player->blockM->SetCheckElec();
-
-		//予測線消す
-		player->blockM->predictBlockM->ClearPredictBlock();
-
-		player->ChangeStateTurnConnect(new StateNormalConTurP);
+		
 	}
 
 }

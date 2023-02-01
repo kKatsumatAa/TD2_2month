@@ -363,15 +363,6 @@ void BlockManager::Update()
 		}
 	}
 
-	if(isElecConectedGoal == true)
-	{
-		form_[6][0] = Form::GOAL;
-	}
-	else
-	{
-		form_[6][0] = Form::BLOCK;
-	}
-
 	//for文のストッパーをリセットする
 	isStopElecConectedGoal = false;
 	
