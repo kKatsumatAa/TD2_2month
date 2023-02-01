@@ -79,6 +79,8 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 		if (color.w < 1.0f) { color.w += 0.05f; }
 	}
 
+
+
 	if(isElec == true)
 	{
 		if(form == Form::BLOCK) { draw[0].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color); }
@@ -89,6 +91,10 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 			worldTransform_.trans.y = 1.2f;
 			draw[1].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &button_[0], color); 
 		}
+
+		goalMat.trans.y = -0.5;
+		draw[11].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &normal_[0], color);
+
 		if(form == Form::GOAL)
 		{
 			/*connectEM->GenerateRandomConnectingEffect({ worldTransform_.trans.x,worldTransform_.trans.y + radius_ * 4.0f,worldTransform_.trans.z }
@@ -154,6 +160,7 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 		draw[5].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &electricBlock_[0], color); 
 	}
 
+	
 }
 
 void Block::OnCollision(Collider& collider)

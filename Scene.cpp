@@ -78,7 +78,7 @@ void SceneStageSelect::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
-	Object::effectFlags.isEmboss = true;
+	//Object::effectFlags.isEmboss = true;
 
 	scene->predictBlockManager->Initialize();
 
@@ -150,6 +150,7 @@ void SceneGame::Update()
 			scene->player->Reset();
 			scene->blockManager->ResetBlock();
 			scene->connectE2M->Initialize();
+			scene->predictBlockManager->Initialize();
 			scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
 			if (scene->stageManager->selectStage == STAGE::TUTORIAL)
 			{

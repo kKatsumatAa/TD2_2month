@@ -4,7 +4,6 @@
 #include "ParticleManager.h"
 #include "GetBackManager.h"
 
-
 using namespace std;
 
 BlockManager& BlockManager::operator=(const BlockManager& obj)
@@ -254,7 +253,6 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockMa
 		}
 	}
 
-
 	for(int i = 0; i < stageWidth_; i++)
 	{
 		for(int j = 0; j < stageHeight_; j++)
@@ -377,6 +375,7 @@ void BlockManager::Update()
 	//for文のストッパーをリセットする
 	isStopElecConectedGoal = false;
 	
+	goalMat.scale = { Vec3(blockRadius_,blockRadius_,blockRadius_) };
 
 	//状態を変える時の遅延
 	if (isChanged_ == false)
@@ -1815,6 +1814,7 @@ void BlockManager::ResetBlock()
 			if (form_[i][j] == Form::GOAL)
 			{
 				goalMat = worldmats_[i][j];
+				goalMat.scale = { Vec3(blockRadius_,blockRadius_,blockRadius_) };
 			}
 
 			isGoal_[i][j] = false;
@@ -2068,6 +2068,7 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 			if (form_[i][j] == Form::GOAL)
 			{
 				goalMat = worldmats_[i][j];
+				goalMat.scale = { Vec3(blockRadius_,blockRadius_,blockRadius_) };
 			}
 
 			isGoal_[i][j] = false;
