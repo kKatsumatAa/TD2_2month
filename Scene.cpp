@@ -78,7 +78,7 @@ void SceneStageSelect::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
-	Object::effectFlags.isVignette = true;
+	//Object::effectFlags.isVignette = true;
 
 	scene->predictBlockManager->Initialize();
 
