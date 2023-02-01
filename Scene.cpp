@@ -78,6 +78,8 @@ void SceneStageSelect::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
+	Object::effectFlags.isEmboss = true;
+
 	scene->predictBlockManager->Initialize();
 
 	//ステージ
@@ -178,12 +180,14 @@ void SceneGame::Update()
 
 		if (scene->goalE->isEnd)
 		{
+			Object::effectFlags.isEmboss = false;
 			scene->ChangeState(new SceneClear);
 		}
 	}
 	//ステージセレクトに戻る
 	else if (KeyboardInput::GetInstance().KeyTrigger(DIK_Q) || KeyboardInput::GetInstance().KeyTrigger(DIK_ESCAPE))
 	{
+		Object::effectFlags.isEmboss = false;
 		scene->cameraM->usingCamera = scene->cameraM->stageSelectCamera.get();
 		scene->ChangeState(new SceneStageSelect);
 	}
@@ -508,20 +512,19 @@ void Scene::Update()
 
 	//ブロックウインドウの表示
 	{
-		
 		//blockManager->SetElec(elec);
 
-		ImGui::Begin("Elec");
-		//ImGui::SetWindowPos("Elec", ImVec2(100, 100));
-		ImGui::SetWindowSize("Elec", ImVec2(400, 800));
-		
-		for(int i = 0; i < 13; i++)
-		{
-			ImGui::Text("%d",i);
-			ImGui::InputInt13("isElec", elec[i], 0.0f);
-		}
-		
-		ImGui::End();
+		//ImGui::Begin("Elec");
+		////ImGui::SetWindowPos("Elec", ImVec2(100, 100));
+		//ImGui::SetWindowSize("Elec", ImVec2(400, 800));
+		//
+		//for(int i = 0; i < 13; i++)
+		//{
+		//	ImGui::Text("%d",i);
+		//	ImGui::InputInt13("isElec", elec[i], 0.0f);
+		//}
+		//
+		//ImGui::End();
 	}
 
 	//imgui
@@ -569,6 +572,11 @@ void Scene::DrawSprite()
 	//imgui
 	imGuiManager->Draw();
 #endif 
+}
+
+void Scene::DrawPostEffect()
+{
+	Object::DrawPera();
 }
 
 void Scene::StopAllWave()

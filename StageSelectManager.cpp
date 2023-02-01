@@ -30,6 +30,9 @@ void StageSelectManager::Initialize(StageManager* stageM)
 	isTutorial = false;
 	isSelect = false;
 
+	isRight = false;
+	isLeft = false;
+
 	if (texhandle[0] == NULL)
 	{
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlameTutorial.png", texhandle[0]);
@@ -54,6 +57,7 @@ void StageSelectManager::Update()
 			selectNum--;
 			this->isLerpMoving = true;
 			this->lerpCount = 0;
+			isLeft = true;
 		}
 	}
 	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_D)) /*&& !this->isLerpMoving*/)
@@ -65,6 +69,7 @@ void StageSelectManager::Update()
 			selectNum++;
 			this->isLerpMoving = true;
 			this->lerpCount = 0;
+			isRight = true;
 		}
 	}
 
@@ -76,12 +81,22 @@ void StageSelectManager::Update()
 		for (int i = 0; i < this->selectNumMax; i++)
 		{
 			object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),0,0.0f };
+			if (isRight)
+			{
+				object[i].worldMat->rot.z = { LerpVec3({0,0,0},{0,0,-pi * 2.0f}, EaseIn((float)lerpCount / (float)lerpCountMax)).z };
+			}
+			else if (isLeft)
+			{
+				object[i].worldMat->rot.z = { LerpVec3({0,0,0},{0,0,pi * 2.0f}, EaseIn((float)lerpCount / (float)lerpCountMax)).z };
+			}
 			object[i].worldMat->SetWorld();
 		}
 
 		if (lerpCount >= lerpCountMax)
 		{
 			isLerpMoving = false;
+			isLeft = false;
+			isRight = false;
 		}
 	}
 

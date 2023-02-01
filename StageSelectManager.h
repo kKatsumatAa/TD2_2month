@@ -25,6 +25,9 @@ private:
 
 	int count = 0;
 
+	bool isRight = false;
+	bool isLeft = false;
+
 public:
 	bool isTutorial = false;
 	bool isSelect = false;
