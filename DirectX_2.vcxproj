@@ -155,6 +155,7 @@
     <ClCompile Include="ColliderManager.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CollisionPrimitive.cpp" />
+    <ClCompile Include="ConectLimit.cpp" />
     <ClCompile Include="ConnectingEffect.cpp" />
     <ClCompile Include="ConnectingEffect2.cpp" />
     <ClCompile Include="ConstBuffTransform.cpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionConfig.h" />
     <ClInclude Include="CollisionPrimitive.h" />
+    <ClInclude Include="ConectLimit.h" />
     <ClInclude Include="ConnectingEffect.h" />
     <ClInclude Include="ConnectingEffect2.h" />
     <ClInclude Include="ConstBuffTransform.h" />
