@@ -75,3 +75,9 @@ cbuffer ConstBufferDataMaterial3 : register(b3)
 	SpotLight  spotLights[SPOTLIGHT_NUM];
 	CircleShadow circleShadows[CIRCLESHADOW_NUM];
 }
+
+cbuffer ConstBufferEffectFlags : register(b4)
+{
+	//ÉtÉHÉO
+	uint isFog;
+}

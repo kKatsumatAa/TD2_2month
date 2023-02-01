@@ -73,6 +73,12 @@ cbuffer ConstBufferDataMaterial3 : register(b3)
 	CircleShadow circleShadows[CIRCLESHADOW_NUM];
 }
 
+cbuffer ConstBufferEffectFlags : register(b4)
+{
+	//フォグ
+	uint isFog;
+}
+
 //頂点シェーダからピクセルシェーダーへのやり取りに使用する構造体
 struct VSOutput
 {

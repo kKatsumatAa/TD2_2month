@@ -19,6 +19,8 @@ cbuffer ConstBufferEffectFlags : register(b0)
 	uint isGradation;
 	//アウトライン
 	uint isOutLine;
+	//ビネット
+	uint isVignette;
 }
 
 //vsからpsに送る
