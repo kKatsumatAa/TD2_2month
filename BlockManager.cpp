@@ -1016,6 +1016,30 @@ bool BlockManager::GetIsGoal(Vec3& pos, bool isPlayer)
 	return false;
 }
 
+bool BlockManager::GetisLockedBlock(Vec3 pos)
+{
+	for(int i = 0; i < stageWidth_; i++)
+	{
+		for(int j = 0; j < stageHeight_; j++)
+		{
+			//プレイヤーが指定のブロックの上にいるかどうか
+			if(worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
+				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
+			{
+				//そのブロックの形状は重なっているブロックかどうか
+				if(form_[i][j] == Form::LOCKED)
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	//プレイヤーが重なっているブロックにいる場合
+	return false;
+}
+
+
 //重なった時の処理
 void BlockManager::UpdateOverlap()
 {
@@ -2090,6 +2114,7 @@ void BlockManager::SetElec(int elec[13][13])
 	}
 
 }
+
 
 //
 //void BlockManager::LoadBlockPosData()
