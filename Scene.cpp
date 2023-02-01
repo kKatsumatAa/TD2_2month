@@ -78,7 +78,6 @@ void SceneStageSelect::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
-	//Object::effectFlags.isVignette = true;
 
 	scene->predictBlockManager->Initialize();
 
@@ -181,14 +180,12 @@ void SceneGame::Update()
 
 		if (scene->goalE->isEnd)
 		{
-			Object::effectFlags.isVignette = false;
 			scene->ChangeState(new SceneClear);
 		}
 	}
 	//ステージセレクトに戻る
 	else if (KeyboardInput::GetInstance().KeyTrigger(DIK_Q) || KeyboardInput::GetInstance().KeyTrigger(DIK_ESCAPE))
 	{
-		Object::effectFlags.isVignette = false;
 		scene->cameraM->usingCamera = scene->cameraM->stageSelectCamera.get();
 		scene->ChangeState(new SceneStageSelect);
 	}
@@ -482,6 +479,8 @@ void Scene::Initialize()
 	//ステージセレクトマネージャー
 	stageSelectM = std::make_unique<StageSelectManager>();
 	stageSelectM->Initialize(stageManager.get());
+
+	Object::effectFlags.isBarrelCurve = true;
 
 	//ステート変更
 	ChangeState(new SceneStageSelect);

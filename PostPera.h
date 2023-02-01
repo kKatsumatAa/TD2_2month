@@ -22,6 +22,8 @@ struct EffectConstBuffer
 	unsigned int isOutLine = false;
 	//ƒrƒlƒbƒg
 	unsigned int isVignette = false;
+	//’Mó˜p‹È
+	unsigned int isBarrelCurve = false;
 };
 
 struct PeraVertex

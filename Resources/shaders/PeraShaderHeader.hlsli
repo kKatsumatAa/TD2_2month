@@ -21,6 +21,8 @@ cbuffer ConstBufferEffectFlags : register(b0)
 	uint isOutLine;
 	//ビネット
 	uint isVignette;
+	//樽状湾曲
+	uint isBarrelCurve;
 }
 
 //vsからpsに送る
