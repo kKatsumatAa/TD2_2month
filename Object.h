@@ -3,6 +3,9 @@
 #include "Util.h"
 #include "Primitive.h"
 #include "LightManager.h"
+#include "PostPera.h"
+
+class BaseCollider;
 
 
 /// <summary>
@@ -29,7 +32,7 @@ private:
 	ConstBuffTransform cbt;//ここをどうにかすれば、インスタンス一つでも色々描画
 
 
-		//定数バッファの生成
+	//定数バッファの生成
 	ComPtr < ID3D12Resource> constBuffMaterial = nullptr;
 	//定数バッファ用データ構造体（マテリアル）
 	//定数バッファのマッピング
@@ -41,23 +44,43 @@ private:
 	//ライト
 	static LightManager* lightManager;
 
+
+
 private:
 	//--------------------
 	void Update(const int& indexNum, const int& pipelineNum, const UINT64 textureHandle, const ConstBuffTransform& constBuffTransform,
 		Model* model = nullptr, const bool& primitiveMode = true);
+
+
 
 public://変数
 	WorldMat* worldMat = new WorldMat();
 	ViewMat* view;
 	ProjectionMat* projection;
 	bool isWireFrame = 0;
+	//画面効果用
+	static EffectConstBuffer effectFlags;
+	//画面効果用
+	static ComPtr <ID3D12Resource> effectFlagsBuff;
+	static EffectConstBuffer* mapEffectFlagsBuff;
+
+protected://継承先まで公開
+	//クラス名(デバッグ用)
+	const char* name = nullptr;
+	//コライダー
+	BaseCollider* collider = nullptr;
+
 
 public:
-
-
-	//
+	//コンストラクタ
 	Object();
 
+	//ワールド行列の取得
+	const M4 GetMatWorld() { return worldMat->matWorld; }
+
+	//-------------
+
+	static void DrawPera();
 
 	void DrawTriangle(/*XMFLOAT3& pos1, XMFLOAT3& pos2, XMFLOAT3& pos3,*/
 		WorldMat* world, ViewMat* view, ProjectionMat* projection, XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f },

@@ -40,6 +40,8 @@ public:
 
 	static KeyboardInput& GetInstance();
 
+	void Initialize();
+
 	void Update();
 
 

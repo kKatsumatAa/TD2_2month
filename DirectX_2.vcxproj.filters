@@ -168,6 +168,9 @@
     <ClCompile Include="PredictBlock.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="PostPera.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KeyboardInput.h">
@@ -323,13 +326,19 @@
     <ClInclude Include="PredictBlock.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="PostPera.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\OBJPixelShader.hlsl" />
     <FxCompile Include="Resources\shaders\OBJVertexShader.hlsl" />
+    <FxCompile Include="Resources\shaders\PeraPixelShader.hlsl" />
+    <FxCompile Include="Resources\shaders\PeraVertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shaders\OBJShaderHeader.hlsli" />
+    <None Include="Resources\shaders\PeraShaderHeader.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="imgui\LICENSE.txt" />

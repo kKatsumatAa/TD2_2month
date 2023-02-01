@@ -16,7 +16,6 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 #include<chrono>
 
-
 class Directx final
 {
 private:
@@ -54,6 +53,13 @@ private:
 	//記録時間（FPS固定
 	std::chrono::steady_clock::time_point reference_;
 
+	FLOAT clearColor[4] = { 0.1f,0.25f, 0.5f,0.0f };
+
+	//ポストエフェクト用
+	ComPtr<ID3D12Resource> _peraResource;
+	ComPtr<ID3D12DescriptorHeap> _peraRTVHeap;//レンダーターゲット用
+	ComPtr<ID3D12DescriptorHeap> _peraSRVHeap;//テクスチャ用
+	bool isPeraClear = false;
 
 private:
 	Directx();
@@ -83,17 +89,25 @@ public:
 	Directx& operator=(const Directx& obj) = delete;
 
 	//関数
+	void Initialize();
+
 	static Directx& GetInstance();
 
 	void DrawInitialize();
 
-	void DrawUpdate(const XMFLOAT4& winRGBA = { 0.01f,0.0f,0.1f,1.0f });
+	void DrawUpdate(const XMFLOAT4& winRGBA = { 0.1f,0.25f,0.5f,0.0f });
 
 	void DrawUpdate2();
+
+	void PostDrawToPera();
+
+	void PreDrawToPera();
 
 	//getter
 	ID3D12Device* GetDevice() const { return device.Get(); }
 	ID3D12GraphicsCommandList* GetCommandList() const { return commandList.Get(); }
+	ComPtr<ID3D12DescriptorHeap> GetPeraSRVHeap() const { return _peraSRVHeap; }
+
 	//バックバッファの数を取得
 	size_t GetBackBufferCount() const { return backBuffers.size(); }
 };

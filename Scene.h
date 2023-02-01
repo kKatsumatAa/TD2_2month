@@ -106,6 +106,8 @@ public:
 	void Draw();
 	void DrawSprite();
 
+	void DrawPostEffect();
+
 	void StopAllWave();
 };
 
