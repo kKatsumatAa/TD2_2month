@@ -509,7 +509,7 @@ void Scene::Update()
 	//ブロックウインドウの表示
 	{
 		
-		blockManager->SetElec(elec);
+		//blockManager->SetElec(elec);
 
 		ImGui::Begin("Elec");
 		//ImGui::SetWindowPos("Elec", ImVec2(100, 100));
