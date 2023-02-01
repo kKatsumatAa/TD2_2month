@@ -83,11 +83,11 @@ void StageSelectManager::Update()
 			object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),0,0.0f };
 			if (isRight)
 			{
-				object[i].worldMat->rot.z = { LerpVec3({0,0,0},{0,0,-pi * 2.0f}, EaseOut((float)lerpCount / (float)lerpCountMax)).z };
+				object[i].worldMat->rot.z = { LerpVec3({0,0,0},{0,0,-pi * 2.0f}, EaseIn((float)lerpCount / (float)lerpCountMax)).z };
 			}
 			else if (isLeft)
 			{
-				object[i].worldMat->rot.z = { LerpVec3({0,0,0},{0,0,pi * 2.0f}, EaseOut((float)lerpCount / (float)lerpCountMax)).z };
+				object[i].worldMat->rot.z = { LerpVec3({0,0,0},{0,0,pi * 2.0f}, EaseIn((float)lerpCount / (float)lerpCountMax)).z };
 			}
 			object[i].worldMat->SetWorld();
 		}
