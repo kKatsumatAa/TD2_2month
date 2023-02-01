@@ -48,10 +48,18 @@ private:
 
 	int skipTimer = 0;
 	static const int skipMaxTime = 40;
-	
+
 public:
 	UINT64 texhandle[10];
 	Object sprite[5];
+
+	int spriteCount = 0;
+	const int spriteCountMax = 30;
+	float spriteSize = 0;
+	const float spriteSizeMax = 0.58f;
+	float spriteRot = 0;
+	const float spriteRotMax = 360.0f;
+
 
 	void Update();
 	//最初のチュートリアルの
@@ -65,7 +73,7 @@ public:
 	void Draw();
 
 	int GetState() { return state2; }
-	void AddState2() { state2++; }
+	void AddState2() { state2++; spriteCount = 0; }
 	void AddStateNum() { state->AddNum(); }
 
 	int GetStateNum() { return state->GetNum(); }

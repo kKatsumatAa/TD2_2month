@@ -9,6 +9,7 @@ void StageSelectManager::Initialize(StageManager* stageM)
 	for (int i = 0; i < this->selectNumMax; i++)
 	{
 		object[i].worldMat->scale = { stageImageRadius,stageImageRadius,1.0f };
+		object[i].worldMat->rot = { 0,0,0 };
 		//object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f),0,0 };
 		object[i].worldMat->SetWorld();
 	}

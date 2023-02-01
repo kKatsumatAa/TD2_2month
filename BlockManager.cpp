@@ -11,7 +11,7 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 	/*this->Initialize(obj.connectEM, obj.predictBlockM, obj.tutorial, obj.cameraM, obj.goalEffect, obj.normal, obj.locked, obj.goal, obj.Socket, obj.button, obj.disconnectedBlock,
 		obj.disconnectedButton, obj.disconnectedSocketBlock, obj.electricBlock, obj.doorGoalClosed);*/
 
-	//ポインタは削除される可能性があるので中身のみコピー
+		//ポインタは削除される可能性があるので中身のみコピー
 	this->cameraM = obj.cameraM;
 	this->tutorial = obj.tutorial;
 	this->goalEffect = obj.goalEffect;
@@ -225,22 +225,22 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockMa
 	isChangedConectGoal = false;
 
 	//繋がっているフラグ初期化
-	for(int i = 0; i < stageWidth_; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for(int j = 0; j < stageHeight_; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
-			for(int k = 0; k < stageWidth_; k++)
+			for (int k = 0; k < stageWidth_; k++)
 			{
-				for(int l = 0; l < stageHeight_; l++)
+				for (int l = 0; l < stageHeight_; l++)
 				{
 					//同じ番号を防ぐ
-					if(i == k && j == l) {}
+					if (i == k && j == l) {}
 					else
 					{
-						if(form_[i][j] == Form::GOAL)
+						if (form_[i][j] == Form::GOAL)
 						{
 							//もし[i][j]がゴールの時に[k][l]番のブロックと隣接していたら
-							if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
+							if (BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
 							{
 								isConectedGoal = true;
 								isChangedConectGoal = true;
@@ -253,18 +253,18 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockMa
 		}
 	}
 
-	for(int i = 0; i < stageWidth_; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for(int j = 0; j < stageHeight_; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
 			//もしゴールに電気が通っていて道が繋がっているなら
-			if(isElec[i][j] == true && form_[i][j] == Form::GOAL && isConectedGoal == true)
+			if (isElec[i][j] == true && form_[i][j] == Form::GOAL && isConectedGoal == true)
 			{
 				isStopElecConectedGoal = true;
 				//ゴールできるフラグON
 				isElecConectedGoal = true;
 			}
-			else if(isStopElecConectedGoal == false)
+			else if (isStopElecConectedGoal == false)
 			{
 				//ゴールできるフラグON
 				isElecConectedGoal = false;
@@ -274,7 +274,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockMa
 
 	//for文のストッパーをリセットする
 	isStopElecConectedGoal = false;
-	
+
 
 	//その他の設定
 	isCount = 1;
@@ -292,7 +292,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockMa
 	effectCount2 = 0;
 
 	isPopedGoal = false;
-	
+
 
 	this->isPopGoalEffect = false;
 	//this->goalPopX = 0;
@@ -340,22 +340,22 @@ void BlockManager::Update()
 
 			blocks_[i][j]->Updata();
 
-			if(action_[i][j] == Action::Connect)
+			if (action_[i][j] == Action::Connect)
 			{
-				if(isLeftRolling == true && isRightRolling == true)
+				if (isLeftRolling == true && isRightRolling == true)
 				{
 					isElec[i][j] = false;
-				}	
+				}
 			}
 
 			//もしゴールに電気が通っていて道が繋がっているなら
-			if(isElec[i][j] == true && form_[i][j] == Form::GOAL && isConectedGoal == true)
+			if (isElec[i][j] == true && form_[i][j] == Form::GOAL && isConectedGoal == true)
 			{
 				isStopElecConectedGoal = true;
 				//ゴールできるフラグON
 				isElecConectedGoal = true;
 			}
-			else if(isStopElecConectedGoal == false)
+			else if (isStopElecConectedGoal == false)
 			{
 				//ゴールできるフラグON
 				isElecConectedGoal = false;
@@ -365,7 +365,7 @@ void BlockManager::Update()
 
 	//for文のストッパーをリセットする
 	isStopElecConectedGoal = false;
-	
+
 	goalMat.scale = { Vec3(blockRadius_,blockRadius_,blockRadius_) };
 
 	//状態を変える時の遅延
@@ -569,7 +569,7 @@ void BlockManager::UpdateConnect(Vec3 pos)
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 				&& action_[i][j] != Action::Connect)
 			{
-				if(form_[i][j] != Form::NONE && form_[i][j] != Form::BUTTON && form_[i][j] != Form::GOAL && beforeTurn_[i][j] != Form::GOAL)
+				if (form_[i][j] != Form::NONE && form_[i][j] != Form::BUTTON && form_[i][j] != Form::GOAL && beforeTurn_[i][j] != Form::GOAL)
 				{
 					action_[i][j] = Action::Connect;
 					cameraM->usingCamera->CameraShake(15, 0.53f);
@@ -634,7 +634,7 @@ void BlockManager::ReleseConectedBlock()
 }
 
 //キーボードによって回転
-void BlockManager::UpdateRotate(Vec3 &rotatePos)
+void BlockManager::UpdateRotate(Vec3& rotatePos)
 {
 	int prerotateX = 0;
 	int prerotateY = 0;
@@ -701,7 +701,7 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 			{
 
 				//もしつながっているなら
-				if(action_[i][j] == Action::Connect && isAxis_[i][j] == false && beforeTurn_[i][j] != Form::GOAL)
+				if (action_[i][j] == Action::Connect && isAxis_[i][j] == false && beforeTurn_[i][j] != Form::GOAL)
 				{
 					WorldMat worldMat;
 					worldMat.rot.y = LerpVec3({ angle_, 0, 0 }, { pi / 2.0f,0,0 },
@@ -765,7 +765,7 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 			for (int j = 0; j < stageHeight_; j++)
 			{
 				//もしつながっているなら
-				if(action_[i][j] == Action::Connect && isAxis_[i][j] == false && beforeTurn_[i][j] != Form::GOAL)
+				if (action_[i][j] == Action::Connect && isAxis_[i][j] == false && beforeTurn_[i][j] != Form::GOAL)
 				{
 					WorldMat worldMat;
 					worldMat.rot.y = LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
@@ -826,7 +826,7 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 		if (rotateCount >= rotateCountMax - 1)
 		{
 			//一回全部OFFにする
-			for(int i = 0; i < stageWidth_; i++)
+			for (int i = 0; i < stageWidth_; i++)
 			{
 				for (int j = 0; j < stageHeight_; j++)
 				{
@@ -835,23 +835,23 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 			}
 		}
 
-		
-		for(int i = 0; i < stageWidth_; i++)
+
+		for (int i = 0; i < stageWidth_; i++)
 		{
 			for (int j = 0; j < stageHeight_; j++)
 			{
 				//電気ブロックの位置のスイッチをONにする
-				if(form_[i][j] == Form::Electric)
+				if (form_[i][j] == Form::Electric)
 				{
 					isElec[i][j] = true;
 				}
 
-				for(int k = 0; k < stageWidth_; k++)
+				for (int k = 0; k < stageWidth_; k++)
 				{
 					for (int l = 0; l < stageHeight_; l++)
 					{
 						//隣接判定
-						if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
+						if (BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
 						{
 							//同じ座標ではないとき
 							if (i != k || j != l)
@@ -874,11 +874,11 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 								{
 									isElec[k][l] = false;
 								}
-								else if(isTurn[i][j] == true)
+								else if (isTurn[i][j] == true)
 								{
 									isElec[i][j] = false;
 								}
-								else if(isTurn[k][l] == true)
+								else if (isTurn[k][l] == true)
 								{
 									isElec[k][l] = false;
 								}
@@ -898,23 +898,23 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 							}
 						}
 
-						if(action_[i][j] == Action::Connect)
+						if (action_[i][j] == Action::Connect)
 						{
-							if(isLeftRolling == true && isRightRolling == true)
+							if (isLeftRolling == true && isRightRolling == true)
 							{
 								isElec[i][j] = false;
 							}
 						}
 
-						if(form_[i][j] == Form::GOAL)
+						if (form_[i][j] == Form::GOAL)
 						{
 							//同じ座標ではないとき
-							if(i != k || j != l)
+							if (i != k || j != l)
 							{
-								if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+								if (form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
 								{
 									//もしゴールがブロックと隣接していたら
-									if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
+									if (BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
 									{
 										isConectedGoal = true;
 									}
@@ -924,13 +924,13 @@ void BlockManager::UpdateRotate(Vec3 &rotatePos)
 					}
 				}
 
-				if(isTurn[i][j] == true)
+				if (isTurn[i][j] == true)
 				{
 					isElec[i][j] = false;
 				}
 
 
-				if(form_[i][j] == Form::Electric)
+				if (form_[i][j] == Form::Electric)
 				{
 					//isElec[i][prerotateY] = true;
 				}
@@ -958,7 +958,7 @@ bool BlockManager::GetIsRollingLeftorRight()
 
 bool BlockManager::GetIsGoal(Vec3& pos, bool isPlayer)
 {
-	for(int i = 0; i < stageWidth_; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
 		for (int j = 0; j < stageHeight_; j++)
 		{
@@ -969,7 +969,7 @@ bool BlockManager::GetIsGoal(Vec3& pos, bool isPlayer)
 				//そのブロックの形状はゴールかどうか
 				if (form_[i][j] == Form::GOAL && isElec[i][j] == true)
 				{
-					if(isPlayer)
+					if (isPlayer)
 					{
 						Vec3 goalEyeDistance = worldmats_[i][j].trans - cameraM->gameMainCamera->GetEye();
 
@@ -1008,16 +1008,16 @@ bool BlockManager::GetIsGoal(Vec3& pos, bool isPlayer)
 
 bool BlockManager::GetisLockedBlock(Vec3 pos)
 {
-	for(int i = 0; i < stageWidth_; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for(int j = 0; j < stageHeight_; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
 			//プレイヤーが指定のブロックの上にいるかどうか
-			if(worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
+			if (worldmats_[i][j].trans.x - blockRadius_ < pos.x && worldmats_[i][j].trans.x + blockRadius_ > pos.x
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 			{
 				//そのブロックの形状は重なっているブロックかどうか
-				if(form_[i][j] == Form::LOCKED)
+				if (form_[i][j] == Form::LOCKED)
 				{
 					return true;
 				}
@@ -1209,21 +1209,21 @@ void BlockManager::UpdateOverlap()
 							}*/
 
 
-							
+
 						}
 					}
 
-					if(form_[i][j] == Form::GOAL)
+					if (form_[i][j] == Form::GOAL)
 					{
 						//同じ座標ではないとき
-						if(i != k || j != l)
+						if (i != k || j != l)
 						{
-							if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+							if (form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
 							{
 								//どこかがゴールにつながっていれば、繋げたままにする
-								if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == false)
+								if (BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == false)
 								{
-									if(isChangedConectGoal == false)
+									if (isChangedConectGoal == false)
 									{
 										isConectedGoal = false;
 									}
@@ -1267,7 +1267,7 @@ void BlockManager::UpdateOverlap()
 
 	//for文のストッパーをリセットする
 	isChangedConectGoal = false;
-	
+
 
 	/*if(checkCount > 11)
 	{
@@ -1436,14 +1436,14 @@ void BlockManager::RepositBlock()
 										{
 											isElec[k][l] = false;
 										}*/
-										
-											//回転したフラグをOFFに
-											isTurn[i][j] = false;
-											isTurn[k][l] = false;
 
-										
+										//回転したフラグをOFFに
+										isTurn[i][j] = false;
+										isTurn[k][l] = false;
 
-										
+
+
+
 
 										//押したフラグをOFFに
 										if (isPushed[k][l] == true)
@@ -1477,28 +1477,28 @@ void BlockManager::RepositBlock()
 											isElec[k][l] = false;
 										}*/
 
-										
-											//回転したフラグをOFFに
-											isTurn[i][j] = false;
-											isTurn[k][l] = false;
-										
+
+										//回転したフラグをOFFに
+										isTurn[i][j] = false;
+										isTurn[k][l] = false;
+
 									}
 								}
 							}
 						}
 					}
 
-					if(form_[i][j] == Form::GOAL)
+					if (form_[i][j] == Form::GOAL)
 					{
 						//同じ座標ではないとき
-						if(i != k || j != l)
+						if (i != k || j != l)
 						{
-							if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+							if (form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
 							{
 								//どこかがゴールにつながっていれば、繋げたままにする
-								if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == false)
+								if (BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == false)
 								{
-									if(isChangedConectGoal == false)
+									if (isChangedConectGoal == false)
 									{
 										isConectedGoal = false;
 									}
@@ -1713,6 +1713,7 @@ void BlockManager::AppearGoal()
 						//チュートリアル
 						if (tutorial->GetState() == TUTORIAL::BUTTON && tutorial->GetStateNum() == 0)
 						{
+							tutorial->spriteCount = 0;
 							tutorial->AddStateNum();
 						}
 					}
@@ -1754,8 +1755,8 @@ bool BlockManager::BlockJunction(Vec3 Pos1, Vec3 Pos2)
 	//右(Pos2が右)
 	//上(Pos2が上)
 	float resultX = (Pos2.x) - (Pos1.x);
-	float resultZ = (Pos2.z ) - (Pos1.z );
-	
+	float resultZ = (Pos2.z) - (Pos1.z);
+
 	//各方向の距離
 	float distanceX = std::fabs(resultX);
 	float distanceZ = std::fabs(resultZ);
@@ -1857,55 +1858,55 @@ void BlockManager::ResetBlock()
 	isChangedConectGoal = false;
 
 	//繋がっているフラグ初期化
-	for(int i = 0; i < stageWidth_; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for(int j = 0; j < stageHeight_; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
-			for(int k = 0; k < stageWidth_; k++)
+			for (int k = 0; k < stageWidth_; k++)
 			{
-				for(int l = 0; l < stageHeight_; l++)
+				for (int l = 0; l < stageHeight_; l++)
 				{
 					//同じ番号を防ぐ
-					if(i == k && j == l){}
+					if (i == k && j == l) {}
 					else
 					{
-						if(form_[i][j] == Form::GOAL)
+						if (form_[i][j] == Form::GOAL)
 						{
 							//もし[i][j]がゴールの時に[k][l]番のブロックと隣接していたら
-							if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
+							if (BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
 							{
 								isConectedGoal = true;
 								isChangedConectGoal = true;
 							}
 						}
 					}
-					
+
 				}
 			}
 		}
 	}
 
-	for(int i = 0; i < stageWidth_; i++)
+	for (int i = 0; i < stageWidth_; i++)
 	{
-		for(int j = 0; j < stageHeight_; j++)
+		for (int j = 0; j < stageHeight_; j++)
 		{
 			//もしゴールに電気が通っていて道が繋がっているなら
-			if(isElec[i][j] == true && form_[i][j] == Form::GOAL && isConectedGoal == true)
+			if (isElec[i][j] == true && form_[i][j] == Form::GOAL && isConectedGoal == true)
 			{
 				isStopElecConectedGoal = true;
 				//ゴールできるフラグON
 				isElecConectedGoal = true;
 			}
-			else if(isStopElecConectedGoal == false)
+			else if (isStopElecConectedGoal == false)
 			{
 				//ゴールできるフラグON
 				isElecConectedGoal = false;
 			}
 		}
 	}
-	
+
 	//for文のストッパーをリセットする
-	if(isStopElecConectedGoal == true)
+	if (isStopElecConectedGoal == true)
 	{
 		isStopElecConectedGoal = false;
 	}
@@ -1924,7 +1925,7 @@ void BlockManager::ResetBlock()
 
 	pushedCount_ = 0;
 
-	
+
 
 	//電気初期化用
 	checkCount = 0;
@@ -2095,9 +2096,9 @@ void BlockManager::SetElec(int elec[13][13])
 {
 
 	//全ての壁の座標を渡す
-	for(int i = 0; i < blockWidth; i++)
+	for (int i = 0; i < blockWidth; i++)
 	{
-		for(int j = 0; j < blockHeight; j++)
+		for (int j = 0; j < blockHeight; j++)
 		{
 			//ワールド行列の平行移動成分を取得(ワールド座標)
 			//blockPos[i][j] = worldTransforms_[i][j].translation_;

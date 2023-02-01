@@ -53,7 +53,7 @@ private:
 	//記録時間（FPS固定
 	std::chrono::steady_clock::time_point reference_;
 
-	FLOAT clearColor[4] = { 0.1f,0.25f, 0.5f,0.0f };
+	FLOAT clearColor[4] = { 0.0f,0.0f,0.01f,0.0f };
 
 	//ポストエフェクト用
 	ComPtr<ID3D12Resource> _peraResource;
@@ -95,7 +95,7 @@ public:
 
 	void DrawInitialize();
 
-	void DrawUpdate(const XMFLOAT4& winRGBA = { 0.1f,0.25f,0.5f,0.0f });
+	void DrawUpdate(const XMFLOAT4& winRGBA = { 0.0f,0.0f,0.01f,0.0f });
 
 	void DrawUpdate2();
 

@@ -134,13 +134,13 @@ void SceneGame::Update()
 			Vec3 pos = scene->player->GetWorldPos();
 			scene->playerSocket->Update({ pos.x,pos.y,pos.z });
 
-			if (scene->stageSelectM->isTutorial)
-			{
-				scene->tutorial->Update();
-			}
+			
 			scene->predictBlockManager->Update();
 		}
-
+		if (scene->stageSelectM->isTutorial)
+		{
+			scene->tutorial->Update();
+		}
 		//リセット
 		if (KeyboardInput::GetInstance().KeyTrigger(DIK_R))
 		{
