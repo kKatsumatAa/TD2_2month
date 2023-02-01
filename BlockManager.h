@@ -119,6 +119,9 @@ public:
 
 	void SetElec(int elec[13][13]);
 
+	//重なっているブロックに乗っているかどうか
+	bool GetisLockedBlock(Vec3 pos);
+
 public:
 	bool isPopGoalEffect = false;
 
