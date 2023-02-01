@@ -81,8 +81,8 @@ void SceneGame::Initialize()
 	scene->predictBlockManager->Initialize();
 
 	//ステージ
-	objWallFloor[0].worldMat->trans = { {scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f - scene->blockManager->blockRadius_}
-	,-scene->blockManager->blockRadius_ / 2.0f,0 };
+	objWallFloor[0].worldMat->trans = { {scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f }
+	,-scene->blockManager->blockRadius_ / 2.0f ,0 - scene->blockManager->blockRadius_ };
 	objWallFloor[0].worldMat->scale = { scene->blockManager->blockRadius_ ,scene->blockManager->blockRadius_ ,scene->blockManager->blockRadius_ };
 	objWallFloor[0].worldMat->SetWorld();
 
