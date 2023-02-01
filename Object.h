@@ -65,10 +65,6 @@ public://変数
 	static EffectConstBuffer* mapEffectFlagsBuff;
 
 protected://継承先まで公開
-	//クラス名(デバッグ用)
-	const char* name = nullptr;
-	//コライダー
-	BaseCollider* collider = nullptr;
 
 
 public:
