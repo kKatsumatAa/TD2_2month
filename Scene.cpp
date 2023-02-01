@@ -78,7 +78,7 @@ void SceneStageSelect::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
-	Object::effectFlags.isEmboss = true;
+	Object::effectFlags.isVignette = true;
 
 	scene->predictBlockManager->Initialize();
 
@@ -180,14 +180,14 @@ void SceneGame::Update()
 
 		if (scene->goalE->isEnd)
 		{
-			Object::effectFlags.isEmboss = false;
+			Object::effectFlags.isVignette = false;
 			scene->ChangeState(new SceneClear);
 		}
 	}
 	//ステージセレクトに戻る
 	else if (KeyboardInput::GetInstance().KeyTrigger(DIK_Q) || KeyboardInput::GetInstance().KeyTrigger(DIK_ESCAPE))
 	{
-		Object::effectFlags.isEmboss = false;
+		Object::effectFlags.isVignette = false;
 		scene->cameraM->usingCamera = scene->cameraM->stageSelectCamera.get();
 		scene->ChangeState(new SceneStageSelect);
 	}

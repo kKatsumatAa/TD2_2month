@@ -186,12 +186,12 @@ void PostPera::GenerateRSPL()
 void PostPera::Draw(EffectConstBuffer effectFlags)
 {
 	this->mapEffectFlagsBuff->isEmboss = effectFlags.isEmboss;
-	this->mapEffectFlagsBuff->isFog = effectFlags.isFog;
 	this->mapEffectFlagsBuff->isGaussian = effectFlags.isGaussian;
 	this->mapEffectFlagsBuff->isGaussian2 = effectFlags.isGaussian2;
 	this->mapEffectFlagsBuff->isGradation = effectFlags.isGradation;
 	this->mapEffectFlagsBuff->isOutLine = effectFlags.isOutLine;
 	this->mapEffectFlagsBuff->isSharpness = effectFlags.isSharpness;
+	this->mapEffectFlagsBuff->isVignette = effectFlags.isVignette;
 
 
 	Directx::GetInstance().GetCommandList()->SetGraphicsRootSignature(_peraRS.Get());

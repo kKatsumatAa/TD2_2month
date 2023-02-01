@@ -20,6 +20,8 @@ struct EffectConstBuffer
 	unsigned int isGradation = false;
 	//アウトライン
 	unsigned int isOutLine = false;
+	//ビネット
+	unsigned int isVignette = false;
 };
 
 struct PeraVertex

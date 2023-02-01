@@ -142,6 +142,19 @@ float4 PS(Output input) : SV_TARGET
 		isEffect = true;
 	}
 
+	//ビネット
+	if (isVignette)
+	{
+		float2 samplePoint = input.uv;
+		float4 Tex = tex.Sample(smp, input.uv);
+		float vignette = length(float2(0.5, 0.5) - input.uv);
+		vignette = clamp(vignette - 0.2, 0, 1);
+		Tex.rgb -= vignette;
+		ret = Tex;
+
+		isEffect = true;
+	}
+
 	if (isEffect)
 	{
 		return ret;
