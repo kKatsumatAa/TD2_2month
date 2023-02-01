@@ -1422,10 +1422,14 @@ void BlockManager::RepositBlock()
 										{
 											isElec[k][l] = false;
 										}*/
-										//回転したフラグをOFFに
-										isTurn[i][j] = false;
-										isTurn[k][l] = false;
+										
+											//回転したフラグをOFFに
+											isTurn[i][j] = false;
+											isTurn[k][l] = false;
 
+										
+
+										
 
 										//押したフラグをOFFに
 										if (isPushed[k][l] == true)
@@ -1458,9 +1462,12 @@ void BlockManager::RepositBlock()
 										{
 											isElec[k][l] = false;
 										}*/
-										//回転したフラグをOFFに
-										isTurn[i][j] = false;
-										isTurn[k][l] = false;
+
+										
+											//回転したフラグをOFFに
+											isTurn[i][j] = false;
+											isTurn[k][l] = false;
+										
 									}
 								}
 							}
