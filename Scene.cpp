@@ -480,7 +480,7 @@ void Scene::Initialize()
 
 	//player
 	player = std::make_unique<Player>();
-	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), tutorial.get(), cameraM.get(), model[0], &debugText);
+	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), tutorial.get(), cameraM.get(), model[0], &debugText,stageManager->GetConectLimit());
 
 	//ステージセレクトマネージャー
 	stageSelectM = std::make_unique<StageSelectManager>();
@@ -519,18 +519,17 @@ void Scene::Update()
 	//ブロックウインドウの表示
 	{
 		//blockManager->SetElec(elec);
+		
+		ImGui::Begin("conectCount");
+		//ImGui::SetWindowPos("Elec", ImVec2(100, 100));
+		ImGui::SetWindowSize("conectCount", ImVec2(400, 100));
+		//ImGui::Text("制限数");
+		ImGui::InputInt("conectCount", &player->conectCount, 0.0f);
+		//ImGui::Text("最大制限");
+		ImGui::InputInt("conectCountMax", &player->conectCountMax, 0.0f);
 
-		//ImGui::Begin("Elec");
-		////ImGui::SetWindowPos("Elec", ImVec2(100, 100));
-		//ImGui::SetWindowSize("Elec", ImVec2(400, 800));
-		//
-		//for(int i = 0; i < 13; i++)
-		//{
-		//	ImGui::Text("%d",i);
-		//	ImGui::InputInt13("isElec", elec[i], 0.0f);
-		//}
-		//
-		//ImGui::End();
+		
+		ImGui::End();
 	}
 
 	//imgui
@@ -552,9 +551,7 @@ void Scene::Update()
 
 	blockManager->Update();
 
-
 	state->Update();
-
 
 #ifdef _DEBUG
 	//if (KeyboardInput::GetInstance().KeyTrigger(DIK_E)) ChangeState(new SceneTitle);
