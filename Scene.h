@@ -82,6 +82,8 @@ public:
 	//player‚ÌˆÊ’u—p
 	bool playerPos[13][13];
 
+	Object objWallFloor[2];
+
 
 	std::unique_ptr<CameraManager> cameraM;
 
@@ -141,7 +143,7 @@ public:
 class SceneGame : public SceneState
 {
 private:
-	Object objWallFloor[2];
+	
 	Object obj[5];
 
 public:
@@ -184,6 +186,8 @@ private:
 	Async async;
 
 public:
+	void LoadFunc();
+
 	void Initialize()override;
 	void Update() override;
 	void Draw() override;

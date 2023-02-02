@@ -59,7 +59,8 @@ void SceneStageSelect::Update()
 	//選択されたら
 	if (scene->stageSelectM->isSelect)
 	{
-		scene->ChangeState(new SceneGame);
+		ParticleManager::GetInstance()->GenerateRandomParticle(50, 120, 3.0f, { 0,0,0 }, 5.0f, 0.1f, { 0.1f,0.5f,0.5,0.99f }, { 0,0,0,0 });
+		scene->ChangeState(new SceneLoad);
 	}
 }
 
@@ -80,67 +81,24 @@ void SceneStageSelect::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
-	Object::effectFlags.isBarrelCurve = false;
 
-	scene->predictBlockManager->Initialize();
-
-	//ステージ
-	objWallFloor[0].worldMat->trans = { {scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f }
-	,-scene->blockManager->blockRadius_ / 2.0f ,0 - scene->blockManager->blockRadius_ };
-	objWallFloor[0].worldMat->scale = { scene->blockManager->blockRadius_ ,scene->blockManager->blockRadius_ ,scene->blockManager->blockRadius_ };
-	objWallFloor[0].worldMat->SetWorld();
-
-	//丸影
-	scene->lightManager->SetCircleShadowActive(0, true);
-
-	//カメラをゲームのメインカメラに
-	scene->cameraM.get()->usingCamera = scene->cameraM->gameMainCamera.get();
-	scene->cameraM->Initialize();
-
-	scene->blockManager->Initialize(scene->connectEM.get(), scene->predictBlockManager.get(), scene->tutorial.get(), scene->cameraM.get(),
-		scene->goalE.get(), scene->model[1], scene->model[2], scene->model[3], scene->model[4], scene->model[5], scene->model[6],
-		scene->model[8], scene->model[9], scene->model[10], scene->model[11]);
-	scene->connectEM->Initialize();
-	scene->connectE2M->Initialize();
-	
-	scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
-	scene->goalE->Initialize(scene->cameraM.get());
-
-	scene->stageManager->Initialize(scene->blockManager, scene->tutorial.get());
-	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
-		, scene->connectE2M.get(), scene->tutorial.get(), scene->cameraM.get(), scene->model[0], &scene->debugText, scene->stageManager->GetConectLimit());
-	scene->player->SetPosStage(scene->stageManager->playerPos);
-
-
-	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get());
-
-	//カメラ位置セット
-	scene->cameraM->gameMainCamera->SetEye({ { scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f }
-	,42,-30 });
-	scene->cameraM->gameMainCamera->SetTarget({ scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f
-		,10
-		,0 });
-	scene->cameraM->gameMainCamera->UpdateViewMatrix();
-
-	//音
-	scene->StopAllWave();
-	Sound::GetInstance().PlayWave("Stage_BGM.wav", 0.5f, true);
 }
 
 void SceneGame::Update()
 {
 	if (!scene->player->isGoal) {
 
+		scene->blockManager->Update();
 		//特定のカメラ演出時は動かさない
 		if (!scene->blockManager->isPopGoalEffect)
 		{
 			scene->player->Update();
-			scene->blockManager->Update();
+			
 
 			Vec3 pos = scene->player->GetWorldPos();
 			scene->playerSocket->Update({ pos.x,pos.y,pos.z });
 
-			
+
 			scene->predictBlockManager->Update();
 		}
 		if (scene->stageSelectM->isTutorial)
@@ -200,7 +158,7 @@ void SceneGame::Update()
 
 void SceneGame::Draw()
 {
-	objWallFloor[0].DrawModel(objWallFloor[0].worldMat, &scene->cameraM.get()->usingCamera->viewMat, &scene->cameraM.get()->usingCamera->projectionMat,
+	scene->objWallFloor[0].DrawModel(scene->objWallFloor[0].worldMat, &scene->cameraM.get()->usingCamera->viewMat, &scene->cameraM.get()->usingCamera->projectionMat,
 		scene->model[7], { 0.7f,0.7f,0.7f,1.0f });
 
 	scene->blockManager->Draw(scene->cameraM.get()->usingCamera);
@@ -292,34 +250,91 @@ void SceneClear::DrawSprite()
 
 
 //--------------------------------------------------------------------------------------
+void SceneLoad::LoadFunc()
+{
+	//音
+	scene->StopAllWave();
+	Sound::GetInstance().PlayWave("Stage_BGM.wav", 0.5f, true);
+
+	Object::effectFlags.isBarrelCurve = false;
+
+	scene->predictBlockManager->Initialize();
+
+	//ステージ
+	scene->objWallFloor[0].worldMat->trans = { {scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f }
+	,-scene->blockManager->blockRadius_ / 2.0f ,0 - scene->blockManager->blockRadius_ };
+	scene->objWallFloor[0].worldMat->scale = { scene->blockManager->blockRadius_ ,scene->blockManager->blockRadius_ ,scene->blockManager->blockRadius_ };
+	scene->objWallFloor[0].worldMat->SetWorld();
+
+	//丸影
+	scene->lightManager->SetCircleShadowActive(0, true);
+
+
+
+	scene->blockManager->Initialize(scene->connectEM.get(), scene->predictBlockManager.get(), scene->tutorial.get(), scene->cameraM.get(),
+		scene->goalE.get(), scene->model[1], scene->model[2], scene->model[3], scene->model[4], scene->model[5], scene->model[6],
+		scene->model[8], scene->model[9], scene->model[10], scene->model[11]);
+	scene->connectEM->Initialize();
+	scene->connectE2M->Initialize();
+
+	scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
+	scene->goalE->Initialize(scene->cameraM.get());
+
+	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
+		, scene->connectE2M.get(), scene->tutorial.get(), scene->cameraM.get(), scene->model[0], &scene->debugText, scene->stageManager->GetConectLimit());
+	scene->player->SetPosStage(scene->stageManager->playerPos);
+	scene->stageManager->Initialize(scene->blockManager, scene->tutorial.get());
+	
+
+
+	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get());
+
+	//カメラ位置セット
+	scene->cameraM->gameMainCamera->SetEye({ { scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f }
+	,42,-30 });
+	scene->cameraM->gameMainCamera->SetTarget({ scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f
+		,10
+		,0 });
+	scene->cameraM->gameMainCamera->UpdateViewMatrix();
+
+	//カメラをゲームのメインカメラに
+	scene->cameraM.get()->usingCamera = scene->cameraM->gameMainCamera.get();
+	scene->cameraM->Initialize();
+
+
+}
+
 void SceneLoad::Initialize()
 {
 
 	//非同期処理(ステージ作成中にもロード画面出す的な)
-	//async.StartAsyncFunction([=]() { /*ここに関数 */ });
+	async.StartAsyncFunction([=]() { LoadFunc(); });
 }
 
 void SceneLoad::Update()
 {
-
+	ParticleManager::GetInstance()->Update(&scene->cameraM->usingCamera->viewMat, &scene->cameraM->usingCamera->projectionMat);
 
 	//シーン遷移
-	//if (async.GetLockFlag())
-	//{
-	//	async.EndThread();
+	if (async.GetLockFlag())
+	{
+		async.EndThread();
 
-	//	//ステージ作り終わったら
-	//	scene->ChangeState(new SceneTitle);
-	//}
+		//ステージ作り終わったら
+		scene->ChangeState(new SceneGame);
+	}
 }
 
 void SceneLoad::Draw()
 {
+	ParticleManager::GetInstance()->Draw(scene->texhandle[1]);
 }
 
 void SceneLoad::DrawSprite()
 {
 }
+
+
 
 
 
@@ -481,13 +496,13 @@ void Scene::Initialize()
 
 	//player
 	player = std::make_unique<Player>();
-	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), tutorial.get(), cameraM.get(), model[0], &debugText,stageManager->GetConectLimit());
+	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), tutorial.get(), cameraM.get(), model[0], &debugText, stageManager->GetConectLimit());
 
 	//ステージセレクトマネージャー
 	stageSelectM = std::make_unique<StageSelectManager>();
 	stageSelectM->Initialize(stageManager.get());
 
-	
+
 
 	//ステート変更
 	ChangeState(new SceneStageSelect);
@@ -520,7 +535,7 @@ void Scene::Update()
 	//ブロックウインドウの表示
 	{
 		//blockManager->SetElec(elec);
-		
+
 		ImGui::Begin("conectCount");
 		//ImGui::SetWindowPos("Elec", ImVec2(100, 100));
 		ImGui::SetWindowSize("conectCount", ImVec2(400, 100));
@@ -529,7 +544,7 @@ void Scene::Update()
 		//ImGui::Text("最大制限");
 		ImGui::InputInt("conectCountMax", &player->conectCountMax, 0.0f);
 
-		
+
 		ImGui::End();
 	}
 
@@ -549,8 +564,6 @@ void Scene::Update()
 	lightManager->Update();
 
 	cameraM->Update();
-
-	blockManager->Update();
 
 	state->Update();
 
