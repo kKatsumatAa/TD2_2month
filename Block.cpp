@@ -11,13 +11,15 @@ Block::~Block()
 
 void Block::Initialize(ConnectingEffectManager* connectEM,
 	Model* normal, Model* locked, Model* goal, Model* socket,Model* button,Model* disconnectedBlock, 
-	Model *disconnectedButton, Model *disconnectedSocketBlock, Model* electricBlock, Model *doorGoalClosed)
+	Model* disconnectedButton, Model *disconnectedSocketBlock, Model* electricBlock, Model *doorGoalClosed,
+	Model* overlapBlock)
 {
 	assert(normal);
 	assert(locked);
 	assert(button);
 	assert(goal);
 	assert(socket);
+	assert(overlapBlock);
 
 	normal_ = normal;
 	locked_ = locked;
@@ -29,6 +31,7 @@ void Block::Initialize(ConnectingEffectManager* connectEM,
 	disconnectedSocketBlock_ = disconnectedSocketBlock;
 	electricBlock_ = electricBlock;
 	doorGoalClosed_ = doorGoalClosed;
+	overlapBlock_ = overlapBlock;
 
 	//this->debugText_ = debugText_;
 
@@ -56,7 +59,7 @@ void Block::Updata(Vec3 pos)
 	worldTransform_.SetWorld();
 }
 
-void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec, WorldMat goalMat)
+void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec, WorldMat goalMat,bool isPushed)
 {
 	//‰¼•\Ž¦
 	if (action == Action::Connect) 
@@ -84,16 +87,21 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 	if(isElec == true)
 	{
 		if(form == Form::BLOCK) { draw[0].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color); }
-		if(form == Form::GEAR) { draw[2].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &socket_[0], color); }
-		if(form == Form::BUTTON) { draw[6].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color); }
-		if(form == Form::BUTTON) 
+		if(form == Form::GEAR) { draw[1].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &socket_[0], color); }
+		if(form == Form::BUTTON) { draw[2].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color); }
+		if(form == Form::BUTTON && isPushed == false)
 		{ 
 			worldTransform_.trans.y = 1.2f;
-			draw[1].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &button_[0], color); 
+			draw[3].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &button_[0], color); 
+		}
+		else if(form == Form::BUTTON && isPushed == true)
+		{
+			worldTransform_.trans.y = -1.0f;
+			draw[4].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &overlapBlock_[0], color);
 		}
 
 		goalMat.trans.y = -0.5;
-		draw[11].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &normal_[0], color);
+		draw[5].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &normal_[0], color);
 
 		if(form == Form::GOAL)
 		{
@@ -110,25 +118,33 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 				worldTransform_.scale = { scaleTmp + scaleTmp / 4.0f,scaleTmp + scaleTmp / 4.0f ,scaleTmp + scaleTmp / 4.0f };
 			}
 			worldTransform_.trans.y = 0.2f;
-			draw[4].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &goal_[0], color);
+			draw[6].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &goal_[0], color);
 		}
 	}
 	else
 	{
 		if(form == Form::BLOCK) 
 		{
-			draw[3].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color); 
+			draw[7].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color); 
 		}
 		if(form == Form::GEAR) 
 		{
 			draw[8].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &socket_[0], color);
 		}
-		if(form == Form::BUTTON) { draw[6].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color); }
-		if(form == Form::BUTTON) 
+
+
+		if(form == Form::BUTTON) { draw[7].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color); }
+		if(form == Form::BUTTON && isPushed == false) 
 		{ 
 			worldTransform_.trans.y = 1.2f;
-			draw[7].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &disconnectedButton_[0], color);
+			draw[9].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &disconnectedButton_[0], color);
 		}
+		else if(form == Form::BUTTON && isPushed == true)
+		{
+			worldTransform_.trans.y = -1.0f;
+			draw[10].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &overlapBlock_[0], color);
+		}
+
 		if(form == Form::GOAL)
 		{
 			/*goalMat.trans.y = -0.5;
@@ -139,7 +155,7 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 				worldTransform_.scale = { scaleTmp + scaleTmp / 4.0f,scaleTmp + scaleTmp / 4.0f ,scaleTmp + scaleTmp / 4.0f };
 			}
 			worldTransform_.trans.y = 0.2f;
-			draw[10].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &doorGoalClosed_[0], color);
+			draw[11].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &doorGoalClosed_[0], color);
 		}
 
 	}
@@ -149,15 +165,15 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 	//if (form == Form::GEAR) { draw[2].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &socket_[0], color); }
 	
 
-	if (form == Form::LOCKED) { draw[4].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &locked_[0], color); }
+	if (form == Form::LOCKED) { draw[12].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &locked_[0], color); }
 
 	if (form == Form::Electric) 
 	{
 		color = { 0.9f,0.9f,0.9f,0.95f };
 
-		draw[9].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color);
+		draw[13].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color);
 		worldTransform_.trans.y = 0.2f;
-		draw[5].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &electricBlock_[0], color); 
+		draw[14].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &electricBlock_[0], color); 
 	}
 
 	

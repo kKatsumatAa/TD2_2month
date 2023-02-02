@@ -46,8 +46,7 @@ private:
 	Model* disconnectedSocketBlock_ = nullptr;
 	Model* electricBlock_ = nullptr;
 	Model* doorGoalClosed_ = nullptr;
-
-
+	Model* overlapBlock_ = nullptr;
 
 	//テクスチャハンドル
 	//UINT64 textureHandle_[10];
@@ -74,11 +73,12 @@ public:
 
 	void Initialize(ConnectingEffectManager* connectEM,
 		Model* normal, Model* locked, Model* goal, Model* Socket,Model* button, Model* disconnectedBlock,
-		Model *disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model *doorGoalClosed);
+		Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model *doorGoalClosed,
+		Model* overlapBlock);
 
 	void Updata(Vec3 pos = { 0,0,0 });
 
-	void Draw(Camera* camera, UINT64* texhandle, int form, Action action,bool isElec,WorldMat goalMat);
+	void Draw(Camera* camera, UINT64* texhandle, int form, Action action,bool isElec,WorldMat goalMat, bool isPushed);
 
 	void SetWorldPos(const Vec3& pos) { worldTransform_.trans = pos; };
 
