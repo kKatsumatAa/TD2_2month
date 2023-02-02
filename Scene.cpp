@@ -109,7 +109,7 @@ void SceneGame::Initialize()
 
 	//カメラ位置セット
 	scene->cameraM->gameMainCamera->SetEye({ { scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f }
-	,35,-30 });
+	,42,-30 });
 	scene->cameraM->gameMainCamera->SetTarget({ scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f
 		,10
 		,0 });
