@@ -44,7 +44,7 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 	//this->tutorial = tutorial;
 
 	worldTransform_.scale = { scaleTmp,0,scaleTmp };
-	worldTransform_.trans = { 0,moveDistance,0 };
+	//worldTransform_.trans = { 0,moveDistance,0 };
 	posYTmp = moveDistance;
 	posXTmp = 0;
 	worldTransform_.SetWorld();
@@ -63,12 +63,42 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 		bufferedKeyArrow = BUFFERED_INPUT_ARROW::NONE;
 	}
 
+	for (int i = 0; i < 13; i++)
+	{
+		for (int j = 0; j < 13; j++)
+		{
+			playerPos[i][j] = false;
+		}
+	}
+
 	//Õ“Ë‘®«
 	SetCollisionAttribute(kCollisionAttributePlayer);
 	SetCollisionMask(kCollisionAttributeEnemy);
 
 	ChangeStateMove(new StateNormalMoveP);
 	ChangeStateTurnConnect(new StateNormalConTurP);
+}
+
+void Player::SetPosStage(bool playerPos[][13])
+{
+	for (int i = 0; i < 13; i++)
+	{
+		for (int j = 0; j < 13; j++)
+		{
+			if (playerPos[i][j] == true)
+			{
+				this->playerPos[i][j] = true;
+				worldTransform_.trans = { moveDistance * (float)j, moveDistance, this->moveDistance * (float)i };
+				worldTransform_.SetWorld();
+				posYTmp = worldTransform_.trans.y;
+				posXTmp = worldTransform_.trans.x;
+			}
+			else
+			{
+				this->playerPos[i][j] = false;
+			}
+		}
+	}
 }
 
 void Player::Reset()
@@ -82,7 +112,6 @@ void Player::Reset()
 	//this->tutorial = tutorial;
 
 	worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
-	worldTransform_.trans = { 0,moveDistance,0 };
 	posYTmp = moveDistance;
 	posXTmp = 0;
 	worldTransform_.SetWorld();
@@ -100,6 +129,8 @@ void Player::Reset()
 		bufferedPushSpace = false;
 		bufferedKeyArrow = BUFFERED_INPUT_ARROW::NONE;
 	}
+
+	SetPosStage(this->playerPos);
 
 	ChangeStateMove(new StateNormalMoveP);
 	ChangeStateTurnConnect(new StateNormalConTurP);
@@ -196,6 +227,14 @@ Player& Player::operator=(const Player& obj)
 	this->worldTransform_ = obj.worldTransform_;
 	this->worldTransform_.SetWorld();
 	this->velocity = obj.velocity;
+
+	for (int i = 0; i < 13; i++)
+	{
+		for (int j = 0; j < 13; j++)
+		{
+			playerPos[i][j] = obj.playerPos[i][j];
+		}
+	}
 
 	return *this;
 }
@@ -515,7 +554,7 @@ void StateTurnP::Update()
 	//‰ñ“]I‚í‚é
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) && !player->blockM->GetIsRollingLeftorRight() && player->blockM->GetCheckElec())
 	{
-		if(player->blockM->GetisLockedBlock(player->GetWorldPos()) == false)
+		if (player->blockM->GetisLockedBlock(player->GetWorldPos()) == false)
 		{
 			//ˆêŽè–ß‚é‹@”\‚É‹L˜^
 			GetBackManager::GetInstance()->SaveDatas();
@@ -558,7 +597,7 @@ void StateTurnP::Update()
 
 			player->ChangeStateTurnConnect(new StateNormalConTurP);
 		}
-		
+
 	}
 
 }

@@ -109,7 +109,6 @@ private:
 
 	//ステージ開始時の位置
 	bool playerPos[13][13] = { false };
-
 	/*Tutorial* tutorial;*/
 public:
 	float posYTmp = 0;
