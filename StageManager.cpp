@@ -38,6 +38,9 @@ void StageManager::Initialize(BlockManager* blockManager
 		{
 			//形の要素を追加
 			forms_[i].push_back(form_);
+
+			//プレイヤーの位置をリセット
+			playerPos[i][j] = false;
 		}
 	}
 
@@ -110,6 +113,9 @@ void StageManager::SetTutorial(const int& blockWidth, const int& blockHeight)
 	ResetStage();
 	SetWorldMat(blockWidth, blockHeight);
 
+	//ここでプレイヤーの位置指定
+	playerPos[0][5] = true;
+
 	//形の設定
 	forms_ =
 	{
@@ -140,6 +146,9 @@ void StageManager::SetStage1(const int& blockWidth, const int& blockHeight)
 
 	ResetStage();
 	SetWorldMat(blockWidth, blockHeight);
+
+	//ここでプレイヤーの位置指定
+	playerPos[2][4] = true;
 
 	//形の設定
 	forms_ =
@@ -174,6 +183,9 @@ void StageManager::SetStage2(const int& blockWidth, const int& blockHeight)
 	ResetStage();
 	SetWorldMat(blockWidth, blockHeight);
 
+	//ここでプレイヤーの位置指定
+	playerPos[0][5] = true;
+
 	//形の設定
 	forms_ =
 	{
@@ -204,6 +216,9 @@ void StageManager::SetStage3(const int& blockWidth, const int& blockHeight)
 
 	ResetStage();
 	SetWorldMat(blockWidth, blockHeight);
+
+	//ここでプレイヤーの位置指定
+	playerPos[4][0] = true;
 
 	//形の設定
 	forms_ =

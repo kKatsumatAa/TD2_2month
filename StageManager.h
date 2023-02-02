@@ -16,7 +16,7 @@ class StageManager
 public:
 
 	//初期化
-	void Initialize(BlockManager* blockManager,Tutorial* tutorial);
+	void Initialize(BlockManager* blockManager, Tutorial* tutorial);
 
 	//更新
 	void Update();
@@ -67,6 +67,9 @@ public:
 
 	//外部で参照するための
 	int stageWidth = 0;
+
+	//playerの位置
+	bool playerPos[13][13] = { false };
 
 private:
 
