@@ -273,7 +273,7 @@ void SceneLoad::LoadFunc()
 
 	scene->blockManager->Initialize(scene->connectEM.get(), scene->predictBlockManager.get(), scene->tutorial.get(), scene->cameraM.get(),
 		scene->goalE.get(), scene->model[1], scene->model[2], scene->model[3], scene->model[4], scene->model[5], scene->model[6],
-		scene->model[8], scene->model[9], scene->model[10], scene->model[11]);
+		scene->model[8], scene->model[9], scene->model[10], scene->model[11],scene->model[13]);
 	scene->connectEM->Initialize();
 	scene->connectE2M->Initialize();
 
@@ -281,12 +281,11 @@ void SceneLoad::LoadFunc()
 	scene->goalE->Initialize(scene->cameraM.get());
 
 	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
-		, scene->connectE2M.get(), scene->tutorial.get(), scene->cameraM.get(), scene->model[0], &scene->debugText, scene->stageManager->GetConectLimit());
+		, scene->connectE2M.get(), scene->tutorial.get(), scene->cameraM.get(), scene->model[0], &scene->debugText, scene->conectLimit_);
 	scene->player->SetPosStage(scene->stageManager->playerPos);
-	scene->stageManager->Initialize(scene->blockManager, scene->tutorial.get());
+	scene->stageManager->Initialize(scene->blockManager, scene->tutorial.get(),scene->conectLimit_);
+	scene->player->SetConectCount(scene->stageManager->GetConectCount());
 	
-
-
 	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get());
 
 	//カメラ位置セット
@@ -429,6 +428,11 @@ void Scene::Initialize()
 	imGuiManager = new ImGuiManager();
 	imGuiManager->Initialize();
 
+	conectLimit_ = new ConectLimit();
+
+	/*conectLimit_ = std::make_unique<ConectLimit>();
+	conectLimit_->ResetCounts();
+	*/
 	//予測線用
 	predictBlockManager = std::make_unique<PredictBlockManager>();
 	predictBlockManager->Initialize();
@@ -453,7 +457,7 @@ void Scene::Initialize()
 		model[1], model[2], model[3], model[4], model[5], model[6], model[8], model[9], model[10], model[11],model[13]);
 
 	stageManager = std::make_unique<StageManager>();
-	stageManager->Initialize(blockManager, tutorial.get());
+	stageManager->Initialize(blockManager, tutorial.get(),conectLimit_);
 
 
 	//Light
@@ -495,7 +499,7 @@ void Scene::Initialize()
 
 	//player
 	player = std::make_unique<Player>();
-	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), tutorial.get(), cameraM.get(), model[0], &debugText, stageManager->GetConectLimit());
+	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), tutorial.get(), cameraM.get(), model[0], &debugText, conectLimit_);
 
 	//ステージセレクトマネージャー
 	stageSelectM = std::make_unique<StageSelectManager>();
@@ -535,13 +539,17 @@ void Scene::Update()
 	{
 		//blockManager->SetElec(elec);
 
+		int count = player->GetPlayerConectCount();
+		int countMax = player->GetPlayerConectCountMax();
+
+
 		ImGui::Begin("conectCount");
 		//ImGui::SetWindowPos("Elec", ImVec2(100, 100));
 		ImGui::SetWindowSize("conectCount", ImVec2(400, 100));
 		//ImGui::Text("制限数");
-		ImGui::InputInt("conectCount", &player->conectCount, 0.0f);
+		ImGui::InputInt("conectCount", &count, 0.0f);
 		//ImGui::Text("最大制限");
-		ImGui::InputInt("conectCountMax", &player->conectCountMax, 0.0f);
+		ImGui::InputInt("conectCountMax", &countMax, 0.0f);
 
 
 		ImGui::End();

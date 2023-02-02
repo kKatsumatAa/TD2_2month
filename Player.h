@@ -115,8 +115,14 @@ public:
 	float posYTmp = 0;
 	float posXTmp = 0;
 
-	int conectCount;
+	int conectCount_;
 	int conectCountMax;
+
+	//スタートマスのフラグ
+	bool isStartConect = true;
+	//進んだカウントを記録する
+	int moveCount = 0;
+
 	bool isLoadConectCount = true;
 
 	//外部からセットするブロックあるから動ける
@@ -175,12 +181,16 @@ public:
 
 	void Reset();
 
+	void SetConectCount(int conectCount) { conectCount_ = conectCount; };
+
 	//衝突を検出したら呼び出す（コールバック関数）
 	//
 	void OnCollision(Collider& collider)override;
 	//
 	void OnCollision2(Collider& collider)override;
 
+	int GetPlayerConectCount() { return conectCount_; }
+	int GetPlayerConectCountMax() { return conectCountMax; }
 
 	Player& operator=(const Player& obj);
 };

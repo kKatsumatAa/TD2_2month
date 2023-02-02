@@ -32,7 +32,8 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 	this->cameraM = cameraM;
 
 	this->conectLimit_ = conectLimit;
-	
+	//conectLimit_->ResetCounts();
+
 	isPlayer = true;
 	isDead = false;
 	isGoal = false;
@@ -45,7 +46,7 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 	}
 
 	//繋ぐ回数を設定
-	conectCount = conectLimit_->GetConectcount();
+	conectCount_ = conectLimit_->GetConectcount();
 	//繋ぐ回数制限を設定
 	conectCountMax = conectLimit_->GetLimitCount();
 
@@ -69,9 +70,9 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 		bufferedKeyArrow = BUFFERED_INPUT_ARROW::NONE;
 	}
 
-	for (int i = 0; i < 13; i++)
+	for(int i = 0; i < 13; i++)
 	{
-		for (int j = 0; j < 13; j++)
+		for(int j = 0; j < 13; j++)
 		{
 			playerPos[i][j] = false;
 		}
@@ -87,11 +88,11 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 
 void Player::SetPosStage(bool playerPos[][13])
 {
-	for (int i = 0; i < 13; i++)
+	for(int i = 0; i < 13; i++)
 	{
-		for (int j = 0; j < 13; j++)
+		for(int j = 0; j < 13; j++)
 		{
-			if (playerPos[i][j] == true)
+			if(playerPos[i][j] == true)
 			{
 				this->playerPos[i][j] = true;
 				worldTransform_.trans = { moveDistance * (float)j, moveDistance, this->moveDistance * (float)i };
@@ -117,7 +118,7 @@ void Player::Reset()
 	velocity = { 0,0,0 };
 
 	//繋ぐ回数を設定
-	conectCount = conectLimit_->GetConectcount();
+	conectCount_ = conectLimit_->GetConectcount();
 	//繋ぐ回数制限を設定
 	conectCountMax = conectLimit_->GetLimitCount();
 
@@ -151,34 +152,34 @@ void Player::Update()
 {
 	if(isLoadConectCount == true)
 	{
-		conectCount = conectLimit_->GetConectcount();
+		conectCount_ = conectLimit_->GetConectcount();
 		conectCountMax = conectLimit_->GetLimitCount();
 		isLoadConectCount = false;
 	}
 
-	if (worldTransform_.scale.x > scaleTmp) { worldTransform_.scale.x -= 0.05f; }
-	if (worldTransform_.scale.x < scaleTmp) { worldTransform_.scale.x += 0.05f; }
+	if(worldTransform_.scale.x > scaleTmp) { worldTransform_.scale.x -= 0.05f; }
+	if(worldTransform_.scale.x < scaleTmp) { worldTransform_.scale.x += 0.05f; }
 
-	if (worldTransform_.scale.y > scaleTmp) { worldTransform_.scale.y -= 0.05f; }
-	if (worldTransform_.scale.y < scaleTmp) { worldTransform_.scale.y += 0.05f; }
+	if(worldTransform_.scale.y > scaleTmp) { worldTransform_.scale.y -= 0.05f; }
+	if(worldTransform_.scale.y < scaleTmp) { worldTransform_.scale.y += 0.05f; }
 
-	if (worldTransform_.scale.z > scaleTmp) { worldTransform_.scale.z -= 0.05f; }
-	if (worldTransform_.scale.z < scaleTmp) { worldTransform_.scale.z += 0.05f; }
+	if(worldTransform_.scale.z > scaleTmp) { worldTransform_.scale.z -= 0.05f; }
+	if(worldTransform_.scale.z < scaleTmp) { worldTransform_.scale.z += 0.05f; }
 
 	{
 
 	}
 
 	//先行入力
-	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
+	if(KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
 		bufferedPushSpace = true;
 	}
 	//〃移動
-	if (KeyboardInput::GetInstance().KeyTrigger(DIK_LEFTARROW)) { bufferedKeyArrow = BUFFERED_INPUT_ARROW::LEFT; }
-	if (KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHTARROW)) { bufferedKeyArrow = BUFFERED_INPUT_ARROW::RIGHT; }
-	if (KeyboardInput::GetInstance().KeyTrigger(DIK_UPARROW)) { bufferedKeyArrow = BUFFERED_INPUT_ARROW::UP; }
-	if (KeyboardInput::GetInstance().KeyTrigger(DIK_DOWNARROW)) { bufferedKeyArrow = BUFFERED_INPUT_ARROW::DOWN; }
+	if(KeyboardInput::GetInstance().KeyTrigger(DIK_LEFTARROW)) { bufferedKeyArrow = BUFFERED_INPUT_ARROW::LEFT; }
+	if(KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHTARROW)) { bufferedKeyArrow = BUFFERED_INPUT_ARROW::RIGHT; }
+	if(KeyboardInput::GetInstance().KeyTrigger(DIK_UPARROW)) { bufferedKeyArrow = BUFFERED_INPUT_ARROW::UP; }
+	if(KeyboardInput::GetInstance().KeyTrigger(DIK_DOWNARROW)) { bufferedKeyArrow = BUFFERED_INPUT_ARROW::DOWN; }
 
 	stateMove->Update();
 	stateConnectTurn->Update();
@@ -211,7 +212,7 @@ void Player::OnCollision(Collider& collider)
 
 Player& Player::operator=(const Player& obj)
 {
-	this->Initialize(obj.moveDistance, obj.blockM, obj.playerSocket, obj.connectE2M, obj.tutorial, obj.cameraM, obj.model_, obj.debugText_,obj.conectLimit_);
+	this->Initialize(obj.moveDistance, obj.blockM, obj.playerSocket, obj.connectE2M, obj.tutorial, obj.cameraM, obj.model_, obj.debugText_, obj.conectLimit_);
 
 	//*this->model_ = *obj.model_;
 	//*this->textureHandle = *obj.textureHandle;
@@ -219,7 +220,7 @@ Player& Player::operator=(const Player& obj)
 	*this->stateConnectTurn = *obj.stateConnectTurn;//deleteされちゃうものはポインタの中身だけ
 	this->posYTmp = obj.posYTmp;
 	this->posXTmp = obj.posXTmp;
-	this->conectCount = obj.conectCount;
+	this->conectCount_ = obj.conectCount_;
 	this->conectCountMax = obj.conectCountMax;
 	this->isMove = obj.isMove;
 	this->isWantToMove = obj.isWantToMove;
@@ -247,12 +248,12 @@ Player& Player::operator=(const Player& obj)
 	this->worldTransform_ = obj.worldTransform_;
 	this->worldTransform_.SetWorld();
 	this->velocity = obj.velocity;
-	this->conectCount = obj.conectCount;
+	this->conectCount_ = obj.conectCount_;
 	this->conectCountMax = obj.conectCountMax;
 
-	for (int i = 0; i < 13; i++)
+	for(int i = 0; i < 13; i++)
 	{
-		for (int j = 0; j < 13; j++)
+		for(int j = 0; j < 13; j++)
 		{
 			playerPos[i][j] = obj.playerPos[i][j];
 		}
@@ -274,7 +275,7 @@ void PlayerState::SetPlayer(Player* player)
 //--------------------------------------------------------------------------
 void StateNormalMoveP::Update()
 {
-	if (player->isTurnNow == false)
+	if(player->isTurnNow == false)
 	{
 		shake.Update();
 
@@ -289,7 +290,7 @@ void StateNormalMoveP::Update()
 	}
 
 	//移動の場合(回転中は移動しない)
-	if (
+	if(
 		(
 			(
 				KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) ||
@@ -308,29 +309,110 @@ void StateNormalMoveP::Update()
 			)
 		&& player->isTurnNow == false && !shake.GetIsShaking())
 	{
-		if (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A)
+		if(KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::LEFT)
 		{
-			player->moveEndPos = { player->GetWorldPos().x - player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
+			if(player->isConnect == true)
+			{
+				if(player->isStartConect == true && player->isTurn == false)
+				{
+					player->isStartConect = false;
+				}
+				else
+				{
+					player->conectCount_ -= 1;
+					player->moveCount += 1;
+				}
+
+				if(player->conectCount_ > 0)
+				{
+					player->moveEndPos = { player->GetWorldPos().x - player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
+				}
+			}
+			else
+			{
+				player->moveEndPos = { player->GetWorldPos().x - player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
+			}
 		}
-		if (KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D)
+		if(KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::RIGHT)
 		{
-			player->moveEndPos = { player->GetWorldPos().x + player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
+			if(player->isConnect == true)
+			{
+				if(player->isStartConect == true && player->isTurn == false)
+				{
+					player->isStartConect = false;
+				}
+				else
+				{
+					player->conectCount_ -= 1;
+					player->moveCount += 1;
+				}
+
+				if(player->conectCount_ > 0)
+				{
+					player->moveEndPos = { player->GetWorldPos().x + player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
+				}
+			}
+			else
+			{
+				player->moveEndPos = { player->GetWorldPos().x + player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
+			}
 		}
-		if (KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_W)
+		if(KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_W)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::UP)
 		{
-			player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + player->moveDistance };
+			if(player->isConnect == true)
+			{
+				if(player->isStartConect == true && player->isTurn == false)
+				{
+					player->isStartConect = false;
+				}
+				else
+				{
+					player->conectCount_ -= 1;
+					player->moveCount += 1;
+				}
+				if(player->conectCount_ > 0)
+				{
+					player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + player->moveDistance };
+				}
+			}
+			else
+			{
+				player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + player->moveDistance };
+			}
 		}
-		if (KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW) || KeyboardInput::GetInstance().KeyPush(DIK_S)
+		if(KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW) || KeyboardInput::GetInstance().KeyPush(DIK_S)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::DOWN)
 		{
-			player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + -player->moveDistance };
+			
+			if(player->isConnect == true && player->isTurn == false)
+			{
+				
+				if(player->isStartConect == true)
+				{
+					player->isStartConect = false;
+				}
+				else
+				{
+					player->conectCount_ -= 1;
+					player->moveCount += 1;
+				}
+
+				if(player->conectCount_ > 0)
+				{
+					player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + -player->moveDistance };
+				}
+			}
+			else
+			{
+				player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + -player->moveDistance };
+			}
 		}
 
 		//進んだ先にブロック
-		if (player->blockM->GetPosIsBlock(player->moveEndPos))
+		if(player->blockM->GetPosIsBlock(player->moveEndPos))
 		{
 			//一手戻る機能に記録
 			GetBackManager::GetInstance()->SaveDatas();
@@ -349,7 +431,7 @@ void StateNormalMoveP::Update()
 			player->GetWorldTransForm()->scale = { scale.x * 1.2f,scale.y * 0.6f,scale.z * 1.2f };
 
 			//チュートリアル
-			if (player->tutorial->GetState() == TUTORIAL::MOVE)
+			if(player->tutorial->GetState() == TUTORIAL::MOVE)
 			{
 				player->tutorial->AddStateNum();
 			}
@@ -357,7 +439,7 @@ void StateNormalMoveP::Update()
 			player->ChangeStateMove(new StateMoveP);
 		}
 		//無かった時
-		else if (!shake.GetIsShaking() && shake.GetShake() == 0 && effectCount <= 0)
+		else if(!shake.GetIsShaking() && shake.GetShake() == 0 && effectCount <= 0)
 		{
 			//先行
 			player->bufferedKeyArrow = NONE;
@@ -387,12 +469,12 @@ void StateMoveP::Update()
 	player->SetWorldPos(LerpVec3(player->moveStartPos, player->moveEndPos, EaseOut(t)));
 
 	//ゴールしたら
-	if (!player->isGoal && player->blockM->GetIsGoal(player->GetWorldPos(), true))
+	if(!player->isGoal && player->blockM->GetIsGoal(player->GetWorldPos(), true))
 	{
 		player->isGoal = true;
 	}
 	//移動し終わったらステート戻す
-	if (count >= countMax)
+	if(count >= countMax)
 	{
 		player->isMove = false;
 		player->posXTmp = player->GetWorldPos().x;
@@ -409,18 +491,18 @@ void StateMoveP::Draw(Camera* camera, Model* model)
 //--------------------------------------------------------------------------
 void StateNormalConTurP::Update()
 {
-	if (player->isConnect)
+	if(player->isConnect)
 	{
 		player->ChangeStateTurnConnect(new StateConnectP);
 	}
 
 	//繋ぐ
-	else if (((KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) || player->bufferedPushSpace) && !player->isMove))
+	else if(((KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) || player->bufferedPushSpace) && !player->isMove))
 	{
 		//ボタンがあったら
-		if (player->blockM->GetPosIsGear(player->GetWorldPos()) /*&& !player->isMove*/)
+		if(player->blockM->GetPosIsGear(player->GetWorldPos()) /*&& !player->isMove*/)
 		{
-			if(player->conectCount > 0)
+			if(player->conectCount_ > 0)
 			{
 				//一手戻る機能に記録
 				GetBackManager::GetInstance()->SaveDatas();
@@ -482,16 +564,19 @@ void StateConnectP::Update()
 {
 	player->blockM->UpdateConnect(player->GetWorldPos());
 
-	if (player->isTurnNow)
+	if(player->isTurnNow)
 	{
 		player->ChangeStateTurnConnect(new StateTurnP);
 	}
 
-	else if ((KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) || player->bufferedPushSpace) && !player->isMove)
+	else if((KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) || player->bufferedPushSpace) && !player->isMove)
 	{
 		//押したところがボタンだったら
-		if (player->blockM->CheckAxisGear(player->GetWorldPos()))
+		if(player->blockM->CheckAxisGear(player->GetWorldPos()))
 		{
+			//スタートマスのフラグをオンに
+			player->isStartConect = true;
+
 			//一手戻る機能に記録
 			GetBackManager::GetInstance()->SaveDatas();
 
@@ -516,7 +601,7 @@ void StateConnectP::Update()
 				, { 0.2f,0.1f,1.0f,0.9f }, { 1.0f,1.0f,1.0f,0.3f }, 40, { 0,pi * 10.0f,0 });
 
 			//チュートリアル
-			if (player->tutorial->GetState() == TUTORIAL::CONNECT)
+			if(player->tutorial->GetState() == TUTORIAL::CONNECT)
 			{
 				player->tutorial->AddStateNum();
 			}
@@ -525,6 +610,12 @@ void StateConnectP::Update()
 		}
 		else
 		{
+			//スタートマスのフラグをオンに
+			player->isStartConect = true;
+			//進んだマス分カウント戻す
+			player->conectCount_ += player->moveCount;
+			player->moveCount = 0;
+
 			//一手戻る機能に記録
 			GetBackManager::GetInstance()->SaveDatas();
 
@@ -558,6 +649,32 @@ void StateConnectP::Update()
 			player->ChangeStateTurnConnect(new StateNormalConTurP);
 		}
 	}
+
+	/*if(player->conectCount_ > 0)
+	{
+		if(KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A)
+			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::LEFT)
+		{
+			player->conectCount_ -= 1;
+		}
+		if(KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D)
+			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::RIGHT)
+		{
+			player->conectCount_ -= 1;
+		}
+		if(KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_W)
+			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::UP)
+		{
+			player->conectCount_ -= 1;
+		}
+		if(KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW) || KeyboardInput::GetInstance().KeyPush(DIK_S)
+			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::DOWN)
+		{
+			player->conectCount_ -= 1;
+		}
+	}*/
+	
+
 }
 
 void StateConnectP::Draw(Camera* camera, Model* model)
@@ -577,54 +694,55 @@ void StateTurnP::Update()
 	player->GetWorldTransForm()->scale = { scale.x ,scale.y * 1.3f,scale.z };
 
 	//回転終わる
-	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) && !player->blockM->GetIsRollingLeftorRight() && player->blockM->GetCheckElec())
+	if(KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) && !player->blockM->GetIsRollingLeftorRight() && player->blockM->GetCheckElec())
 	{
-		if (player->blockM->GetisLockedBlock(player->GetWorldPos()) == false)
+		if(player->blockM->GetisLockedBlock(player->GetWorldPos()) == false)
 		{
-				//一手戻る機能に記録
-				GetBackManager::GetInstance()->SaveDatas();
 
-				//先行
-				player->bufferedKeyArrow = NONE;
+			//一手戻る機能に記録
+			GetBackManager::GetInstance()->SaveDatas();
 
-				player->isTurnNow = false;
-				//繋がれているブロックを全部解除するステージ関数()
-				player->blockM->ReleseConectedBlock();
-				//コンセントを抜く
-				player->playerSocket->FinishSocket(player->GetWorldPos());
+			//先行
+			player->bufferedKeyArrow = NONE;
 
-				if(player->isConnect)
-				{
-					player->conectCount -= 1;
-					player->isConnect = false;
-				}
+			player->isTurnNow = false;
+			//繋がれているブロックを全部解除するステージ関数()
+			player->blockM->ReleseConectedBlock();
+			//コンセントを抜く
+			player->playerSocket->FinishSocket(player->GetWorldPos());
 
-				player->bufferedPushSpace = false;
+			if(player->isConnect)
+			{
+				player->conectCount_ -= 1;
+				player->isConnect = false;
+			}
 
-				//演出
-				Vec3 scale = player->GetWorldTransForm()->scale;
-				player->GetWorldTransForm()->scale = { scale.x * 0.1f,scale.y * 2.0f,scale.z * 0.1f };
+			player->bufferedPushSpace = false;
 
-				//カメラ切り替え
-				{
-					player->cameraM->usingCamera = player->cameraM->gameTurnCamera.get();
+			//演出
+			Vec3 scale = player->GetWorldTransForm()->scale;
+			player->GetWorldTransForm()->scale = { scale.x * 0.1f,scale.y * 2.0f,scale.z * 0.1f };
 
-					player->cameraM->BegineLerpUsingCamera(
-						player->cameraM->gameTurnCamera->GetEye(),
-						player->cameraM->gameMainCamera->GetEye(),
-						player->cameraM->gameTurnCamera->GetTarget(),
-						player->cameraM->gameMainCamera->GetTarget(),
-						player->cameraM->gameTurnCamera->GetUp(),
-						player->cameraM->gameMainCamera->GetUp(),
-						60);
-				}
+			//カメラ切り替え
+			{
+				player->cameraM->usingCamera = player->cameraM->gameTurnCamera.get();
 
-				player->blockM->SetCheckElec();
+				player->cameraM->BegineLerpUsingCamera(
+					player->cameraM->gameTurnCamera->GetEye(),
+					player->cameraM->gameMainCamera->GetEye(),
+					player->cameraM->gameTurnCamera->GetTarget(),
+					player->cameraM->gameMainCamera->GetTarget(),
+					player->cameraM->gameTurnCamera->GetUp(),
+					player->cameraM->gameMainCamera->GetUp(),
+					60);
+			}
 
-				//予測線消す
-				player->blockM->predictBlockM->ClearPredictBlock();
+			player->blockM->SetCheckElec();
 
-				player->ChangeStateTurnConnect(new StateNormalConTurP);
+			//予測線消す
+			player->blockM->predictBlockM->ClearPredictBlock();
+
+			player->ChangeStateTurnConnect(new StateNormalConTurP);
 		}
 
 	}

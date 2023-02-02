@@ -6,47 +6,17 @@ int StageManager::selectStage = STAGE::TUTORIAL;
 
 StageManager::~StageManager()
 {
-	delete conectLimit_;
+	
 }
 
 void StageManager::Initialize(BlockManager* blockManager
-	, Tutorial* tutorial)
+	, Tutorial* tutorial,ConectLimit* conectLimit)
 {
 	//インスタンスの生成
 	//blockManager_ = std::make_unique<BlockManager>();
 	blockManager_ = blockManager;
-	//conectLimit_ = std::make_unique<ConectLimit>();
+	conectLimit_ = conectLimit;
 
-	conectLimit_ = new ConectLimit;
-
-	if(isCountReset[STAGE::TUTORIAL] == true)
-	{
-		conectLimit_->SetCount(1);
-		conectLimit_->ResetCount();
-	}
-	else if(isCountReset[STAGE::STAGE1] == true)
-	{
-		conectLimit_->SetCount(2);
-		conectLimit_->ResetCount();
-	}
-	else if(isCountReset[STAGE::STAGE2] == true)
-	{
-		conectLimit_->SetCount(3);
-		conectLimit_->ResetCount();
-	}
-	else if(isCountReset[STAGE::STAGE3] == true)
-	{
-		conectLimit_->SetCount(4);
-		conectLimit_->ResetCount();
-	}
-	else
-	{
-		conectLimit_->SetCount(0);
-		conectLimit_->ResetCount();
-	}
-
-
-	
 	this->tutorial = tutorial;
 
 	int tutorialWidth = 13;
@@ -153,7 +123,8 @@ void StageManager::SetTutorial(const int& blockWidth, const int& blockHeight)
 	//ここでプレイヤーの位置指定
 	playerPos[0][3] = true;
 
-	SetisCountReset(selectStage);
+	conectLimit_->SetCount(1);
+	conectLimit_->ResetCount();
 
 	//形の設定
 	forms_ =
@@ -189,7 +160,10 @@ void StageManager::SetStage1(const int& blockWidth, const int& blockHeight)
 	//ここでプレイヤーの位置指定
 	playerPos[0][0] = true;
 
-	SetisCountReset(selectStage);
+	conectLimit_->SetCount(2);
+	conectLimit_->ResetCount();
+
+	//SetisCountReset(selectStage);
 
 	//形の設定
 	forms_ =
@@ -228,8 +202,10 @@ void StageManager::SetStage2(const int& blockWidth, const int& blockHeight)
 	playerPos[0][0] = true;
 
 	//プレイヤーの制限回数の上限を設定
-	
-	SetisCountReset(selectStage);
+	conectLimit_->SetCount(3);
+	conectLimit_->ResetCount();
+
+	//SetisCountReset(selectStage);
 
 	//形の設定
 	forms_ =
@@ -267,7 +243,10 @@ void StageManager::SetStage3(const int& blockWidth, const int& blockHeight)
 
 	//プレイヤーの制限回数の上限を設定
 
-	SetisCountReset(selectStage);
+	conectLimit_->SetCount(4);
+	conectLimit_->ResetCount();
+
+	//SetisCountReset(selectStage);
 
 	//形の設定
 	forms_ =

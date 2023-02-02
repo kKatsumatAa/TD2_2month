@@ -19,7 +19,7 @@ public:
 	~StageManager();
 
 	//初期化
-	void Initialize(BlockManager* blockManager, Tutorial* tutorial);
+	void Initialize(BlockManager* blockManager, Tutorial* tutorial,ConectLimit* conectLimit);
 
 	//更新
 	void Update();
@@ -60,7 +60,9 @@ public:
 	//各ステージのカウントフラグをセット
 	void SetisCountReset(int stageNum);
 
-	ConectLimit* GetConectLimit() { return conectLimit_; };
+	int GetConectCount() { return conectLimit_->GetConectcount(); };
+
+	//ConectLimit* GetConectLimit() { return conectLimit_; };
 
 	//チュートリアルステージの長さ
 	static const int TutorialWidth = 13;
@@ -102,7 +104,7 @@ private:
 	std::vector<std::vector<Block::Form>> forms_;
 
 	//std::unique_ptr<ConectLimit> conectLimit_;
-	ConectLimit* conectLimit_;
+	ConectLimit* conectLimit_ = nullptr;
 
 	bool isCountReset[stageMax] = { 0 };
 

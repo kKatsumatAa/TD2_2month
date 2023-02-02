@@ -66,6 +66,7 @@ public:
 	//ƒ‰ƒCƒg
 	LightManager* lightManager = nullptr;
 
+	
 	//ŠÛ‰e
 	float circleShadowDir[3] = { 0,-1,0 };
 	float circleShadowAtten[3] = { 0.5f,0.15f,0 };
@@ -97,6 +98,10 @@ public:
 	std::unique_ptr<Tutorial> tutorial;
 
 	BlockManager* blockManager = nullptr;
+
+	//§ŒÀ‰ñ”
+	//std::unique_ptr <ConectLimit> conectLimit_;
+	ConectLimit* conectLimit_;
 
 	std::unique_ptr<StageManager> stageManager = nullptr;
 	std::unique_ptr<StageSelectManager>stageSelectM;
