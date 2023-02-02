@@ -151,7 +151,7 @@ void StageManager::SetTutorial(const int& blockWidth, const int& blockHeight)
 	SetWorldMat(blockWidth, blockHeight);
 
 	//ここでプレイヤーの位置指定
-	playerPos[0][3] = true;
+	playerPos[1][1] = true;
 
 	SetisCountReset(selectStage);
 
