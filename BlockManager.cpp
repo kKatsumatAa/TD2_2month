@@ -107,7 +107,7 @@ BlockManager::~BlockManager()
 //初期化
 void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockManager* pBM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
 	Model* normal, Model* locked, Model* goal, Model* Socket, Model* button, Model* disconnectedBlock,
-	Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed)
+	Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed,Model* overLapBlock)
 {
 	blocks_.clear();
 	worldmats_.clear();
@@ -167,7 +167,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockMa
 			//worldmats_[i][j]->rot = { 0.0f,0.0f,0.0f };
 
 			blocks_[i][j]->Initialize(connectEM, normal, locked, goal, Socket, button, disconnectedBlock,
-				disconnectedButton, disconnectedSocketBlock, electricBlock, doorGoalClosed);
+				disconnectedButton, disconnectedSocketBlock, electricBlock, doorGoalClosed, overLapBlock);
 
 			//ブロックの種類を設定
 
@@ -186,7 +186,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockMa
 			worldmats_[i][j].SetWorld();
 
 			block_->Initialize(connectEM, normal, locked, goal, Socket, button, disconnectedBlock,
-				disconnectedButton, disconnectedSocketBlock, electricBlock, doorGoalClosed);
+				disconnectedButton, disconnectedSocketBlock, electricBlock, doorGoalClosed, overLapBlock);
 
 			//軸になっているかどうか
 			isAxis_[i][j] = false;
@@ -410,7 +410,7 @@ void BlockManager::Draw(Camera* camera)
 			//Manager.cppで配列で定義したworldTransformの値をBlock.cppのDrawにセット
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
-			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j], isElec[i][j], goalMat);
+			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j], isElec[i][j], goalMat,isPushed[i][j]);
 
 			if (action_[i][j] == Action::Connect && effectCount >= effectCountMax)
 			{

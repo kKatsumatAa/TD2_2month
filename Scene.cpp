@@ -96,7 +96,7 @@ void SceneGame::Initialize()
 
 	scene->blockManager->Initialize(scene->connectEM.get(), scene->predictBlockManager.get(), scene->tutorial.get(), scene->cameraM.get(),
 		scene->goalE.get(), scene->model[1], scene->model[2], scene->model[3], scene->model[4], scene->model[5], scene->model[6],
-		scene->model[8], scene->model[9], scene->model[10], scene->model[11]);
+		scene->model[8], scene->model[9], scene->model[10], scene->model[11],scene->model[13]);
 	scene->connectEM->Initialize();
 	scene->connectE2M->Initialize();
 	
@@ -351,7 +351,7 @@ Scene::~Scene()
 	delete model[10];
 	delete model[11];
 	delete model[12];
-
+	delete model[13];
 }
 
 void Scene::ChangeState(SceneState* state)
@@ -405,8 +405,7 @@ void Scene::Initialize()
 	model[10] = Model::LoadFromOBJ("ElectricBlock");
 	model[11] = Model::LoadFromOBJ("DoorGoal_Closed");
 	model[12] = Model::LoadFromOBJ("Wall");
-
-
+	model[13] = Model::LoadFromOBJ("OverlapBlock");
 
 	//imgui
 	imGuiManager = new ImGuiManager();
@@ -433,7 +432,7 @@ void Scene::Initialize()
 
 	blockManager = new BlockManager();
 	blockManager->Initialize(connectEM.get(), predictBlockManager.get(), tutorial.get(), cameraM.get(), goalE.get(),
-		model[1], model[2], model[3], model[4], model[5], model[6], model[8], model[9], model[10], model[11]);
+		model[1], model[2], model[3], model[4], model[5], model[6], model[8], model[9], model[10], model[11],model[13]);
 
 	stageManager = std::make_unique<StageManager>();
 	stageManager->Initialize(blockManager, tutorial.get());
