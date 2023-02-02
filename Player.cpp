@@ -721,7 +721,7 @@ void StateTurnP::Update()
 
 			if (player->isConnect)
 			{
-				player->conectCount -= 1;
+				player->conectCount_ -= 1;
 				player->isConnect = false;
 			}
 

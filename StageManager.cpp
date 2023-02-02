@@ -123,7 +123,7 @@ void StageManager::SetTutorial(const int& blockWidth, const int& blockHeight)
 	//ここでプレイヤーの位置指定
 	playerPos[1][1] = true;
 
-	conectLimit_->SetCount(1);
+	conectLimit_->SetCount(10);
 	conectLimit_->ResetCount();
 
 	//形の設定
@@ -160,7 +160,7 @@ void StageManager::SetStage1(const int& blockWidth, const int& blockHeight)
 	//ここでプレイヤーの位置指定
 	playerPos[0][0] = true;
 
-	conectLimit_->SetCount(2);
+	conectLimit_->SetCount(12);
 	conectLimit_->ResetCount();
 
 	//SetisCountReset(selectStage);
@@ -202,7 +202,7 @@ void StageManager::SetStage2(const int& blockWidth, const int& blockHeight)
 	playerPos[0][0] = true;
 
 	//プレイヤーの制限回数の上限を設定
-	conectLimit_->SetCount(3);
+	conectLimit_->SetCount(13);
 	conectLimit_->ResetCount();
 
 	//SetisCountReset(selectStage);
@@ -243,7 +243,7 @@ void StageManager::SetStage3(const int& blockWidth, const int& blockHeight)
 
 	//プレイヤーの制限回数の上限を設定
 
-	conectLimit_->SetCount(4);
+	conectLimit_->SetCount(14);
 	conectLimit_->ResetCount();
 
 	//SetisCountReset(selectStage);
