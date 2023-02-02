@@ -158,7 +158,7 @@ void TurnTutorial::Update()
 	{
 		tutorial->AddStateNum();
 		tutorial->AddState2();
-		tutorial->ChangeState(new GetBackTutorial);
+		tutorial->ChangeState(new OverlapTutorial);
 	}
 }
 

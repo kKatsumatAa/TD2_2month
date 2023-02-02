@@ -68,6 +68,7 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 		moveEndPos = { 0,0,0 };
 		bufferedPushSpace = false;
 		bufferedKeyArrow = BUFFERED_INPUT_ARROW::NONE;
+		bufferedTurnRelease = false;
 	}
 
 	for(int i = 0; i < 13; i++)
@@ -140,6 +141,7 @@ void Player::Reset()
 		moveEndPos = { 0,0,0 };
 		bufferedPushSpace = false;
 		bufferedKeyArrow = BUFFERED_INPUT_ARROW::NONE;
+		bufferedTurnRelease = false;
 	}
 
 	SetPosStage(this->playerPos);
@@ -150,7 +152,7 @@ void Player::Reset()
 
 void Player::Update()
 {
-	if(isLoadConectCount == true)
+	if (isLoadConectCount == true)
 	{
 		conectCount_ = conectLimit_->GetConectcount();
 		conectCountMax = conectLimit_->GetLimitCount();
@@ -174,6 +176,11 @@ void Player::Update()
 	if(KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
 		bufferedPushSpace = true;
+
+		if (isTurnNow)
+		{
+			bufferedTurnRelease = true;
+		}
 	}
 	//〃移動
 	if(KeyboardInput::GetInstance().KeyTrigger(DIK_LEFTARROW)) { bufferedKeyArrow = BUFFERED_INPUT_ARROW::LEFT; }
@@ -694,7 +701,7 @@ void StateTurnP::Update()
 	player->GetWorldTransForm()->scale = { scale.x ,scale.y * 1.3f,scale.z };
 
 	//回転終わる
-	if(KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) && !player->blockM->GetIsRollingLeftorRight() && player->blockM->GetCheckElec())
+	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) || player->bufferedTurnRelease) && !player->blockM->GetIsRollingLeftorRight() && player->blockM->GetCheckElec())
 	{
 		if(player->blockM->GetisLockedBlock(player->GetWorldPos()) == false)
 		{
@@ -704,6 +711,7 @@ void StateTurnP::Update()
 
 			//先行
 			player->bufferedKeyArrow = NONE;
+			player->bufferedTurnRelease = false;
 
 			player->isTurnNow = false;
 			//繋がれているブロックを全部解除するステージ関数()
@@ -711,9 +719,9 @@ void StateTurnP::Update()
 			//コンセントを抜く
 			player->playerSocket->FinishSocket(player->GetWorldPos());
 
-			if(player->isConnect)
+			if (player->isConnect)
 			{
-				player->conectCount_ -= 1;
+				player->conectCount -= 1;
 				player->isConnect = false;
 			}
 

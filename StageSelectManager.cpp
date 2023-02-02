@@ -116,27 +116,29 @@ void StageSelectManager::Update()
 
 void StageSelectManager::Draw(CameraManager* cameraM)
 {
-	//ステージ1とか
-	count++;
-
-	object[selectNum].worldMat->scale = { stageImageRadius + sinf(count * 0.1f),stageImageRadius + sinf(count * 0.1f) ,stageImageRadius };
-
-	for (int i = 0; i < this->selectNumMax; i++)
-	{
-		if (object[i].worldMat->scale.x != stageImageRadius && selectNum != i)
-		{
-			object[i].worldMat->scale = { stageImageRadius ,stageImageRadius ,stageImageRadius };
-		}
-
-		object[i].DrawBox(object[i].worldMat, &cameraM->usingCamera->viewMat, &cameraM->usingCamera->projectionMat, { 1.0f,1.0f,1.0f,1.0f }, texhandle[i]);
-	}
-
 	//背景など
 	for (int i = selectNumMax; i < this->selectNumMax + 3; i++)
 	{
 		object[i].DrawBox(object[i].worldMat, &cameraM->usingCamera->viewMat, &cameraM->usingCamera->projectionMat,
 			{ 1.0f,1.0f,1.0f,1.0f }, texhandle[i]);
 	}
+
+	//ステージ1とか
+	count++;
+
+	object[selectNum].worldMat->scale = { stageImageRadius  + sinf(count * 0.1f),stageImageRadius  + sinf(count * 0.1f) ,stageImageRadius  };
+
+	for (int i = 0; i < this->selectNumMax; i++)
+	{
+		if (object[i].worldMat->scale.x != stageImageRadius  && selectNum != i)
+		{
+			object[i].worldMat->scale = { stageImageRadius  ,stageImageRadius  ,stageImageRadius  };
+		}
+
+		object[i].DrawBox(object[i].worldMat, &cameraM->usingCamera->viewMat, &cameraM->usingCamera->projectionMat, { 1.0f,1.0f,1.0f,1.0f }, texhandle[i]);
+	}
+
+	
 }
 
 void StageSelectManager::DrawSprite()

@@ -148,6 +148,7 @@ public:
 	//æs“ü—Í—p
 	bool bufferedPushSpace = false;
 	int  bufferedKeyArrow = BUFFERED_INPUT_ARROW::NONE;
+	bool bufferedTurnRelease = false;
 
 	Object draw[10];
 	DebugText* debugText_ = nullptr;
