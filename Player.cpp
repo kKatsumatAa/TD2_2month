@@ -319,22 +319,34 @@ void StateNormalMoveP::Update()
 		if(KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::LEFT)
 		{
-			player->moveEndPos = { player->GetWorldPos().x - player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
+			if(player->conectCount_ > 0)
+			{
+				player->moveEndPos = { player->GetWorldPos().x - player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
+			}
 		}
 		if(KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::RIGHT)
 		{
-			player->moveEndPos = { player->GetWorldPos().x + player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
+			if(player->conectCount_ > 0)
+			{
+				player->moveEndPos = { player->GetWorldPos().x + player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
+			}
 		}
 		if(KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_W)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::UP)
 		{
-			player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + player->moveDistance };
+			if(player->conectCount_ > 0)
+			{
+				player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + player->moveDistance };
+			}
 		}
 		if(KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW) || KeyboardInput::GetInstance().KeyPush(DIK_S)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::DOWN)
 		{
-			player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + -player->moveDistance };
+			if(player->conectCount_ > 0)
+			{
+				player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + -player->moveDistance };
+			}
 		}
 
 		//進んだ先にブロック
