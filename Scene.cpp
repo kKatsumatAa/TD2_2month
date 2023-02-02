@@ -103,12 +103,10 @@ void SceneGame::Initialize()
 	scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
 	scene->goalE->Initialize(scene->cameraM.get());
 
-	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
-		, scene->connectE2M.get(), scene->tutorial.get(), scene->cameraM.get(), scene->model[0], &scene->debugText);
-	scene->player->SetPosStage(scene->stageManager->playerPos);
-
 	scene->stageManager->Initialize(scene->blockManager, scene->tutorial.get());
-
+	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
+		, scene->connectE2M.get(), scene->tutorial.get(), scene->cameraM.get(), scene->model[0], &scene->debugText, scene->stageManager->GetConectLimit());
+	scene->player->SetPosStage(scene->stageManager->playerPos);
 
 
 	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get());

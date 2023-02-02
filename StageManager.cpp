@@ -153,6 +153,8 @@ void StageManager::SetTutorial(const int& blockWidth, const int& blockHeight)
 	//ここでプレイヤーの位置指定
 	playerPos[0][0] = true;
 
+	SetisCountReset(selectStage);
+
 	//形の設定
 	forms_ =
 	{
