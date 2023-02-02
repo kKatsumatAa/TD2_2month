@@ -1364,8 +1364,8 @@ void BlockManager::GeneratePredictBlock()
 
 			if (form_[i][j] == Form::BLOCK)
 			{
-				predictBlockM->AddPredictBlock(worldMat[0].trans, { blockRadius_,blockRadius_,blockRadius_ }, false, this->normal);
-				predictBlockM->AddPredictBlock(worldMat[1].trans, { blockRadius_,blockRadius_,blockRadius_ }, true, this->normal);
+				predictBlockM->AddPredictBlock(worldMat[0].trans, { blockRadius_,blockRadius_,blockRadius_ }, false, this->disconnectedBlock);
+				predictBlockM->AddPredictBlock(worldMat[1].trans, { blockRadius_,blockRadius_,blockRadius_ }, true, this->disconnectedBlock);
 			}
 			if (form_[i][j] == Form::LOCKED)
 			{
