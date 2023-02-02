@@ -1,5 +1,6 @@
 #pragma once
 #include "BlockManager.h"
+#include "ConectLimit.h"
 
 enum STAGE
 {
@@ -14,6 +15,8 @@ class StageManager
 	using Form = Block::Form;
 
 public:
+
+	~StageManager();
 
 	//初期化
 	void Initialize(BlockManager* blockManager,Tutorial* tutorial);
@@ -54,6 +57,8 @@ public:
 	/// <param name="stageNum"></param>
 	void SelectStage(int stageNum);
 
+	ConectLimit* GetConectLimit() { return conectLimit_; };
+
 	//チュートリアルステージの長さ
 	static const int TutorialWidth = 13;
 	static const int TutorialHeight = 13;
@@ -68,6 +73,7 @@ public:
 	//外部で参照するための
 	int stageWidth = 0;
 
+	
 private:
 
 
@@ -90,5 +96,7 @@ private:
 	Form form_;
 	std::vector<std::vector<Block::Form>> forms_;
 
+	//std::unique_ptr<ConectLimit> conectLimit_;
+	ConectLimit* conectLimit_;
 };
 

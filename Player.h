@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "BlockManager.h"
 #include "PlayerSocket.h"
+#include "ConectLimit.h"
 
 
 class Player;
@@ -107,13 +108,15 @@ private:
 
 	const float scaleTmp = 1.8f;
 
-
-
+	
 	/*Tutorial* tutorial;*/
 public:
 	float posYTmp = 0;
 	float posXTmp = 0;
 
+	int conectCount;
+	int conectCountMax;
+	bool isLoadConectCount = true;
 
 	//外部からセットするブロックあるから動ける
 	bool isMove = false;
@@ -152,12 +155,15 @@ public:
 
 	CameraManager* cameraM;
 
+	//std::unique_ptr<ConectLimit> conectLimit_;
+	ConectLimit* conectLimit_;
 
 	void ChangeStateTurnConnect(PlayerState* state);
 	void ChangeStateMove(PlayerState* state);
 
 	void Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket,
-		ConnectingEffect2Manager* connectE2M, Tutorial* tutorial, CameraManager* cameraM, Model* model, DebugText* debugText_/*,Tutorial* tutorial = nullptr*/);
+		ConnectingEffect2Manager* connectE2M, Tutorial* tutorial, CameraManager* cameraM, Model* model, DebugText* debugText_,/*,Tutorial* tutorial = nullptr*/
+		ConectLimit* conectLimit);
 	void Update();
 	void Draw(Camera* camera);
 	void DrawSprite();

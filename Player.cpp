@@ -17,7 +17,8 @@ void Player::ChangeStateMove(PlayerState* state)
 }
 
 void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* playerSocket,
-	ConnectingEffect2Manager* connectE2M, Tutorial* tutorial, CameraManager* cameraM, Model* model, DebugText* debugText_)
+	ConnectingEffect2Manager* connectE2M, Tutorial* tutorial, CameraManager* cameraM, Model* model, DebugText* debugText_,
+	ConectLimit* conectLimit)
 {
 	assert(model);
 
@@ -29,6 +30,12 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 	this->connectE2M = connectE2M;
 	this->tutorial = tutorial;
 	this->cameraM = cameraM;
+
+	conectLimit_ = conectLimit;
+	//繋ぐ回数を設定
+	//conectCount = conectLimit_->GetConectcount();
+	////繋ぐ回数制限を設定
+	//conectCountMax = conectLimit_->GetConectcount();
 
 	isPlayer = true;
 	isDead = false;
@@ -76,6 +83,7 @@ void Player::Reset()
 	isPlayer = true;
 	isDead = false;
 	isGoal = false;
+	isLoadConectCount = true;
 
 	velocity = { 0,0,0 };
 
@@ -107,6 +115,13 @@ void Player::Reset()
 
 void Player::Update()
 {
+	if(isLoadConectCount == true)
+	{
+		conectCount = conectLimit_->GetConectcount();
+		conectCountMax = conectLimit_->GetConectcount();
+		isLoadConectCount = false;
+	}
+
 	if (worldTransform_.scale.x > scaleTmp) { worldTransform_.scale.x -= 0.05f; }
 	if (worldTransform_.scale.x < scaleTmp) { worldTransform_.scale.x += 0.05f; }
 
@@ -162,7 +177,7 @@ void Player::OnCollision(Collider& collider)
 
 Player& Player::operator=(const Player& obj)
 {
-	this->Initialize(obj.moveDistance, obj.blockM, obj.playerSocket, obj.connectE2M, obj.tutorial, obj.cameraM, obj.model_, obj.debugText_);
+	this->Initialize(obj.moveDistance, obj.blockM, obj.playerSocket, obj.connectE2M, obj.tutorial, obj.cameraM, obj.model_, obj.debugText_,obj.conectLimit_);
 
 	//*this->model_ = *obj.model_;
 	//*this->textureHandle = *obj.textureHandle;
@@ -170,6 +185,8 @@ Player& Player::operator=(const Player& obj)
 	*this->stateConnectTurn = *obj.stateConnectTurn;//deleteされちゃうものはポインタの中身だけ
 	this->posYTmp = obj.posYTmp;
 	this->posXTmp = obj.posXTmp;
+	this->conectCount = obj.conectCount;
+	this->conectCountMax = obj.conectCountMax;
 	this->isMove = obj.isMove;
 	this->isWantToMove = obj.isWantToMove;
 	this->isMoveNow = obj.isMoveNow;
@@ -359,48 +376,51 @@ void StateNormalConTurP::Update()
 		//ボタンがあったら
 		if (player->blockM->GetPosIsGear(player->GetWorldPos()) /*&& !player->isMove*/)
 		{
-			//一手戻る機能に記録
-			GetBackManager::GetInstance()->SaveDatas();
-
-			//シェイクやめる
-			Vec3 trans = { player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z };
-			trans = { trans.x ,trans.y,trans.z };
-			player->GetWorldTransForm()->trans = { player->posXTmp ,player->posYTmp,trans.z };
-
-			//先行解除
-			player->bufferedPushSpace = false;
-			player->isConnect = true;
-
-			//軸を登録
-			player->blockM->RegistAxisGear(player->GetWorldPos());
-
-			//コンセントをさす
-			player->playerSocket->UseSocket(player->GetWorldPos());
-
-			//演出
-			Vec3 scale = player->GetWorldTransForm()->scale;
-			player->GetWorldTransForm()->scale = { scale.x * 2.0f,scale.y * 0.2f,scale.z * 2.0f };
-
-			//エフェクト
-			Vec3 startScale = { player->GetRadius() * 2.0f,player->GetRadius() * 2.0f,player->GetRadius() * 2.0f };
-			Vec3 endScale = { player->GetRadius() * 0.1f,player->GetRadius() * 100.0f,player->GetRadius() * 0.1f };
-			player->connectE2M->GenerateConnectingEffect2(player->GetWorldPos(), startScale, endScale
-				, { 1.0f,1.0f,0,0.9f }, { 1.0f,1.0f,1.0f,0.3f }, 40, { 0,pi * 10.0f,0 });
-
-			//カメラ切り替え
+			if(player->conectCount > 0)
 			{
-				player->cameraM->usingCamera = player->cameraM->gameTurnCamera.get();
+				//一手戻る機能に記録
+				GetBackManager::GetInstance()->SaveDatas();
 
-				player->cameraM->BegineLerpUsingCamera(player->cameraM->gameMainCamera->GetEye(),
-					{ 0 + player->GetWorldPos().x,player->cameraM->gameMainCamera->GetEye().y + 35.0f,0 + player->GetWorldPos().z },
-					player->cameraM->gameMainCamera->GetTarget(),
-					{ 0 + player->GetWorldPos().x,0,0 + player->GetWorldPos().z },
-					player->cameraM->gameMainCamera->GetUp(),
-					{ 0,0,1 },
-					60);
+				//シェイクやめる
+				Vec3 trans = { player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z };
+				trans = { trans.x ,trans.y,trans.z };
+				player->GetWorldTransForm()->trans = { player->posXTmp ,player->posYTmp,trans.z };
+
+				//先行解除
+				player->bufferedPushSpace = false;
+				player->isConnect = true;
+
+				//軸を登録
+				player->blockM->RegistAxisGear(player->GetWorldPos());
+
+				//コンセントをさす
+				player->playerSocket->UseSocket(player->GetWorldPos());
+
+				//演出
+				Vec3 scale = player->GetWorldTransForm()->scale;
+				player->GetWorldTransForm()->scale = { scale.x * 2.0f,scale.y * 0.2f,scale.z * 2.0f };
+
+				//エフェクト
+				Vec3 startScale = { player->GetRadius() * 2.0f,player->GetRadius() * 2.0f,player->GetRadius() * 2.0f };
+				Vec3 endScale = { player->GetRadius() * 0.1f,player->GetRadius() * 100.0f,player->GetRadius() * 0.1f };
+				player->connectE2M->GenerateConnectingEffect2(player->GetWorldPos(), startScale, endScale
+					, { 1.0f,1.0f,0,0.9f }, { 1.0f,1.0f,1.0f,0.3f }, 40, { 0,pi * 10.0f,0 });
+
+				//カメラ切り替え
+				{
+					player->cameraM->usingCamera = player->cameraM->gameTurnCamera.get();
+
+					player->cameraM->BegineLerpUsingCamera(player->cameraM->gameMainCamera->GetEye(),
+						{ 0 + player->GetWorldPos().x,player->cameraM->gameMainCamera->GetEye().y + 35.0f,0 + player->GetWorldPos().z },
+						player->cameraM->gameMainCamera->GetTarget(),
+						{ 0 + player->GetWorldPos().x,0,0 + player->GetWorldPos().z },
+						player->cameraM->gameMainCamera->GetUp(),
+						{ 0,0,1 },
+						60);
+				}
+
+				player->ChangeStateTurnConnect(new StateConnectP);
 			}
-
-			player->ChangeStateTurnConnect(new StateConnectP);
 		}
 		else
 		{
@@ -517,46 +537,50 @@ void StateTurnP::Update()
 	{
 		if(player->blockM->GetisLockedBlock(player->GetWorldPos()) == false)
 		{
-			//一手戻る機能に記録
-			GetBackManager::GetInstance()->SaveDatas();
+				//一手戻る機能に記録
+				GetBackManager::GetInstance()->SaveDatas();
 
-			//先行
-			player->bufferedKeyArrow = NONE;
+				//先行
+				player->bufferedKeyArrow = NONE;
 
-			player->isTurnNow = false;
-			//繋がれているブロックを全部解除するステージ関数()
-			player->blockM->ReleseConectedBlock();
-			//コンセントを抜く
-			player->playerSocket->FinishSocket(player->GetWorldPos());
+				player->isTurnNow = false;
+				//繋がれているブロックを全部解除するステージ関数()
+				player->blockM->ReleseConectedBlock();
+				//コンセントを抜く
+				player->playerSocket->FinishSocket(player->GetWorldPos());
 
-			player->isConnect = false;
+				if(player->isConnect)
+				{
+					player->conectCount -= 1;
+					player->isConnect = false;
+				}
 
-			player->bufferedPushSpace = false;
+				player->bufferedPushSpace = false;
 
-			//演出
-			Vec3 scale = player->GetWorldTransForm()->scale;
-			player->GetWorldTransForm()->scale = { scale.x * 0.1f,scale.y * 2.0f,scale.z * 0.1f };
+				//演出
+				Vec3 scale = player->GetWorldTransForm()->scale;
+				player->GetWorldTransForm()->scale = { scale.x * 0.1f,scale.y * 2.0f,scale.z * 0.1f };
 
-			//カメラ切り替え
-			{
-				player->cameraM->usingCamera = player->cameraM->gameTurnCamera.get();
+				//カメラ切り替え
+				{
+					player->cameraM->usingCamera = player->cameraM->gameTurnCamera.get();
 
-				player->cameraM->BegineLerpUsingCamera(
-					player->cameraM->gameTurnCamera->GetEye(),
-					player->cameraM->gameMainCamera->GetEye(),
-					player->cameraM->gameTurnCamera->GetTarget(),
-					player->cameraM->gameMainCamera->GetTarget(),
-					player->cameraM->gameTurnCamera->GetUp(),
-					player->cameraM->gameMainCamera->GetUp(),
-					60);
-			}
+					player->cameraM->BegineLerpUsingCamera(
+						player->cameraM->gameTurnCamera->GetEye(),
+						player->cameraM->gameMainCamera->GetEye(),
+						player->cameraM->gameTurnCamera->GetTarget(),
+						player->cameraM->gameMainCamera->GetTarget(),
+						player->cameraM->gameTurnCamera->GetUp(),
+						player->cameraM->gameMainCamera->GetUp(),
+						60);
+				}
 
-			player->blockM->SetCheckElec();
+				player->blockM->SetCheckElec();
 
-			//予測線消す
-			player->blockM->predictBlockM->ClearPredictBlock();
+				//予測線消す
+				player->blockM->predictBlockM->ClearPredictBlock();
 
-			player->ChangeStateTurnConnect(new StateNormalConTurP);
+				player->ChangeStateTurnConnect(new StateNormalConTurP);
 		}
 		
 	}

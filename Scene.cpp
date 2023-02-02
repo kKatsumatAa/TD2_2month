@@ -100,12 +100,12 @@ void SceneGame::Initialize()
 		scene->model[8], scene->model[9], scene->model[10], scene->model[11]);
 	scene->connectEM->Initialize();
 	scene->connectE2M->Initialize();
-	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
-		, scene->connectE2M.get(), scene->tutorial.get(), scene->cameraM.get(), scene->model[0], &scene->debugText);
-	scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
-	scene->goalE->Initialize(scene->cameraM.get());
 	scene->stageManager->Initialize(scene->blockManager, scene->tutorial.get());
 
+	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
+		, scene->connectE2M.get(), scene->tutorial.get(), scene->cameraM.get(), scene->model[0], &scene->debugText,scene->stageManager->GetConectLimit());
+	scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
+	scene->goalE->Initialize(scene->cameraM.get());
 	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get());
 
 	//カメラ位置セット
@@ -477,7 +477,7 @@ void Scene::Initialize()
 
 	//player
 	player = std::make_unique<Player>();
-	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), tutorial.get(), cameraM.get(), model[0], &debugText);
+	player->Initialize(blockManager->blockRadius_ * 2.0f, blockManager, playerSocket.get(), connectE2M.get(), tutorial.get(), cameraM.get(), model[0], &debugText,stageManager->GetConectLimit());
 
 	//ステージセレクトマネージャー
 	stageSelectM = std::make_unique<StageSelectManager>();
@@ -547,9 +547,7 @@ void Scene::Update()
 
 	blockManager->Update();
 
-
 	state->Update();
-
 
 #ifdef _DEBUG
 	//if (KeyboardInput::GetInstance().KeyTrigger(DIK_E)) ChangeState(new SceneTitle);

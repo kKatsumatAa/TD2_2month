@@ -4,12 +4,20 @@ using namespace std;
 
 int StageManager::selectStage = STAGE::TUTORIAL;
 
+StageManager::~StageManager()
+{
+	delete conectLimit_;
+}
+
 void StageManager::Initialize(BlockManager* blockManager
 	, Tutorial* tutorial)
 {
 	//インスタンスの生成
 	//blockManager_ = std::make_unique<BlockManager>();
 	blockManager_ = blockManager;
+	//conectLimit_ = std::make_unique<ConectLimit>();
+
+	conectLimit_ = new ConectLimit;
 	this->tutorial = tutorial;
 
 	int tutorialWidth = 13;
@@ -110,6 +118,10 @@ void StageManager::SetTutorial(const int& blockWidth, const int& blockHeight)
 	ResetStage();
 	SetWorldMat(blockWidth, blockHeight);
 
+	//プレイヤーの制限回数の上限を設定
+	conectLimit_->SetCount(3);
+	conectLimit_->ResetCount();
+
 	//形の設定
 	forms_ =
 	{
@@ -140,6 +152,10 @@ void StageManager::SetStage1(const int& blockWidth, const int& blockHeight)
 
 	ResetStage();
 	SetWorldMat(blockWidth, blockHeight);
+
+	//プレイヤーの制限回数の上限を設定
+	conectLimit_->SetCount(4);
+	conectLimit_->ResetCount();
 
 	//形の設定
 	forms_ =
@@ -174,6 +190,10 @@ void StageManager::SetStage2(const int& blockWidth, const int& blockHeight)
 	ResetStage();
 	SetWorldMat(blockWidth, blockHeight);
 
+	//プレイヤーの制限回数の上限を設定
+	conectLimit_->SetCount(5);
+	conectLimit_->ResetCount();
+
 	//形の設定
 	forms_ =
 	{
@@ -204,6 +224,10 @@ void StageManager::SetStage3(const int& blockWidth, const int& blockHeight)
 
 	ResetStage();
 	SetWorldMat(blockWidth, blockHeight);
+
+	//プレイヤーの制限回数の上限を設定
+	conectLimit_->SetCount(6);
+	conectLimit_->ResetCount();
 
 	//形の設定
 	forms_ =
