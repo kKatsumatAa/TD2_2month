@@ -57,6 +57,9 @@ public:
 	/// <param name="stageNum"></param>
 	void SelectStage(int stageNum);
 
+	//各ステージのカウントフラグをセット
+	void SetisCountReset(int stageNum);
+
 	ConectLimit* GetConectLimit() { return conectLimit_; };
 
 	//チュートリアルステージの長さ
@@ -72,7 +75,6 @@ public:
 
 	//外部で参照するための
 	int stageWidth = 0;
-
 	
 private:
 
@@ -98,5 +100,11 @@ private:
 
 	//std::unique_ptr<ConectLimit> conectLimit_;
 	ConectLimit* conectLimit_;
+
+	bool isCountReset[stageMax] = { 0 };
+
+	int stageNum = 0; 
+
+
 };
 

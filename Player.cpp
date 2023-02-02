@@ -31,12 +31,8 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 	this->tutorial = tutorial;
 	this->cameraM = cameraM;
 
-	conectLimit_ = conectLimit;
-	//Œq‚®‰ñ”‚ðÝ’è
-	//conectCount = conectLimit_->GetConectcount();
-	////Œq‚®‰ñ”§ŒÀ‚ðÝ’è
-	//conectCountMax = conectLimit_->GetConectcount();
-
+	this->conectLimit_ = conectLimit;
+	
 	isPlayer = true;
 	isDead = false;
 	isGoal = false;
@@ -48,7 +44,10 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 		velocity = { 0,0,0 };
 	}
 
-	//this->tutorial = tutorial;
+	//Œq‚®‰ñ”‚ðÝ’è
+	conectCount = conectLimit_->GetConectcount();
+	//Œq‚®‰ñ”§ŒÀ‚ðÝ’è
+	conectCountMax = conectLimit_->GetLimitCount();
 
 	worldTransform_.scale = { scaleTmp,0,scaleTmp };
 	worldTransform_.trans = { 0,moveDistance,0 };
@@ -87,7 +86,11 @@ void Player::Reset()
 
 	velocity = { 0,0,0 };
 
-	//this->tutorial = tutorial;
+	//Œq‚®‰ñ”‚ðÝ’è
+	conectCount = conectLimit_->GetConectcount();
+	//Œq‚®‰ñ”§ŒÀ‚ðÝ’è
+	conectCountMax = conectLimit_->GetLimitCount();
+
 
 	worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
 	worldTransform_.trans = { 0,moveDistance,0 };
@@ -118,7 +121,7 @@ void Player::Update()
 	if(isLoadConectCount == true)
 	{
 		conectCount = conectLimit_->GetConectcount();
-		conectCountMax = conectLimit_->GetConectcount();
+		conectCountMax = conectLimit_->GetLimitCount();
 		isLoadConectCount = false;
 	}
 
@@ -213,6 +216,8 @@ Player& Player::operator=(const Player& obj)
 	this->worldTransform_ = obj.worldTransform_;
 	this->worldTransform_.SetWorld();
 	this->velocity = obj.velocity;
+	this->conectCount = obj.conectCount;
+	this->conectCountMax = obj.conectCountMax;
 
 	return *this;
 }
