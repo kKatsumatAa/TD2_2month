@@ -319,103 +319,22 @@ void StateNormalMoveP::Update()
 		if(KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::LEFT)
 		{
-			if(player->isConnect == true)
-			{
-				if(player->isStartConect == true && player->isTurn == false)
-				{
-					player->isStartConect = false;
-				}
-				else
-				{
-					player->conectCount_ -= 1;
-					player->moveCount += 1;
-				}
-
-				if(player->conectCount_ > 0)
-				{
-					player->moveEndPos = { player->GetWorldPos().x - player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
-				}
-			}
-			else
-			{
-				player->moveEndPos = { player->GetWorldPos().x - player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
-			}
+			player->moveEndPos = { player->GetWorldPos().x - player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
 		}
 		if(KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::RIGHT)
 		{
-			if(player->isConnect == true)
-			{
-				if(player->isStartConect == true && player->isTurn == false)
-				{
-					player->isStartConect = false;
-				}
-				else
-				{
-					player->conectCount_ -= 1;
-					player->moveCount += 1;
-				}
-
-				if(player->conectCount_ > 0)
-				{
-					player->moveEndPos = { player->GetWorldPos().x + player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
-				}
-			}
-			else
-			{
-				player->moveEndPos = { player->GetWorldPos().x + player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
-			}
+			player->moveEndPos = { player->GetWorldPos().x + player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
 		}
 		if(KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_W)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::UP)
 		{
-			if(player->isConnect == true)
-			{
-				if(player->isStartConect == true && player->isTurn == false)
-				{
-					player->isStartConect = false;
-				}
-				else
-				{
-					player->conectCount_ -= 1;
-					player->moveCount += 1;
-				}
-				if(player->conectCount_ > 0)
-				{
-					player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + player->moveDistance };
-				}
-			}
-			else
-			{
-				player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + player->moveDistance };
-			}
+			player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + player->moveDistance };
 		}
 		if(KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW) || KeyboardInput::GetInstance().KeyPush(DIK_S)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::DOWN)
 		{
-			
-			if(player->isConnect == true && player->isTurn == false)
-			{
-				
-				if(player->isStartConect == true)
-				{
-					player->isStartConect = false;
-				}
-				else
-				{
-					player->conectCount_ -= 1;
-					player->moveCount += 1;
-				}
-
-				if(player->conectCount_ > 0)
-				{
-					player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + -player->moveDistance };
-				}
-			}
-			else
-			{
-				player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + -player->moveDistance };
-			}
+			player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + -player->moveDistance };
 		}
 
 		//進んだ先にブロック
@@ -457,8 +376,6 @@ void StateNormalMoveP::Update()
 			effectCount = effectCountTmp;
 		}
 	}
-
-
 }
 
 void StateNormalMoveP::Draw(Camera* camera, Model* model)
@@ -483,6 +400,11 @@ void StateMoveP::Update()
 	//移動し終わったらステート戻す
 	if(count >= countMax)
 	{
+		if(player->isConnect == true)
+		{
+			player->conectCount_ -= 1;
+			player->moveCount += 1;
+		}
 		player->isMove = false;
 		player->posXTmp = player->GetWorldPos().x;
 
@@ -581,6 +503,9 @@ void StateConnectP::Update()
 		//押したところがボタンだったら
 		if(player->blockM->CheckAxisGear(player->GetWorldPos()))
 		{
+			//進んだマス分カウントリセット
+			player->moveCount = 0;
+
 			//スタートマスのフラグをオンに
 			player->isStartConect = true;
 
@@ -656,32 +581,6 @@ void StateConnectP::Update()
 			player->ChangeStateTurnConnect(new StateNormalConTurP);
 		}
 	}
-
-	/*if(player->conectCount_ > 0)
-	{
-		if(KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A)
-			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::LEFT)
-		{
-			player->conectCount_ -= 1;
-		}
-		if(KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D)
-			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::RIGHT)
-		{
-			player->conectCount_ -= 1;
-		}
-		if(KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_W)
-			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::UP)
-		{
-			player->conectCount_ -= 1;
-		}
-		if(KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW) || KeyboardInput::GetInstance().KeyPush(DIK_S)
-			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::DOWN)
-		{
-			player->conectCount_ -= 1;
-		}
-	}*/
-	
-
 }
 
 void StateConnectP::Draw(Camera* camera, Model* model)
@@ -719,11 +618,7 @@ void StateTurnP::Update()
 			//コンセントを抜く
 			player->playerSocket->FinishSocket(player->GetWorldPos());
 
-			if (player->isConnect)
-			{
-				player->conectCount_ -= 1;
-				player->isConnect = false;
-			}
+			player->isConnect = false;
 
 			player->bufferedPushSpace = false;
 
