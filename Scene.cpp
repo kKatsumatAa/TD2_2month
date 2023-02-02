@@ -38,6 +38,8 @@ void SceneTitle::DrawSprite()
 //セレクト画面
 void SceneStageSelect::Initialize()
 {
+	Object::effectFlags.isBarrelCurve = true;
+
 	scene->lightManager->SetCircleShadowActive(0, false);
 	scene->stageSelectM->Initialize(scene->stageManager.get());
 	scene->cameraM->Initialize();
@@ -78,6 +80,7 @@ void SceneStageSelect::DrawSprite()
 //ゲーム
 void SceneGame::Initialize()
 {
+	Object::effectFlags.isBarrelCurve = false;
 
 	scene->predictBlockManager->Initialize();
 
@@ -486,7 +489,7 @@ void Scene::Initialize()
 	stageSelectM = std::make_unique<StageSelectManager>();
 	stageSelectM->Initialize(stageManager.get());
 
-	Object::effectFlags.isBarrelCurve = true;
+	
 
 	//ステート変更
 	ChangeState(new SceneStageSelect);
