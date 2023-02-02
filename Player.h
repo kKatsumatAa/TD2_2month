@@ -107,7 +107,8 @@ private:
 
 	const float scaleTmp = 1.8f;
 
-
+	//ステージ開始時の位置
+	bool playerPos[13][13] = { false };
 
 	/*Tutorial* tutorial;*/
 public:
@@ -163,6 +164,8 @@ public:
 	void DrawSprite();
 
 	void SetWorldPos(const Vec3& pos) { worldTransform_.trans = pos; };
+
+	void SetPosStage(bool playerPos[][13]);
 
 	void Reset();
 
