@@ -107,7 +107,7 @@ private:
 
 	const float scaleTmp = 1.8f;
 
-
+	bool playerPos[13][13] = { false };
 
 	/*Tutorial* tutorial;*/
 public:
@@ -163,6 +163,8 @@ public:
 	void DrawSprite();
 
 	void SetWorldPos(const Vec3& pos) { worldTransform_.trans = pos; };
+
+	void SetPosStage(bool playerPos[][13]);
 
 	void Reset();
 

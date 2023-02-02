@@ -79,6 +79,9 @@ public:
 	//エレキ確認用
 	int elec[13][13];
 
+	//playerの位置用
+	bool playerPos[13][13];
+
 
 	std::unique_ptr<CameraManager> cameraM;
 
