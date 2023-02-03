@@ -63,12 +63,14 @@ private:
 
 	int count = 0;
 
+	bool isGoalElec = false;
+
 
 public:
 
 	~Block();
 
-	Object draw[15];
+	Object draw[20];
 	DebugText* debugText_ = nullptr;
 
 	void Initialize(ConnectingEffectManager* connectEM,
