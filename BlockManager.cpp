@@ -107,6 +107,7 @@ BlockManager::~BlockManager()
 
 //初期化
 void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockManager* pBM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
+	GoalConnectEffectManager* goalConnectEM,
 	Model* normal, Model* locked, Model* goal, Model* Socket, Model* button, Model* disconnectedBlock,
 	Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed, Model* overLapBlock)
 {
@@ -117,6 +118,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockMa
 	this->cameraM = cameraM;
 	this->tutorial = tutorial;
 	this->goalEffect = goalEffect;
+	this->goalConnectEM = goalConnectEM;
 	this->predictBlockM = pBM;
 	this->goalCameraPoses.clear();
 
@@ -409,7 +411,7 @@ void BlockManager::Update()
 	}
 
 	//ゴールがほかのブロックとつながってて電気通っていたら
-	if (isElecConectedGoal)
+	if (isElecConectedGoal && count % 4 == 0)
 	{
 		//Object::effectFlags.isEmboss = true;
 
@@ -423,14 +425,17 @@ void BlockManager::Update()
 
 					int time = (float)rand() / RAND_MAX * 60;
 
-					float scale[2] = { (float)rand() / RAND_MAX * 2.0f,(float)rand() / RAND_MAX };
-					float pos = (float)rand() / RAND_MAX * blockRadius_ * 5.0f;
-					float pos2 = ((float)rand() / RAND_MAX - 0.5f) * blockRadius_ * 2.0f;
+					float scale[2] = { (float)rand() / RAND_MAX * 1.3f,(float)rand() / RAND_MAX };
+					float pos = (float)rand() / RAND_MAX * blockRadius_ * 6.0f;
+					float pos2 = ((float)rand() / RAND_MAX - 0.5f) * blockRadius_ * 3.0f;
 
-					XMFLOAT4 color = { (float)rand() / RAND_MAX ,(float)rand() / RAND_MAX ,(float)rand() / RAND_MAX ,(float)rand() / RAND_MAX };
+					XMFLOAT4 color = { (float)rand() / RAND_MAX ,(float)rand() / RAND_MAX ,(float)rand() / RAND_MAX ,(float)rand() / RAND_MAX + 0.3f };
 
 					ParticleManager::GetInstance()->Add(time, { worldmats_[i][j].trans.x+ pos2,worldmats_[i][j].trans.y + pos ,worldmats_[i][j].trans.z },
 						{ vec[0],vec[1],vec[2] }, { -vec[0] / (float)time,-vec[1] / (float)time,-vec[2] / (float)time }, scale[0], scale[1], { 0.1,0.2,1.0,color.w }, { 0,0,0,0 });
+
+					goalConnectEM->GenerateGoalConnectEffect({ worldmats_[i][j].trans.x + pos2,worldmats_[i][j].trans.y + pos ,worldmats_[i][j].trans.z },
+						{ scale[0] ,scale[0],scale[0] }, { 0,0,0 }, {1.0f,1.0f,0.2f,0.9f}, {0,0,0,0}, 60, {vec[0],vec[1],vec[2]});
 
 				}
 			}
@@ -960,7 +965,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 							}
 						}
 
-						
+
 					}
 				}
 
