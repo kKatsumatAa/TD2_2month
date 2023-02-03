@@ -310,7 +310,8 @@ private:
 	//ゴール判定用のfor文のストッパー
 	bool isStopElecConectedGoal = false;
 
-	
+	//回転しているかどうか
+	bool isTurning[blockWidth][blockHeight];
 
 };
 
