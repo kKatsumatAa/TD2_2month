@@ -51,9 +51,9 @@ void Block::Updata(Vec3 pos)
 	if (worldTransform_.scale.x > scaleTmp) { worldTransform_.scale.x -= 0.05f; }
 	if (worldTransform_.scale.y > scaleTmp) { worldTransform_.scale.y -= 0.05f; }
 	if (worldTransform_.scale.z > scaleTmp) { worldTransform_.scale.z -= 0.05f; }
-	if (worldTransform_.scale.x < scaleTmp) { worldTransform_.scale.x += 0.025f; }
-	if (worldTransform_.scale.y < scaleTmp) { worldTransform_.scale.y += 0.025f; }
-	if (worldTransform_.scale.z < scaleTmp) { worldTransform_.scale.z += 0.025f; }
+	if (worldTransform_.scale.x < scaleTmp) { worldTransform_.scale.x += 0.05f; }
+	if (worldTransform_.scale.y < scaleTmp) { worldTransform_.scale.y += 0.05f; }
+	if (worldTransform_.scale.z < scaleTmp) { worldTransform_.scale.z += 0.05f; }
 
 	//block_.SetWorldPos(pos);
 	worldTransform_.SetWorld();

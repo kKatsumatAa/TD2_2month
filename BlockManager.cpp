@@ -351,6 +351,30 @@ void BlockManager::Update()
 				//ゴールできるフラグON
 				isElecConectedGoal = false;
 			}
+
+			//回転時のみにしか判定を行ってなかったのでここに移動
+			for (int k = 0; k < stageWidth_; k++)
+			{
+				for (int l = 0; l < stageHeight_; l++)
+				{
+					if (form_[i][j] == Form::GOAL)
+					{
+						//同じ座標ではないとき
+						if (i != k || j != l)
+						{
+							if (form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+							{
+								//もしゴールがブロックと隣接していたら
+								if (BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
+								{
+									isConectedGoal = true;
+								}
+							}
+						}
+					}
+				}
+			}
+
 		}
 	}
 
@@ -382,6 +406,37 @@ void BlockManager::Update()
 		ParticleManager::GetInstance()->GenerateRandomParticle(50, 120, 0.5f,
 			{ worldmats_[goalPopX][goalPopY].trans.x,worldmats_[goalPopX][goalPopY].trans.y + blockRadius_ * 2.0f, worldmats_[goalPopX][goalPopY].trans.z },
 			0.4f, 0, { 1.0f,0.3f,0.2f,1.0f }, { 1.0f,1.0f,0,0 });
+	}
+
+	//ゴールがほかのブロックとつながってて電気通っていたら
+	if (isElecConectedGoal)
+	{
+		//Object::effectFlags.isEmboss = true;
+
+		for (int i = 0; i < stageHeight_; i++)
+		{
+			for (int j = 0; j < stageWidth_; j++)
+			{
+				if (form_[i][j] == Form::GOAL)
+				{
+					float vec[3] = { ((float)rand() / RAND_MAX - 0.5f) * 0.3f,((float)rand() / RAND_MAX - 0.5f) * 0.3f,((float)rand() / RAND_MAX - 0.5f) * 0.3f };
+
+					int time = (float)rand() / RAND_MAX * 60;
+
+					float scale[2] = { (float)rand() / RAND_MAX * 2.0f,(float)rand() / RAND_MAX };
+					float pos = (float)rand() / RAND_MAX * blockRadius_ * 5.0f;
+					float pos2 = ((float)rand() / RAND_MAX - 0.5f) * blockRadius_ * 2.0f;
+
+					XMFLOAT4 color = { (float)rand() / RAND_MAX ,(float)rand() / RAND_MAX ,(float)rand() / RAND_MAX ,(float)rand() / RAND_MAX };
+
+					ParticleManager::GetInstance()->Add(time, { worldmats_[i][j].trans.x+ pos2,worldmats_[i][j].trans.y + pos ,worldmats_[i][j].trans.z },
+						{ vec[0],vec[1],vec[2] }, { -vec[0] / (float)time,-vec[1] / (float)time,-vec[2] / (float)time }, scale[0], scale[1], { 0.1,0.2,1.0,color.w }, { 0,0,0,0 });
+
+				}
+			}
+		}
+
+
 	}
 }
 
@@ -905,21 +960,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 							}
 						}
 
-						if (form_[i][j] == Form::GOAL)
-						{
-							//同じ座標ではないとき
-							if (i != k || j != l)
-							{
-								if (form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
-								{
-									//もしゴールがブロックと隣接していたら
-									if (BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
-									{
-										isConectedGoal = true;
-									}
-								}
-							}
-						}
+						
 					}
 				}
 
