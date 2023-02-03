@@ -193,6 +193,8 @@ void PostPera::Draw(EffectConstBuffer effectFlags)
 	this->mapEffectFlagsBuff->isSharpness = effectFlags.isSharpness;
 	this->mapEffectFlagsBuff->isVignette = effectFlags.isVignette;
 	this->mapEffectFlagsBuff->isBarrelCurve = effectFlags.isBarrelCurve;
+	this->mapEffectFlagsBuff->isScanningLine = effectFlags.isScanningLine;
+	this->mapEffectFlagsBuff->time++;
 
 
 	Directx::GetInstance().GetCommandList()->SetGraphicsRootSignature(_peraRS.Get());

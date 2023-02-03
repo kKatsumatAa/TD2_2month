@@ -38,7 +38,7 @@ void SceneTitle::DrawSprite()
 //セレクト画面
 void SceneStageSelect::Initialize()
 {
-	Object::effectFlags.isBarrelCurve = true;
+	Object::effectFlags.isScanningLine = true;
 
 	scene->lightManager->SetCircleShadowActive(0, false);
 	scene->stageSelectM->Initialize(scene->stageManager.get());
@@ -256,7 +256,7 @@ void SceneLoad::LoadFunc()
 	scene->StopAllWave();
 	Sound::GetInstance().PlayWave("Stage_BGM.wav", 0.5f, true);
 
-	Object::effectFlags.isBarrelCurve = false;
+	//Object::effectFlags.isScanningLine = false;
 
 	scene->predictBlockManager->Initialize();
 

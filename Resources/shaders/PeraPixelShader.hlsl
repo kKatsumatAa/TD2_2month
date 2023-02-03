@@ -1,6 +1,5 @@
 #include"PeraShaderHeader.hlsli"
 
-
 float4 PS(Output input) : SV_TARGET
 {
 	// シェーディングによる色で描画
@@ -164,6 +163,22 @@ float4 PS(Output input) : SV_TARGET
 		samplePoint *= float2(distPower, distPower);
 		samplePoint += float2(0.5, 0.5);
 		float4 Tex = tex.Sample(smp, samplePoint);
+		ret = Tex;
+
+		isEffect = true;
+	}
+
+	//走査線
+	if (isScanningLine)
+	{
+		float extend = 0.1f;
+		float2 samplePoint = input.uv;
+		float4 Tex = tex.Sample(smp, samplePoint);
+		float sinv = sin(input.uv.y * 2 + time * extend * -0.1);
+		float steped = step(0.99, sinv * sinv);
+		Tex.rgb -= (1 - steped) * abs(sin(input.uv.y * 50.0 + time * extend * 1.0)) * 0.05;
+		Tex.rgb -= (1 - steped) * abs(sin(input.uv.y * 100.0 - time * extend * 2.0)) * 0.08;
+		Tex.rgb += steped * 0.1;
 		ret = Tex;
 
 		isEffect = true;

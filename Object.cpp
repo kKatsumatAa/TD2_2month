@@ -231,6 +231,7 @@ void Object::Update(const int& indexNum, const int& pipelineNum, const UINT64 te
 		mapEffectFlagsBuff->isSharpness = this->effectFlags.isSharpness;
 		mapEffectFlagsBuff->isVignette = this->effectFlags.isVignette;
 		mapEffectFlagsBuff->isBarrelCurve = this->effectFlags.isBarrelCurve;
+		mapEffectFlagsBuff->isScanningLine = this->effectFlags.isScanningLine;
 	}
 
 	//テクスチャを設定していなかったら

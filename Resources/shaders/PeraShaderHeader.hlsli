@@ -23,6 +23,10 @@ cbuffer ConstBufferEffectFlags : register(b0)
 	uint isVignette;
 	//’Mó˜p‹È
 	uint isBarrelCurve;
+	//‘–¸ü
+	uint isScanningLine;
+	//ŠÔ
+	uint time;
 }
 
 //vs‚©‚çps‚É‘—‚é
