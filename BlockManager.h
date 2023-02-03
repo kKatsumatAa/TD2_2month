@@ -7,6 +7,7 @@
 #include "GoalEffect.h"
 #include "PredictBlock.h"
 #include "ImGuiManager.h"
+#include"GoalConnectEffect.h"
 
 
 class BlockManager
@@ -22,6 +23,7 @@ public:
 
 	//初期化
 	void Initialize(ConnectingEffectManager* connectEM, PredictBlockManager* pBM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
+		GoalConnectEffectManager* goalConnectEM,
 		Model* normal, Model* locked, Model* goal, Model* Socket, Model* Button, Model* disconnectedBlock,
 		Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed,Model* overLapBlock);
 
@@ -140,6 +142,8 @@ private:
 	Tutorial* tutorial;
 
 	GoalEffect* goalEffect;
+
+	GoalConnectEffectManager* goalConnectEM;
 
 	UINT64 texhandle[10];
 

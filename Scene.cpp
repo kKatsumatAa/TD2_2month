@@ -135,6 +135,7 @@ void SceneGame::Update()
 			GetBackManager::GetInstance()->GetBack();
 		}
 	}
+	scene->goalConnectEM->Update();
 	scene->connectEM->Update();
 	scene->connectE2M->Update();
 	ParticleManager::GetInstance()->Update(&scene->cameraM.get()->usingCamera->viewMat, &scene->cameraM.get()->usingCamera->projectionMat);
@@ -169,6 +170,8 @@ void SceneGame::Draw()
 	scene->connectE2M->Draw(scene->cameraM.get()->usingCamera);
 
 	scene->predictBlockManager->Draw(scene->cameraM.get()->usingCamera);
+
+	scene->goalConnectEM->Draw(scene->cameraM.get()->usingCamera);
 
 	ParticleManager::GetInstance()->Draw(scene->texhandle[1]);
 
@@ -252,9 +255,7 @@ void SceneClear::DrawSprite()
 //--------------------------------------------------------------------------------------
 void SceneLoad::LoadFunc()
 {
-	//音
-	scene->StopAllWave();
-	Sound::GetInstance().PlayWave("Stage_BGM.wav", 0.5f, true);
+
 
 	//Object::effectFlags.isScanningLine = false;
 
@@ -272,7 +273,8 @@ void SceneLoad::LoadFunc()
 
 
 	scene->blockManager->Initialize(scene->connectEM.get(), scene->predictBlockManager.get(), scene->tutorial.get(), scene->cameraM.get(),
-		scene->goalE.get(), scene->model[1], scene->model[2], scene->model[3], scene->model[4], scene->model[5], scene->model[6],
+		scene->goalE.get(),scene->goalConnectEM.get(),
+		scene->model[1], scene->model[2], scene->model[3], scene->model[4], scene->model[5], scene->model[6],
 		scene->model[8], scene->model[9], scene->model[10], scene->model[11], scene->model[13]);
 	scene->connectEM->Initialize();
 	scene->connectE2M->Initialize();
@@ -300,7 +302,9 @@ void SceneLoad::LoadFunc()
 	scene->cameraM.get()->usingCamera = scene->cameraM->gameMainCamera.get();
 	scene->cameraM->Initialize();
 
-
+	//音
+	scene->StopAllWave();
+	Sound::GetInstance().PlayWave("Stage_BGM.wav", 0.5f, true);
 }
 
 void SceneLoad::Initialize()
@@ -351,6 +355,7 @@ Scene::~Scene()
 	goalE.reset();
 	stageSelectM.reset();
 	stageManager.reset();
+	goalConnectEM.reset();
 	imGuiManager->Finalize();
 	delete imGuiManager;
 	delete lightManager;
@@ -450,10 +455,14 @@ void Scene::Initialize()
 	//電気エフェクト
 	connectEM = std::make_unique<ConnectingEffectManager>();
 	connectEM->Initialize();
+	
+	//電気エフェクト
+	goalConnectEM = std::make_unique<GoalConnectEffectManager>();
+	goalConnectEM->Initialize();
 
 
 	blockManager = new BlockManager();
-	blockManager->Initialize(connectEM.get(), predictBlockManager.get(), tutorial.get(), cameraM.get(), goalE.get(),
+	blockManager->Initialize(connectEM.get(), predictBlockManager.get(), tutorial.get(), cameraM.get(), goalE.get(), goalConnectEM.get(),
 		model[1], model[2], model[3], model[4], model[5], model[6], model[8], model[9], model[10], model[11], model[13]);
 
 	stageManager = std::make_unique<StageManager>();
