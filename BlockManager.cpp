@@ -88,6 +88,7 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 			this->formTmp_[i][j] = obj.formTmp_[i][j];
 			this->isElec[i][j] = obj.isElec[i][j];
 			this->isDecisionElec[i][j] = obj.isDecisionElec[i][j];
+			this->isTurning[i][j] = obj.isTurning[i][j];
 		}
 	}
 
@@ -205,17 +206,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockMa
 
 			pushedCount_ = 0;
 
-			/*if(form_[i][j] == Form::Electric)
-			{
-				isElec[i][j] = true;
-			}
-			else
-			{
-				isElec[i][j] = false;
-			}*/
-
-			//電気初期化
-
+			isTurning[i][j] = false;
 		}
 
 		InitializeElectric();
@@ -655,6 +646,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		{
 			for (int j = 0; j < blockHeight; j++)
 			{
+				isTurning[i][j] = false;
 				distancePos[i][j] = worldmats_[i][j].trans - axis_pos_;
 			}
 		}
@@ -703,6 +695,8 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 				//もしつながっているなら
 				if (action_[i][j] == Action::Connect && isAxis_[i][j] == false && beforeTurn_[i][j] != Form::GOAL)
 				{
+					isTurning[i][j] = true;
+
 					WorldMat worldMat;
 					worldMat.rot.y = LerpVec3({ angle_, 0, 0 }, { pi / 2.0f,0,0 },
 						EaseOut((float)rotateCount / (float)rotateCountMax)).x;
@@ -740,6 +734,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 			{
 				for (int j = 0; j < blockHeight; j++)
 				{
+					isTurning[i][j] = false;
 					distancePos[i][j] = worldmats_[i][j].trans - axis_pos_;
 				}
 			}
@@ -767,6 +762,8 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 				//もしつながっているなら
 				if (action_[i][j] == Action::Connect && isAxis_[i][j] == false && beforeTurn_[i][j] != Form::GOAL)
 				{
+					isTurning[i][j] = true;
+
 					WorldMat worldMat;
 					worldMat.rot.y = LerpVec3({ angle_, 0, 0 }, { -pi / 2.0f,0,0 },
 						EaseOut((float)rotateCount / (float)rotateCountMax)).x;
@@ -802,6 +799,7 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 			{
 				for (int j = 0; j < blockHeight; j++)
 				{
+					isTurning[i][j] = false;
 					distancePos[i][j] = worldmats_[i][j].trans - axis_pos_;
 				}
 			}
@@ -856,12 +854,12 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 							//同じ座標ではないとき
 							if (i != k || j != l)
 							{
-								if (isElec[i][j] == true && form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+								if (isElec[i][j] == true && form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED && isTurning[k][l] == false)
 								{
 									isElec[k][l] = true;
 									//isDecisionElec[k][l] = true;
 								}
-								else if (form_[k][l] == Form::NONE || form_[k][l] == Form::LOCKED)
+								else if (form_[k][l] == Form::NONE || form_[k][l] == Form::LOCKED || isTurning[k][l] == true)
 								{
 									isElec[k][l] = false;
 									//isDecisionElec[k][l] = false;
@@ -1179,63 +1177,63 @@ void BlockManager::UpdateOverlap()
 					}
 
 					//もし[i][j]が[k][l]番のブロックと隣接していたら
-					if (BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
-					{
-						//同じ座標ではないとき
-						if (i != k || j != l)
-						{
-							if (isElec[i][j] == true && form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
-							{
-								isElec[k][l] = true;
-								//isDecisionElec[k][l] = true;
-							}
-							else if (form_[k][l] == Form::NONE || form_[k][l] == Form::LOCKED)
-							{
-								isElec[k][l] = false;
-								//isDecisionElec[k][l] = false;
-							}
-							else if (form_[k][l] == Form::BUTTON && isPushed[k][l] == true)
-							{
-								isElec[k][l] = false;
-							}
+					//if (BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
+					//{
+					//	//同じ座標ではないとき
+					//	if (i != k || j != l)
+					//	{
+					//		if (isElec[i][j] == true && form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED && isTurn[k][l] == false)
+					//		{
+					//			isElec[k][l] = true;
+					//			//isDecisionElec[k][l] = true;
+					//		}
+					//		else if (form_[k][l] == Form::NONE || form_[k][l] == Form::LOCKED || isTurn[k][l] == true)
+					//		{
+					//			isElec[k][l] = false;
+					//			//isDecisionElec[k][l] = false;
+					//		}
+					//		else if (form_[k][l] == Form::BUTTON && isPushed[k][l] == true)
+					//		{
+					//			isElec[k][l] = false;
+					//		}
 
-							/*else if(isTurn[i][j] == true)
-							{
-								isElec[i][j] = false;
-							}
-							else if(isTurn[k][l] == true)
-							{
-								isElec[k][l] = false;
-							}*/
+					//		/*else if(isTurn[i][j] == true)
+					//		{
+					//			isElec[i][j] = false;
+					//		}
+					//		else if(isTurn[k][l] == true)
+					//		{
+					//			isElec[k][l] = false;
+					//		}*/
 
 
 
-						}
-					}
+					//	}
+					//}
 
-					if (form_[i][j] == Form::GOAL)
-					{
-						//同じ座標ではないとき
-						if (i != k || j != l)
-						{
-							if (form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
-							{
-								//どこかがゴールにつながっていれば、繋げたままにする
-								if (BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == false)
-								{
-									if (isChangedConectGoal == false)
-									{
-										isConectedGoal = false;
-									}
-								}
-								else
-								{
-									isConectedGoal = true;
-									isChangedConectGoal = true;
-								}
-							}
-						}
-					}
+					//if (form_[i][j] == Form::GOAL)
+					//{
+					//	//同じ座標ではないとき
+					//	if (i != k || j != l)
+					//	{
+					//		if (form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+					//		{
+					//			//どこかがゴールにつながっていれば、繋げたままにする
+					//			if (BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == false)
+					//			{
+					//				if (isChangedConectGoal == false)
+					//				{
+					//					isConectedGoal = false;
+					//				}
+					//			}
+					//			else
+					//			{
+					//				isConectedGoal = true;
+					//				isChangedConectGoal = true;
+					//			}
+					//		}
+					//	}
+					//}
 
 					/*if(i == stageWidth_ - 1 && j == stageWidth_ - 1 && k == stageWidth_ - 1 && l == stageWidth_ - 1)
 					{
@@ -1296,12 +1294,12 @@ void BlockManager::ConectElec()
 						//同じ座標ではないとき
 						if (i != k || j != l)
 						{
-							if (isElec[i][j] == true && form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+							if (isElec[i][j] == true && form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED && isTurning[k][l] == false && isTurn[k][l] == false)
 							{
 								isElec[k][l] = true;
 								//isDecisionElec[k][l] = true;
 							}
-							else if (form_[k][l] == Form::NONE || form_[k][l] == Form::LOCKED)
+							else if (form_[k][l] == Form::NONE || form_[k][l] == Form::LOCKED || isTurning[k][l] == true)
 							{
 								isElec[k][l] = false;
 								//isDecisionElec[k][l] = false;
@@ -1437,13 +1435,11 @@ void BlockManager::RepositBlock()
 											isElec[k][l] = false;
 										}*/
 
-										//回転したフラグをOFFに
-										isTurn[i][j] = false;
-										isTurn[k][l] = false;
-
-
-
-
+										
+											//回転したフラグをOFFに
+											isTurn[i][j] = false;
+											isTurn[k][l] = false;
+										
 
 										//押したフラグをOFFに
 										if (isPushed[k][l] == true)
@@ -1477,10 +1473,11 @@ void BlockManager::RepositBlock()
 											isElec[k][l] = false;
 										}*/
 
-
-										//回転したフラグをOFFに
-										isTurn[i][j] = false;
-										isTurn[k][l] = false;
+										
+											//回転したフラグをOFFに
+											isTurn[i][j] = false;
+											isTurn[k][l] = false;
+										
 
 									}
 								}
@@ -1670,10 +1667,9 @@ void BlockManager::AppearGoal()
 
 						goalPopX = i; goalPopY = j;
 
-						//ステージで一回のみ
+						//ステージで一回のみ(電気を待ってから)
 						if (!isPopedGoal)
 						{
-
 							//カメラ演出
 							Vec3 goalPos = worldmats_[i][j].trans;
 
@@ -1831,6 +1827,8 @@ void BlockManager::ResetBlock()
 			isDecisionElec[i][j] = false;
 
 			isTurn[i][j] = false;
+
+			isTurning[i][j] = false;
 		}
 	}
 
@@ -2070,6 +2068,8 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 			loadForms_[i][j] = forms[i][j];
 
 			isDecisionElec[i][j] = false;
+
+			isTurning[i][j] = false;
 		}
 	}
 

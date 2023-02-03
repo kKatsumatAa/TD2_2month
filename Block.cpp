@@ -100,8 +100,8 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 			draw[4].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &overlapBlock_[0], color);
 		}
 
-		goalMat.trans.y = -0.5;
-		draw[5].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &normal_[0], color);
+		/*goalMat.trans.y = -0.5;
+		draw[5].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &normal_[0], color);*/
 
 		if(form == Form::GOAL)
 		{
@@ -112,6 +112,8 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 
 			/*goalMat.trans.y = -0.5;
 			draw[11].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &normal_[0], color);*/
+
+			isGoalElec = true;
 			count++;
 			if(count % 240 == 0 || count % 240 == 10 || count % 240 == 20 || count % 240 == 30)
 			{
@@ -145,8 +147,13 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 			draw[10].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &overlapBlock_[0], color);
 		}
 
+		goalMat.trans.y = -0.5;
+		draw[15].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color);
+
+
 		if(form == Form::GOAL)
 		{
+			isGoalElec = false;
 			/*goalMat.trans.y = -0.5;
 			draw[11].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &normal_[0], color);*/
 			count++;
@@ -158,6 +165,17 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 			draw[11].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &doorGoalClosed_[0], color);
 		}
 
+	}
+
+	if(isGoalElec == true)
+	{
+		goalMat.trans.y = -0.5;
+		draw[5].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &normal_[0], color); 
+	}
+	else
+	{
+		goalMat.trans.y = -0.5;
+		draw[15].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color);
 	}
 
 	/*if (form == Form::BLOCK) { draw[0].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color); }
