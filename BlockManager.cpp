@@ -1076,7 +1076,7 @@ void BlockManager::PopEffect()
 				Vec3 e = LerpVec3(b, c, timeRate[i][j]);
 
 				timerMoveResult_[i][j] = LerpVec3(d, e, timeRate[i][j]).y;				
-				timerMoveResult_[i][j] = std::fabs(timerMoveResult_[i][j]) / 3500;
+				timerMoveResult_[i][j] = std::fabs(timerMoveResult_[i][j]) / 3200;
 
 				if(timerMoveResult_[i][j] > 0.95f)
 				{
