@@ -255,7 +255,7 @@ void SceneClear::DrawSprite()
 //--------------------------------------------------------------------------------------
 void SceneLoad::LoadFunc()
 {
-
+	scene->goalConnectEM->Initialize();
 
 	//Object::effectFlags.isScanningLine = false;
 
