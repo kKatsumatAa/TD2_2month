@@ -74,13 +74,13 @@ public:
 	DebugText* debugText_ = nullptr;
 
 	void Initialize(ConnectingEffectManager* connectEM,
-		Model* normal, Model* locked, Model* goal, Model* Socket,Model* button, Model* disconnectedBlock,
-		Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model *doorGoalClosed,
+		Model* normal, Model* locked, Model* goal, Model* Socket, Model* button, Model* disconnectedBlock,
+		Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed,
 		Model* overlapBlock);
 
 	void Updata(Vec3 pos = { 0,0,0 });
 
-	void Draw(Camera* camera, UINT64* texhandle, int form, Action action,bool isElec,WorldMat goalMat, bool isPushed);
+	void Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec, WorldMat goalMat, bool isPushed, int count);
 
 	void SetWorldPos(const Vec3& pos) { worldTransform_.trans = pos; };
 

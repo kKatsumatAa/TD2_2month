@@ -232,6 +232,7 @@ private:
 
 	int effectCount = 0;
 	int effectCount2 = 0;
+	int count = 0;
 
 	const int effectCountMax = 10;
 
