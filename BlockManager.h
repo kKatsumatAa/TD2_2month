@@ -122,6 +122,9 @@ public:
 	//重なっているブロックに乗っているかどうか
 	bool GetisLockedBlock(Vec3 pos);
 
+	//ブロックの出現演出
+	void PopEffect();
+
 public:
 	bool isPopGoalEffect = false;
 
@@ -312,6 +315,30 @@ private:
 
 	//回転しているかどうか
 	bool isTurning[blockWidth][blockHeight];
+
+	float maxTime = 60.0f;						//　全体時間[s]
+	float timeRate[blockWidth][blockHeight];	// 何% 時間が進んだか(率)
+
+	//P1 からスタートする
+	size_t startIndex_[blockWidth][blockHeight];
+
+	size_t elecCount_[blockWidth][blockHeight] = { 0 };
+
+	//電気タイマーの移動量
+	float elecWaitTimerMove_;
+	//電気タイマーの待ち時間
+	float elecWaitTimer_;
+	//変更するアルファ値
+	float elecWaitAlpha_[blockWidth][blockHeight] = { 0 };
+	//変更するアルファ値の移動量
+	float timerMoveResult_[blockWidth][blockHeight];
+
+	//リセットの出現フラグ
+	bool isPopWait = false;
+	//スタートの出現フラグ
+	bool isStartPop = true;
+	//フェードアウトの出現フラグ
+	bool isPopOut = false;
 
 };
 

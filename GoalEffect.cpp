@@ -156,8 +156,6 @@ void StateGoalCamera::Update()
 			goalEffect->timeRate = 1.0f;
 
 			goalEffect->isEnd = true;
-			//poses.clear();
-
 		}
 	}
 

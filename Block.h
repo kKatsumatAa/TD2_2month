@@ -60,6 +60,8 @@ private:
 	Vec3 pos_;
 
 	XMFLOAT4 color;
+	XMFLOAT4 changeColor;
+
 
 	int count = 0;
 
@@ -79,8 +81,10 @@ public:
 		Model* overlapBlock);
 
 	void Updata(Vec3 pos = { 0,0,0 });
+	void SetAlpha(float blockAlpha);
+	void SetColor(Vec3 blockColor);
 
-	void Draw(Camera* camera, UINT64* texhandle, int form, Action action,bool isElec,WorldMat goalMat, bool isPushed);
+	void Draw(Camera* camera, UINT64* texhandle, int form, Action action,bool isElec,WorldMat goalMat, bool isPushed, float popAlpha);
 
 	void SetWorldPos(const Vec3& pos) { worldTransform_.trans = pos; };
 
