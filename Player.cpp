@@ -320,15 +320,30 @@ void StateNormalMoveP::Update()
 		if (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::LEFT)
 		{
-			if (player->conectCount_ > 0)
+			if(player->isConnect == true)
+			{
+				if(player->conectCount_ > 0)
+				{
+					player->moveEndPos = { player->GetWorldPos().x - player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
+				}
+			}
+			else
 			{
 				player->moveEndPos = { player->GetWorldPos().x - player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
 			}
+			
 		}
 		if (KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::RIGHT)
 		{
-			if (player->conectCount_ > 0)
+			if(player->isConnect == true)
+			{
+				if(player->conectCount_ > 0)
+				{
+					player->moveEndPos = { player->GetWorldPos().x + player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
+				}
+			}
+			else
 			{
 				player->moveEndPos = { player->GetWorldPos().x + player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
 			}
@@ -336,15 +351,30 @@ void StateNormalMoveP::Update()
 		if (KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_W)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::UP)
 		{
-			if (player->conectCount_ > 0)
+			if(player->isConnect == true)
+			{
+				if(player->conectCount_ > 0)
+				{
+					player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + player->moveDistance };
+				}
+			}
+			else
 			{
 				player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + player->moveDistance };
 			}
+
 		}
 		if (KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW) || KeyboardInput::GetInstance().KeyPush(DIK_S)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::DOWN)
 		{
-			if (player->conectCount_ > 0)
+			if(player->isConnect == true)
+			{
+				if(player->conectCount_ > 0)
+				{
+					player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + -player->moveDistance };
+				}
+			}
+			else
 			{
 				player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + -player->moveDistance };
 			}
