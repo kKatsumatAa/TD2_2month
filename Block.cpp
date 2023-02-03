@@ -71,12 +71,12 @@ void Block::SetColor(Vec3 blockColor)
 	color.z = blockColor.z;
 }
 
-void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec, WorldMat goalMat,bool isPushed,float popAlpha)
+void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec, WorldMat goalMat,bool isPushed, int count,float popAlpha)
 {
 	//仮表示
 	if (action == Action::Connect)
 	{
-		color = { 0.2f,0.1f,0.8f,0.95f };
+		color = { 0.2f,0.1f,0.8f,popAlpha };
 	}
 	else if (isElec == false)
 	{
@@ -97,7 +97,9 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 	//演出(使用するものは目立たせる)
 	if ((form == Form::BUTTON || form == Form::Electric || form == Form::GEAR || form == Form::GOAL) && action != Action::Connect && form != Form::LOCKED)
 	{
-		color = { 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,0.3f, 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,0.95f };
+		color = { 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,0.3f, 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,popAlpha };
+		//color = { 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,0.3f + fabsf(sinf(count * 0.025f)) * 0.55f, 0.3f /*+ fabsf(sinf(count * 0.025f)) * 0.55f*/,popAlpha };
+
 		//count++;
 		if (count % 340 == 0 || count % 340 == 10 || count % 340 == 20 || count % 340 == 30)
 		{
@@ -200,7 +202,7 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 
 	if (form == Form::Electric)
 	{
-		color = { 0.9f,0.9f,0.9f,0.95f };
+		color = { 0.9f,0.9f,0.9f,popAlpha };
 
 		draw[13].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color);
 		worldTransform_.trans.y = 0.2f;

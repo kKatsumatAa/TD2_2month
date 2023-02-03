@@ -84,9 +84,8 @@ public:
 	void SetAlpha(float blockAlpha);
 	void SetColor(Vec3 blockColor);
 
-	void Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec, WorldMat goalMat, bool isPushed, int count);
-	void Draw(Camera* camera, UINT64* texhandle, int form, Action action,bool isElec,WorldMat goalMat, bool isPushed, float popAlpha);
-
+	void Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec, WorldMat goalMat, bool isPushed, int count, float popAlpha);
+	
 	void SetWorldPos(const Vec3& pos) { worldTransform_.trans = pos; };
 
 	//è’ìÀéûÇ…åƒÇŒÇÍÇÈ

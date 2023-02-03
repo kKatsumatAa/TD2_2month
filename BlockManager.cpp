@@ -308,7 +308,7 @@ void BlockManager::Update()
 
 			blocks_[i][j]->Updata();
 			blocks_[i][j]->SetAlpha(elecWaitAlpha_[i][j]);
-			
+
 
 			if(action_[i][j] == Action::Connect)
 			{
@@ -332,19 +332,19 @@ void BlockManager::Update()
 			}
 
 			//回転時のみにしか判定を行ってなかったのでここに移動
-			for (int k = 0; k < stageWidth_; k++)
+			for(int k = 0; k < stageWidth_; k++)
 			{
-				for (int l = 0; l < stageHeight_; l++)
+				for(int l = 0; l < stageHeight_; l++)
 				{
-					if (form_[i][j] == Form::GOAL)
+					if(form_[i][j] == Form::GOAL)
 					{
 						//同じ座標ではないとき
-						if (i != k || j != l)
+						if(i != k || j != l)
 						{
-							if (form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
+							if(form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED)
 							{
 								//もしゴールがブロックと隣接していたら
-								if (BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
+								if(BlockJunction(worldmats_[i][j].trans, worldmats_[k][l].trans) == true)
 								{
 									isConectedGoal = true;
 								}
@@ -353,6 +353,8 @@ void BlockManager::Update()
 					}
 				}
 			}
+		}
+	}
 
 	if(isLeftRolling == false && isRightRolling == false)
 	{
@@ -422,8 +424,6 @@ void BlockManager::Update()
 				}
 			}
 		}
-
-
 	}
 }
 
@@ -444,9 +444,8 @@ void BlockManager::Draw(Camera* camera)
 			//Manager.cppで配列で定義したworldTransformの値をBlock.cppのDrawにセット
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
-			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j], isElec[i][j], goalMat, isPushed[i][j], this->count);
-			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j], isElec[i][j], goalMat, isPushed[i][j], elecWaitAlpha_[i][j]);
-
+			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j], isElec[i][j], goalMat, isPushed[i][j], this->count, elecWaitAlpha_[i][j]);
+			
 			if(action_[i][j] == Action::Connect && effectCount >= effectCountMax)
 			{
 				if(isAxis_[i][j])
@@ -881,7 +880,6 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 			}
 		}
 
-
 		for(int i = 0; i < stageWidth_; i++)
 		{
 			for(int j = 0; j < stageHeight_; j++)
@@ -951,8 +949,6 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 								isElec[i][j] = false;
 							}
 						}
-
-
 					}
 				}
 
@@ -961,19 +957,11 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 					isElec[i][j] = false;
 				}
 
-
-				if(form_[i][j] == Form::Electric)
-				{
-					//isElec[i][prerotateY] = true;
-				}
-
 				prerotateY = j;
 			}
 
-
 			prerotateX = i;
 		}
-
 
 		RepositBlock();
 	}
