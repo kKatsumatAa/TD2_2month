@@ -59,7 +59,19 @@ void Block::Updata(Vec3 pos)
 	worldTransform_.SetWorld();
 }
 
-void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec, WorldMat goalMat, bool isPushed, int count)
+void Block::SetAlpha(float blockAlpha)
+{
+	color.w = blockAlpha;
+}
+
+void Block::SetColor(Vec3 blockColor)
+{
+	color.x = blockColor.x;
+	color.y = blockColor.y;
+	color.z = blockColor.z;
+}
+
+void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec, WorldMat goalMat,bool isPushed,float popAlpha)
 {
 	//‰¼•\Ž¦
 	if (action == Action::Connect)
@@ -68,8 +80,7 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 	}
 	else if (isElec == false)
 	{
-		color = { 0.6f,0.6f,0.6f,0.95f };
-
+		color = { 0.6f,0.6f,0.6f,popAlpha };
 	}
 	else {
 		if (color.x > 1.0f) { color.x -= 0.05f; }
@@ -78,8 +89,8 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 		if (color.y < 1.0f) { color.y += 0.05f; }
 		if (color.z > 1.0f) { color.z -= 0.05f; }
 		if (color.z < 1.0f) { color.z += 0.05f; }
-		if (color.w > 1.0f) { color.w -= 0.05f; }
-		if (color.w < 1.0f) { color.w += 0.05f; }
+		if (color.w > 1.0f) { color.w = popAlpha; }
+		if (color.w < 1.0f) { color.w = popAlpha; }
 	}
 
 
