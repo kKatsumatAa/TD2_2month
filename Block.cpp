@@ -97,8 +97,8 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 	//ââèo(égópÇ∑ÇÈÇ‡ÇÃÇÕñ⁄óßÇΩÇπÇÈ)
 	if ((form == Form::BUTTON || form == Form::Electric || form == Form::GEAR || form == Form::GOAL) && action != Action::Connect && form != Form::LOCKED)
 	{
-		color = { 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,0.3f, 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,popAlpha };
-		//color = { 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,0.3f + fabsf(sinf(count * 0.025f)) * 0.55f, 0.3f /*+ fabsf(sinf(count * 0.025f)) * 0.55f*/,popAlpha };
+		//color = { 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,0.3f, 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,popAlpha };
+		color = { 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,0.3f + fabsf(sinf(count * 0.025f)) * 0.55f, 0.3f /*+ fabsf(sinf(count * 0.025f)) * 0.55f*/,popAlpha };
 
 		//count++;
 		if (count % 340 == 0 || count % 340 == 10 || count % 340 == 20 || count % 340 == 30)
