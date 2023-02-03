@@ -146,8 +146,8 @@ float4 PS(Output input) : SV_TARGET
 	{
 		float2 samplePoint = input.uv;
 		float4 Tex = tex.Sample(smp, input.uv);
-		float vignette = length(float2(0.5, 0.5) - input.uv);
-		vignette = clamp(vignette - 0.2, 0, 1);
+		float vignette = length(float2(0.5f, 0.5f) - input.uv);
+		vignette = clamp(vignette - 0.4f, 0, 1);
 		Tex.rgb -= vignette;
 		ret = Tex;
 
@@ -159,7 +159,7 @@ float4 PS(Output input) : SV_TARGET
 	{
 		float2 samplePoint = input.uv;
 		samplePoint -= float2(0.5, 0.5);
-		float distPower = pow(length(samplePoint), 0.08);
+		float distPower = pow(length(samplePoint), 0.02);
 		samplePoint *= float2(distPower, distPower);
 		samplePoint += float2(0.5, 0.5);
 		float4 Tex = tex.Sample(smp, samplePoint);

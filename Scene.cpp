@@ -38,7 +38,7 @@ void SceneTitle::DrawSprite()
 //セレクト画面
 void SceneStageSelect::Initialize()
 {
-	Object::effectFlags.isScanningLine = true;
+	Object::effectFlags.isVignette = true;
 
 	scene->lightManager->SetCircleShadowActive(0, false);
 	scene->stageSelectM->Initialize(scene->stageManager.get());
