@@ -66,7 +66,7 @@ void Tutorial::InitializeCommon()
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Connecting.png", texhandle[CONNECT]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Rotate.png", texhandle[TURN]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Overlapping.png", texhandle[OVERLAP]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Z.png", texhandle[CONNECT_LIMIT]);
+		TextureManager::LoadGraph(L"Resources/image/Explanation/Tutorial_Consume.png", texhandle[CONNECT_LIMIT]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Tutorial_Exhaust.png", texhandle[CONNECT_LIMIT + 1]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Button.png", texhandle[BUTTON + 1]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Goal.png", texhandle[BUTTON + 2]);
