@@ -460,7 +460,7 @@ void BlockManager::Draw(Camera* camera)
 				isEffect = true;
 			}
 
-			if (form_[i][j] == Form::Electric && form_[i][j] != Form::GOAL /*&& !isElecConectedGoal*/)
+			if (form_[i][j] == Form::Electric && form_[i][j] != Form::GOAL && !isElecConectedGoal)
 			{
 				connectEM->GenerateRandomConnectingEffect(worldmats_[i][j].trans, blockRadius_, blockRadius_ / 2.0f, 15, 3, { 0.3f,0.3f,1.0f,0.95f });
 

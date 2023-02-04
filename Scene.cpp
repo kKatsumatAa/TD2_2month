@@ -128,6 +128,10 @@ void SceneGame::Update()
 			{
 				scene->tutorial->ConnectLimitInitialize();
 			}
+			if (scene->stageManager->selectStage == STAGE::STAGE4)
+			{
+				scene->tutorial->ElectricInitialize();
+			}
 			GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get());
 		}
 		if (KeyboardInput::GetInstance().KeyTrigger(DIK_Z))
