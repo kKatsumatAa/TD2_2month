@@ -612,7 +612,7 @@ void BlockManager::UpdateConnect(Vec3 pos)
 					if (tutorial->GetState() == TUTORIAL::CONNECT_LIMIT)
 					{
 						tutorial->AddStateNum();
-						if (tutorial->GetStateNum() == tutorial->GetStateNumMax())
+						if (tutorial->GetStateNum() == tutorial->GetStateNumMax() - 1)
 						{
 							tutorial->spriteCount = 0;
 						}
