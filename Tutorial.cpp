@@ -4,52 +4,40 @@
 void Tutorial::Initialize()
 {
 	//外部から今行ってるチュートリアルが分かるようにした変数
-	state2 = MOVE;
-	isEnd = false;
-	count = 0;
-	skipTimer = 0;
-	spriteSize = 0;
-	spriteRot = 0;
-	spriteCount = 0;
-	if (texhandle[0] == NULL)
-	{
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Movement_Explanation.png", texhandle[MOVE]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Connecting.png", texhandle[CONNECT]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Rotate.png", texhandle[TURN]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Overlapping.png", texhandle[OVERLAP]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Z.png", texhandle[GETBACK]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Button.png", texhandle[BUTTON]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Goal.png", texhandle[BUTTON + 1]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_ElectlicBlock.png", texhandle[ELECTRIC + 1]);
-	}
-
+	state2 = TUTORIAL::MOVE;
+	
+	InitializeCommon();
 
 	ChangeState(new MoveTutorial);
 }
 
+void Tutorial::OverlapInitialize()
+{
+	//外部から今行ってるチュートリアルが分かるようにした変数
+	state2 = TUTORIAL::OVERLAP;
+	
+	InitializeCommon();
+
+	ChangeState(new OverlapTutorial);
+}
+
+void Tutorial::ConnectLimitInitialize()
+{
+	//外部から今行ってるチュートリアルが分かるようにした変数
+	state2 = TUTORIAL::CONNECT_LIMIT;
+
+	InitializeCommon();
+
+	ChangeState(new ConnectLimitTutorial);
+}
+
+
 void Tutorial::ButtonInitialize()
 {
 	//外部から今行ってるチュートリアルが分かるようにした変数
-	state2 = BUTTON;
-	isEnd = false;
-	count = 0;
-	skipTimer = 0;
-	spriteSize = 0;
-	spriteRot = 0;
-	spriteCount = 0;
-	if (texhandle[0] == NULL)
-	{
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Movement_Explanation.png", texhandle[MOVE]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Connecting.png", texhandle[CONNECT]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Rotate.png", texhandle[TURN]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Overlapping.png", texhandle[OVERLAP]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Z.png", texhandle[GETBACK]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Button.png", texhandle[BUTTON]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Goal.png", texhandle[BUTTON + 1]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_ElectlicBlock.png", texhandle[ELECTRIC + 1]);
+	state2 = TUTORIAL::BUTTON;
 
-	}
-
+	InitializeCommon();
 
 	ChangeState(new ButtonTutorial);
 }
@@ -57,7 +45,15 @@ void Tutorial::ButtonInitialize()
 void Tutorial::ElectricInitialize()
 {
 	//外部から今行ってるチュートリアルが分かるようにした変数
-	state2 = ELECTRIC;
+	state2 = TUTORIAL::ELECTRIC;
+	
+	InitializeCommon();
+
+	ChangeState(new ElectricTutorial);
+}
+
+void Tutorial::InitializeCommon()
+{
 	isEnd = false;
 	count = 0;
 	skipTimer = 0;
@@ -70,14 +66,11 @@ void Tutorial::ElectricInitialize()
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Connecting.png", texhandle[CONNECT]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Rotate.png", texhandle[TURN]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Overlapping.png", texhandle[OVERLAP]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Z.png", texhandle[GETBACK]);
+		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Z.png", texhandle[CONNECT_LIMIT]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Button.png", texhandle[BUTTON]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Goal.png", texhandle[BUTTON + 1]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_ElectlicBlock.png", texhandle[ELECTRIC + 1]);
 	}
-
-
-	ChangeState(new ElectricTutorial);
 }
 
 void Tutorial::Update()
@@ -154,12 +147,12 @@ TurnTutorial::TurnTutorial()
 
 void TurnTutorial::Update()
 {
-	if (num >= numMax)
+	/*if (num >= numMax)
 	{
 		tutorial->AddStateNum();
 		tutorial->AddState2();
-		tutorial->ChangeState(new OverlapTutorial);
-	}
+		tutorial->ChangeState(new ConnectLimitTutorial);
+	}*/
 }
 
 void TurnTutorial::Draw()
@@ -172,33 +165,36 @@ void TurnTutorial::Draw()
 
 
 //------------------------------------------------------------------------------------
-GetBackTutorial::GetBackTutorial()
+ConnectLimitTutorial::ConnectLimitTutorial()
 {
 
 }
 
-void GetBackTutorial::Update()
+void ConnectLimitTutorial::Update()
 {
-	if (KeyboardInput::GetInstance().KeyTrigger(DIK_Z))
-	{
-		num++;
-	}
-
-	if (num >= numMax)
-	{
-		//num = numMax - 1;
-		tutorial->AddStateNum();
-		tutorial->AddState2();
-		tutorial->ChangeState(new OverlapTutorial);
-	}
+	//if (num >= numMax)
+	//{
+	//	//num = numMax - 1;
+	//	tutorial->AddStateNum();
+	//	tutorial->AddState2();
+	//	//tutorial->ChangeState(new OverlapTutorial);
+	//}
 }
 
-void GetBackTutorial::Draw()
+void ConnectLimitTutorial::Draw()
 {
 	count += 0.1f;
 
-	sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.55f,180.0f + sinf(count) * 2.0f,0 }, tutorial->spriteSize, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[GETBACK],
-		{ 0.5f,0.5f }, false, false, tutorial->spriteRot);
+	if (count < 3)
+	{
+		sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.55f,180.0f + sinf(count) * 2.0f,0 }, tutorial->spriteSize, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[CONNECT_LIMIT],
+			{ 0.5f,0.5f }, false, false, tutorial->spriteRot);
+	}
+	else
+	{
+		sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.55f,180.0f + sinf(count) * 2.0f,0 }, tutorial->spriteSize, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[CONNECT_LIMIT],
+			{ 0.5f,0.5f }, false, false, tutorial->spriteRot);
+	}
 }
 
 //-----------------------------------------------------------------------

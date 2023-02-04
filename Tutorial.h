@@ -7,7 +7,7 @@ static enum TUTORIAL
 	CONNECT,  //繋ぐ
 	TURN,     //回転
 	OVERLAP,  //重なる
-	GETBACK,  //一手戻る
+	CONNECT_LIMIT,  //限度
 	BUTTON,   //ボタン
 	ELECTRIC, //電気ブロック
 	LAST      //終わり
@@ -64,11 +64,16 @@ public:
 	void Update();
 	//最初のチュートリアルの
 	void Initialize();
+	//
+	void ConnectLimitInitialize();
+	//
+	void OverlapInitialize();
 	//ボタンのチュートリアル
 	void ButtonInitialize();
 	//電気ブロックのチュートリアル
 	void ElectricInitialize();
 
+	void InitializeCommon();
 
 	void Draw();
 
@@ -174,17 +179,17 @@ public:
 	void Draw() override;
 };
 
-// 一手戻る
-class GetBackTutorial : public TutorialState
+// 限度
+class ConnectLimitTutorial : public TutorialState
 {
 private:
 
-	const int numMax = 1;
+	const int numMax = 4;
 	int texhandle[5];
 	Object sprite[5];
 
 public:
-	GetBackTutorial();
+	ConnectLimitTutorial();
 
 
 	void AddNum()override { num++; }

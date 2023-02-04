@@ -40,9 +40,16 @@ void StageSelectManager::Initialize(StageManager* stageM)
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame1.png", texhandle[1]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame2.png", texhandle[2]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame3.png", texhandle[3]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/selectBackground.png", texhandle[4]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/spaceKey.png", texhandle[5]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowKey.png", texhandle[6]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame3.png", texhandle[4]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame3.png", texhandle[5]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame3.png", texhandle[6]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame3.png", texhandle[7]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame3.png", texhandle[8]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame3.png", texhandle[9]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame3.png", texhandle[10]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/selectBackground.png", texhandle[11]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/spaceKey.png", texhandle[12]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowKey.png", texhandle[13]);
 	}
 }
 
@@ -104,7 +111,8 @@ void StageSelectManager::Update()
 	//選択確定
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
-		if (selectNum < STAGE::STAGE3)
+		//ここでチュートリアルを表示するか決める
+		if (selectNum == STAGE::TUTORIAL || selectNum == STAGE::STAGE1 || selectNum == STAGE::STAGE2)
 		{
 			isTutorial = true;
 		}
@@ -126,19 +134,19 @@ void StageSelectManager::Draw(CameraManager* cameraM)
 	//ステージ1とか
 	count++;
 
-	object[selectNum].worldMat->scale = { stageImageRadius  + sinf(count * 0.1f),stageImageRadius  + sinf(count * 0.1f) ,stageImageRadius  };
+	object[selectNum].worldMat->scale = { stageImageRadius + sinf(count * 0.1f),stageImageRadius + sinf(count * 0.1f) ,stageImageRadius };
 
 	for (int i = 0; i < this->selectNumMax; i++)
 	{
-		if (object[i].worldMat->scale.x != stageImageRadius  && selectNum != i)
+		if (object[i].worldMat->scale.x != stageImageRadius && selectNum != i)
 		{
-			object[i].worldMat->scale = { stageImageRadius  ,stageImageRadius  ,stageImageRadius  };
+			object[i].worldMat->scale = { stageImageRadius  ,stageImageRadius  ,stageImageRadius };
 		}
 
 		object[i].DrawBox(object[i].worldMat, &cameraM->usingCamera->viewMat, &cameraM->usingCamera->projectionMat, { 1.0f,1.0f,1.0f,1.0f }, texhandle[i]);
 	}
 
-	
+
 }
 
 void StageSelectManager::DrawSprite()

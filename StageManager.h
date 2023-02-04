@@ -8,6 +8,13 @@ enum STAGE
 	STAGE1,
 	STAGE2,
 	STAGE3,
+	STAGE4,
+	STAGE5,
+	STAGE6,
+	STAGE7,
+	STAGE8,
+	STAGE9,
+	STAGE10
 };
 
 class StageManager
@@ -46,6 +53,14 @@ public:
 	/// </summary>
 	void SetStage3(const int& blockWidth, const int& blockHeight);
 
+	void SetStage4(const int& blockWidth, const int& blockHeight);
+	void SetStage5(const int& blockWidth, const int& blockHeight);
+	void SetStage6(const int& blockWidth, const int& blockHeight);
+	void SetStage7(const int& blockWidth, const int& blockHeight);
+	void SetStage8(const int& blockWidth, const int& blockHeight);
+	void SetStage9(const int& blockWidth, const int& blockHeight);
+	void SetStage10(const int& blockWidth, const int& blockHeight);
+
 	/// <summary>
 	/// ステージをリセット
 	/// </summary>
@@ -72,7 +87,7 @@ public:
 	static const int stage1Height = 13;
 
 	//ステージ数
-	static const int stageMax = 4;
+	static const int stageMax = 11;
 	static int selectStage;
 
 	//外部で参照するための
