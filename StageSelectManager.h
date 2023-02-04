@@ -10,9 +10,9 @@ private:
 	int selectNum = 0;
 	int selectNumMax = 0;
 
-	Object object[15];
+	Object object[20];
 
-	UINT64 texhandle[10];
+	UINT64 texhandle[20];
 
 	int lerpCount = 0;
 	const int lerpCountMax = 20;

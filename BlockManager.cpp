@@ -603,11 +603,20 @@ void BlockManager::UpdateConnect(Vec3 pos)
 				&& worldmats_[i][j].trans.z - blockRadius_ < pos.z && worldmats_[i][j].trans.z + blockRadius_ > pos.z)
 				&& action_[i][j] != Action::Connect)
 			{
-				if(form_[i][j] != Form::NONE && form_[i][j] != Form::BUTTON && form_[i][j] != Form::GOAL && beforeTurn_[i][j] != Form::GOAL)
+				if (form_[i][j] != Form::NONE && form_[i][j] != Form::BUTTON && form_[i][j] != Form::GOAL && beforeTurn_[i][j] != Form::GOAL)
 				{
 					action_[i][j] = Action::Connect;
 					cameraM->usingCamera->CameraShake(15, 0.53f);
 
+					//チュートリアル
+					if (tutorial->GetState() == TUTORIAL::CONNECT_LIMIT)
+					{
+						tutorial->AddStateNum();
+						if (tutorial->GetStateNum() == tutorial->GetStateNumMax() - 1)
+						{
+							tutorial->spriteCount = 0;
+						}
+					}
 				}
 			}
 		}

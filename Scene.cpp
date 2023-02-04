@@ -122,11 +122,11 @@ void SceneGame::Update()
 			}
 			if (scene->stageManager->selectStage == STAGE::STAGE1)
 			{
-				scene->tutorial->ButtonInitialize();
+				scene->tutorial->OverlapInitialize();
 			}
 			if (scene->stageManager->selectStage == STAGE::STAGE2)
 			{
-				scene->tutorial->ElectricInitialize();
+				scene->tutorial->ConnectLimitInitialize();
 			}
 			GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get());
 		}
