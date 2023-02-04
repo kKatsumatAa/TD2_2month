@@ -18,6 +18,8 @@ public:
 	void SetPlayer(Player* player);
 	virtual void Update() = 0;
 	virtual void Draw(Camera* camera, Model* model) = 0;
+
+	void FailedEffect();
 };
 
 //‰½‚à‚µ‚Ä‚¢‚È‚¢
@@ -29,6 +31,7 @@ private:
 	Shake shake;
 
 	int effectCount = 0;
+	int effectCount2 = 0;
 	int effectCountTmp = 60;
 
 public:

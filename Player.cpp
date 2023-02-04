@@ -280,6 +280,24 @@ void PlayerState::SetPlayer(Player* player)
 	this->player = player;
 }
 
+void PlayerState::FailedEffect()
+{
+	player->GetWorldTransForm()->scale = { player->GetRadius() * 0 ,player->GetRadius() * 0 ,player->GetRadius() * 0 };
+
+	player->bufferedTurnRelease = false;
+
+	player->cameraM->usingCamera->CameraShake(15, 1.3f);
+
+	for (int i = 0; i < 5; i++)
+	{
+		ParticleManager::GetInstance()->GenerateRandomParticle(7, 60, 0.2f, { player->GetWorldPos().x,player->GetWorldPos().y + player->GetRadius() * 1.3f,player->GetWorldPos().z }
+		, 5.0f, 0.1f, { 1.0f,1.0f,1.0f,0.2f }, { 0,0,0,0.1f });
+
+		ParticleManager::GetInstance()->GenerateRandomParticle(5, 90, 0.45f, { player->GetWorldPos().x,player->GetWorldPos().y + player->GetRadius() * 1.3f,player->GetWorldPos().z },
+			0.45f, 0.1f, { 1.0f,1.0f,0,1.0f }, { 0,0,0,1.0f });
+	}
+}
+
 //--------------------------------------------------------------------------
 void StateNormalMoveP::Update()
 {
@@ -290,6 +308,7 @@ void StateNormalMoveP::Update()
 		countE++;
 
 		effectCount--;
+		effectCount2--;
 
 		Vec3 trans = { player->GetWorldPos().x,player->GetWorldPos().y,player->GetWorldPos().z };
 		trans = { trans.x ,trans.y,trans.z };
@@ -320,27 +339,37 @@ void StateNormalMoveP::Update()
 		if (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::LEFT)
 		{
-			if(player->isConnect == true)
+			if (player->isConnect == true)
 			{
-				if(player->conectCount_ > 0)
+				if (player->conectCount_ > 0)
 				{
 					player->moveEndPos = { player->GetWorldPos().x - player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
+				}
+				else if (KeyboardInput::GetInstance().KeyTrigger(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_A) || effectCount2 <= 0)
+				{
+					effectCount2 = effectCountTmp;
+					FailedEffect();
 				}
 			}
 			else
 			{
 				player->moveEndPos = { player->GetWorldPos().x - player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
 			}
-			
+
 		}
 		if (KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::RIGHT)
 		{
-			if(player->isConnect == true)
+			if (player->isConnect == true)
 			{
-				if(player->conectCount_ > 0)
+				if (player->conectCount_ > 0)
 				{
 					player->moveEndPos = { player->GetWorldPos().x + player->moveDistance , player->GetWorldPos().y, player->GetWorldPos().z };
+				}
+				else if (KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_D) || effectCount2 <= 0)
+				{
+					effectCount2 = effectCountTmp;
+					FailedEffect();
 				}
 			}
 			else
@@ -351,11 +380,16 @@ void StateNormalMoveP::Update()
 		if (KeyboardInput::GetInstance().KeyPush(DIK_UPARROW) || KeyboardInput::GetInstance().KeyPush(DIK_W)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::UP)
 		{
-			if(player->isConnect == true)
+			if (player->isConnect == true)
 			{
-				if(player->conectCount_ > 0)
+				if (player->conectCount_ > 0)
 				{
 					player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + player->moveDistance };
+				}
+				else if (KeyboardInput::GetInstance().KeyTrigger(DIK_UPARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_W) || effectCount2 <= 0)
+				{
+					effectCount2 = effectCountTmp;
+					FailedEffect();
 				}
 			}
 			else
@@ -367,11 +401,16 @@ void StateNormalMoveP::Update()
 		if (KeyboardInput::GetInstance().KeyPush(DIK_DOWNARROW) || KeyboardInput::GetInstance().KeyPush(DIK_S)
 			|| player->bufferedKeyArrow == BUFFERED_INPUT_ARROW::DOWN)
 		{
-			if(player->isConnect == true)
+			if (player->isConnect == true)
 			{
-				if(player->conectCount_ > 0)
+				if (player->conectCount_ > 0)
 				{
 					player->moveEndPos = { player->GetWorldPos().x, player->GetWorldPos().y,player->GetWorldPos().z + -player->moveDistance };
+				}
+				else if (KeyboardInput::GetInstance().KeyTrigger(DIK_DOWNARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_S) || effectCount2 <= 0)
+				{
+					effectCount2 = effectCountTmp;
+					FailedEffect();
 				}
 			}
 			else
@@ -408,7 +447,11 @@ void StateNormalMoveP::Update()
 			player->ChangeStateMove(new StateMoveP);
 		}
 		//–³‚©‚Á‚½Žž
-		else if (!shake.GetIsShaking() && shake.GetShake() == 0 && effectCount <= 0)
+		else if (!shake.GetIsShaking() && shake.GetShake() == 0 && effectCount <= 0||
+			KeyboardInput::GetInstance().KeyTrigger(DIK_DOWNARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_S)||
+			KeyboardInput::GetInstance().KeyTrigger(DIK_UPARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_W)||
+			KeyboardInput::GetInstance().KeyTrigger(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_A)||
+			KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_D))
 		{
 			//æs
 			player->bufferedKeyArrow = NONE;
@@ -518,6 +561,12 @@ void StateNormalConTurP::Update()
 				}
 
 				player->ChangeStateTurnConnect(new StateConnectP);
+			}
+			//Žc—Ê‚ª‚È‚©‚Á‚½‚ç
+			else
+			{
+				player->bufferedPushSpace = false;
+				FailedEffect();
 			}
 		}
 		else
@@ -693,19 +742,8 @@ void StateTurnP::Update()
 		//‰ðœ‚Å‚«‚È‚¢‚Æ‚«‚Ì‰‰o
 		else if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE) || player->bufferedTurnRelease)
 		{
-			player->GetWorldTransForm()->scale = { player->GetRadius() * 0 ,player->GetRadius() * 0 ,player->GetRadius() * 0 };
-
+			FailedEffect();
 			player->bufferedTurnRelease = false;
-
-			player->cameraM->usingCamera->CameraShake(15, 1.3f);
-
-			for (int i = 0; i < 5; i++)
-			{
-				ParticleManager::GetInstance()->GenerateRandomParticle(7, 90, 0.2f, { player->GetWorldPos().x,player->GetWorldPos().y + player->GetRadius() * 2.0f,player->GetWorldPos().z }
-				, 5.0f, 0.1f, { 1.0f,1.0f,1.0f,1.0f }, { 0,0,0,0.1f });
-
-				ParticleManager::GetInstance()->GenerateRandomParticle(10, 60, 0.5f, player->GetWorldPos(), 0.45f, 0.1f, { 1.0f,1.0f,0,1.0f }, { 0,0,0,1.0f });
-			}
 		}
 		else
 		{
