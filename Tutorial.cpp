@@ -5,7 +5,7 @@ void Tutorial::Initialize()
 {
 	//外部から今行ってるチュートリアルが分かるようにした変数
 	state2 = TUTORIAL::MOVE;
-	
+
 	InitializeCommon();
 
 	ChangeState(new MoveTutorial);
@@ -15,7 +15,7 @@ void Tutorial::OverlapInitialize()
 {
 	//外部から今行ってるチュートリアルが分かるようにした変数
 	state2 = TUTORIAL::OVERLAP;
-	
+
 	InitializeCommon();
 
 	ChangeState(new OverlapTutorial);
@@ -46,7 +46,7 @@ void Tutorial::ElectricInitialize()
 {
 	//外部から今行ってるチュートリアルが分かるようにした変数
 	state2 = TUTORIAL::ELECTRIC;
-	
+
 	InitializeCommon();
 
 	ChangeState(new ElectricTutorial);
@@ -67,9 +67,10 @@ void Tutorial::InitializeCommon()
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Rotate.png", texhandle[TURN]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Overlapping.png", texhandle[OVERLAP]);
 		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanation_Z.png", texhandle[CONNECT_LIMIT]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Button.png", texhandle[BUTTON]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Goal.png", texhandle[BUTTON + 1]);
-		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_ElectlicBlock.png", texhandle[ELECTRIC + 1]);
+		TextureManager::LoadGraph(L"Resources/image/Explanation/Tutorial_Exhaust.png", texhandle[CONNECT_LIMIT + 1]);
+		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Button.png", texhandle[BUTTON + 1]);
+		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_Goal.png", texhandle[BUTTON + 2]);
+		TextureManager::LoadGraph(L"Resources/image/Explanation/Explanartion_ElectlicBlock.png", texhandle[ELECTRIC + 2]);
 	}
 }
 
@@ -185,14 +186,14 @@ void ConnectLimitTutorial::Draw()
 {
 	count += 0.1f;
 
-	if (count < 3)
+	if (num < 3)
 	{
 		sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.55f,180.0f + sinf(count) * 2.0f,0 }, tutorial->spriteSize, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[CONNECT_LIMIT],
 			{ 0.5f,0.5f }, false, false, tutorial->spriteRot);
 	}
 	else
 	{
-		sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.55f,180.0f + sinf(count) * 2.0f,0 }, tutorial->spriteSize, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[CONNECT_LIMIT],
+		sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.55f,180.0f + sinf(count) * 2.0f,0 }, tutorial->spriteSize, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[CONNECT_LIMIT + 1],
 			{ 0.5f,0.5f }, false, false, tutorial->spriteRot);
 	}
 }
@@ -245,12 +246,12 @@ void ButtonTutorial::Draw()
 
 	if (num == 0)
 	{
-		sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.55f,180.0f + sinf(count) * 2.0f,0 }, tutorial->spriteSize, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[BUTTON],
+		sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.55f,180.0f + sinf(count) * 2.0f,0 }, tutorial->spriteSize, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[BUTTON + 1],
 			{ 0.5f,0.5f }, false, false, tutorial->spriteRot);
 	}
 	else
 	{
-		sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.55f,180.0f + sinf(count) * 2.0f,0 }, tutorial->spriteSize, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[BUTTON + 1],
+		sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.55f,180.0f + sinf(count) * 2.0f,0 }, tutorial->spriteSize, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[BUTTON + 2],
 			{ 0.5f,0.5f }, false, false, tutorial->spriteRot);
 	}
 }
@@ -277,7 +278,7 @@ void ElectricTutorial::Draw()
 {
 	count += 0.1f;
 
-	sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.55f,180.0f + sinf(count) * 2.0f,0 }, tutorial->spriteSize, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[ELECTRIC + 1],
+	sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.55f,180.0f + sinf(count) * 2.0f,0 }, tutorial->spriteSize, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[ELECTRIC + 2],
 		{ 0.5f,0.5f }, false, false, tutorial->spriteRot);
 }
 

@@ -40,13 +40,13 @@ void StageSelectManager::Initialize(StageManager* stageM)
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame1.png", texhandle[1]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame2.png", texhandle[2]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame3.png", texhandle[3]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame3.png", texhandle[4]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame3.png", texhandle[5]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame3.png", texhandle[6]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame3.png", texhandle[7]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame3.png", texhandle[8]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame3.png", texhandle[9]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlame3.png", texhandle[10]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFrame4.png", texhandle[4]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFrame5.png", texhandle[5]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFrame6.png", texhandle[6]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFrame7.png", texhandle[7]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFrame8.png", texhandle[8]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFrame9.png", texhandle[9]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFrame10.png", texhandle[10]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/selectBackground.png", texhandle[11]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/spaceKey.png", texhandle[12]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowKey.png", texhandle[13]);
@@ -91,11 +91,11 @@ void StageSelectManager::Update()
 			object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),0,0.0f };
 			if (isRight)
 			{
-				object[i].worldMat->rot.z = { LerpVec3({0,0,0},{0,0,-pi * 2.0f}, EaseIn((float)lerpCount / (float)lerpCountMax)).z };
+				object[i].worldMat->rot.z = { LerpVec3({0,0,0},{0,0,-pi * 2.0f}, EaseOut((float)lerpCount / (float)lerpCountMax)).z };
 			}
 			else if (isLeft)
 			{
-				object[i].worldMat->rot.z = { LerpVec3({0,0,0},{0,0,pi * 2.0f}, EaseIn((float)lerpCount / (float)lerpCountMax)).z };
+				object[i].worldMat->rot.z = { LerpVec3({0,0,0},{0,0,pi * 2.0f}, EaseOut((float)lerpCount / (float)lerpCountMax)).z };
 			}
 			object[i].worldMat->SetWorld();
 		}
