@@ -420,7 +420,7 @@ void Scene::Initialize()
 	model[0] = Model::LoadFromOBJ("Player");
 	model[1] = Model::LoadFromOBJ("Mesh_NormalTile_01");
 	model[2] = Model::LoadFromOBJ("Mesh_ButtonTile_01");//固定ブロックに変える
-	model[3] = Model::LoadFromOBJ("Mesh_GoalTile_01");
+	model[3] = Model::LoadFromOBJ("Goal_02");
 	model[4] = Model::LoadFromOBJ("Mesh_SocketTile_01");
 	model[5] = Model::LoadFromOBJ("Button");
 	model[6] = Model::LoadFromOBJ("DisconnectedBlock");
