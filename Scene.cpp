@@ -280,10 +280,7 @@ void SceneLoad::LoadFunc()
 
 
 
-	scene->blockManager->Initialize(scene->connectEM.get(), scene->predictBlockManager.get(), scene->tutorial.get(), scene->cameraM.get(),
-		scene->goalE.get(),scene->goalConnectEM.get(),
-		scene->model[1], scene->model[2], scene->model[3], scene->model[4], scene->model[5], scene->model[6],
-		scene->model[8], scene->model[9], scene->model[10], scene->model[11], scene->model[13]);
+
 	scene->connectEM->Initialize();
 	scene->connectE2M->Initialize();
 
@@ -297,6 +294,11 @@ void SceneLoad::LoadFunc()
 	scene->player->SetConectCount(scene->stageManager->GetConectCount());
 	
 	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get());
+
+	scene->blockManager->Initialize(scene->connectEM.get(), scene->predictBlockManager.get(), scene->tutorial.get(), scene->cameraM.get(),
+		scene->goalE.get(), scene->goalConnectEM.get(),
+		scene->model[1], scene->model[2], scene->model[3], scene->model[4], scene->model[5], scene->model[6],
+		scene->model[8], scene->model[9], scene->model[10], scene->model[11], scene->model[13]);
 
 	//カメラ位置セット
 	scene->cameraM->gameMainCamera->SetEye({ { scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f }
@@ -406,6 +408,7 @@ void Scene::Initialize()
 		Sound::GetInstance().LoadWave("arrow (2).wav", false);
 		Sound::GetInstance().LoadWave("button (2).wav", false);
 		Sound::GetInstance().LoadWave("connectBegine.wav", false);
+		Sound::GetInstance().LoadWave("connectEnd.wav", false);
 		Sound::GetInstance().LoadWave("connectCancel.wav", false);
 		Sound::GetInstance().LoadWave("connectGoal.wav", false);
 		Sound::GetInstance().LoadWave("connectMove.wav", false);
@@ -657,6 +660,19 @@ void Scene::StopAllWave()
 {
 	Sound::GetInstance().StopWave("LevelSelect.wav");
 	Sound::GetInstance().StopWave("Stage_BGM.wav");
+
+	Sound::GetInstance().StopWave("arrow (2).wav");
+	Sound::GetInstance().StopWave("button (2).wav");
+	Sound::GetInstance().StopWave("connectBegine.wav");
+	Sound::GetInstance().StopWave("connectCancel.wav");
+	Sound::GetInstance().StopWave("connectGoal.wav");
+	Sound::GetInstance().StopWave("connectMove.wav");
+	Sound::GetInstance().StopWave("emergeGoal.wav");
+	Sound::GetInstance().StopWave("move (2).wav");
+	Sound::GetInstance().StopWave("moveFailed (2).wav");
+	Sound::GetInstance().StopWave("select.wav");
+	Sound::GetInstance().StopWave("turnBegine.wav");
+	Sound::GetInstance().StopWave("turnEnd.wav");
 }
 
 

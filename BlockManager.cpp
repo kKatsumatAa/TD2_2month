@@ -306,7 +306,7 @@ void BlockManager::Update()
 			//演出用にY座標を下げる
 			DownPosY();
 
-			blocks_[i][j]->Updata({0,0,0},form_[i][j],action_[i][j], isElec[i][j], count);
+			blocks_[i][j]->Updata({ 0,0,0 }, form_[i][j], action_[i][j], isElec[i][j], count);
 			blocks_[i][j]->SetAlpha(elecWaitAlpha_[i][j]);
 
 
@@ -319,11 +319,14 @@ void BlockManager::Update()
 			}
 
 			//もしゴールに電気が通っていて道が繋がっているなら
-			if (isElec[i][j] == true && form_[i][j] == Form::GOAL && isConectedGoal == true)
+			if (isElec[i][j] == true && form_[i][j] == Form::GOAL && isConectedGoal == true && isElecConectedGoal == false)
 			{
 				isStopElecConectedGoal = true;
 				//ゴールできるフラグON
 				isElecConectedGoal = true;
+
+				//音
+				Sound::GetInstance().PlayWave("connectGoal.wav", 0.6f);
 			}
 			else if (isStopElecConectedGoal == false)
 			{
@@ -392,6 +395,9 @@ void BlockManager::Update()
 		ParticleManager::GetInstance()->GenerateRandomParticle(50, 120, 0.5f,
 			{ worldmats_[goalPopX][goalPopY].trans.x,worldmats_[goalPopX][goalPopY].trans.y + blockRadius_ * 2.0f, worldmats_[goalPopX][goalPopY].trans.z },
 			0.4f, 0, { 1.0f,0.3f,0.2f,1.0f }, { 1.0f,1.0f,0,0 });
+
+		//音
+		Sound::GetInstance().PlayWave("emergeGoal.wav", 0.8f);
 	}
 
 	//ゴールがほかのブロックとつながってて電気通っていたら
@@ -617,6 +623,9 @@ void BlockManager::UpdateConnect(Vec3 pos)
 							tutorial->spriteCount = 0;
 						}
 					}
+
+					//音
+					Sound::GetInstance().PlayWave("connectMove.wav", 1.0f);
 				}
 			}
 		}
@@ -706,6 +715,10 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		predictBlockM->ClearPredictBlock();
 
 		distancePosPlayer = rotatePos - axis_pos_;
+
+		//音
+		Sound::GetInstance().PlayWave("turnBegine.wav", 0.7f);
+
 	}
 
 	if (isLeftRolling == false && isRightRolling == false && (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A)))
@@ -729,6 +742,9 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		predictBlockM->ClearPredictBlock();
 
 		distancePosPlayer = rotatePos - axis_pos_;
+
+		//音
+		Sound::GetInstance().PlayWave("turnBegine.wav", 0.7f);
 	}
 
 	if (isRightRolling == true)
@@ -796,6 +812,9 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 			//パーティクル発生
 			GenerateParticleTurnBlock();
+
+			//音
+			Sound::GetInstance().PlayWave("turnEnd.wav", 0.5f);//
 		}
 
 	}
@@ -862,6 +881,9 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 			//パーティクル発生
 			GenerateParticleTurnBlock();
+
+			//音
+			Sound::GetInstance().PlayWave("turnEnd.wav", 0.5f);//
 		}
 	}
 
@@ -1298,6 +1320,9 @@ void BlockManager::UpdateOverlap()
 									isPushed[i][j] = true;
 									//押された数を増やす
 									pushedCount_++;
+
+									//音
+									Sound::GetInstance().PlayWave("button (2).wav", 1.2f);
 								}
 
 							}
