@@ -30,8 +30,8 @@ void DrawIntNumImage::SetNum(int num, Vec2 pos, Vec2 sizeUV, Vec2 numImageSize, 
 		//余りを出して次の桁で使う
 		numRemainder = numRemainder % (int)std::pow(10, i);
 
-		//その桁があるか、前の桁があったら
-		if (numDigit > 0 || isStartDigit == true)
+		//その桁があるか、前の桁があったら,0だったら
+		if (numDigit > 0 || isStartDigit == true || i == 0)
 		{
 			isStartDigit = true;
 
