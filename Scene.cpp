@@ -38,7 +38,7 @@ void SceneTitle::DrawSprite()
 //セレクト画面
 void SceneStageSelect::Initialize()
 {
-	Object::effectFlags.isBarrelCurve = true;
+	//Object::effectFlags.isBarrelCurve = true;
 
 	scene->lightManager->SetCircleShadowActive(0, false);
 	scene->stageSelectM->Initialize(scene->stageManager.get());
@@ -593,38 +593,38 @@ void Scene::Update()
 	{
 		//blockManager->SetElec(elec);
 
-		int count = player->GetPlayerConectCount();
-		int countMax = player->GetPlayerConectCountMax();
+		//int count = player->GetPlayerConectCount();
+		//int countMax = player->GetPlayerConectCountMax();
 
 
-		ImGui::Begin("conectCount");
-		//ImGui::SetWindowPos("Elec", ImVec2(100, 100));
-		ImGui::SetWindowSize("conectCount", ImVec2(400, 100));
-		//ImGui::Text("制限数");
-		ImGui::InputInt("conectCount", &count, 0.0f);
-		//ImGui::Text("最大制限");
-		ImGui::InputInt("conectCountMax", &countMax, 0.0f);
+		//ImGui::Begin("conectCount");
+		////ImGui::SetWindowPos("Elec", ImVec2(100, 100));
+		//ImGui::SetWindowSize("conectCount", ImVec2(400, 100));
+		////ImGui::Text("制限数");
+		//ImGui::InputInt("conectCount", &count, 0.0f);
+		////ImGui::Text("最大制限");
+		//ImGui::InputInt("conectCountMax", &countMax, 0.0f);
 
 
-		ImGui::End();
+		//ImGui::End();
 	}
 
 	//ブロックウインドウの表示
 	{
 
-		blockManager->SetElec(elec);
+		//blockManager->SetElec(elec);
 
-		ImGui::Begin("Elec");
-		//ImGui::SetWindowPos("Elec", ImVec2(100, 100));
-		ImGui::SetWindowSize("Elec", ImVec2(600, 800));
+		//ImGui::Begin("Elec");
+		////ImGui::SetWindowPos("Elec", ImVec2(100, 100));
+		//ImGui::SetWindowSize("Elec", ImVec2(600, 800));
 
-		for (int i = 0; i < 13; i++)
-		{
-			ImGui::Text("%d", i);
-			ImGui::InputInt13("isElec", elec[i], 0.0f);
-		}
+		//for (int i = 0; i < 13; i++)
+		//{
+		//	ImGui::Text("%d", i);
+		//	ImGui::InputInt13("isElec", elec[i], 0.0f);
+		//}
 
-		ImGui::End();
+		//ImGui::End();
 	}
 
 	//imgui
