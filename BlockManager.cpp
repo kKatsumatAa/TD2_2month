@@ -325,8 +325,9 @@ void BlockManager::Update()
 				//ゴールできるフラグON
 				isElecConectedGoal = true;
 
-				//音
-				Sound::GetInstance().PlayWave("connectGoal.wav", 0.6f);
+				//↓毎フレーム毎になぜか入るので無理
+				////音
+				//Sound::GetInstance().PlayWave("connectGoal.wav", 0.6f);
 			}
 			else if (isStopElecConectedGoal == false)
 			{
