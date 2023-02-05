@@ -159,6 +159,11 @@ void Player::Update()
 		conectCountMax = conectLimit_->GetLimitCount();
 		isLoadConectCount = false;
 	}
+	else
+	{
+		//よくわからないことをしていたのでここでコネクトリミットの方も合わせる
+		conectLimit_->SetDrawCount(conectCount_);
+	}
 
 	if (worldTransform_.scale.x > scaleTmp) { worldTransform_.scale.x -= 0.05f; }
 	if (worldTransform_.scale.x < scaleTmp) { worldTransform_.scale.x += 0.05f; }

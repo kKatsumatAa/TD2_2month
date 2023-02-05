@@ -183,7 +183,7 @@ void SceneGame::Draw()
 
 	ParticleManager::GetInstance()->Draw(scene->texhandle[1]);
 
-
+	scene->conectLimit_->Update(scene->player->GetWorldPos(), scene->cameraM->usingCamera);
 }
 
 void SceneGame::DrawSprite()
@@ -195,6 +195,11 @@ void SceneGame::DrawSprite()
 
 	obj[0].DrawBoxSprite({ 10,10,0 }, 1.0f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[3]);
 	obj[1].DrawBoxSprite({ 110,10,0 }, 1.0f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
+
+	if (!scene->player->isGoal)
+	{
+		scene->conectLimit_->Draw();
+	}
 }
 
 
@@ -473,6 +478,7 @@ void Scene::Initialize()
 	imGuiManager->Initialize();
 
 	conectLimit_ = new ConectLimit();
+	conectLimit_->Initialize();
 
 	/*conectLimit_ = std::make_unique<ConectLimit>();
 	conectLimit_->ResetCounts();
@@ -553,7 +559,7 @@ void Scene::Initialize()
 	stageSelectM = std::make_unique<StageSelectManager>();
 	stageSelectM->Initialize(stageManager.get());
 
-
+	
 
 	//ステート変更
 	ChangeState(new SceneStageSelect);
