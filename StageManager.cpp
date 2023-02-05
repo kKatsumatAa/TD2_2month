@@ -328,7 +328,7 @@ void StageManager::SetStage5(const int& blockWidth, const int& blockHeight)
 
 	//ƒvƒŒƒCƒ„[‚Ì§ŒÀ‰ñ”‚ÌãŒÀ‚ðÝ’è
 
-	conectLimit_->SetCount(14);
+	conectLimit_->SetCount(8);
 	conectLimit_->ResetCount();
 
 	//SetisCountReset(selectStage);
