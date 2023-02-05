@@ -415,7 +415,7 @@ void BlockManager::Update()
 					int time = (float)rand() / RAND_MAX * 60;
 
 					float scale[2] = { (float)rand() / RAND_MAX * 1.3f,(float)rand() / RAND_MAX };
-					float pos = (float)rand() / RAND_MAX * blockRadius_ * 3.0f;
+					float pos = (float)rand() / RAND_MAX * blockRadius_ * 4.0f;
 					float pos2 = ((float)rand() / RAND_MAX - 0.5f) * blockRadius_ * 3.0f;
 
 					XMFLOAT4 color = { (float)rand() / RAND_MAX ,(float)rand() / RAND_MAX ,(float)rand() / RAND_MAX ,(float)rand() / RAND_MAX + 0.3f };
