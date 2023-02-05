@@ -106,13 +106,13 @@ void StateGoalParticle::Update()
 		goalEffect->particleCool = 0;
 		particleCount++;
 
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 100; i++)
 		{
 			XMFLOAT4 color = { colorDist(engine),colorDist(engine) ,colorDist(engine) ,colorDist(engine) };
 			XMFLOAT4 color2 = { colorDist(engine),colorDist(engine) ,colorDist(engine) ,colorDist(engine) };
 			float scale = scaleDist(engine);
 
-			ParticleManager::GetInstance()->GenerateRandomParticle(5, 300, scale * 4.0f, goalEffect->target, scale / 1.2f, 0, color, color2);
+			ParticleManager::GetInstance()->GenerateRandomParticle(1, 300, scale * 2.0f, goalEffect->target, scale *1.3f, 0, color, color2);
 		}
 	}
 

@@ -281,7 +281,7 @@ void SceneLoad::LoadFunc()
 
 
 	scene->blockManager->Initialize(scene->connectEM.get(), scene->predictBlockManager.get(), scene->tutorial.get(), scene->cameraM.get(),
-		scene->goalE.get(),scene->goalConnectEM.get(),
+		scene->goalE.get(), scene->goalConnectEM.get(),
 		scene->model[1], scene->model[2], scene->model[3], scene->model[4], scene->model[5], scene->model[6],
 		scene->model[8], scene->model[9], scene->model[10], scene->model[11], scene->model[13]);
 	scene->connectEM->Initialize();
@@ -293,9 +293,9 @@ void SceneLoad::LoadFunc()
 	scene->player->Initialize(scene->blockManager->blockRadius_ * 2.0f, scene->blockManager, scene->playerSocket.get()
 		, scene->connectE2M.get(), scene->tutorial.get(), scene->cameraM.get(), scene->model[0], &scene->debugText, scene->conectLimit_);
 	scene->player->SetPosStage(scene->stageManager->playerPos);
-	scene->stageManager->Initialize(scene->blockManager, scene->tutorial.get(),scene->conectLimit_);
+	scene->stageManager->Initialize(scene->blockManager, scene->tutorial.get(), scene->conectLimit_);
 	scene->player->SetConectCount(scene->stageManager->GetConectCount());
-	
+
 	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get());
 
 	//カメラ位置セット
@@ -324,6 +324,12 @@ void SceneLoad::Initialize()
 
 void SceneLoad::Update()
 {
+	if (count % 5 == 0)
+	{
+		float x = (float)rand() / RAND_MAX * 200.0f - 100.0f;
+		ParticleManager::GetInstance()->GenerateRandomParticle(20, 120, 3.0f, { x,50,0 }, 3.0f, 0.1f, { 1.0f,1.0f,0.2f,0.7f }, { 0,0,0,0 });
+	}
+
 	ParticleManager::GetInstance()->Update(&scene->cameraM->usingCamera->viewMat, &scene->cameraM->usingCamera->projectionMat);
 
 	//シーン遷移
@@ -332,6 +338,8 @@ void SceneLoad::Update()
 		async.EndThread();
 
 		//ステージ作り終わったら
+		ParticleManager::GetInstance()->ClearParticles();
+
 		scene->ChangeState(new SceneGame);
 	}
 }
@@ -343,6 +351,9 @@ void SceneLoad::Draw()
 
 void SceneLoad::DrawSprite()
 {
+	count++;
+
+	sprite[0].DrawBoxSprite({ 0,0,0 }, 1.0f, { 1.0f,1.0f,1.0f,(float)count / (float)countMax }, scene->texhandle[5]);
 }
 
 
@@ -402,7 +413,7 @@ void Scene::Initialize()
 		Sound::GetInstance().LoadWave("Stage_BGM.wav", false);
 		Sound::GetInstance().LoadWave("LevelSelect.wav", false);
 		Sound::GetInstance().LoadWave("game-victory-sound-effect.wav", false);
-		
+
 		Sound::GetInstance().LoadWave("arrow (2).wav", false);
 		Sound::GetInstance().LoadWave("button (2).wav", false);
 		Sound::GetInstance().LoadWave("connectBegine.wav", false);
@@ -432,6 +443,8 @@ void Scene::Initialize()
 		//ゲーム中のリセット,一手戻る
 		TextureManager::LoadGraph(L"Resources/image/z.png", texhandle[3]);
 		TextureManager::LoadGraph(L"Resources/image/restart.png", texhandle[4]);
+		//ロード
+		TextureManager::LoadGraph(L"Resources/image/LoadingScreen.png", texhandle[5]);
 	}
 
 	//model
@@ -479,7 +492,7 @@ void Scene::Initialize()
 	//電気エフェクト
 	connectEM = std::make_unique<ConnectingEffectManager>();
 	connectEM->Initialize();
-	
+
 	//電気エフェクト
 	goalConnectEM = std::make_unique<GoalConnectEffectManager>();
 	goalConnectEM->Initialize();
@@ -490,7 +503,7 @@ void Scene::Initialize()
 		model[1], model[2], model[3], model[4], model[5], model[6], model[8], model[9], model[10], model[11], model[13]);
 
 	stageManager = std::make_unique<StageManager>();
-	stageManager->Initialize(blockManager, tutorial.get(),conectLimit_);
+	stageManager->Initialize(blockManager, tutorial.get(), conectLimit_);
 
 
 	//Light
@@ -596,13 +609,13 @@ void Scene::Update()
 		ImGui::Begin("Elec");
 		//ImGui::SetWindowPos("Elec", ImVec2(100, 100));
 		ImGui::SetWindowSize("Elec", ImVec2(600, 800));
-		
-		for(int i = 0; i < 13; i++)
+
+		for (int i = 0; i < 13; i++)
 		{
-			ImGui::Text("%d",i);
+			ImGui::Text("%d", i);
 			ImGui::InputInt13("isElec", elec[i], 0.0f);
 		}
-		
+
 		ImGui::End();
 	}
 

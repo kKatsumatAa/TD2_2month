@@ -189,7 +189,10 @@ class SceneLoad : public SceneState
 {
 private:
 	int count = 0;
+	const int countMax = 120;
 	Async async;
+
+	Object sprite[5];
 
 public:
 	void LoadFunc();
