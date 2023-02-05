@@ -427,6 +427,8 @@ void Scene::Initialize()
 		Sound::GetInstance().LoadWave("select.wav", false);
 		Sound::GetInstance().LoadWave("turnBegine.wav", false);
 		Sound::GetInstance().LoadWave("turnEnd.wav", false);
+		Sound::GetInstance().LoadWave("limitFailed.wav", false);
+		Sound::GetInstance().LoadWave("goal.wav", false);
 
 
 	}
@@ -685,6 +687,8 @@ void Scene::StopAllWave()
 	Sound::GetInstance().StopWave("select.wav");
 	Sound::GetInstance().StopWave("turnBegine.wav");
 	Sound::GetInstance().StopWave("turnEnd.wav");
+	Sound::GetInstance().StopWave("limitFailed.wav");
+	Sound::GetInstance().StopWave("goal.wav");
 }
 
 

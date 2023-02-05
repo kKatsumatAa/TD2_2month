@@ -296,6 +296,9 @@ void PlayerState::FailedEffect()
 		ParticleManager::GetInstance()->GenerateRandomParticle(5, 90, 0.45f, { player->GetWorldPos().x,player->GetWorldPos().y + player->GetRadius() * 1.3f,player->GetWorldPos().z },
 			0.45f, 0.1f, { 1.0f,1.0f,0,1.0f }, { 0,0,0,1.0f });
 	}
+
+	//‰¹
+	Sound::GetInstance().PlayWave("limitFailed.wav", 0.4f);
 }
 
 //--------------------------------------------------------------------------
