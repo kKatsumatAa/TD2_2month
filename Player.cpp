@@ -444,13 +444,17 @@ void StateNormalMoveP::Update()
 				player->tutorial->AddStateNum();
 			}
 
+			//‰¹
+			Sound::GetInstance().PlayWave("move (2).wav", 0.5f);
+
+
 			player->ChangeStateMove(new StateMoveP);
 		}
 		//–³‚©‚Á‚½Žž
-		else if (!shake.GetIsShaking() && shake.GetShake() == 0 && effectCount <= 0||
-			KeyboardInput::GetInstance().KeyTrigger(DIK_DOWNARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_S)||
-			KeyboardInput::GetInstance().KeyTrigger(DIK_UPARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_W)||
-			KeyboardInput::GetInstance().KeyTrigger(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_A)||
+		else if (!shake.GetIsShaking() && shake.GetShake() == 0 && effectCount <= 0 ||
+			KeyboardInput::GetInstance().KeyTrigger(DIK_DOWNARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_S) ||
+			KeyboardInput::GetInstance().KeyTrigger(DIK_UPARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_W) ||
+			KeyboardInput::GetInstance().KeyTrigger(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_A) ||
 			KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_D))
 		{
 			//æs
@@ -460,6 +464,9 @@ void StateNormalMoveP::Update()
 			shake.SetShake(12, player->moveDistance / 4.0f);
 
 			effectCount = effectCountTmp;
+
+			//‰¹
+			Sound::GetInstance().PlayWave("moveFailed (2).wav", 0.5f);
 		}
 	}
 }
@@ -560,6 +567,10 @@ void StateNormalConTurP::Update()
 						60);
 				}
 
+				//‰¹
+				Sound::GetInstance().PlayWave("connectBegine.wav", 0.7f);
+
+
 				player->ChangeStateTurnConnect(new StateConnectP);
 			}
 			//Žc—Ê‚ª‚È‚©‚Á‚½‚ç
@@ -630,6 +641,9 @@ void StateConnectP::Update()
 				player->tutorial->AddStateNum();
 			}
 
+			//‰¹
+			Sound::GetInstance().PlayWave("connectEnd.wav", 0.7f);
+
 			player->ChangeStateTurnConnect(new StateTurnP);
 		}
 		else
@@ -669,6 +683,9 @@ void StateConnectP::Update()
 					player->cameraM->gameMainCamera->GetUp(),
 					60);
 			}
+
+			//‰¹
+			Sound::GetInstance().PlayWave("connectCancel.wav", 0.35f);
 
 			player->ChangeStateTurnConnect(new StateNormalConTurP);
 		}

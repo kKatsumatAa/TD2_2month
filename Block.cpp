@@ -74,7 +74,7 @@ void Block::Updata(Vec3 pos, int form, Action action, bool isElec, int count)
 		//color = { 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,0.3f, 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,popAlpha };
 		if (form == Form::GOAL)
 		{
-			color = { 0.2f,0.2f , 0.45f + fabsf(sinf(count * 0.025f)) * 0.55f ,0.95f };
+			color = { 0.45f + fabsf(sinf(count * 0.025f)) * 0.55f,0.45f + fabsf(sinf(count * 0.025f)) * 0.55f , 0.45f + fabsf(sinf(count * 0.025f)) * 0.55f ,0.95f };
 		}
 		else
 		{

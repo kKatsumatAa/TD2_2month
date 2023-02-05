@@ -306,7 +306,7 @@ void BlockManager::Update()
 			//演出用にY座標を下げる
 			DownPosY();
 
-			blocks_[i][j]->Updata({0,0,0},form_[i][j],action_[i][j], isElec[i][j], count);
+			blocks_[i][j]->Updata({ 0,0,0 }, form_[i][j], action_[i][j], isElec[i][j], count);
 			blocks_[i][j]->SetAlpha(elecWaitAlpha_[i][j]);
 
 
@@ -319,11 +319,13 @@ void BlockManager::Update()
 			}
 
 			//もしゴールに電気が通っていて道が繋がっているなら
-			if (isElec[i][j] == true && form_[i][j] == Form::GOAL && isConectedGoal == true)
+			if (isElec[i][j] == true && form_[i][j] == Form::GOAL && isConectedGoal == true && isElecConectedGoal == false)
 			{
 				isStopElecConectedGoal = true;
 				//ゴールできるフラグON
 				isElecConectedGoal = true;
+
+
 			}
 			else if (isStopElecConectedGoal == false)
 			{
@@ -392,6 +394,9 @@ void BlockManager::Update()
 		ParticleManager::GetInstance()->GenerateRandomParticle(50, 120, 0.5f,
 			{ worldmats_[goalPopX][goalPopY].trans.x,worldmats_[goalPopX][goalPopY].trans.y + blockRadius_ * 2.0f, worldmats_[goalPopX][goalPopY].trans.z },
 			0.4f, 0, { 1.0f,0.3f,0.2f,1.0f }, { 1.0f,1.0f,0,0 });
+
+		//音
+		Sound::GetInstance().PlayWave("emergeGoal.wav", 0.8f);
 	}
 
 	//ゴールがほかのブロックとつながってて電気通っていたら
@@ -410,7 +415,7 @@ void BlockManager::Update()
 					int time = (float)rand() / RAND_MAX * 60;
 
 					float scale[2] = { (float)rand() / RAND_MAX * 1.3f,(float)rand() / RAND_MAX };
-					float pos = (float)rand() / RAND_MAX * blockRadius_ * 3.0f;
+					float pos = (float)rand() / RAND_MAX * blockRadius_ * 4.0f;
 					float pos2 = ((float)rand() / RAND_MAX - 0.5f) * blockRadius_ * 3.0f;
 
 					XMFLOAT4 color = { (float)rand() / RAND_MAX ,(float)rand() / RAND_MAX ,(float)rand() / RAND_MAX ,(float)rand() / RAND_MAX + 0.3f };
@@ -617,6 +622,9 @@ void BlockManager::UpdateConnect(Vec3 pos)
 							tutorial->spriteCount = 0;
 						}
 					}
+
+					//音
+					Sound::GetInstance().PlayWave("connectMove.wav", 1.0f);
 				}
 			}
 		}
@@ -706,6 +714,10 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		predictBlockM->ClearPredictBlock();
 
 		distancePosPlayer = rotatePos - axis_pos_;
+
+		//音
+		Sound::GetInstance().PlayWave("turnBegine.wav", 0.7f);
+
 	}
 
 	if (isLeftRolling == false && isRightRolling == false && (KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A)))
@@ -729,6 +741,9 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		predictBlockM->ClearPredictBlock();
 
 		distancePosPlayer = rotatePos - axis_pos_;
+
+		//音
+		Sound::GetInstance().PlayWave("turnBegine.wav", 0.7f);
 	}
 
 	if (isRightRolling == true)
@@ -796,6 +811,9 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 			//パーティクル発生
 			GenerateParticleTurnBlock();
+
+			//音
+			Sound::GetInstance().PlayWave("turnEnd.wav", 0.5f);//
 		}
 
 	}
@@ -862,6 +880,9 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 			//パーティクル発生
 			GenerateParticleTurnBlock();
+
+			//音
+			Sound::GetInstance().PlayWave("turnEnd.wav", 0.5f);//
 		}
 	}
 
@@ -1298,6 +1319,9 @@ void BlockManager::UpdateOverlap()
 									isPushed[i][j] = true;
 									//押された数を増やす
 									pushedCount_++;
+
+									//音
+									Sound::GetInstance().PlayWave("button (2).wav", 1.2f);
 								}
 
 							}
@@ -1431,10 +1455,22 @@ void BlockManager::ConectElec()
 						//同じ座標ではないとき
 						if (i != k || j != l)
 						{
-							if (isElec[i][j] == true && form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED && isTurning[k][l] == false && isTurn[k][l] == false)
+							if (isElec[i][j] == true && form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED && isTurning[k][l] == false && isTurn[k][l] == false
+								&& isElec[k][l] == false)
 							{
 								isElec[k][l] = true;
 								//isDecisionElec[k][l] = true;
+
+								if (form_[k][l] == Form::GOAL)
+								{
+									//音
+									Sound::GetInstance().PlayWave("connectGoal.wav", 0.6f);
+
+									//パーティクル発生
+									ParticleManager::GetInstance()->GenerateRandomParticle(40, 100, 0.3f,
+										{ worldmats_[k][l].trans.x,worldmats_[k][l].trans.y + blockRadius_ * 2.0f,worldmats_[k][l].trans.z },
+										2.0f, 0, { 0.1f,0.2f,1.0f,1.0f }, { 1.0f,0.0f,0.0f,1.0f });
+								}
 							}
 							else if (form_[k][l] == Form::NONE || form_[k][l] == Form::LOCKED || isTurning[k][l] == true)
 							{

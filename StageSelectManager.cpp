@@ -66,6 +66,9 @@ void StageSelectManager::Update()
 			this->isLerpMoving = true;
 			this->lerpCount = 0;
 			isLeft = true;
+
+			//‰¹
+			Sound::GetInstance().PlayWave("arrow (2).wav", 0.5f);
 		}
 	}
 	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_D)) /*&& !this->isLerpMoving*/)
@@ -78,6 +81,9 @@ void StageSelectManager::Update()
 			this->isLerpMoving = true;
 			this->lerpCount = 0;
 			isRight = true;
+
+			//
+			Sound::GetInstance().PlayWave("arrow (2).wav", 0.5f);
 		}
 	}
 
@@ -119,6 +125,9 @@ void StageSelectManager::Update()
 		isSelect = true;
 
 		stageM->SelectStage(selectNum);
+
+		//‰¹
+		Sound::GetInstance().PlayWave("select.wav", 0.7f);
 	}
 }
 
