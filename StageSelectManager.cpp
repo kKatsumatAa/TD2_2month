@@ -14,7 +14,7 @@ void StageSelectManager::Initialize(StageManager* stageM)
 		object[i].worldMat->SetWorld();
 	}
 	//背景
-	object[selectNumMax].worldMat->scale = { 12.8f * 6.0f,7.2f * 6.0f,1.0f };
+	object[selectNumMax].worldMat->scale = { 12.8f * 5.7f,7.2f * 5.7f,1.0f };
 	object[selectNumMax].worldMat->trans = { 0,0,1.0f };
 	object[selectNumMax].worldMat->SetWorld();
 	//スペースボタン

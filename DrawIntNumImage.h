@@ -16,7 +16,7 @@ private:
 	};
 
 private:
-	std::list<NumImage*> numImages;
+	std::list<std::unique_ptr< NumImage>> numImages;
 	//—]‚è
 	int numRemainder;
 	//‚»‚ÌŒ…
@@ -30,7 +30,7 @@ private:
 public:
 	void Initialize(UINT64 texhandle);
 
-	void SetNum(int num, Vec2 pos, Vec2 sizeUV,Vec2 numImageSize, float scale, XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f });
+	void SetNum(int num, Vec2 pos, Vec2 sizeUV, Vec2 numImageSize, float scale, XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f });
 
 	void Draw();
 };
