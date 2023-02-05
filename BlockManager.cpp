@@ -325,9 +325,7 @@ void BlockManager::Update()
 				//ゴールできるフラグON
 				isElecConectedGoal = true;
 
-				//↓毎フレーム毎になぜか入るので無理
-				////音
-				//Sound::GetInstance().PlayWave("connectGoal.wav", 0.6f);
+
 			}
 			else if (isStopElecConectedGoal == false)
 			{
@@ -1457,10 +1455,22 @@ void BlockManager::ConectElec()
 						//同じ座標ではないとき
 						if (i != k || j != l)
 						{
-							if (isElec[i][j] == true && form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED && isTurning[k][l] == false && isTurn[k][l] == false)
+							if (isElec[i][j] == true && form_[k][l] != Form::NONE && form_[k][l] != Form::LOCKED && isTurning[k][l] == false && isTurn[k][l] == false
+								&& isElec[k][l] == false)
 							{
 								isElec[k][l] = true;
 								//isDecisionElec[k][l] = true;
+
+								if (form_[k][l] == Form::GOAL)
+								{
+									//音
+									Sound::GetInstance().PlayWave("connectGoal.wav", 0.6f);
+
+									//パーティクル発生
+									ParticleManager::GetInstance()->GenerateRandomParticle(40, 100, 0.3f,
+										{ worldmats_[k][l].trans.x,worldmats_[k][l].trans.y + blockRadius_ * 2.0f,worldmats_[k][l].trans.z },
+										2.0f, 0, { 0.1f,0.2f,1.0f,1.0f }, { 1.0f,0.0f,0.0f,1.0f });
+								}
 							}
 							else if (form_[k][l] == Form::NONE || form_[k][l] == Form::LOCKED || isTurning[k][l] == true)
 							{
