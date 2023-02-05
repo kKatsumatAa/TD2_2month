@@ -132,6 +132,10 @@ void SceneGame::Update()
 			{
 				scene->tutorial->ElectricInitialize();
 			}
+			if (scene->stageManager->selectStage == STAGE::STAGE5)
+			{
+				scene->tutorial->ButtonInitialize();
+			}
 			GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get());
 		}
 		if (KeyboardInput::GetInstance().KeyTrigger(DIK_Z))

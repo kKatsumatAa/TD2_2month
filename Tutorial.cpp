@@ -231,29 +231,29 @@ ButtonTutorial::ButtonTutorial()
 
 void ButtonTutorial::Update()
 {
-	if (num >= numMax)
-	{
-		//num = numMax - 1;
-		tutorial->AddStateNum();
-		tutorial->AddState2();
-		tutorial->ChangeState(new ElectricTutorial);
-	}
+	//if (num >= numMax)
+	//{
+	//	//num = numMax - 1;
+	//	tutorial->AddStateNum();
+	//	tutorial->AddState2();
+	//	tutorial->ChangeState(new ElectricTutorial);
+	//}
 }
 
 void ButtonTutorial::Draw()
 {
 	/* count += 0.1f; */
 
-	if (num == 0)
+	/*if (num == 0)*/
 	{
 		sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.5f,180.0f + sinf(count) * 2.0f,0 }, tutorial->spriteSize, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[BUTTON + 1],
 			{ 0.5f,0.5f }, false, false, tutorial->spriteRot);
 	}
-	else
+	/*else
 	{
 		sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.5f,180.0f + sinf(count) * 2.0f,0 }, tutorial->spriteSize, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[BUTTON + 2],
 			{ 0.5f,0.5f }, false, false, tutorial->spriteRot);
-	}
+	}*/
 }
 
 
