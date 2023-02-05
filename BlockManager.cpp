@@ -306,7 +306,7 @@ void BlockManager::Update()
 			//演出用にY座標を下げる
 			DownPosY();
 
-			blocks_[i][j]->Updata();
+			blocks_[i][j]->Updata({0,0,0},form_[i][j],action_[i][j], isElec[i][j], count);
 			blocks_[i][j]->SetAlpha(elecWaitAlpha_[i][j]);
 
 
@@ -410,7 +410,7 @@ void BlockManager::Update()
 					int time = (float)rand() / RAND_MAX * 60;
 
 					float scale[2] = { (float)rand() / RAND_MAX * 1.3f,(float)rand() / RAND_MAX };
-					float pos = (float)rand() / RAND_MAX * blockRadius_ * 6.0f;
+					float pos = (float)rand() / RAND_MAX * blockRadius_ * 3.0f;
 					float pos2 = ((float)rand() / RAND_MAX - 0.5f) * blockRadius_ * 3.0f;
 
 					XMFLOAT4 color = { (float)rand() / RAND_MAX ,(float)rand() / RAND_MAX ,(float)rand() / RAND_MAX ,(float)rand() / RAND_MAX + 0.3f };

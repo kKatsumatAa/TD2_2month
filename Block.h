@@ -80,7 +80,7 @@ public:
 		Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed,
 		Model* overlapBlock);
 
-	void Updata(Vec3 pos = { 0,0,0 });
+	void Updata(Vec3 pos, int form, Action action, bool isElec, int count);
 	void SetAlpha(float blockAlpha);
 	void SetColor(Vec3 blockColor);
 

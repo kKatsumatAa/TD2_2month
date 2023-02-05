@@ -43,17 +43,52 @@ void Block::Initialize(ConnectingEffectManager* connectEM,
 	radius_ = scaleTmp;
 }
 
-void Block::Updata(Vec3 pos)
+void Block::Updata(Vec3 pos, int form, Action action, bool isElec, int count)
 {
 
 	//worldTransform_.trans = { pos.x,pos.y,pos.z };
 
-	if (worldTransform_.scale.x > scaleTmp) { worldTransform_.scale.x -= 0.05f; }
-	if (worldTransform_.scale.y > scaleTmp) { worldTransform_.scale.y -= 0.05f; }
-	if (worldTransform_.scale.z > scaleTmp) { worldTransform_.scale.z -= 0.05f; }
-	if (worldTransform_.scale.x < scaleTmp) { worldTransform_.scale.x += 0.05f; }
-	if (worldTransform_.scale.y < scaleTmp) { worldTransform_.scale.y += 0.05f; }
-	if (worldTransform_.scale.z < scaleTmp) { worldTransform_.scale.z += 0.05f; }
+		//仮表示
+	if (action == Action::Connect)
+	{
+		color = { 0.2f,0.1f,0.8f,0.95f };
+	}
+	else if (isElec == false)
+	{
+		color = { 0.6f,0.6f,0.6f,0.95f };
+	}
+	else {
+		if (color.x > 1.0f) { color.x -= 0.05f; }
+		if (color.x < 1.0f) { color.x += 0.05f; }
+		if (color.y > 1.0f) { color.y -= 0.05f; }
+		if (color.y < 1.0f) { color.y += 0.05f; }
+		if (color.z > 1.0f) { color.z -= 0.05f; }
+		if (color.z < 1.0f) { color.z += 0.05f; }
+		if (color.w > 1.0f) { color.w = 0.95f; }
+		if (color.w < 1.0f) { color.w = 0.95f; }
+	}
+
+		//演出(使用するものは目立たせる)
+	if ((form == Form::BUTTON || form == Form::Electric || form == Form::GEAR || form == Form::GOAL) && action != Action::Connect && form != Form::LOCKED)
+	{
+		//color = { 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,0.3f, 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,popAlpha };
+		if (form == Form::GOAL)
+		{
+			color = { 0.2f,0.2f , 0.45f + fabsf(sinf(count * 0.025f)) * 0.55f ,0.95f };
+		}
+		else
+		{
+			color = { 0.45f + fabsf(sinf(count * 0.025f)) * 0.55f,0.45f + fabsf(sinf(count * 0.025f)) * 0.55f, 0.3f ,0.95f };
+		}
+		//count++;
+		if (count % 340 == 0 || count % 340 == 10 || count % 340 == 20 || count % 340 == 30)
+		{
+			worldTransform_.scale = { scaleTmp + scaleTmp / 4.0f,scaleTmp + scaleTmp / 4.0f ,scaleTmp + scaleTmp / 4.0f };
+		}
+	}
+
+
+	
 
 	//block_.SetWorldPos(pos);
 	worldTransform_.SetWorld();
@@ -73,39 +108,16 @@ void Block::SetColor(Vec3 blockColor)
 
 void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec, WorldMat goalMat,bool isPushed, int count,float popAlpha)
 {
-	//仮表示
-	if (action == Action::Connect)
-	{
-		color = { 0.2f,0.1f,0.8f,popAlpha };
-	}
-	else if (isElec == false)
-	{
-		color = { 0.6f,0.6f,0.6f,popAlpha };
-	}
-	else {
-		if (color.x > 1.0f) { color.x -= 0.05f; }
-		if (color.x < 1.0f) { color.x += 0.05f; }
-		if (color.y > 1.0f) { color.y -= 0.05f; }
-		if (color.y < 1.0f) { color.y += 0.05f; }
-		if (color.z > 1.0f) { color.z -= 0.05f; }
-		if (color.z < 1.0f) { color.z += 0.05f; }
-		if (color.w > 1.0f) { color.w = popAlpha; }
-		if (color.w < 1.0f) { color.w = popAlpha; }
-	}
+	if (worldTransform_.scale.x > scaleTmp) { worldTransform_.scale.x -= 0.05f; }
+	if (worldTransform_.scale.y > scaleTmp) { worldTransform_.scale.y -= 0.05f; }
+	if (worldTransform_.scale.z > scaleTmp) { worldTransform_.scale.z -= 0.05f; }
+	if (worldTransform_.scale.x < scaleTmp) { worldTransform_.scale.x += 0.05f; }
+	if (worldTransform_.scale.y < scaleTmp) { worldTransform_.scale.y += 0.05f; }
+	if (worldTransform_.scale.z < scaleTmp) { worldTransform_.scale.z += 0.05f; }
 
 
-	//演出(使用するものは目立たせる)
-	if ((form == Form::BUTTON || form == Form::Electric || form == Form::GEAR || form == Form::GOAL) && action != Action::Connect && form != Form::LOCKED)
-	{
-		//color = { 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,0.3f, 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,popAlpha };
-		color = { 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,0.3f + fabsf(sinf(count * 0.025f)) * 0.55f, 0.3f /*+ fabsf(sinf(count * 0.025f)) * 0.55f*/,popAlpha };
 
-		//count++;
-		if (count % 340 == 0 || count % 340 == 10 || count % 340 == 20 || count % 340 == 30)
-		{
-			worldTransform_.scale = { scaleTmp + scaleTmp / 4.0f,scaleTmp + scaleTmp / 4.0f ,scaleTmp + scaleTmp / 4.0f };
-		}
-	}
+
 
 
 	if (isElec == true)
