@@ -402,6 +402,21 @@ void Scene::Initialize()
 		Sound::GetInstance().LoadWave("Stage_BGM.wav", false);
 		Sound::GetInstance().LoadWave("LevelSelect.wav", false);
 		Sound::GetInstance().LoadWave("game-victory-sound-effect.wav", false);
+		
+		Sound::GetInstance().LoadWave("arrow (2).wav", false);
+		Sound::GetInstance().LoadWave("button (2).wav", false);
+		Sound::GetInstance().LoadWave("connectBegine.wav", false);
+		Sound::GetInstance().LoadWave("connectCancel.wav", false);
+		Sound::GetInstance().LoadWave("connectGoal.wav", false);
+		Sound::GetInstance().LoadWave("connectMove.wav", false);
+		Sound::GetInstance().LoadWave("emergeGoal.wav", false);
+		Sound::GetInstance().LoadWave("move (2).wav", false);
+		Sound::GetInstance().LoadWave("moveFailed (2).wav", false);
+		Sound::GetInstance().LoadWave("select.wav", false);
+		Sound::GetInstance().LoadWave("turnBegine.wav", false);
+		Sound::GetInstance().LoadWave("turnEnd.wav", false);
+
+
 	}
 
 	//白い画像
