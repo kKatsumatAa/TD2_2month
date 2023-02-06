@@ -520,7 +520,7 @@ bool BlockManager::GetPosIsBlock(Vec3 pos)
 					return false;
 				}
 				//そのブロックの形状は普通のブロックかどうか
-				else if (form_[i][j] != Form::NONE && form_[i][j] != Form::LOCKED && form_[i][j] != Form::Electric && action_[i][j] != Action::Connect)
+				else if (form_[i][j] != Form::NONE && form_[i][j] != Form::LOCKED && form_[i][j] != Form::Electric && form_[i][j] != Form::BUTTON && action_[i][j] != Action::Connect)
 				{
 					if (isPushed[i][j] == false)
 					{
