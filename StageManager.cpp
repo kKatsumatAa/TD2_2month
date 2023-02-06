@@ -274,6 +274,8 @@ void StageManager::SetStage3(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetStage4(const int& blockWidth, const int& blockHeight)
 {
+	tutorial->ButtonInitialize();
+
 	stageWidth = blockWidth;
 	selectStage = STAGE::STAGE4;
 
@@ -285,7 +287,7 @@ void StageManager::SetStage4(const int& blockWidth, const int& blockHeight)
 
 	//プレイヤーの制限回数の上限を設定
 
-	conectLimit_->SetCount(12);
+	conectLimit_->SetCount(2);
 	conectLimit_->ResetCount();
 
 	//SetisCountReset(selectStage);
@@ -326,7 +328,7 @@ void StageManager::SetStage5(const int& blockWidth, const int& blockHeight)
 
 	//プレイヤーの制限回数の上限を設定
 
-	conectLimit_->SetCount(14);
+	conectLimit_->SetCount(18);
 	conectLimit_->ResetCount();
 
 	//SetisCountReset(selectStage);
@@ -355,7 +357,9 @@ void StageManager::SetStage5(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetStage6(const int& blockWidth, const int& blockHeight)
 {
-	tutorial->ButtonInitialize();
+	
+	tutorial->ElectricInitialize();
+
 
 	stageWidth = blockWidth;
 	selectStage = STAGE::STAGE6;
@@ -368,7 +372,7 @@ void StageManager::SetStage6(const int& blockWidth, const int& blockHeight)
 
 	//プレイヤーの制限回数の上限を設定
 
-	conectLimit_->SetCount(14);
+	conectLimit_->SetCount(2);
 	conectLimit_->ResetCount();
 
 	//形の設定
@@ -406,7 +410,7 @@ void StageManager::SetStage7(const int& blockWidth, const int& blockHeight)
 
 	//プレイヤーの制限回数の上限を設定
 
-	conectLimit_->SetCount(18);
+	conectLimit_->SetCount(8);
 	conectLimit_->ResetCount();
 
 	//形の設定
@@ -434,8 +438,7 @@ void StageManager::SetStage7(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetStage8(const int& blockWidth, const int& blockHeight)
 {
-	tutorial->ElectricInitialize();
-
+	
 	stageWidth = blockWidth;
 	selectStage = STAGE::STAGE8;
 
@@ -447,7 +450,7 @@ void StageManager::SetStage8(const int& blockWidth, const int& blockHeight)
 
 	//プレイヤーの制限回数の上限を設定
 
-	conectLimit_->SetCount(2);
+	conectLimit_->SetCount(6);
 	conectLimit_->ResetCount();
 
 	//形の設定
