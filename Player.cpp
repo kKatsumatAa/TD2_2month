@@ -261,8 +261,8 @@ Player& Player::operator=(const Player& obj)
 	this->worldTransform_ = obj.worldTransform_;
 	this->worldTransform_.SetWorld();
 	this->velocity = obj.velocity;
-	this->conectCount_ = obj.conectCount_;
-	this->conectCountMax = obj.conectCountMax;
+	*this->conectLimit_ = *obj.conectLimit_;
+	this->moveCount = obj.moveCount;
 
 	for (int i = 0; i < 13; i++)
 	{

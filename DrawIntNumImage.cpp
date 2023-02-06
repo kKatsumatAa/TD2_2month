@@ -35,7 +35,7 @@ void DrawIntNumImage::SetNum(int num, Vec2 pos, Vec2 sizeUV, Vec2 numImageSize, 
 		{
 			isStartDigit = true;
 
-			std::unique_ptr< NumImage > numImage = std::make_unique<NumImage>();
+			NumImage*  numImage = new NumImage();
 
 			numImage->num = numDigit;
 			numImage->pos = pos;
@@ -44,7 +44,7 @@ void DrawIntNumImage::SetNum(int num, Vec2 pos, Vec2 sizeUV, Vec2 numImageSize, 
 			numImage->color = color;
 			numImage->numImageSize = numImageSize;
 
-			this->numImages.push_back(std::move(numImage));
+			this->numImages.push_back(numImage);
 		}
 	}
 }
@@ -55,7 +55,7 @@ void DrawIntNumImage::Draw()
 	{
 		int i = 0;
 
-		for (std::unique_ptr< NumImage >& num : numImages)
+		for ( NumImage * num : numImages)
 		{
 			//桁の数も考慮して、中心座標からの距離を出し、真の座標とする
 			Vec2 pos = { num->pos.x + num->numImageSize.x / 2.0f * (i - (int)this->numImages.size() / 2) * num->scale,num->pos.y };

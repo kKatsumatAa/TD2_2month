@@ -28,6 +28,9 @@ private:
 	bool isRight = false;
 	bool isLeft = false;
 
+	int moveCool = 0;
+	const int moveCoolTmp = 10;
+
 public:
 	bool isTutorial = false;
 	bool isSelect = false;

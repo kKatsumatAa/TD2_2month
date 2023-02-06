@@ -34,6 +34,8 @@ void StageSelectManager::Initialize(StageManager* stageM)
 	isRight = false;
 	isLeft = false;
 
+	moveCool = 0;
+
 	if (texhandle[0] == NULL)
 	{
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFlameTutorial.png", texhandle[0]);
@@ -55,11 +57,17 @@ void StageSelectManager::Initialize(StageManager* stageM)
 
 void StageSelectManager::Update()
 {
+	moveCool--;
+
 	//十字キーで選択
-	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_A)) /*&& !this->isLerpMoving*/)
+	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_A)) /*&& !this->isLerpMoving*/
+		|| ((KeyboardInput::GetInstance().KeyPush(DIK_LEFTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_A)) && moveCool <= 0)
+		)
 	{
 		if (this->selectNum > 0)
 		{
+			moveCool = moveCoolTmp;
+
 			ParticleManager::GetInstance()->GenerateRandomParticle(20, 120, 3.0f, object[selectNum].worldMat->trans, 1.0f, 0.1f, { 1.0f,1.0f,0,0.7f }, { 0,0,0,0 });
 
 			selectNum--;
@@ -71,10 +79,14 @@ void StageSelectManager::Update()
 			Sound::GetInstance().PlayWave("arrow (2).wav", 0.5f);
 		}
 	}
-	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_D)) /*&& !this->isLerpMoving*/)
+	if ((KeyboardInput::GetInstance().KeyTrigger(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyTrigger(DIK_D)) /*&& !this->isLerpMoving*/
+		|| ((KeyboardInput::GetInstance().KeyPush(DIK_RIGHTARROW) || KeyboardInput::GetInstance().KeyPush(DIK_D)) && moveCool <= 0)
+		)
 	{
 		if (this->selectNum < this->selectNumMax - 1)
 		{
+			moveCool = moveCoolTmp;
+
 			ParticleManager::GetInstance()->GenerateRandomParticle(20, 120, 2.0f, object[selectNum].worldMat->trans, 1.0f, 0.1f, { 1.0f,1.0f,0,0.7f }, { 0,0,0,0 });
 
 			selectNum++;

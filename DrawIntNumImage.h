@@ -16,7 +16,7 @@ private:
 	};
 
 private:
-	std::list<std::unique_ptr< NumImage>> numImages;
+	std::list< NumImage*> numImages;
 	//—]‚è
 	int numRemainder;
 	//‚»‚ÌŒ…
