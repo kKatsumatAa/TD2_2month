@@ -274,6 +274,8 @@ void StageManager::SetStage3(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetStage4(const int& blockWidth, const int& blockHeight)
 {
+	tutorial->ButtonInitialize();
+
 	stageWidth = blockWidth;
 	selectStage = STAGE::STAGE4;
 
@@ -355,7 +357,7 @@ void StageManager::SetStage5(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetStage6(const int& blockWidth, const int& blockHeight)
 {
-	tutorial->ButtonInitialize();
+	tutorial->ElectricInitialize();
 
 	stageWidth = blockWidth;
 	selectStage = STAGE::STAGE6;
@@ -434,8 +436,6 @@ void StageManager::SetStage7(const int& blockWidth, const int& blockHeight)
 
 void StageManager::SetStage8(const int& blockWidth, const int& blockHeight)
 {
-	tutorial->ElectricInitialize();
-
 	stageWidth = blockWidth;
 	selectStage = STAGE::STAGE8;
 
