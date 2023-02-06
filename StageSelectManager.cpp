@@ -8,13 +8,13 @@ void StageSelectManager::Initialize(StageManager* stageM)
 
 	for (int i = 0; i < this->selectNumMax; i++)
 	{
-		object[i].worldMat->scale = { stageImageRadius,stageImageRadius,1.0f };
+		object[i].worldMat->scale = { stageImageRadius * 1.6f,stageImageRadius * 1.6f,1.0f };
 		object[i].worldMat->rot = { 0,0,0 };
 		//object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f),0,0 };
 		object[i].worldMat->SetWorld();
 	}
 	//背景
-	object[selectNumMax].worldMat->scale = { 12.8f * 5.7f,7.2f * 5.7f,1.0f };
+	object[selectNumMax].worldMat->scale = { 12.8f * 5.8f,7.2f * 5.8f,1.0f };
 	object[selectNumMax].worldMat->trans = { 0,0,1.0f };
 	object[selectNumMax].worldMat->SetWorld();
 	//スペースボタン
@@ -155,13 +155,13 @@ void StageSelectManager::Draw(CameraManager* cameraM)
 	//ステージ1とか
 	count++;
 
-	object[selectNum].worldMat->scale = { stageImageRadius + sinf(count * 0.1f),stageImageRadius + sinf(count * 0.1f) ,stageImageRadius };
+	object[selectNum].worldMat->scale = { stageImageRadius + fabsf(sinf(count * 0.05f)) * 1.5f,stageImageRadius + fabsf(sinf(count * 0.05f)) * 1.5f ,stageImageRadius };
 
 	for (int i = 0; i < this->selectNumMax; i++)
 	{
 		if (object[i].worldMat->scale.x != stageImageRadius && selectNum != i)
 		{
-			object[i].worldMat->scale = { stageImageRadius  ,stageImageRadius  ,stageImageRadius };
+			object[i].worldMat->scale = { stageImageRadius * 1.1f  ,stageImageRadius * 1.1f  ,stageImageRadius };
 		}
 
 		object[i].DrawBox(object[i].worldMat, &cameraM->usingCamera->viewMat, &cameraM->usingCamera->projectionMat, { 1.0f,1.0f,1.0f,1.0f }, texhandle[i]);
