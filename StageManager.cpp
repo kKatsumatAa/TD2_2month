@@ -173,9 +173,9 @@ void StageManager::SetStage1(const int& blockWidth, const int& blockHeight)
 	SetWorldMat(blockWidth, blockHeight);
 
 	//ここでプレイヤーの位置指定
-	playerPos[0][0] = true;
+	playerPos[0][5] = true;
 
-	conectLimit_->SetCount(12);
+	conectLimit_->SetCount(3);
 	conectLimit_->ResetCount();
 
 	//SetisCountReset(selectStage);
