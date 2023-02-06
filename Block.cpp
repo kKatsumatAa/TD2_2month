@@ -115,11 +115,6 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 	if (worldTransform_.scale.y < scaleTmp) { worldTransform_.scale.y += 0.05f; }
 	if (worldTransform_.scale.z < scaleTmp) { worldTransform_.scale.z += 0.05f; }
 
-
-
-
-
-
 	if (isElec == true)
 	{
 		if (form == Form::BLOCK) { draw[0].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &normal_[0], color); }
@@ -220,10 +215,6 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 		worldTransform_.trans.y = 0.2f;
 		draw[14].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &electricBlock_[0], color);
 	}
-
-
-
-
 }
 
 void Block::OnCollision(Collider& collider)
