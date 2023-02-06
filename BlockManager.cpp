@@ -112,7 +112,7 @@ BlockManager::~BlockManager()
 void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockManager* pBM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
 	GoalConnectEffectManager* goalConnectEM,
 	Model* normal, Model* locked, Model* goal, Model* Socket, Model* button, Model* disconnectedBlock,
-	Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed, Model* overLapBlock)
+	Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed, Model* overLapBlock,Model* beforeButtonPop)
 {
 	blocks_.clear();
 	worldmats_.clear();
@@ -173,7 +173,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockMa
 			//worldmats_[i][j]->rot = { 0.0f,0.0f,0.0f };
 
 			blocks_[i][j]->Initialize(connectEM, normal, locked, goal, Socket, button, disconnectedBlock,
-				disconnectedButton, disconnectedSocketBlock, electricBlock, doorGoalClosed, overLapBlock);
+				disconnectedButton, disconnectedSocketBlock, electricBlock, doorGoalClosed, overLapBlock, beforeButtonPop);
 
 			//ブロックの種類を設定
 
@@ -192,7 +192,7 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockMa
 			worldmats_[i][j].SetWorld();
 
 			block_->Initialize(connectEM, normal, locked, goal, Socket, button, disconnectedBlock,
-				disconnectedButton, disconnectedSocketBlock, electricBlock, doorGoalClosed, overLapBlock);
+				disconnectedButton, disconnectedSocketBlock, electricBlock, doorGoalClosed, overLapBlock, beforeButtonPop);
 
 			//軸になっているかどうか
 			isAxis_[i][j] = false;
@@ -449,7 +449,7 @@ void BlockManager::Draw(Camera* camera)
 			//Manager.cppで配列で定義したworldTransformの値をBlock.cppのDrawにセット
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
-			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j], isElec[i][j], goalMat, isPushed[i][j], this->count, elecWaitAlpha_[i][j]);
+			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j], isElec[i][j], goalMat, isPushed[i][j], this->count, elecWaitAlpha_[i][j],isGoal_[i][j],isPopGoal);
 
 			if (action_[i][j] == Action::Connect && effectCount >= effectCountMax)
 			{
