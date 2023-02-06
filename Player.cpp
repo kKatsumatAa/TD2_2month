@@ -371,6 +371,9 @@ void StateNormalMoveP::Update()
 				{
 					effectCount2 = effectCountTmp;
 					FailedEffect();
+
+					//演出
+					player->conectLimit_->BeginNumEffect(20, 1.8f, { 1.0f,0.1f,0.2f,1.0f });
 				}
 			}
 			else
@@ -392,6 +395,9 @@ void StateNormalMoveP::Update()
 				{
 					effectCount2 = effectCountTmp;
 					FailedEffect();
+
+					//演出
+					player->conectLimit_->BeginNumEffect(20, 1.8f, { 1.0f,0.1f,0.2f,1.0f });
 				}
 			}
 			else
@@ -412,6 +418,9 @@ void StateNormalMoveP::Update()
 				{
 					effectCount2 = effectCountTmp;
 					FailedEffect();
+
+					//演出
+					player->conectLimit_->BeginNumEffect(20, 1.8f, { 1.0f,0.1f,0.2f,1.0f });
 				}
 			}
 			else
@@ -433,6 +442,9 @@ void StateNormalMoveP::Update()
 				{
 					effectCount2 = effectCountTmp;
 					FailedEffect();
+
+					//演出
+					player->conectLimit_->BeginNumEffect(20, 1.8f, { 1.0f,0.1f,0.2f,1.0f });
 				}
 			}
 			else
@@ -467,7 +479,7 @@ void StateNormalMoveP::Update()
 			if (player->conectCount_ > 0 && player->isConnect)
 			{
 				//演出
-				player->conectLimit_->BeginNumEffect(10, 1.8f, { 1.0f,1.0f,0.2f,1.0f });
+				player->conectLimit_->BeginNumEffect(15, 1.8f, { 1.0f,1.0f,0.2f,1.0f });
 			}
 
 			//チュートリアル
@@ -610,6 +622,9 @@ void StateNormalConTurP::Update()
 			{
 				player->bufferedPushSpace = false;
 				FailedEffect();
+
+				//演出
+				player->conectLimit_->BeginNumEffect(20, 1.8f, { 1.0f,0.1f,0.2f,1.0f });
 			}
 		}
 		else

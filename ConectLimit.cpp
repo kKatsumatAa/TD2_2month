@@ -28,7 +28,7 @@ void ConectLimit::Update(Vec3 pos, Camera* camera)
 	//
 	if (effectCount > 0)
 	{
-		float t = 1.0f - (float)effectCount / (float)effectCountTmp;
+		float t = (float)effectCount / (float)effectCountTmp;
 
 		scale = effectAddScale * EaseOut(t);
 		color.x = effectAddColor.x * EaseOut(t);
