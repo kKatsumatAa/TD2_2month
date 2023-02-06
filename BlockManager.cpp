@@ -1882,12 +1882,12 @@ void BlockManager::AppearGoal()
 
 						isPopGoalEffect = true;
 
-						//チュートリアル
-						if (tutorial->GetState() == TUTORIAL::BUTTON && tutorial->GetStateNum() == 0)
-						{
-							tutorial->spriteCount = 0;
-							tutorial->AddStateNum();
-						}
+						////チュートリアル
+						//if (tutorial->GetState() == TUTORIAL::BUTTON && tutorial->GetStateNum() == 0)
+						//{
+						//	tutorial->spriteCount = 0;
+						//	tutorial->AddStateNum();
+						//}
 					}
 				}
 			}

@@ -130,7 +130,7 @@ void StageSelectManager::Update()
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
 		//ここでチュートリアルを表示するか決める
-		if (selectNum == STAGE::TUTORIAL || selectNum == STAGE::STAGE1 || selectNum == STAGE::STAGE2 || selectNum == STAGE::STAGE4 || selectNum == STAGE::STAGE5)
+		if (selectNum == STAGE::TUTORIAL || selectNum == STAGE::STAGE1 || selectNum == STAGE::STAGE2 || selectNum == STAGE::STAGE6 || selectNum == STAGE::STAGE8)
 		{
 			isTutorial = true;
 		}
