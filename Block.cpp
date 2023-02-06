@@ -47,8 +47,9 @@ void Block::Initialize(ConnectingEffectManager* connectEM,
 	radius_ = scaleTmp;
 }
 
-void Block::Updata(Vec3 pos, int form, Action action, bool isElec, int count)
+void Block::Updata(Vec3 pos, int form, Action action, bool isElec, int count, WorldMat goalMat)
 {
+	goalMat_ = goalMat;
 
 	//worldTransform_.trans = { pos.x,pos.y,pos.z };
 
@@ -74,12 +75,16 @@ void Block::Updata(Vec3 pos, int form, Action action, bool isElec, int count)
 	}
 
 	//演出(使用するものは目立たせる)
-	if((form == Form::BUTTON || form == Form::Electric || form == Form::GEAR || form == Form::GOAL) && action != Action::Connect && form != Form::LOCKED)
+	if((/*form == Form::BUTTON || form == Form::Electric ||*/ form == Form::GEAR /*|| form == Form::GOAL*/) && action != Action::Connect && form != Form::LOCKED)
 	{
 		//color = { 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,0.3f, 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,popAlpha };
 		if(form == Form::GOAL)
 		{
 			color = { 0.45f + fabsf(sinf(count * 0.025f)) * 0.55f,0.45f + fabsf(sinf(count * 0.025f)) * 0.55f , 0.45f + fabsf(sinf(count * 0.025f)) * 0.55f ,0.95f };
+		}
+		else if(form == Form::BUTTON)
+		{
+
 		}
 		else
 		{
@@ -111,7 +116,7 @@ void Block::SetColor(Vec3 blockColor)
 	color.z = blockColor.z;
 }
 
-void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec, WorldMat goalMat, bool isPushed, int count, float popAlpha, bool isPosGoal, bool isPopGoal)
+void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec,bool isPushed, int count, float popAlpha, bool isPosGoal, bool isPopGoal)
 {
 	if(worldTransform_.scale.x > scaleTmp) { worldTransform_.scale.x -= 0.05f; }
 	if(worldTransform_.scale.y > scaleTmp) { worldTransform_.scale.y -= 0.05f; }
@@ -211,9 +216,11 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 	//ゴール下には固定で枠組みを置いておく
 	if(isPosGoal == true)
 	{
-		draw[16].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color);
-		goalMat.trans.y = 0.5f;
-		draw[17].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &beforePopGoal_[0], color);
+		draw[16].DrawModel(&goalMat_, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color);
+		goalMat_.trans.y = 0.5f;
+		//draw[17].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &beforePopGoal_[0], color);
+		draw[17].DrawModel(&goalMat_, &camera->viewMat, &camera->projectionMat, &beforePopGoal_[0], color);
+
 	}
 
 	//ゴール下のブロック

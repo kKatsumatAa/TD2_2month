@@ -306,7 +306,7 @@ void BlockManager::Update()
 			//演出用にY座標を下げる
 			DownPosY();
 
-			blocks_[i][j]->Updata({ 0,0,0 }, form_[i][j], action_[i][j], isElec[i][j], count);
+			blocks_[i][j]->Updata({ 0,0,0 }, form_[i][j], action_[i][j], isElec[i][j], count, goalMat);
 			blocks_[i][j]->SetAlpha(elecWaitAlpha_[i][j]);
 
 
@@ -449,7 +449,7 @@ void BlockManager::Draw(Camera* camera)
 			//Manager.cppで配列で定義したworldTransformの値をBlock.cppのDrawにセット
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
-			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j], isElec[i][j], goalMat, isPushed[i][j], this->count, elecWaitAlpha_[i][j],isGoal_[i][j],isPopGoal);
+			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j], isElec[i][j],isPushed[i][j], this->count, elecWaitAlpha_[i][j],isGoal_[i][j],isPopGoal);
 
 			if (action_[i][j] == Action::Connect && effectCount >= effectCountMax)
 			{

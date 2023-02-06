@@ -63,6 +63,7 @@ private:
 	XMFLOAT4 color;
 	XMFLOAT4 changeColor;
 
+	WorldMat goalMat_;
 
 	int count = 0;
 
@@ -81,11 +82,11 @@ public:
 		Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed,
 		Model* overlapBlock,Model* beforePopGoal);
 
-	void Updata(Vec3 pos, int form, Action action, bool isElec, int count);
+	void Updata(Vec3 pos, int form, Action action, bool isElec, int count, WorldMat goalMat);
 	void SetAlpha(float blockAlpha);
 	void SetColor(Vec3 blockColor);
 
-	void Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec, WorldMat goalMat, bool isPushed, int count, float popAlpha,bool isPosGoal,bool isPopGoal);
+	void Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec, bool isPushed, int count, float popAlpha,bool isPosGoal,bool isPopGoal);
 	
 	void SetWorldPos(const Vec3& pos) { worldTransform_.trans = pos; };
 
