@@ -45,6 +45,7 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 
 		velocity = { 0,0,0 };
 	}
+	colorCount = 0;
 
 	//Œq‚®‰ñ”‚ðÝ’è
 	conectCount_ = conectLimit_->GetConectcount();
@@ -134,7 +135,7 @@ void Player::Reset()
 	worldTransform_.SetWorld();
 
 	radius_ = scaleTmp;
-
+	colorCount = 0;
 	{
 		isMove = false;
 		isMoveNow = false;
@@ -210,9 +211,22 @@ void Player::Update()
 void Player::Draw(Camera* camera)
 {
 	//ˆÚ“®Ž¸”s
-	if (stateMove->GetShake() || this->conectCount_ <= 0)
+	if (stateMove->GetShake())
 	{
 		color = { 1.0f,0.1f,0.2f,1.0f };
+	}
+	//Žc—Ê‚È‚¢‚Æ‚«
+	else if (this->conectCount_ <= 0)
+	{
+		colorCount++;
+
+		float addColor = sinf(colorCount * 0.05f) * 0.3f;
+		color = { 0.5f + addColor,0.5f + addColor,0.5f + addColor,1.0f };
+
+		if (colorCount % 60 < 20 && colorCount % 5 == 0)
+		{
+			color = { color.x - 0.4f,color.y - 0.4f,color.z + 0.2f,1.0f };
+		}
 	}
 	else
 	{
@@ -277,6 +291,8 @@ Player& Player::operator=(const Player& obj)
 	*this->conectLimit_ = *obj.conectLimit_;
 	this->moveCount = obj.moveCount;
 	this->color = obj.color;
+
+	colorCount = obj.colorCount;
 
 	for (int i = 0; i < 13; i++)
 	{

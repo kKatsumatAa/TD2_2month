@@ -120,6 +120,7 @@ private:
 	/*Tutorial* tutorial;*/
 
 	XMFLOAT4 color;
+	int colorCount = 0;
 public:
 	float posYTmp = 0;
 	float posXTmp = 0;
