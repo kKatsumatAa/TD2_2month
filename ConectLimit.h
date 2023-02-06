@@ -13,6 +13,7 @@ public:
 
 	void Draw();
 
+	void BeginNumEffect(int time, float addScale, XMFLOAT4 addColor);
 
 	//ゲッター
 	int GetConectcount() { return conectCount; };
@@ -43,5 +44,15 @@ private:
 
 	//表示用
 	int drawConnectCount;
+
+	//
+	int effectCount = 0;
+	int effectCountTmp = 0;
+
+	float effectAddScale = 0;
+	float effectAddScaleTmp = 0;
+
+	XMFLOAT4 effectAddColor;
+	XMFLOAT4 effectAddColorTmp;
 };
 

@@ -59,6 +59,8 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 
 	radius_ = scaleTmp;
 
+	color = { 1.0f,1.0f,1.0f,1.0f };
+
 	{
 		isMove = false;
 		isMoveNow = false;
@@ -118,6 +120,7 @@ void Player::Reset()
 	isLoadConectCount = true;
 
 	velocity = { 0,0,0 };
+	color = { 1.0f,1.0f,1.0f,1.0f };
 
 	//繋ぐ回数を設定
 	conectCount_ = conectLimit_->GetConectcount();
@@ -206,7 +209,17 @@ void Player::Update()
 
 void Player::Draw(Camera* camera)
 {
-	draw[0].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &model_[0]);
+	//移動失敗
+	if (stateMove->GetShake() || this->conectCount_ <= 0)
+	{
+		color = { 1.0f,0.1f,0.2f,1.0f };
+	}
+	else
+	{
+		color = { 1.0f,1.0f,1.0f,1.0f };
+	}
+
+	draw[0].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &model_[0], color);
 
 	//
 	stateMove->Draw(camera, model_);
@@ -263,6 +276,7 @@ Player& Player::operator=(const Player& obj)
 	this->velocity = obj.velocity;
 	*this->conectLimit_ = *obj.conectLimit_;
 	this->moveCount = obj.moveCount;
+	this->color = obj.color;
 
 	for (int i = 0; i < 13; i++)
 	{
@@ -445,6 +459,16 @@ void StateNormalMoveP::Update()
 			//演出
 			Vec3 scale = player->GetWorldTransForm()->scale;
 			player->GetWorldTransForm()->scale = { scale.x * 1.2f,scale.y * 0.6f,scale.z * 1.2f };
+
+			ParticleManager::GetInstance()->GenerateRandomParticle(15, 25, 0.2f, { player->GetWorldPos().x,player->GetWorldPos().y - player->GetRadius() * 1.5f,player->GetWorldPos().z }
+			, 2.0f, 0.1f, { 1.0f,1.0f,1.0f,0.2f }, { 0,0,0,0.1f });
+
+			//数字
+			if (player->conectCount_ > 0 && player->isConnect)
+			{
+				//演出
+				player->conectLimit_->BeginNumEffect(10, 1.8f, { 1.0f,1.0f,0.2f,1.0f });
+			}
 
 			//チュートリアル
 			if (player->tutorial->GetState() == TUTORIAL::MOVE)

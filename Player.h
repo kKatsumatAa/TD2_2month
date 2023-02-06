@@ -20,6 +20,8 @@ public:
 	virtual void Draw(Camera* camera, Model* model) = 0;
 
 	void FailedEffect();
+
+	virtual bool GetShake() { return false; }
 };
 
 //何もしていない
@@ -37,6 +39,8 @@ private:
 public:
 	void Update(/*Tutorial* tutorial = nullptr*/);
 	void Draw(Camera* camera, Model* model);
+
+	bool GetShake()override { return shake.GetShake(); }
 };
 
 //移動中
@@ -114,6 +118,8 @@ private:
 	//ステージ開始時の位置
 	bool playerPos[13][13] = { false };
 	/*Tutorial* tutorial;*/
+
+	XMFLOAT4 color;
 public:
 	float posYTmp = 0;
 	float posXTmp = 0;
