@@ -82,7 +82,7 @@ public:
 		Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed,
 		Model* overlapBlock,Model* beforePopGoal);
 
-	void Updata(Vec3 pos, int form, Action action, bool isElec, int count, WorldMat goalMat);
+	void Updata(Vec3 pos, int form, Action action, bool isElec, int count, WorldMat goalMat, bool isPosGoal);
 	void SetAlpha(float blockAlpha);
 	void SetColor(Vec3 blockColor);
 

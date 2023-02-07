@@ -47,7 +47,7 @@ void Block::Initialize(ConnectingEffectManager* connectEM,
 	radius_ = scaleTmp;
 }
 
-void Block::Updata(Vec3 pos, int form, Action action, bool isElec, int count, WorldMat goalMat)
+void Block::Updata(Vec3 pos, int form, Action action, bool isElec, int count, WorldMat goalMat,bool isPosGoal)
 {
 	goalMat_ = goalMat;
 
@@ -74,19 +74,32 @@ void Block::Updata(Vec3 pos, int form, Action action, bool isElec, int count, Wo
 		if(color.w < 1.0f) { color.w = 0.95f; }
 	}
 
+	if(form == Form::LOCKED && isPosGoal == true)
+	{
+		//color = { 0.15f + fabsf(sinf(count * 0.025f)) * 0.55f,0.45f + fabsf(sinf(count * 0.025f)) * 0.55f , 0.15f + fabsf(sinf(count * 0.025f)) * 0.55f ,0.95f };
+	}
+
 	//‰‰o(Žg—p‚·‚é‚à‚Ì‚Í–Ú—§‚½‚¹‚é)
-	if((/*form == Form::BUTTON || form == Form::Electric ||*/ form == Form::GEAR /*|| form == Form::GOAL*/) && action != Action::Connect && form != Form::LOCKED)
+	if((form == LOCKED || form == Form::BUTTON || form == Form::Electric || form == Form::GEAR || form == Form::GOAL) && action != Action::Connect /*&& form != Form::LOCKED*/)
 	{
 		//color = { 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,0.3f, 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,popAlpha };
 		if(form == Form::GOAL)
 		{
-			color = { 0.45f + fabsf(sinf(count * 0.025f)) * 0.55f,0.45f + fabsf(sinf(count * 0.025f)) * 0.55f , 0.45f + fabsf(sinf(count * 0.025f)) * 0.55f ,0.95f };
+			color = { 0.22f + fabsf(sinf(count * 0.025f)) * 0.55f,0.45f + fabsf(sinf(count * 0.025f)) * 0.55f , 0.22f + fabsf(sinf(count * 0.025f)) * 0.55f ,0.95f };
+		}
+		else if(form == Form::LOCKED && isPosGoal == true)
+		{
+			color = { 0.20f + fabsf(sinf(count * 0.025f)) * 0.55f,0.45f + fabsf(sinf(count * 0.025f)) * 0.55f , 0.20f + fabsf(sinf(count * 0.025f)) * 0.55f ,0.95f };
 		}
 		else if(form == Form::BUTTON)
 		{
-
+			color = { 0.75f + fabsf(sinf(count * 0.025f)) * 0.55f,0.55f + fabsf(sinf(count * 0.025f)) * 0.55f , 0.25f + fabsf(sinf(count * 0.025f)) * 0.55f ,0.95f };
 		}
-		else
+		else if(form == Form::GEAR)
+		{
+			color = { 0.45f + fabsf(sinf(count * 0.025f)) * 0.55f,0.45f + fabsf(sinf(count * 0.025f)) * 0.55f, 0.3f ,0.95f };
+		}
+		else if(form == Form::Electric)
 		{
 			color = { 0.45f + fabsf(sinf(count * 0.025f)) * 0.55f,0.45f + fabsf(sinf(count * 0.025f)) * 0.55f, 0.3f ,0.95f };
 		}
@@ -96,9 +109,6 @@ void Block::Updata(Vec3 pos, int form, Action action, bool isElec, int count, Wo
 			worldTransform_.scale = { scaleTmp + scaleTmp / 4.0f,scaleTmp + scaleTmp / 4.0f ,scaleTmp + scaleTmp / 4.0f };
 		}
 	}
-
-
-
 
 	//block_.SetWorldPos(pos);
 	worldTransform_.SetWorld();

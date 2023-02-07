@@ -309,7 +309,7 @@ void BlockManager::Update()
 			//演出用にY座標を下げる
 			DownPosY();
 
-			blocks_[i][j]->Updata({ 0,0,0 }, form_[i][j], action_[i][j], isElec[i][j], count, goalMat);
+			blocks_[i][j]->Updata({ 0,0,0 }, form_[i][j], action_[i][j], isElec[i][j], count, goalMat, isGoal_[i][j]);
 			blocks_[i][j]->SetAlpha(elecWaitAlpha_[i][j]);
 
 
