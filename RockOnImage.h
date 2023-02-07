@@ -8,7 +8,7 @@ private:
 	//ゴール通れるときのロックオン
 	bool isGoalConnect = false;
 	int isGoalConnectCount = 0;
-	const int isGoalConnectCountTmp = 15;
+	const int isGoalConnectCountTmp = 25;
 	float isGoalConnectScale = 1.0f;
 	float isGoalConnectRot = 0.0f;
 
