@@ -11,8 +11,13 @@ private:
 	int selectNumMax = 0;
 
 	Object object[20];
+	Object objectSI[11];
+	//ステージイメージのサイズ
+	const Vec2 stageImageLength = { 21.0f ,14.0f };
+	XMFLOAT4 stageImageColor = { 0.5f,0.5f,0.5f,1.0f };
 
 	UINT64 texhandle[20];
+	UINT64 texhandleSI[11];
 
 	int lerpCount = 0;
 	const int lerpCountMax = 20;
