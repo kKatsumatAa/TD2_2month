@@ -291,7 +291,7 @@ void SceneLoad::LoadFunc()
 
 	scene->objWallFloor[1].worldMat->trans = { {scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f }
 	,-scene->blockManager->blockRadius_ / 2.0f ,0 - scene->blockManager->blockRadius_ };
-	scene->objWallFloor[1].worldMat->scale = { 0.5f,0.5f,0.5f };
+	//scene->objWallFloor[1].worldMat->scale = { 0.5f,0.5f,0.5f };
 	scene->objWallFloor[1].worldMat->SetWorld();
 
 	//丸影
