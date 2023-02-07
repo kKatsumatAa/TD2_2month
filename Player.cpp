@@ -250,10 +250,12 @@ void Player::DrawSprite()
 
 bool Player::PlayerOutArea()
 {
+	//ƒuƒƒbƒN‚Ì’¼Œa
+	int BlockDia = blockM->blockRadius_ * 2;
 	//‚¸‚ê‚Ä‚¢‚éX•ª‚Ì’·‚³
-	float outOfPositionX = outOfPositionWidth * 1.8f;
-
-	if(GetWorldPos().x + outOfPositionWidth <= playerLimitX + outOfPositionWidth && GetWorldPos().x + outOfPositionWidth > -playerLimitX + outOfPositionWidth && GetWorldPos().z <= playerLimitZ && GetWorldPos().z > -playerLimitZ)
+	float outOfPositionXLeft = (blockM->outOfBlockNum + 1) * BlockDia;
+	float outOfPositionXRight = (blockM->gameAreaWidth - blockM->outOfBlockNum) * BlockDia;
+	if(GetWorldPos().x <= outOfPositionXRight && GetWorldPos().x >= -outOfPositionXLeft && GetWorldPos().z <= playerLimitZ && GetWorldPos().z > -playerLimitZ)
 	{
 		return false;
 	}

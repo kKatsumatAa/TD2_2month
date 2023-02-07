@@ -142,8 +142,16 @@ public:
 
 	static const int blockWidth = 13;
 	static const int blockHeight = 13;
+
+	//外枠の長さ
+	static const int gameAreaWidth = 28;
+	static const int gameAreaHeight = 22;
+
 	//半径
 	const float blockRadius_ = 1.8f;
+
+	//ずれているブロックのマス目の数
+	static const int outOfBlockNum = 10;
 
 	PredictBlockManager* predictBlockM;
 private:
@@ -356,11 +364,6 @@ private:
 	//フェードアウトの出現フラグ
 	bool isPopOut = false;
 
-	//外枠の長さ
-	static const int gameAreaWidth = 28;
-	static const int gameAreaHeight = 22;
-
-	
 	float gameWidthX;
 	float gameWidthY;
 
