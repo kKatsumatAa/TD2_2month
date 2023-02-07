@@ -100,6 +100,8 @@ void SceneGame::Update()
 
 
 			scene->predictBlockManager->Update();
+
+			scene->rockOnImage->Update();
 		}
 		if (scene->stageSelectM->isTutorial)
 		{
@@ -116,6 +118,7 @@ void SceneGame::Update()
 			scene->connectE2M->Initialize();
 			scene->predictBlockManager->Initialize();
 			scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
+			scene->rockOnImage->Initialize();
 			if (scene->stageManager->selectStage == STAGE::TUTORIAL)
 			{
 				scene->tutorial->Initialize();
@@ -200,14 +203,17 @@ void SceneGame::DrawSprite()
 		scene->tutorial->Draw();
 	}
 
-	obj[0].DrawBoxSprite({ 10,10,0 }, 1.0f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[3]);
-	obj[1].DrawBoxSprite({ 110,10,0 }, 1.0f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
+	obj[3].DrawBoxSprite({ 50,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[7]);
+	obj[0].DrawBoxSprite({ 160,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[3]);
+	obj[1].DrawBoxSprite({ 270,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
+
 	//
 	obj[2].DrawBoxSprite({ 0,0,0 }, 1.0f, { 1.0f,1.0f,1.0f,0.7f }, scene->texhandle[6]);
 
 	if (!scene->player->isGoal)
 	{
 		scene->conectLimit_->Draw();
+		scene->rockOnImage->Draw(scene->cameraM.get()->usingCamera);
 	}
 }
 
@@ -277,6 +283,8 @@ void SceneClear::DrawSprite()
 //--------------------------------------------------------------------------------------
 void SceneLoad::LoadFunc()
 {
+	scene->rockOnImage->Initialize();
+
 	scene->goalConnectEM->Initialize();
 
 	//Object::effectFlags.isScanningLine = false;
@@ -299,7 +307,7 @@ void SceneLoad::LoadFunc()
 
 
 
-	scene->blockManager->Initialize(scene->connectEM.get(), scene->predictBlockManager.get(), scene->tutorial.get(), scene->cameraM.get(),
+	scene->blockManager->Initialize(scene->rockOnImage, scene->connectEM.get(), scene->predictBlockManager.get(), scene->tutorial.get(), scene->cameraM.get(),
 		scene->goalE.get(), scene->goalConnectEM.get(),
 		scene->model[1], scene->model[2], scene->model[3], scene->model[4], scene->model[5], scene->model[6],
 		scene->model[8], scene->model[9], scene->model[10], scene->model[11], scene->model[13], scene->model[14]);
@@ -397,6 +405,7 @@ Scene::~Scene()
 	imGuiManager->Finalize();
 	delete imGuiManager;
 	delete lightManager;
+	delete rockOnImage;
 
 	delete model[0];
 	delete model[1];
@@ -467,8 +476,10 @@ void Scene::Initialize()
 		TextureManager::LoadGraph(L"Resources/image/restart.png", texhandle[4]);
 		//ロード
 		TextureManager::LoadGraph(L"Resources/image/LoadingScreen.png", texhandle[5]);
-		//
+		//枠
 		TextureManager::LoadGraph(L"Resources/image/UI/UI_Border.png", texhandle[6]);
+		//Q
+		TextureManager::LoadGraph(L"Resources/image/backStageQ.png", texhandle[7]);
 	}
 
 	//model
@@ -508,6 +519,10 @@ void Scene::Initialize()
 	//パーティクル
 	ParticleManager::GetInstance()->Initialize();
 
+	//
+	rockOnImage = new RockOnImage();
+	rockOnImage->Initialize();
+
 	//tutorial
 	tutorial = std::make_unique<Tutorial>();
 
@@ -525,7 +540,7 @@ void Scene::Initialize()
 
 
 	blockManager = new BlockManager();
-	blockManager->Initialize(connectEM.get(), predictBlockManager.get(), tutorial.get(), cameraM.get(), goalE.get(), goalConnectEM.get(),
+	blockManager->Initialize(rockOnImage, connectEM.get(), predictBlockManager.get(), tutorial.get(), cameraM.get(), goalE.get(), goalConnectEM.get(),
 		model[1], model[2], model[3], model[4], model[5], model[6], model[8], model[9], model[10], model[11], model[13], model[14]);
 
 	stageManager = std::make_unique<StageManager>();

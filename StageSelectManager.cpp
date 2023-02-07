@@ -10,9 +10,14 @@ void StageSelectManager::Initialize(StageManager* stageM)
 	{
 		object[i].worldMat->scale = { stageImageRadius * 1.6f,stageImageRadius * 1.6f,1.0f };
 		object[i].worldMat->rot = { 0,0,0 };
-		object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),0,0.0f };
+		object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),-stageImageRadius * 2.0f,0.0f };
 		//object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f),0,0 };
 		object[i].worldMat->SetWorld();
+
+		//ステージイメージ
+		objectSI[i].worldMat->scale = { 0,0 ,1.0f };
+		objectSI[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),stageImageLength.y * 0.5f,0.1f };
+		objectSI[i].worldMat->SetWorld();
 	}
 	//背景
 	object[selectNumMax].worldMat->scale = { 12.8f * 5.8f,7.2f * 5.8f,1.0f };
@@ -27,6 +32,7 @@ void StageSelectManager::Initialize(StageManager* stageM)
 	object[selectNumMax + 2].worldMat->trans = { 50.0f,-30.0f,0.0f };
 	object[selectNumMax + 2].worldMat->SetWorld();
 
+	stageImageColor = { 1000,1000,1000,0.3f };
 	this->isLerpMoving = true;
 	this->stageM = stageM;
 	isTutorial = false;
@@ -55,6 +61,18 @@ void StageSelectManager::Initialize(StageManager* stageM)
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/selectBackground.png", texhandle[11]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/spaceKey.png", texhandle[12]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowKey.png", texhandle[13]);
+		//ステージイメージ
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s0.png", texhandleSI[0]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s1.png", texhandleSI[1]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s2.png", texhandleSI[2]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s3.png", texhandleSI[3]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s4.png", texhandleSI[4]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s5.png", texhandleSI[5]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s6.png", texhandleSI[6]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s7.png", texhandleSI[7]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s8.png", texhandleSI[8]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s9.png", texhandleSI[9]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s10.png", texhandleSI[10]);
 	}
 }
 
@@ -78,6 +96,8 @@ void StageSelectManager::Update()
 			this->lerpCount = 0;
 			isLeft = true;
 
+			objectSI[selectNum].worldMat->scale = { stageImageLength.x * 0,stageImageLength.y * 0,1.0f };
+			stageImageColor = { 1000,1000,1000,0.3f };
 			//音
 			Sound::GetInstance().PlayWave("arrow (2).wav", 0.5f);
 		}
@@ -97,6 +117,8 @@ void StageSelectManager::Update()
 			this->lerpCount = 0;
 			isRight = true;
 
+			objectSI[selectNum].worldMat->scale = { stageImageLength.x * 0,stageImageLength.y * 0,1.0f };
+			stageImageColor = { 1000,1000,1000,0.3f };
 			//
 			Sound::GetInstance().PlayWave("arrow (2).wav", 0.5f);
 		}
@@ -107,7 +129,11 @@ void StageSelectManager::Update()
 	{
 		for (int i = 0; i < this->selectNumMax; i++)
 		{
-			object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),0,0.0f };
+			object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),-stageImageRadius * 2.0f,0.0f };
+			//ステージイメージ
+			objectSI[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),+stageImageLength.y * 0.5f,0.1f };
+			objectSI[i].worldMat->scale = { LerpVec3({0,0,1.0f},{stageImageLength.x,stageImageLength.y,1.0f},EaseOut((float)lerpCount * 2.0f / (float)lerpCountMax)) };
+
 			if (isRight)
 			{
 				object[i].worldMat->rot.z = { LerpVec3({0,0,0},{0,0,-pi * 2.0f}, EaseOut((float)lerpCount / (float)lerpCountMax)).z };
@@ -117,6 +143,7 @@ void StageSelectManager::Update()
 				object[i].worldMat->rot.z = { LerpVec3({0,0,0},{0,0,pi * 2.0f}, EaseOut((float)lerpCount / (float)lerpCountMax)).z };
 			}
 			object[i].worldMat->SetWorld();
+			objectSI[i].worldMat->SetWorld();
 		}
 
 		if (lerpCount >= lerpCountMax)
@@ -127,6 +154,11 @@ void StageSelectManager::Update()
 		}
 
 		lerpCount++;
+	}
+	else
+	{
+		//ステージイメージ
+		objectSI[selectNum].worldMat->scale = { stageImageLength.x + fabsf(sinf(count * 0.03f)) * 1.5f,stageImageLength.y + fabsf(sinf(count * 0.03f)) * 1.5f ,stageImageRadius };
 	}
 
 	//選択確定
@@ -155,6 +187,15 @@ void StageSelectManager::Draw(CameraManager* cameraM)
 			{ 1.0f,1.0f,1.0f,1.0f }, texhandle[i]);
 	}
 
+	//ステージイメージ
+	if (!isLerpMoving) {
+		stageImageColor.x = 0.5f + fabsf(sinf(count * 0.05f)) * 0.5f;
+		stageImageColor.y = 0.5f + fabsf(sinf(count * 0.05f)) * 0.5f;
+		stageImageColor.z = 0.5f + fabsf(sinf(count * 0.05f)) * 0.5f;
+		stageImageColor.w = 1.0f;
+	}
+	objectSI[selectNum].DrawBox(objectSI[selectNum].worldMat, &cameraM->usingCamera->viewMat, &cameraM->usingCamera->projectionMat, stageImageColor, texhandleSI[selectNum]);
+
 	//ステージ1とか
 	count++;
 
@@ -169,8 +210,6 @@ void StageSelectManager::Draw(CameraManager* cameraM)
 
 		object[i].DrawBox(object[i].worldMat, &cameraM->usingCamera->viewMat, &cameraM->usingCamera->projectionMat, { 1.0f,1.0f,1.0f,1.0f }, texhandle[i]);
 	}
-
-
 }
 
 void StageSelectManager::DrawSprite()

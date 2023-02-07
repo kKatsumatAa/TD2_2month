@@ -184,6 +184,7 @@
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="ProjectionMat.cpp" />
     <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="RockOnImage.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shake.cpp" />
     <ClCompile Include="Sound.cpp" />
@@ -241,6 +242,7 @@
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="ProjectionMat.h" />
     <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="RockOnImage.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shake.h" />
     <ClInclude Include="Sound.h" />
