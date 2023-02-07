@@ -40,7 +40,7 @@ void RockOnImage::Update(/*Vec3 pos*/)
 		isGoalConnectCount++;
 		float t = (float)isGoalConnectCount / (float)isGoalConnectCountTmp;
 
-		isGoalConnectRot = LerpVec3({ 180.0f * 1.5f,0,0 }, { 0,0,0 }, EaseIn(t)).x;
+		isGoalConnectRot = LerpVec3({ 180.0f * 2.5f,0,0 }, { 0,0,0 }, EaseIn(t)).x;
 		isGoalConnectScale = LerpVec3({ 0.5f,0,0 }, { 0.1f,0,0 }, EaseIn(t)).x;
 	}
 	else
