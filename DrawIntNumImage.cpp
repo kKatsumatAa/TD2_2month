@@ -10,20 +10,26 @@ void DrawIntNumImage::Initialize(UINT64 texhandle)
 
 	this->texhandle = texhandle;
 
-	numImages.clear();
+	numCount = 0;
+
+	for (int i = _countof(numImages) - 1; i >= 0; i--)
+	{
+		this->numImages[i].isTrue = false;
+	}
 }
 
 void DrawIntNumImage::SetNum(int num, Vec2 pos, Vec2 sizeUV, Vec2 numImageSize, float scale, XMFLOAT4 color)
 {
-	this->numImages.clear();
-
 	//最初に数字全部入れる
 	numRemainder = num;
 
 	//桁が始まったらそこから全部描画する用
 	isStartDigit = false;
 
-	for (int i = 4; i >= 0; i--)
+	//数字の数をカウント
+	numCount = 0;
+
+	for (int i = _countof(numImages) - 1; i >= 0; i--)
 	{
 		//その桁の数字を出す
 		numDigit = numRemainder / (int)std::pow(10, i);
@@ -35,37 +41,42 @@ void DrawIntNumImage::SetNum(int num, Vec2 pos, Vec2 sizeUV, Vec2 numImageSize, 
 		{
 			isStartDigit = true;
 
-			NumImage*  numImage = new NumImage();
+			this->numImages[i].num = numDigit;
+			this->numImages[i].pos = pos;
+			this->numImages[i].sizeUV = sizeUV;
+			this->numImages[i].scale = scale;
+			this->numImages[i].color = color;
+			this->numImages[i].numImageSize = numImageSize;
+			this->numImages[i].isTrue = true;
 
-			numImage->num = numDigit;
-			numImage->pos = pos;
-			numImage->sizeUV = sizeUV;
-			numImage->scale = scale;
-			numImage->color = color;
-			numImage->numImageSize = numImageSize;
-
-			this->numImages.push_back(numImage);
+			numCount++;
+		}
+		else
+		{
+			this->numImages[i].isTrue = false;
 		}
 	}
 }
 
 void DrawIntNumImage::Draw()
 {
-	if (this->numImages.size())
+	if (isStartDigit)
 	{
-		int i = 0;
-
-		for ( NumImage * num : numImages)
+		//一番大きい桁からスタート
+		for (int i = numCount - 1; i >= 0; i--)
 		{
-			//桁の数も考慮して、中心座標からの距離を出し、真の座標とする
-			Vec2 pos = { num->pos.x + num->numImageSize.x / 2.0f * (i - (int)this->numImages.size() / 2) * num->scale,num->pos.y };
+			if (this->numImages[i].isTrue)
+			{
+				//桁の数も考慮して、中心座標からの距離を出し、真の座標とする　　　　　　　　　　//大きい桁からスタートなので逆順にして、左から並べる（座標）
+				Vec2 pos = { numImages[i].pos.x + numImages[i].numImageSize.x / 2.0f * ((float)(numCount - 1) - (float)i - (float)numCount / 2.0f) * numImages[i].scale
+					,numImages[i].pos.y };
 
-			pos.x -= num->numImageSize.x / 2.0f * num->scale;
-			pos.y -= num->numImageSize.y / 2.0f * num->scale;
+				pos.x -= numImages[i].numImageSize.x / 2.0f * numImages[i].scale;
+				pos.y -= numImages[i].numImageSize.y / 2.0f * numImages[i].scale;
 
-			num->obj.DrawClippingBoxSprite({ pos.x,pos.y,0 }, num->scale, { num->num * num->sizeUV.x,0 }, { num->sizeUV.x,num->sizeUV.y }, num->color, texhandle, true);
-
-			i++;
+				numImages[i].obj.DrawClippingBoxSprite({ pos.x,pos.y,0 }, numImages[i].scale, { numImages[i].num * numImages[i].sizeUV.x,0 },
+					{ numImages[i].sizeUV.x,numImages[i].sizeUV.y }, numImages[i].color, texhandle, true);
+			}
 		}
 	}
 }

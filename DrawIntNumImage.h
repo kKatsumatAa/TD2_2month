@@ -13,10 +13,11 @@ private:
 		int num;
 		float scale;
 		Vec2 numImageSize;
+		bool isTrue;
 	};
 
 private:
-	std::list< NumImage*> numImages;
+	NumImage numImages[5];
 	//—]‚è
 	int numRemainder;
 	//‚»‚ÌŒ…
@@ -25,6 +26,8 @@ private:
 	UINT64 texhandle;
 
 	bool isStartDigit = false;
+
+	int numCount = 0;
 
 
 public:
