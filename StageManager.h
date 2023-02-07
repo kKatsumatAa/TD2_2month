@@ -125,6 +125,5 @@ private:
 
 	int stageNum = 0; 
 
-
 };
 

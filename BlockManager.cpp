@@ -1202,10 +1202,18 @@ void BlockManager::PopEffect()
 	}
 }
 
-void BlockManager::UpdateGoalConnect()
+float BlockManager::GetGameWidth()
 {
-
+	gameWidthX = (blockRadius_ * gameAreaWidth);
+	return gameWidthX;
 }
+
+float BlockManager::GetGameHeight()
+{
+	gameWidthY = (blockRadius_ * gameAreaHeight);
+	return gameWidthY;
+}
+
 
 
 //重なった時の処理

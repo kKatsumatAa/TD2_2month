@@ -108,7 +108,7 @@ void SceneGame::Update()
 			scene->tutorial->Update();
 		}
 		//リセット
-		if (KeyboardInput::GetInstance().KeyTrigger(DIK_R))
+		if (KeyboardInput::GetInstance().KeyTrigger(DIK_R) || scene->player->PlayerOutArea())
 		{
 			//カメラをゲームのメインカメラに
 			scene->cameraM.get()->usingCamera = scene->cameraM->gameMainCamera.get();
