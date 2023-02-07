@@ -127,6 +127,11 @@ public:
 	//ブロックの出現演出
 	void PopEffect();
 
+	//ゲームの横の長さ
+	float GetGameWidth();
+	//ゲームの縦の長さ
+	float GetGameHeight();
+
 public:
 	bool isPopGoalEffect = false;
 
@@ -137,8 +142,16 @@ public:
 
 	static const int blockWidth = 13;
 	static const int blockHeight = 13;
+
+	//外枠の長さ
+	static const int gameAreaWidth = 28;
+	static const int gameAreaHeight = 22;
+
 	//半径
 	const float blockRadius_ = 1.8f;
+
+	//ずれているブロックのマス目の数
+	static const int outOfBlockNum = 10;
 
 	PredictBlockManager* predictBlockM;
 private:
@@ -350,6 +363,9 @@ private:
 	bool isStartPop = true;
 	//フェードアウトの出現フラグ
 	bool isPopOut = false;
+
+	float gameWidthX;
+	float gameWidthY;
 
 };
 
