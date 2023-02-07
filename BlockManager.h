@@ -8,6 +8,7 @@
 #include "PredictBlock.h"
 #include "ImGuiManager.h"
 #include"GoalConnectEffect.h"
+#include"RockOnImage.h"
 
 
 class BlockManager
@@ -22,7 +23,7 @@ public:
 	~BlockManager();
 
 	//初期化
-	void Initialize(ConnectingEffectManager* connectEM, PredictBlockManager* pBM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
+	void Initialize(RockOnImage* rockOnImage, ConnectingEffectManager* connectEM, PredictBlockManager* pBM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
 		GoalConnectEffectManager* goalConnectEM,
 		Model* normal, Model* locked, Model* goal, Model* Socket, Model* Button, Model* disconnectedBlock,
 		Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed,Model* overLapBlock, Model* beforeButtonPop);
@@ -364,8 +365,9 @@ private:
 	//フェードアウトの出現フラグ
 	bool isPopOut = false;
 
+	RockOnImage* rockOnImage;
+
 	float gameWidthX;
 	float gameWidthY;
-
 };
 
