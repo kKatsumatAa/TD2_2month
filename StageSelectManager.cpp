@@ -10,6 +10,7 @@ void StageSelectManager::Initialize(StageManager* stageM)
 	{
 		object[i].worldMat->scale = { stageImageRadius * 1.6f,stageImageRadius * 1.6f,1.0f };
 		object[i].worldMat->rot = { 0,0,0 };
+		object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),0,0.0f };
 		//object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f),0,0 };
 		object[i].worldMat->SetWorld();
 	}
@@ -35,6 +36,8 @@ void StageSelectManager::Initialize(StageManager* stageM)
 	isLeft = false;
 
 	moveCool = 0;
+
+	lerpCount = 0;
 
 	if (texhandle[0] == NULL)
 	{
@@ -102,8 +105,6 @@ void StageSelectManager::Update()
 	//イージングで動かす
 	if (isLerpMoving)
 	{
-		lerpCount++;
-
 		for (int i = 0; i < this->selectNumMax; i++)
 		{
 			object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),0,0.0f };
@@ -124,6 +125,8 @@ void StageSelectManager::Update()
 			isLeft = false;
 			isRight = false;
 		}
+
+		lerpCount++;
 	}
 
 	//選択確定
