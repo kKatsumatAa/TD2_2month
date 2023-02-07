@@ -35,7 +35,7 @@ void RockOnImage::Initialize()
 
 void RockOnImage::Update(/*Vec3 pos*/)
 {
-	if (isGoalConnectCount < isGoalConnectCountTmp)
+	if (isGoalConnectCount < isGoalConnectCountTmp && isGoalConnect)
 	{
 		isGoalConnectCount++;
 		float t = (float)isGoalConnectCount / (float)isGoalConnectCountTmp;
@@ -47,7 +47,7 @@ void RockOnImage::Update(/*Vec3 pos*/)
 	{
 		count++;
 
-		isGoalConnectScale = 0.1f + fabs(sinf(count * 0.05f)) * 0.03f;
+		isGoalConnectScale = 0.1f + fabs(sinf(count * 0.05f)) * 0.09f;
 	}
 }
 
@@ -67,4 +67,16 @@ void RockOnImage::BeginEffect(Vec3 pos)
 	isGoalConnectCount = 0;
 
 	this->pos = pos;
+}
+
+void RockOnImage::BeginEffect2(Vec3 pos)
+{
+	isGoalConnect = true;
+	this->pos = pos;
+}
+
+void RockOnImage::FinishEffect()
+{
+	isGoalConnect = false;
+	//isGoalConnectCount = 0;
 }

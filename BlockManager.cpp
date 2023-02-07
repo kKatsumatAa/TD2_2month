@@ -113,7 +113,7 @@ BlockManager::~BlockManager()
 }
 
 //初期化
-void BlockManager::Initialize(RockOnImage* rockOnImage,ConnectingEffectManager* connectEM, PredictBlockManager* pBM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
+void BlockManager::Initialize(RockOnImage* rockOnImage, ConnectingEffectManager* connectEM, PredictBlockManager* pBM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
 	GoalConnectEffectManager* goalConnectEM,
 	Model* normal, Model* locked, Model* goal, Model* Socket, Model* button, Model* disconnectedBlock,
 	Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed, Model* overLapBlock, Model* beforeButtonPop)
@@ -340,6 +340,12 @@ void BlockManager::Update()
 			{
 				//ゴールできるフラグON
 				isElecConectedGoal = false;
+			}
+
+			if (form_[i][j] == Form::GOAL && !rockOnImage->GetIsEffectFlag() && isElec[i][j] == true)
+			{
+				//ロックオン画像演出（回転、拡縮なし）
+				rockOnImage->BeginEffect2({ worldmats_[i][j].trans.x,worldmats_[i][j].trans.y + blockRadius_ * 2.0f,worldmats_[i][j].trans.z });
 			}
 
 			//回転時のみにしか判定を行ってなかったのでここに移動
@@ -926,6 +932,12 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 				for (int j = 0; j < stageHeight_; j++)
 				{
 					isElec[i][j] = false;
+
+
+					//回転後に、ゴールに電気通ってるか判断する前にロックオン一回オフ
+					{
+						rockOnImage->FinishEffect();
+					}
 				}
 			}
 		}
@@ -1503,7 +1515,7 @@ void BlockManager::ConectElec()
 									ParticleManager::GetInstance()->GenerateRandomParticle(40, 100, 0.3f,
 										{ worldmats_[k][l].trans.x,worldmats_[k][l].trans.y + blockRadius_ * 2.0f,worldmats_[k][l].trans.z },
 										2.0f, 0, { 0.1f,0.2f,1.0f,1.0f }, { 1.0f,0.0f,0.0f,1.0f });
-
+								
 									//ロックオン画像演出
 									rockOnImage->BeginEffect({ worldmats_[k][l].trans.x,worldmats_[k][l].trans.y + blockRadius_ * 2.0f,worldmats_[k][l].trans.z });
 								}

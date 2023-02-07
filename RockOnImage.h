@@ -29,6 +29,13 @@ public:
 
 	void Draw(Camera* camera);
 
+	//回転、拡縮あり
 	void BeginEffect(Vec3 pos);
+	//回転、拡縮ないパターン
+	void BeginEffect2(Vec3 pos);
+	//ロックオン消す
+	void FinishEffect();
+	//ロックオン表示がオンになっているか
+	bool GetIsEffectFlag() { return isGoalConnect; }
 };
 
