@@ -130,6 +130,11 @@ public:
 public:
 	bool isPopGoalEffect = false;
 
+	//カメラ後に立つフラグ
+	bool isPopedGoal2 = false;
+	int  isPopedGoal2Count = 0;
+	const int isPopedGoalCountTmp = 50;
+
 	static const int blockWidth = 13;
 	static const int blockHeight = 13;
 	//半径
@@ -302,6 +307,7 @@ private:
 
 	//一回のみゴール出現演出
 	bool isPopedGoal = false;
+
 
 	int  goalPopX, goalPopY;
 
