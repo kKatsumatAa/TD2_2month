@@ -203,8 +203,10 @@ void SceneGame::DrawSprite()
 		scene->tutorial->Draw();
 	}
 
-	obj[0].DrawBoxSprite({ 10,10,0 }, 1.0f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[3]);
-	obj[1].DrawBoxSprite({ 110,10,0 }, 1.0f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
+	obj[3].DrawBoxSprite({ 50,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[7]);
+	obj[0].DrawBoxSprite({ 160,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[3]);
+	obj[1].DrawBoxSprite({ 270,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
+
 	//
 	obj[2].DrawBoxSprite({ 0,0,0 }, 1.0f, { 1.0f,1.0f,1.0f,0.7f }, scene->texhandle[6]);
 
@@ -474,8 +476,10 @@ void Scene::Initialize()
 		TextureManager::LoadGraph(L"Resources/image/restart.png", texhandle[4]);
 		//ロード
 		TextureManager::LoadGraph(L"Resources/image/LoadingScreen.png", texhandle[5]);
-		//
+		//枠
 		TextureManager::LoadGraph(L"Resources/image/UI/UI_Border.png", texhandle[6]);
+		//Q
+		TextureManager::LoadGraph(L"Resources/image/backStageQ.png", texhandle[7]);
 	}
 
 	//model
