@@ -474,7 +474,7 @@ void Scene::Initialize()
 	model[9] = Model::LoadFromOBJ("DisconnectedSocketBlock");
 	model[10] = Model::LoadFromOBJ("ElectricBlock");
 	model[11] = Model::LoadFromOBJ("DoorGoal_Closed");
-	model[12] = Model::LoadFromOBJ("Wall");
+	//model[12] = Model::LoadFromOBJ("Wall");
 	model[13] = Model::LoadFromOBJ("OverlapBlock");
 	model[14] = Model::LoadFromOBJ("BeforeButtonPop");
 
