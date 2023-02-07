@@ -176,7 +176,7 @@ void Sound::PlayWave(const std::string& filename, const float& volume, const boo
 	if (Loop == true) { buf.LoopCount = XAUDIO2_LOOP_INFINITE; }
 
 	//波形データの再生&設定
-	result = pSourceVoice->SubmitSourceBuffer(&buf);
+ 	result = pSourceVoice->SubmitSourceBuffer(&buf);
 	result = pSourceVoice->SetVolume(volume);
 	result = pSourceVoice->Start();
 

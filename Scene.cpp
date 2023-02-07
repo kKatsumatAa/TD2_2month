@@ -199,6 +199,8 @@ void SceneGame::DrawSprite()
 
 	obj[0].DrawBoxSprite({ 10,10,0 }, 1.0f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[3]);
 	obj[1].DrawBoxSprite({ 110,10,0 }, 1.0f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
+	//
+	obj[2].DrawBoxSprite({ 0,0,0 }, 1.0f, { 1.0f,1.0f,1.0f,0.7f }, scene->texhandle[6]);
 
 	if (!scene->player->isGoal)
 	{
@@ -438,6 +440,7 @@ void Scene::Initialize()
 		Sound::GetInstance().LoadWave("turnEnd.wav", false);
 		Sound::GetInstance().LoadWave("limitFailed.wav", false);
 		Sound::GetInstance().LoadWave("goal.wav", false);
+		Sound::GetInstance().LoadWave("tutu4.wav", false);
 
 
 	}
@@ -456,6 +459,8 @@ void Scene::Initialize()
 		TextureManager::LoadGraph(L"Resources/image/restart.png", texhandle[4]);
 		//ロード
 		TextureManager::LoadGraph(L"Resources/image/LoadingScreen.png", texhandle[5]);
+		//
+		TextureManager::LoadGraph(L"Resources/image/UI/UI_Border.png", texhandle[6]);
 	}
 
 	//model
@@ -700,6 +705,7 @@ void Scene::StopAllWave()
 	Sound::GetInstance().StopWave("turnEnd.wav");
 	Sound::GetInstance().StopWave("limitFailed.wav");
 	Sound::GetInstance().StopWave("goal.wav");
+	Sound::GetInstance().StopWave("tutu4.wav");
 }
 
 

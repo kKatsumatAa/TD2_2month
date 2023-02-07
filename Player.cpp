@@ -227,6 +227,10 @@ void Player::Draw(Camera* camera)
 		{
 			color = { color.x - 0.4f,color.y - 0.4f,color.z + 0.2f,1.0f };
 		}
+		if (colorCount % 180 == 5)
+		{
+			Sound::GetInstance().PlayWave("tutu4.wav", 0.25f);
+		}
 	}
 	else
 	{
