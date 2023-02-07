@@ -57,7 +57,7 @@ void RockOnImage::Draw(Camera* camera)
 	{
 		Vec2 pos = Vec3toVec2(this->pos, camera->viewMat.matView, camera->projectionMat.matProjection);
 
-		obj.DrawBoxSprite({ pos.x,pos.y,0 }, this->isGoalConnectScale, { 1.0f,1.0f,1.0f,0.6f }, texhandle, { 0.5f,0.5f }, false, false, this->isGoalConnectRot);
+		obj.DrawBoxSprite({ pos.x,pos.y,0 }, this->isGoalConnectScale, { 1.0f,1.0f,1.0f,0.9f }, texhandle, { 0.5f,0.5f }, false, false, this->isGoalConnectRot);
 	}
 }
 
