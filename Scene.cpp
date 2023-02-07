@@ -168,6 +168,9 @@ void SceneGame::Update()
 
 void SceneGame::Draw()
 {
+	scene->objWallFloor[1].DrawModel(scene->objWallFloor[1].worldMat, &scene->cameraM.get()->usingCamera->viewMat, &scene->cameraM.get()->usingCamera->projectionMat,
+		scene->model[12], { 0.7f,0.7f,0.7f,1.0f });
+
 	scene->objWallFloor[0].DrawModel(scene->objWallFloor[0].worldMat, &scene->cameraM.get()->usingCamera->viewMat, &scene->cameraM.get()->usingCamera->projectionMat,
 		scene->model[7], { 0.7f,0.7f,0.7f,1.0f });
 
@@ -199,6 +202,8 @@ void SceneGame::DrawSprite()
 
 	obj[0].DrawBoxSprite({ 10,10,0 }, 1.0f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[3]);
 	obj[1].DrawBoxSprite({ 110,10,0 }, 1.0f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
+	//
+	obj[2].DrawBoxSprite({ 0,0,0 }, 1.0f, { 1.0f,1.0f,1.0f,0.7f }, scene->texhandle[6]);
 
 	if (!scene->player->isGoal)
 	{
@@ -283,6 +288,11 @@ void SceneLoad::LoadFunc()
 	,-scene->blockManager->blockRadius_ / 2.0f ,0 - scene->blockManager->blockRadius_ };
 	scene->objWallFloor[0].worldMat->scale = { scene->blockManager->blockRadius_ ,scene->blockManager->blockRadius_ ,scene->blockManager->blockRadius_ };
 	scene->objWallFloor[0].worldMat->SetWorld();
+
+	scene->objWallFloor[1].worldMat->trans = { {scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f }
+	,-scene->blockManager->blockRadius_ / 2.0f ,0 - scene->blockManager->blockRadius_ };
+	//scene->objWallFloor[1].worldMat->scale = { 0.5f,0.5f,0.5f };
+	scene->objWallFloor[1].worldMat->SetWorld();
 
 	//丸影
 	scene->lightManager->SetCircleShadowActive(0, true);
@@ -438,6 +448,7 @@ void Scene::Initialize()
 		Sound::GetInstance().LoadWave("turnEnd.wav", false);
 		Sound::GetInstance().LoadWave("limitFailed.wav", false);
 		Sound::GetInstance().LoadWave("goal.wav", false);
+		Sound::GetInstance().LoadWave("tutu4.wav", false);
 
 
 	}
@@ -456,6 +467,8 @@ void Scene::Initialize()
 		TextureManager::LoadGraph(L"Resources/image/restart.png", texhandle[4]);
 		//ロード
 		TextureManager::LoadGraph(L"Resources/image/LoadingScreen.png", texhandle[5]);
+		//
+		TextureManager::LoadGraph(L"Resources/image/UI/UI_Border.png", texhandle[6]);
 	}
 
 	//model
@@ -474,7 +487,7 @@ void Scene::Initialize()
 	model[9] = Model::LoadFromOBJ("DisconnectedSocketBlock");
 	model[10] = Model::LoadFromOBJ("ElectricBlock");
 	model[11] = Model::LoadFromOBJ("DoorGoal_Closed");
-	//model[12] = Model::LoadFromOBJ("Wall");
+	model[12] = Model::LoadFromOBJ("Wall");
 	model[13] = Model::LoadFromOBJ("OverlapBlock");
 	model[14] = Model::LoadFromOBJ("BeforeButtonPop");
 
@@ -700,6 +713,7 @@ void Scene::StopAllWave()
 	Sound::GetInstance().StopWave("turnEnd.wav");
 	Sound::GetInstance().StopWave("limitFailed.wav");
 	Sound::GetInstance().StopWave("goal.wav");
+	Sound::GetInstance().StopWave("tutu4.wav");
 }
 
 
