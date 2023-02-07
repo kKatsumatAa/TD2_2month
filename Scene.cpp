@@ -168,6 +168,9 @@ void SceneGame::Update()
 
 void SceneGame::Draw()
 {
+	scene->objWallFloor[1].DrawModel(scene->objWallFloor[1].worldMat, &scene->cameraM.get()->usingCamera->viewMat, &scene->cameraM.get()->usingCamera->projectionMat,
+		scene->model[12], { 0.7f,0.7f,0.7f,1.0f });
+
 	scene->objWallFloor[0].DrawModel(scene->objWallFloor[0].worldMat, &scene->cameraM.get()->usingCamera->viewMat, &scene->cameraM.get()->usingCamera->projectionMat,
 		scene->model[7], { 0.7f,0.7f,0.7f,1.0f });
 
@@ -285,6 +288,11 @@ void SceneLoad::LoadFunc()
 	,-scene->blockManager->blockRadius_ / 2.0f ,0 - scene->blockManager->blockRadius_ };
 	scene->objWallFloor[0].worldMat->scale = { scene->blockManager->blockRadius_ ,scene->blockManager->blockRadius_ ,scene->blockManager->blockRadius_ };
 	scene->objWallFloor[0].worldMat->SetWorld();
+
+	scene->objWallFloor[1].worldMat->trans = { {scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f }
+	,-scene->blockManager->blockRadius_ / 2.0f ,0 - scene->blockManager->blockRadius_ };
+	scene->objWallFloor[1].worldMat->scale = { 0.5f,0.5f,0.5f };
+	scene->objWallFloor[1].worldMat->SetWorld();
 
 	//丸影
 	scene->lightManager->SetCircleShadowActive(0, true);
@@ -479,7 +487,7 @@ void Scene::Initialize()
 	model[9] = Model::LoadFromOBJ("DisconnectedSocketBlock");
 	model[10] = Model::LoadFromOBJ("ElectricBlock");
 	model[11] = Model::LoadFromOBJ("DoorGoal_Closed");
-	//model[12] = Model::LoadFromOBJ("Wall");
+	model[12] = Model::LoadFromOBJ("Wall");
 	model[13] = Model::LoadFromOBJ("OverlapBlock");
 	model[14] = Model::LoadFromOBJ("BeforeButtonPop");
 
