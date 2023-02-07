@@ -136,7 +136,7 @@ void SceneGame::Update()
 			{
 				scene->tutorial->ElectricInitialize();
 			}
-			
+
 			GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get());
 		}
 		if (KeyboardInput::GetInstance().KeyTrigger(DIK_Z))
@@ -290,7 +290,7 @@ void SceneLoad::LoadFunc()
 	scene->objWallFloor[0].worldMat->SetWorld();
 
 	scene->objWallFloor[1].worldMat->trans = { {scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f }
-	,-scene->blockManager->blockRadius_ / 2.0f ,0 - scene->blockManager->blockRadius_ };
+	,0 - scene->blockManager->blockRadius_ * 1.0f ,0 - scene->blockManager->blockRadius_ };
 	//scene->objWallFloor[1].worldMat->scale = { 0.5f,0.5f,0.5f };
 	scene->objWallFloor[1].worldMat->SetWorld();
 
@@ -526,7 +526,7 @@ void Scene::Initialize()
 
 	blockManager = new BlockManager();
 	blockManager->Initialize(connectEM.get(), predictBlockManager.get(), tutorial.get(), cameraM.get(), goalE.get(), goalConnectEM.get(),
-		model[1], model[2], model[3], model[4], model[5], model[6], model[8], model[9], model[10], model[11], model[13],model[14]);
+		model[1], model[2], model[3], model[4], model[5], model[6], model[8], model[9], model[10], model[11], model[13], model[14]);
 
 	stageManager = std::make_unique<StageManager>();
 	stageManager->Initialize(blockManager, tutorial.get(), conectLimit_);
@@ -577,7 +577,7 @@ void Scene::Initialize()
 	stageSelectM = std::make_unique<StageSelectManager>();
 	stageSelectM->Initialize(stageManager.get());
 
-	
+
 
 	//ステート変更
 	ChangeState(new SceneStageSelect);
