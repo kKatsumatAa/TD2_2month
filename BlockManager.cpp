@@ -1197,6 +1197,18 @@ void BlockManager::PopEffect()
 	}
 }
 
+float BlockManager::GetGameWidth()
+{
+	gameWidthX = (blockRadius_ * gameAreaWidth);
+	return gameWidthX;
+}
+
+float BlockManager::GetGameHeight()
+{
+	gameWidthY = (blockRadius_ * gameAreaHeight);
+	return gameWidthY;
+}
+
 
 //重なった時の処理
 void BlockManager::UpdateOverlap()

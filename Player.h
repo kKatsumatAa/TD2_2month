@@ -122,6 +122,10 @@ private:
 	XMFLOAT4 color;
 	int colorCount = 0;
 public:
+
+	float playerLimitX;
+	float playerLimitZ;
+
 	float posYTmp = 0;
 	float posXTmp = 0;
 
@@ -173,6 +177,8 @@ public:
 
 	CameraManager* cameraM;
 
+	const int outOfPositionWidth = 8;
+
 	//std::unique_ptr<ConectLimit> conectLimit_;
 	ConectLimit* conectLimit_;
 
@@ -193,6 +199,9 @@ public:
 	void Reset();
 
 	void SetConectCount(int conectCount) { conectCount_ = conectCount; };
+
+	//制限エリア外にプレイヤーがいるかどうか
+	bool PlayerOutArea();
 
 	//衝突を検出したら呼び出す（コールバック関数）
 	//

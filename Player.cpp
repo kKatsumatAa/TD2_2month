@@ -83,6 +83,10 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 		}
 	}
 
+	//プレイヤーの長さ制限
+	playerLimitX = blockM->GetGameWidth();
+	playerLimitZ = blockM->GetGameHeight();
+
 	//衝突属性
 	SetCollisionAttribute(kCollisionAttributePlayer);
 	SetCollisionMask(kCollisionAttributeEnemy);
@@ -178,9 +182,7 @@ void Player::Update()
 	if (worldTransform_.scale.z > scaleTmp) { worldTransform_.scale.z -= 0.05f; }
 	if (worldTransform_.scale.z < scaleTmp) { worldTransform_.scale.z += 0.05f; }
 
-	{
-
-	}
+	
 
 	//先行入力
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
@@ -245,6 +247,21 @@ void Player::DrawSprite()
 }
 
 
+
+bool Player::PlayerOutArea()
+{
+	//ずれているX分の長さ
+	float outOfPositionX = outOfPositionWidth * 1.8f;
+
+	if(GetWorldPos().x + outOfPositionWidth <= playerLimitX + outOfPositionWidth && GetWorldPos().x + outOfPositionWidth > -playerLimitX + outOfPositionWidth && GetWorldPos().z <= playerLimitZ && GetWorldPos().z > -playerLimitZ)
+	{
+		return false;
+	}
+	else
+	{
+		return true;;
+	}
+}
 
 void Player::OnCollision(Collider& collider)
 {

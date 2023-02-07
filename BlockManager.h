@@ -127,6 +127,11 @@ public:
 	//ブロックの出現演出
 	void PopEffect();
 
+	//ゲームの横の長さ
+	float GetGameWidth();
+	//ゲームの縦の長さ
+	float GetGameHeight();
+
 public:
 	bool isPopGoalEffect = false;
 
@@ -350,6 +355,14 @@ private:
 	bool isStartPop = true;
 	//フェードアウトの出現フラグ
 	bool isPopOut = false;
+
+	//外枠の長さ
+	static const int gameAreaWidth = 28;
+	static const int gameAreaHeight = 22;
+
+	
+	float gameWidthX;
+	float gameWidthY;
 
 };
 
