@@ -128,11 +128,11 @@ void SceneGame::Update()
 			{
 				scene->tutorial->ConnectLimitInitialize();
 			}
-			if (scene->stageManager->selectStage == STAGE::STAGE4)
+			if (scene->stageManager->selectStage == STAGE::STAGE3)
 			{
 				scene->tutorial->ButtonInitialize();
 			}
-			if (scene->stageManager->selectStage == STAGE::STAGE6)
+			if (scene->stageManager->selectStage == STAGE::STAGE5)
 			{
 				scene->tutorial->ElectricInitialize();
 			}
