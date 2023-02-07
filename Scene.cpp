@@ -90,7 +90,7 @@ void SceneGame::Update()
 
 		scene->blockManager->Update();
 		//特定のカメラ演出時は動かさない
-		if (!scene->blockManager->isPopGoalEffect)
+		if (!scene->blockManager->isPopedGoal2)
 		{
 			scene->player->Update();
 
@@ -173,7 +173,10 @@ void SceneGame::Draw()
 
 	scene->blockManager->Draw(scene->cameraM.get()->usingCamera);
 
-	scene->player->Draw(scene->cameraM.get()->usingCamera);
+	if (!scene->blockManager->isPopedGoal2)
+	{
+		scene->player->Draw(scene->cameraM.get()->usingCamera);
+	}
 	scene->playerSocket->Draw(scene->cameraM.get()->usingCamera);
 	scene->connectEM->Draw(*scene->cameraM.get()->usingCamera);
 	scene->connectE2M->Draw(scene->cameraM.get()->usingCamera);

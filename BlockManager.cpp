@@ -112,7 +112,7 @@ BlockManager::~BlockManager()
 void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockManager* pBM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
 	GoalConnectEffectManager* goalConnectEM,
 	Model* normal, Model* locked, Model* goal, Model* Socket, Model* button, Model* disconnectedBlock,
-	Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed, Model* overLapBlock,Model* beforeButtonPop)
+	Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed, Model* overLapBlock, Model* beforeButtonPop)
 {
 	blocks_.clear();
 	worldmats_.clear();
@@ -288,6 +288,9 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockMa
 	effectCount2 = 0;
 
 	isPopedGoal = false;
+	isPopedGoal2 = false;
+	isPopedGoal2Count = 0;
+
 	isStartPop = true;
 
 	this->isPopGoalEffect = false;
@@ -390,6 +393,8 @@ void BlockManager::Update()
 		form_[goalPopX][goalPopY] = Form::GOAL;
 		blocks_[goalPopX][goalPopY]->SetScale({ 0,0,0 });
 
+		isPopedGoal2Count = isPopedGoalCountTmp;
+
 		//エフェクト
 		ParticleManager::GetInstance()->GenerateRandomParticle(50, 120, 0.5f,
 			{ worldmats_[goalPopX][goalPopY].trans.x,worldmats_[goalPopX][goalPopY].trans.y + blockRadius_ * 2.0f, worldmats_[goalPopX][goalPopY].trans.z },
@@ -397,6 +402,16 @@ void BlockManager::Update()
 
 		//音
 		Sound::GetInstance().PlayWave("emergeGoal.wav", 0.8f);
+	}
+	//ゴール出現後待つための
+	if (isPopedGoal && isPopedGoal2)
+	{
+		if (isPopedGoal2Count <= 0)
+		{
+			isPopedGoal2 = false;
+		}
+
+		isPopedGoal2Count--;
 	}
 
 	//ゴールがほかのブロックとつながってて電気通っていたら
@@ -449,7 +464,7 @@ void BlockManager::Draw(Camera* camera)
 			//Manager.cppで配列で定義したworldTransformの値をBlock.cppのDrawにセット
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
-			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j], isElec[i][j],isPushed[i][j], this->count, elecWaitAlpha_[i][j],isGoal_[i][j],isPopGoal);
+			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j], isElec[i][j], isPushed[i][j], this->count, elecWaitAlpha_[i][j], isGoal_[i][j], isPopGoal);
 
 			if (action_[i][j] == Action::Connect && effectCount >= effectCountMax)
 			{
@@ -1857,11 +1872,13 @@ void BlockManager::AppearGoal()
 								{ 0,1.0f,0 },
 								90,
 								cameraM->gameTurnCamera.get(),
-								50
+								isPopedGoalCountTmp
 							);
 							cameraM->usingCamera = cameraM->goalEffectCamera.get();
 							cameraM->Update();
 							cameraM->usingCamera->CameraShake(30, 1.0f);
+
+							isPopedGoal2 = true;
 						}
 						else
 						{
@@ -1878,9 +1895,12 @@ void BlockManager::AppearGoal()
 								cameraM->gameTurnCamera.get(),
 								1
 							);
+
+							isPopedGoal2 = false;
 						}
 
 						isPopGoalEffect = true;
+						
 
 						////チュートリアル
 						//if (tutorial->GetState() == TUTORIAL::BUTTON && tutorial->GetStateNum() == 0)
@@ -2115,6 +2135,8 @@ void BlockManager::ResetBlock()
 
 	//リセットは戻す
 	isPopedGoal = false;
+	isPopedGoal2 = false;
+	isPopedGoal2Count = 0;
 
 	this->isPopGoalEffect = false;
 }

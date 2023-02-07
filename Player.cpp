@@ -353,6 +353,10 @@ void StateNormalMoveP::Update()
 
 		player->GetWorldTransForm()->trans = { player->posXTmp + shake.GetShake() ,player->posYTmp + sinf(countE * 0.07f) * 0.3f ,trans.z };
 	}
+	else
+	{
+		shake.Initialize();
+	}
 
 	//ˆÚ“®‚Ìê‡(‰ñ“]’†‚ÍˆÚ“®‚µ‚È‚¢)
 	if (
