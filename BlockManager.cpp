@@ -67,7 +67,11 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 	this->isStopElecConectedGoal = obj.isStopElecConectedGoal;
 	this->isStartPop = obj.isStartPop;
 	this->isPopWait = obj.isPopWait;
-
+	if (rockOnImage == nullptr)
+	{
+		this->rockOnImage = new RockOnImage();
+	}
+	*this->rockOnImage = *obj.rockOnImage;
 
 	for (int i = 0; i < blockWidth; i++)
 	{
@@ -109,7 +113,7 @@ BlockManager::~BlockManager()
 }
 
 //初期化
-void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockManager* pBM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
+void BlockManager::Initialize(RockOnImage* rockOnImage,ConnectingEffectManager* connectEM, PredictBlockManager* pBM, Tutorial* tutorial, CameraManager* cameraM, GoalEffect* goalEffect,
 	GoalConnectEffectManager* goalConnectEM,
 	Model* normal, Model* locked, Model* goal, Model* Socket, Model* button, Model* disconnectedBlock,
 	Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed, Model* overLapBlock, Model* beforeButtonPop)
@@ -127,6 +131,8 @@ void BlockManager::Initialize(ConnectingEffectManager* connectEM, PredictBlockMa
 
 	this->normal = normal; this->locked = locked; this->goal = goal; this->Socket = Socket; this->button = button; this->disconnectedBlock = disconnectedBlock;
 	this->disconnectedButton = disconnectedButton; this->disconnectedSocketBlock = disconnectedSocketBlock; this->electricBlock = electricBlock; this->doorGoalClosed = doorGoalClosed;
+
+	this->rockOnImage = rockOnImage;
 
 	//std::unique_ptr<Block> newBullet = std::make_unique<Block>();
 
@@ -491,7 +497,6 @@ void BlockManager::Draw(Camera* camera)
 
 	if (isEffect) { effectCount = 0; isEffect = false; }
 	if (isEffect2) { effectCount2 = 0; isEffect2 = false; }
-
 }
 
 bool BlockManager::CheckPlayerOnBlock(Vec3 pos)
@@ -1197,6 +1202,11 @@ void BlockManager::PopEffect()
 	}
 }
 
+void BlockManager::UpdateGoalConnect()
+{
+
+}
+
 
 //重なった時の処理
 void BlockManager::UpdateOverlap()
@@ -1485,6 +1495,9 @@ void BlockManager::ConectElec()
 									ParticleManager::GetInstance()->GenerateRandomParticle(40, 100, 0.3f,
 										{ worldmats_[k][l].trans.x,worldmats_[k][l].trans.y + blockRadius_ * 2.0f,worldmats_[k][l].trans.z },
 										2.0f, 0, { 0.1f,0.2f,1.0f,1.0f }, { 1.0f,0.0f,0.0f,1.0f });
+
+									//ロックオン画像演出
+									rockOnImage->BeginEffect({ worldmats_[k][l].trans.x,worldmats_[k][l].trans.y + blockRadius_ * 2.0f,worldmats_[k][l].trans.z });
 								}
 							}
 							else if (form_[k][l] == Form::NONE || form_[k][l] == Form::LOCKED || isTurning[k][l] == true)
@@ -1900,7 +1913,7 @@ void BlockManager::AppearGoal()
 						}
 
 						isPopGoalEffect = true;
-						
+
 
 						////チュートリアル
 						//if (tutorial->GetState() == TUTORIAL::BUTTON && tutorial->GetStateNum() == 0)

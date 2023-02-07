@@ -108,6 +108,8 @@ public:
 	std::unique_ptr<StageSelectManager>stageSelectM;
 	std::unique_ptr<PredictBlockManager>predictBlockManager;
 
+	RockOnImage* rockOnImage = nullptr;
+
 public:
 	~Scene();
 	void ChangeState(SceneState* state);
