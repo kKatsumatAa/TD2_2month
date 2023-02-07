@@ -27,7 +27,7 @@ void RockOnImage::Initialize()
 
 	if (texhandle == NULL)
 	{
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/z.png", texhandle);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/UI_LockOn.png", texhandle);
 	}
 
 	pos = { 0,0,0 };
@@ -41,13 +41,13 @@ void RockOnImage::Update(/*Vec3 pos*/)
 		float t = (float)isGoalConnectCount / (float)isGoalConnectCountTmp;
 
 		isGoalConnectRot = LerpVec3({ 180.0f * 1.5f,0,0 }, { 0,0,0 }, EaseIn(t)).x;
-		isGoalConnectScale = LerpVec3({ 1.5f,0,0 }, { 1.0f,0,0 }, EaseIn(t)).x;
+		isGoalConnectScale = LerpVec3({ 0.5f,0,0 }, { 0.1f,0,0 }, EaseIn(t)).x;
 	}
 	else
 	{
 		count++;
 
-		isGoalConnectScale = 1.0f + (sinf(count * 0.05f)) * 0.3f;
+		isGoalConnectScale = 0.1f + fabs(sinf(count * 0.05f)) * 0.03f;
 	}
 }
 
@@ -57,7 +57,7 @@ void RockOnImage::Draw(Camera* camera)
 	{
 		Vec2 pos = Vec3toVec2(this->pos, camera->viewMat.matView, camera->projectionMat.matProjection);
 
-		obj.DrawBoxSprite({ pos.x,pos.y,0 }, this->isGoalConnectScale, { 1.0f,1.0f,1.0f,1.0f }, texhandle, { 0.5f,0.5f }, false, false, this->isGoalConnectRot);
+		obj.DrawBoxSprite({ pos.x,pos.y,0 }, this->isGoalConnectScale, { 1.0f,1.0f,1.0f,0.6f }, texhandle, { 0.5f,0.5f }, false, false, this->isGoalConnectRot);
 	}
 }
 

@@ -365,5 +365,9 @@ private:
 	//フェードアウトの出現フラグ
 	bool isPopOut = false;
 
+	RockOnImage* rockOnImage;
+
+	float gameWidthX;
+	float gameWidthY;
 };
 
