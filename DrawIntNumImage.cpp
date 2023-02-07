@@ -69,6 +69,7 @@ void DrawIntNumImage::Draw()
 			{
 				//桁の数も考慮して、中心座標からの距離を出し、真の座標とする　　　　　　　　　　//大きい桁からスタートなので逆順にして、左から並べる（座標）
 				Vec2 pos = { numImages[i].pos.x + numImages[i].numImageSize.x / 2.0f * ((float)(numCount - 1) - (float)i - (float)numCount / 2.0f) * numImages[i].scale
+					+ (numImages[i].numImageSize.x / 4.0f * numImages[i].scale)
 					,numImages[i].pos.y };
 
 				pos.x -= numImages[i].numImageSize.x / 2.0f * numImages[i].scale;
