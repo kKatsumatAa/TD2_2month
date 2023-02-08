@@ -28,11 +28,14 @@ private:
 	WorldMat worldTransform_;
 
 	float scaleArrow;
+	float colorAlpha = 0.0f;
 
 public:
 	void Initialize(Vec3 pos, Vec3 scale);
 	void Update(int count);
 	void Draw(Camera* camera, bool isArrowDraw);
+	float GetColor() { return colorAlpha; }
+	void fadeColor();
 };
 
 class PredictBlockManager
