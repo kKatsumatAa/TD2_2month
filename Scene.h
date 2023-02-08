@@ -127,6 +127,8 @@ public:
 class SceneTitle : public SceneState
 {
 private:
+	int count = 0;
+	Object obj[5];
 
 
 public:
@@ -139,7 +141,8 @@ public:
 class SceneStageSelect : public SceneState
 {
 private:
-
+	float alpha = 0;
+	Object obj[5];
 
 public:
 	void Initialize()override;

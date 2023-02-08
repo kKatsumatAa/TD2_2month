@@ -12,7 +12,15 @@ void SceneState::SetScene(Scene* scene)
 //タイトル
 void SceneTitle::Initialize()
 {
+	scene->lightManager->SetCircleShadowActive(0, false);
 
+	obj[0].worldMat->scale = { 7.0f * 2.0f,7.0f * 0.8f,1.0f };
+	obj[0].worldMat->trans = { 0,-33.0f,0.0f };
+	obj[0].worldMat->SetWorld();
+
+	scene->StopAllWave();
+	//音
+	Sound::GetInstance().PlayWave("titleBGM.wav", 0.5f, true);
 }
 
 void SceneTitle::Update()
@@ -20,18 +28,29 @@ void SceneTitle::Update()
 
 
 	//シーン遷移
-	/*if ()
+	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
-		scene->ChangeState(new SceneGame);
-	}*/
+		Sound::GetInstance().PlayWave("select.wav", 0.7f);
+
+		scene->ChangeState(new SceneStageSelect);
+	}
 }
 
 void SceneTitle::Draw()
 {
+
+
 }
 
 void SceneTitle::DrawSprite()
 {
+	count++;
+
+	obj[0].worldMat->scale = { 7.0f * 2.0f * (fabsf(sinf(count * 0.02f) * 0.5f) + 0.2f),7.0f * 0.8f * (fabsf(sinf(count * 0.02f) * 0.5f) + 0.2f),1.0f };
+	obj[0].worldMat->SetWorld();
+
+	obj[0].DrawBox(obj[0].worldMat, &scene->cameraM->usingCamera->viewMat, &scene->cameraM->usingCamera->projectionMat,
+		{ 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[8]);
 }
 
 //---------------------------------------------------------------------------------------
@@ -62,6 +81,12 @@ void SceneStageSelect::Update()
 		ParticleManager::GetInstance()->GenerateRandomParticle(50, 120, 3.0f, { 0,0,0 }, 5.0f, 0.1f, { 0.1f,0.5f,0.5,0.99f }, { 0,0,0,0 });
 		scene->ChangeState(new SceneLoad);
 	}
+	//ステージセレクトに戻る
+	else if (KeyboardInput::GetInstance().KeyTrigger(DIK_Q) || KeyboardInput::GetInstance().KeyTrigger(DIK_ESCAPE))
+	{
+		//scene->cameraM->usingCamera = scene->cameraM->stageSelectCamera.get();
+		scene->ChangeState(new SceneTitle);
+	}
 }
 
 void SceneStageSelect::Draw()
@@ -74,6 +99,8 @@ void SceneStageSelect::Draw()
 void SceneStageSelect::DrawSprite()
 {
 	scene->stageSelectM->DrawSprite();
+
+	obj[3].DrawBoxSprite({ 50,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[7]);
 }
 
 
@@ -205,7 +232,7 @@ void SceneGame::DrawSprite()
 
 	obj[3].DrawBoxSprite({ 50,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[7]);
 	obj[0].DrawBoxSprite({ 160,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[3]);
-	obj[1].DrawBoxSprite({ 270,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
+	obj[1].DrawBoxSprite({ 280,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
 
 	//
 	obj[2].DrawBoxSprite({ 0,0,0 }, 1.0f, { 1.0f,1.0f,1.0f,0.7f }, scene->texhandle[6]);
@@ -439,6 +466,7 @@ void Scene::Initialize()
 	//音
 	{
 		Sound::GetInstance().Initialize("Resources/Sounds/");
+		Sound::GetInstance().LoadWave("titleBGM.wav", false);
 		Sound::GetInstance().LoadWave("Stage_BGM.wav", false);
 		Sound::GetInstance().LoadWave("LevelSelect.wav", false);
 		Sound::GetInstance().LoadWave("game-victory-sound-effect.wav", false);
@@ -481,6 +509,8 @@ void Scene::Initialize()
 		TextureManager::LoadGraph(L"Resources/image/UI/UI_Border.png", texhandle[6]);
 		//Q
 		TextureManager::LoadGraph(L"Resources/image/backStageQ.png", texhandle[7]);
+		//
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/spaceKey.png", texhandle[8]);
 	}
 
 	//model
@@ -559,7 +589,8 @@ void Scene::Initialize()
 	lightManager->SetDirLightActive(0, true);
 	lightManager->SetDirLightActive(1, true);
 	lightManager->SetDirLightActive(2, false);
-	lightManager->SetDirLightDir(1, XMVectorSet(0, 0, 1.0f, 0));
+	lightManager->SetDirLightDir(0, XMVectorSet(0, 0, 1.0f, 0));
+	lightManager->SetDirLightDir(1, XMVectorSet(0, -1.0f, 0, 0));
 	//点光源
 	for (int i = 0; i < 6; i++)
 	{
@@ -596,7 +627,7 @@ void Scene::Initialize()
 
 
 	//ステート変更
-	ChangeState(new SceneStageSelect);
+	ChangeState(new SceneTitle);
 }
 
 int count = 0;
@@ -713,6 +744,7 @@ void Scene::StopAllWave()
 {
 	Sound::GetInstance().StopWave("LevelSelect.wav");
 	Sound::GetInstance().StopWave("Stage_BGM.wav");
+	Sound::GetInstance().StopWave("titleBGM.wav");
 
 	Sound::GetInstance().StopWave("arrow (2).wav");
 	Sound::GetInstance().StopWave("button (2).wav");
@@ -724,7 +756,7 @@ void Scene::StopAllWave()
 	Sound::GetInstance().StopWave("emergeGoal.wav");
 	Sound::GetInstance().StopWave("move (2).wav");
 	Sound::GetInstance().StopWave("moveFailed (2).wav");
-	Sound::GetInstance().StopWave("select.wav");
+	//Sound::GetInstance().StopWave("select.wav");
 	Sound::GetInstance().StopWave("turnBegine.wav");
 	Sound::GetInstance().StopWave("turnEnd.wav");
 	Sound::GetInstance().StopWave("limitFailed.wav");
