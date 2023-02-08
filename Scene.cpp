@@ -50,7 +50,7 @@ void SceneTitle::Draw()
 {
 	count++;
 
-	obj[0].worldMat->trans = { 0,-33.0f + sinf(count * 0.05f) * 2.0f,0.0f };
+	obj[0].worldMat->trans = { 0,-33.0f + sinf(count * 0.025f) * 1.5f,0.0f };
 	obj[0].worldMat->SetWorld();
 
 	//背景
