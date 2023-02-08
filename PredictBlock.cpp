@@ -112,9 +112,6 @@ void PredictArrow::Initialize(Vec3 pos, Vec3 scale)
 	{
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowRight.png", texhandle[0]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowLeft.png", texhandle[1]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowLeftOnly.png", texhandle[2]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/lightLeft.png", texhandle[3]);
-
 	}
 }
 
