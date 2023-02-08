@@ -25,6 +25,8 @@ cbuffer ConstBufferEffectFlags : register(b0)
 	uint isBarrelCurve;
 	//走査線
 	uint isScanningLine;
+	//グレースケール
+	uint isGrayScale;
 	//時間
 	uint time;
 }

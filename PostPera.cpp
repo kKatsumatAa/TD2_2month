@@ -194,6 +194,7 @@ void PostPera::Draw(EffectConstBuffer effectFlags)
 	this->mapEffectFlagsBuff->isVignette = effectFlags.isVignette;
 	this->mapEffectFlagsBuff->isBarrelCurve = effectFlags.isBarrelCurve;
 	this->mapEffectFlagsBuff->isScanningLine = effectFlags.isScanningLine;
+	this->mapEffectFlagsBuff->isGrayScale = effectFlags.isGrayScale;
 	this->mapEffectFlagsBuff->time++;
 
 

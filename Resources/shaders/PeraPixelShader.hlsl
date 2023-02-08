@@ -184,6 +184,51 @@ float4 PS(Output input) : SV_TARGET
 		isEffect = true;
 	}
 
+	//グレー
+	if (isGrayScale)
+	{
+		// テクスチャから画素値取得
+		float4 tcolor = RGBA;
+
+		// 輝度算出
+		if ((tcolor.x > 0.9f || tcolor.y > 0.9f || tcolor.z > 0.9f || tcolor.w > 0.9f))
+		{
+			float y, u, v;
+			y = tcolor.x * 0.199 + tcolor.y * 0.487 + tcolor.z * 0.014;
+
+			// グレースケール変換
+			tcolor.x = y;
+			tcolor.y = y;
+			tcolor.z = y;
+		}
+		else
+		{
+			/*if (tcolor.x >= 0.9f)
+			{
+				tcolor.x *= 0.1f;
+				tcolor.x += 0.5f;
+			}
+			if (tcolor.y >= 0.9f)
+			{
+				tcolor.y *= 0.1f;
+				tcolor.y += 0.5f;
+			}
+			if (tcolor.z >= 0.9f)
+			{
+				tcolor.z *= 0.1f;
+				tcolor.z += 0.5f;
+			}
+			if (tcolor.w >= 0.9f)
+			{
+				tcolor.w = 0;
+			}*/
+		}
+		// 出力するピクセル色
+		ret = tcolor;
+
+		isEffect = true;
+	}
+
 	if (isEffect)
 	{
 		return ret;
