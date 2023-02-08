@@ -184,7 +184,7 @@ class ConnectLimitTutorial : public TutorialState
 {
 private:
 
-	const int numMax = 4;
+	const int numMax = 1;
 	int texhandle[5];
 	Object sprite[5];
 

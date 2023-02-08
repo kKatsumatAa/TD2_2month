@@ -186,7 +186,7 @@ void ConnectLimitTutorial::Draw()
 {
 	/* count += 0.1f; */
 
-	if (num < 3)
+	if (num == 0)
 	{
 		sprite[0].DrawBoxSprite({ WindowsApp::GetInstance().window_width / 3.0f * 2.5f,180.0f + sinf(count) * 2.0f,0 }, tutorial->spriteSize, { 1.0f,1.0f,1.0f,1.0f }, tutorial->texhandle[CONNECT_LIMIT],
 			{ 0.5f,0.5f }, false, false, tutorial->spriteRot);

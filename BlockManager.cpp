@@ -639,16 +639,6 @@ void BlockManager::UpdateConnect(Vec3 pos)
 					action_[i][j] = Action::Connect;
 					cameraM->usingCamera->CameraShake(15, 0.53f);
 
-					//チュートリアル
-					if (tutorial->GetState() == TUTORIAL::CONNECT_LIMIT)
-					{
-						tutorial->AddStateNum();
-						if (tutorial->GetStateNum() == tutorial->GetStateNumMax() - 1)
-						{
-							tutorial->spriteCount = 0;
-						}
-					}
-
 					//音
 					Sound::GetInstance().PlayWave("connectMove.wav", 1.0f);
 				}
