@@ -32,6 +32,11 @@ void StageSelectManager::Initialize(StageManager* stageM)
 	object[selectNumMax + 2].worldMat->trans = { 50.0f,-30.0f,0.0f };
 	object[selectNumMax + 2].worldMat->SetWorld();
 
+	//枠
+	objSIF.worldMat->trans = { 0,+stageImageLength.y * 0.5f,0.01f };
+	objSIF.worldMat->scale = { 0,0,0 };
+	objSIF.worldMat->SetWorld();
+
 	stageImageColor = { 1000,1000,1000,0.3f };
 	this->isLerpMoving = true;
 	this->stageM = stageM;
@@ -73,6 +78,8 @@ void StageSelectManager::Initialize(StageManager* stageM)
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s8.png", texhandleSI[8]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s9.png", texhandleSI[9]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s10.png", texhandleSI[10]);
+		//枠
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/UI_LevelStage_Frame.png", texhandleSIF);
 	}
 }
 
@@ -97,7 +104,7 @@ void StageSelectManager::Update()
 			isLeft = true;
 
 			objectSI[selectNum].worldMat->scale = { stageImageLength.x * 0,stageImageLength.y * 0,1.0f };
-			stageImageColor = { 1000,1000,1000,0.3f };
+			stageImageColor = { 1000,1000,1000,0.6f };
 			//音
 			Sound::GetInstance().PlayWave("arrow (2).wav", 0.5f);
 		}
@@ -118,7 +125,7 @@ void StageSelectManager::Update()
 			isRight = true;
 
 			objectSI[selectNum].worldMat->scale = { stageImageLength.x * 0,stageImageLength.y * 0,1.0f };
-			stageImageColor = { 1000,1000,1000,0.3f };
+			stageImageColor = { 1000,1000,1000,0.6f };
 			//
 			Sound::GetInstance().PlayWave("arrow (2).wav", 0.5f);
 		}
@@ -132,7 +139,7 @@ void StageSelectManager::Update()
 			object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),-stageImageRadius * 2.0f,0.0f };
 			//ステージイメージ
 			objectSI[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),+stageImageLength.y * 0.5f,0.1f };
-			objectSI[i].worldMat->scale = { LerpVec3({0,0,1.0f},{stageImageLength.x,stageImageLength.y,1.0f},EaseOut((float)lerpCount * 2.0f / (float)lerpCountMax)) };
+			objectSI[i].worldMat->scale = { LerpVec3({stageImageLength.x,0,1.0f},{stageImageLength.x,stageImageLength.y,1.0f},EaseOut((float)lerpCount * 3.0f / (float)lerpCountMax)) };
 
 			if (isRight)
 			{
@@ -145,6 +152,14 @@ void StageSelectManager::Update()
 			object[i].worldMat->SetWorld();
 			objectSI[i].worldMat->SetWorld();
 		}
+
+		//イメージの枠
+		{
+			objSIF.worldMat->trans = { 0,+stageImageLength.y * 0.5f,0.01f };
+			objSIF.worldMat->scale = { LerpVec3({0,0,1.0f},{stageImageLength.x * 1.5f,stageImageLength.y * 1.5f,1.0f},EaseIn((float)lerpCount / (float)lerpCountMax)) };
+			objSIF.worldMat->SetWorld();
+		}
+		
 
 		if (lerpCount >= lerpCountMax)
 		{
@@ -159,6 +174,7 @@ void StageSelectManager::Update()
 	{
 		//ステージイメージ
 		objectSI[selectNum].worldMat->scale = { stageImageLength.x * 1.3f,stageImageLength.y * 1.3f ,stageImageRadius };
+		objSIF.worldMat->scale = { stageImageLength.x * 1.5f,stageImageLength.y * 1.5f ,stageImageRadius };
 	}
 
 	//選択確定
@@ -195,6 +211,7 @@ void StageSelectManager::Draw(CameraManager* cameraM)
 		stageImageColor.w = 1.0f;
 	}
 	objectSI[selectNum].DrawBox(objectSI[selectNum].worldMat, &cameraM->usingCamera->viewMat, &cameraM->usingCamera->projectionMat, stageImageColor, texhandleSI[selectNum]);
+	objSIF.DrawBox(objSIF.worldMat, &cameraM->usingCamera->viewMat, &cameraM->usingCamera->projectionMat, { 1.0f,1.0f,1.0f,1.0f }, texhandleSIF);
 
 	//ステージ1とか
 	count++;
