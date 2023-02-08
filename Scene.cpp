@@ -247,7 +247,7 @@ void SceneGame::DrawSprite()
 {
 	if (scene->stageSelectM->isTutorial)
 	{
-		//scene->tutorial->Draw();
+		scene->tutorial->Draw();
 	}
 
 	obj[3].DrawBoxSprite({ 50,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[7]);
