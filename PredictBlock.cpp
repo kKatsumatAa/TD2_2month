@@ -68,7 +68,7 @@ void PredictBlockManager::Update()
 }
 
 
-void PredictBlockManager::Draw(Camera* camera)
+void PredictBlockManager::Draw(Camera* camera, bool isArrowDraw)
 {
 	for (PredictBlock& pB : predictBlocks_)
 	{
@@ -77,7 +77,7 @@ void PredictBlockManager::Draw(Camera* camera)
 
 	for (PredictArrow& pA : predictArrows_)
 	{
-		pA.Draw(camera);
+		pA.Draw(camera,isArrowDraw);
 	}
 }
 
@@ -120,16 +120,19 @@ void PredictArrow::Update(int count)
 	this->count = count;
 }
 
-void PredictArrow::Draw(Camera* camera)
+void PredictArrow::Draw(Camera* camera, bool isArrowDraw)
 {
 	Vec2 posNum = Vec3toVec2(worldTransform_.trans, camera->viewMat.matView, camera->projectionMat.matProjection);
 	Vec3 pos = Vec3(posNum.x + 180, posNum.y + 225, 0.0f);
 
 	float scale = fabsf(sinf(count * 0.011f)) * 0.011f + 0.22f;
-	
-	//âE
-	obj[0].DrawBoxSprite(pos, scale, XMFLOAT4(0.8f,0.8f,0.8f,0.85f), texhandle[0], Vec2(0.5f, 0.5f), false, false, 0.0f);
-	//ç∂
-	pos.x -= 180 * 2;
-	obj[1].DrawBoxSprite(pos, scale, XMFLOAT4(0.8f, 0.8f, 0.8f, 0.85f), texhandle[1], Vec2(0.5f, 0.5f), false, false, 0.0f);
+
+	if (isArrowDraw)
+	{
+		//âE
+		obj[0].DrawBoxSprite(pos, scale, XMFLOAT4(0.8f, 0.8f, 0.8f, 0.85f), texhandle[0], Vec2(0.5f, 0.5f), false, false, 0.0f);
+		//ç∂
+		pos.x -= 180 * 2;
+		obj[1].DrawBoxSprite(pos, scale, XMFLOAT4(0.8f, 0.8f, 0.8f, 0.85f), texhandle[1], Vec2(0.5f, 0.5f), false, false, 0.0f);
+	}
 }
