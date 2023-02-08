@@ -125,11 +125,11 @@ void SceneGame::Update()
 			}
 			if (scene->stageManager->selectStage == STAGE::STAGE1)
 			{
-				scene->tutorial->OverlapInitialize();
+				scene->tutorial->ConnectLimitInitialize();
 			}
 			if (scene->stageManager->selectStage == STAGE::STAGE2)
 			{
-				scene->tutorial->ConnectLimitInitialize();
+				scene->tutorial->OverlapInitialize();
 			}
 			if (scene->stageManager->selectStage == STAGE::STAGE3)
 			{

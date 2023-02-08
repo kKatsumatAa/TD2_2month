@@ -258,8 +258,8 @@ bool Player::PlayerOutArea()
 	int BlockDia = blockM->blockRadius_ * 2;
 	//‚¸‚ê‚Ä‚¢‚éX•ª‚Ì’·‚³
 	float outOfPositionXLeft = (blockM->outOfBlockNum) * BlockDia;
-	float outOfPositionXRight = (blockM->gameAreaWidth - blockM->outOfBlockNum + 5) * BlockDia;
-	if(GetWorldPos().x <= outOfPositionXRight && GetWorldPos().x >= -outOfPositionXLeft && GetWorldPos().z <= playerLimitZ && GetWorldPos().z > -playerLimitZ)
+	float outOfPositionXRight = (blockM->gameAreaWidth - blockM->outOfBlockNum + 6) * BlockDia;
+	if(GetWorldPos().x <= outOfPositionXRight && GetWorldPos().x >= -outOfPositionXLeft && GetWorldPos().z <= playerLimitZ && GetWorldPos().z > -playerLimitZ - BlockDia)
 	{
 		return false;
 	}
