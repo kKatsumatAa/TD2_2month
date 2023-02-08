@@ -14,7 +14,7 @@ void SceneTitle::Initialize()
 {
 	scene->lightManager->SetCircleShadowActive(0, false);
 	//スペースキー
-	obj[0].worldMat->scale = { 7.0f * 2.0f,7.0f * 0.8f,1.0f };
+	obj[0].worldMat->scale = { 310 / 15.0f,50 / 15.0f,1.0f };
 	obj[0].worldMat->trans = { 0,-33.0f,0.0f };
 	obj[0].worldMat->SetWorld();
 	//背景
@@ -50,7 +50,7 @@ void SceneTitle::Draw()
 {
 	count++;
 
-	obj[0].worldMat->scale = { 7.0f * 2.0f * (fabsf(sinf(count * 0.02f) * 0.5f) + 0.2f),7.0f * 0.8f * (fabsf(sinf(count * 0.02f) * 0.5f) + 0.2f),1.0f };
+	obj[0].worldMat->trans = { 0,-33.0f + sinf(count * 0.05f) * 2.0f,0.0f };
 	obj[0].worldMat->SetWorld();
 
 	//背景
@@ -61,9 +61,9 @@ void SceneTitle::Draw()
 	obj[1].DrawBox(obj[1].worldMat, &scene->cameraM->usingCamera->viewMat, &scene->cameraM->usingCamera->projectionMat,
 		{ 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[9]);
 
-	////スペースキー
-	//obj[0].DrawBox(obj[0].worldMat, &scene->cameraM->usingCamera->viewMat, &scene->cameraM->usingCamera->projectionMat,
-	//	{ 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[8]);
+	//スペースキー
+	obj[0].DrawBox(obj[0].worldMat, &scene->cameraM->usingCamera->viewMat, &scene->cameraM->usingCamera->projectionMat,
+		{ 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[8]);
 
 	ParticleManager::GetInstance()->Draw(scene->texhandle[1]);
 }
@@ -529,10 +529,9 @@ void Scene::Initialize()
 		TextureManager::LoadGraph(L"Resources/image/UI/UI_Border.png", texhandle[6]);
 		//Q
 		TextureManager::LoadGraph(L"Resources/image/backStageQ.png", texhandle[7]);
-		//スペース
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/spaceKey.png", texhandle[8]);
 		//タイトル
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/title.png", texhandle[9]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/press_space.png", texhandle[8]);
 	}
 
 	//model
