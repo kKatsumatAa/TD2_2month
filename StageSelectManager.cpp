@@ -10,13 +10,13 @@ void StageSelectManager::Initialize(StageManager* stageM)
 	{
 		object[i].worldMat->scale = { stageImageRadius * 1.6f,stageImageRadius * 1.6f,1.0f };
 		object[i].worldMat->rot = { 0,0,0 };
-		object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),-stageImageRadius * 2.0f,0.0f };
+		object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),-stageImageRadius * 2.5f,0.0f };
 		//object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f),0,0 };
 		object[i].worldMat->SetWorld();
 
 		//ステージイメージ
 		objectSI[i].worldMat->scale = { 0,0 ,1.0f };
-		objectSI[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),stageImageLength.y * 0.5f,0.1f };
+		objectSI[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),stageImageLength.y * 0.3f,0.1f };
 		objectSI[i].worldMat->SetWorld();
 	}
 	//背景
@@ -33,7 +33,7 @@ void StageSelectManager::Initialize(StageManager* stageM)
 	object[selectNumMax + 2].worldMat->SetWorld();
 
 	//枠
-	objSIF.worldMat->trans = { 0,+stageImageLength.y * 0.5f,0.01f };
+	objSIF.worldMat->trans = { 0,+stageImageLength.y * 0.3f,0.01f };
 	objSIF.worldMat->scale = { 0,0,0 };
 	objSIF.worldMat->SetWorld();
 
@@ -136,9 +136,9 @@ void StageSelectManager::Update()
 	{
 		for (int i = 0; i < this->selectNumMax; i++)
 		{
-			object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),-stageImageRadius * 2.0f,0.0f };
+			object[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),-stageImageRadius * 2.5f,0.0f };
 			//ステージイメージ
-			objectSI[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),+stageImageLength.y * 0.5f,0.1f };
+			objectSI[i].worldMat->trans = { (i - selectNum) * (stageImageRadius * 2.0f + stageImageRadius / 2.0f) * EaseOut((float)lerpCount / (float)lerpCountMax),+stageImageLength.y * 0.3f,0.1f };
 			objectSI[i].worldMat->scale = { LerpVec3({stageImageLength.x,0,1.0f},{stageImageLength.x,stageImageLength.y,1.0f},EaseOut((float)lerpCount * 3.0f / (float)lerpCountMax)) };
 
 			if (isRight)
@@ -155,7 +155,7 @@ void StageSelectManager::Update()
 
 		//イメージの枠
 		{
-			objSIF.worldMat->trans = { 0,+stageImageLength.y * 0.5f,0.01f };
+			objSIF.worldMat->trans = { 0,+stageImageLength.y * 0.3f,0.01f };
 			objSIF.worldMat->scale = { LerpVec3({0,0,1.0f},{stageImageLength.x * 1.5f,stageImageLength.y * 1.5f,1.0f},EaseIn((float)lerpCount / (float)lerpCountMax)) };
 			objSIF.worldMat->SetWorld();
 		}

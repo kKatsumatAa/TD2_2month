@@ -142,6 +142,7 @@ class SceneStageSelect : public SceneState
 {
 private:
 	float alpha = 0;
+	Object obj[5];
 
 public:
 	void Initialize()override;
