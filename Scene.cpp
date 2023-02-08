@@ -13,10 +13,14 @@ void SceneState::SetScene(Scene* scene)
 void SceneTitle::Initialize()
 {
 	scene->lightManager->SetCircleShadowActive(0, false);
-
-	obj[0].worldMat->scale = { 7.0f * 2.0f,7.0f * 0.8f,1.0f };
+	//スペースキー
+	obj[0].worldMat->scale = { 310 / 15.0f,50 / 15.0f,1.0f };
 	obj[0].worldMat->trans = { 0,-33.0f,0.0f };
 	obj[0].worldMat->SetWorld();
+	//背景
+	obj[1].worldMat->scale = { WindowsApp::GetInstance().window_width / 17.5f,WindowsApp::GetInstance().window_height / 17.5f ,1.0f };
+	obj[1].worldMat->trans = { 0,0,0.1f };
+	obj[1].worldMat->SetWorld();
 
 	scene->StopAllWave();
 	//音
@@ -25,7 +29,13 @@ void SceneTitle::Initialize()
 
 void SceneTitle::Update()
 {
+	if (count % 30 == 0)
+	{
+		float x = (float)rand() / RAND_MAX * 200.0f - 100.0f;
+		ParticleManager::GetInstance()->GenerateRandomParticle(20, 120, 3.0f, { x,50,0 }, 3.0f, 0.1f, { 0.1f,0.2f,0.9f,0.9f }, { 0,0,0,0.7f });
+	}
 
+	ParticleManager::GetInstance()->Update(&scene->cameraM->usingCamera->viewMat, &scene->cameraM->usingCamera->projectionMat);
 
 	//シーン遷移
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
@@ -38,19 +48,29 @@ void SceneTitle::Update()
 
 void SceneTitle::Draw()
 {
+	count++;
 
+	obj[0].worldMat->trans = { 0,-33.0f + sinf(count * 0.05f) * 2.0f,0.0f };
+	obj[0].worldMat->SetWorld();
 
+	//背景
+	if (alpha < 1.0f)
+	{
+		alpha += 0.01f;
+	}
+	obj[1].DrawBox(obj[1].worldMat, &scene->cameraM->usingCamera->viewMat, &scene->cameraM->usingCamera->projectionMat,
+		{ 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[9]);
+
+	//スペースキー
+	obj[0].DrawBox(obj[0].worldMat, &scene->cameraM->usingCamera->viewMat, &scene->cameraM->usingCamera->projectionMat,
+		{ 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[8]);
+
+	ParticleManager::GetInstance()->Draw(scene->texhandle[1]);
 }
 
 void SceneTitle::DrawSprite()
 {
-	count++;
 
-	obj[0].worldMat->scale = { 7.0f * 2.0f * (fabsf(sinf(count * 0.02f) * 0.5f) + 0.2f),7.0f * 0.8f * (fabsf(sinf(count * 0.02f) * 0.5f) + 0.2f),1.0f };
-	obj[0].worldMat->SetWorld();
-
-	obj[0].DrawBox(obj[0].worldMat, &scene->cameraM->usingCamera->viewMat, &scene->cameraM->usingCamera->projectionMat,
-		{ 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[8]);
 }
 
 //---------------------------------------------------------------------------------------
@@ -509,8 +529,9 @@ void Scene::Initialize()
 		TextureManager::LoadGraph(L"Resources/image/UI/UI_Border.png", texhandle[6]);
 		//Q
 		TextureManager::LoadGraph(L"Resources/image/backStageQ.png", texhandle[7]);
-		//
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/spaceKey.png", texhandle[8]);
+		//タイトル
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/title.png", texhandle[9]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/press_space.png", texhandle[8]);
 	}
 
 	//model
