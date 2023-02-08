@@ -158,7 +158,7 @@ void StageSelectManager::Update()
 	else
 	{
 		//ステージイメージ
-		objectSI[selectNum].worldMat->scale = { stageImageLength.x + fabsf(sinf(count * 0.03f)) * 1.5f,stageImageLength.y + fabsf(sinf(count * 0.03f)) * 1.5f ,stageImageRadius };
+		objectSI[selectNum].worldMat->scale = { stageImageLength.x * 1.3f,stageImageLength.y * 1.3f ,stageImageRadius };
 	}
 
 	//選択確定
