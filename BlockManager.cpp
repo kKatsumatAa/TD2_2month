@@ -479,7 +479,7 @@ void BlockManager::Draw(Camera* camera)
 			//Manager.cppで配列で定義したworldTransformの値をBlock.cppのDrawにセット
 			blocks_[i][j]->SetWorldPos(worldmats_[i][j].trans);
 			//draw->DrawCube3D(worldmats_[i][j], &camera->viewMat, &camera->projectionMat);
-			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j], isElec[i][j], isPushed[i][j], this->count, elecWaitAlpha_[i][j], isGoal_[i][j], isPopGoal,isElecConectedGoal);
+			blocks_[i][j]->Draw(camera, texhandle, form_[i][j], action_[i][j], isElec[i][j], isPushed[i][j], this->count, elecWaitAlpha_[i][j], isGoal_[i][j], isPopGoal);
 
 			if (action_[i][j] == Action::Connect && effectCount >= effectCountMax)
 			{
@@ -1121,7 +1121,7 @@ void BlockManager::PopEffect()
 
 			if (isStartPop == true && isPopWait == false)
 			{
-				Vec3 start{ -500.0f, 0.0f, 0.0f };
+				Vec3 start{ -400.0f, 0.0f, 0.0f };
 				Vec3 p2{ 80.0f, 0.0f, 0.0f };
 				Vec3 p3{ 100.0f, 20.0f, 0.0f };
 				/*Vec3 p4{ 100.0f, 160.0f, 0.0f };*/
@@ -1223,17 +1223,16 @@ float BlockManager::GetGameHeight()
 	return gameWidthY;
 }
 
-void BlockManager::DrawTurnArrow()
-{
-	if(axisLocked == true)
-	{
-		cameraM->usingCamera = cameraM->gameTurnCamera.get();
-		Vec2 posNum = Vec3toVec2(axis_pos_, cameraM->usingCamera->viewMat.matView, cameraM->usingCamera->projectionMat.matProjection);
-
-		predictBlockM->DrawArrowRight(cameraM->usingCamera, Vec3(posNum.x + 100, posNum.y + 150, 0.0f), 0.3f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),true);
-		predictBlockM->DrawArrowLeft(cameraM->usingCamera, Vec3(posNum.x - 100, posNum.y + 150, 0.0f), 0.3f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),true);
-	}
-}
+//void BlockManager::DrawTurnArrow()
+//{
+//	if(axisLocked == true)
+//	{
+//		cameraM->usingCamera = cameraM->gameTurnCamera.get();
+//		
+//		predictBlockM->DrawArrowRight(cameraM->usingCamera, Vec3(posNum.x + 90, posNum.y + 64, 0.0f), 0.3f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),true);
+//		predictBlockM->DrawArrowLeft(cameraM->usingCamera, Vec3(posNum.x - 90, posNum.y + 64, 0.0f), 0.3f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),true);
+//	}
+//}
 
 
 
@@ -1630,6 +1629,7 @@ void BlockManager::GeneratePredictBlock()
 		}
 	}
 
+	predictBlockM->AddPredictArrow(axis_pos_, { 1.0f,1.0f,1.0f });
 	
 }
 

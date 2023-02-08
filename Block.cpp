@@ -97,11 +97,11 @@ void Block::Updata(Vec3 pos, int form, Action action, bool isElec, int count, Wo
 		}
 		else if(form == Form::GEAR)
 		{
-			color = { 0.45f + fabsf(sinf(count * 0.025f)) * 0.55f,0.45f + fabsf(sinf(count * 0.025f)) * 0.55f, 0.3f ,0.95f };
+			color = { 0.55f + fabsf(sinf(count * 0.025f)) * 0.55f,0.55f + fabsf(sinf(count * 0.025f)) * 0.55f, 0.55f + fabsf(sinf(count * 0.025f)) * 0.55f ,0.95f };
 		}
 		else if(form == Form::Electric)
 		{
-			color = { 0.45f + fabsf(sinf(count * 0.025f)) * 0.55f,0.45f + fabsf(sinf(count * 0.025f)) * 0.55f, 0.3f ,0.95f };
+			color = { 0.15f + fabsf(sinf(count * 0.025f)) * 0.55f,0.15f + fabsf(sinf(count * 0.025f)) * 0.55f, 0.1f ,0.95f };
 		}
 		//count++;
 		if(count % 340 == 0 || count % 340 == 10 || count % 340 == 20 || count % 340 == 30)
@@ -126,7 +126,7 @@ void Block::SetColor(Vec3 blockColor)
 	color.z = blockColor.z;
 }
 
-void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec,bool isPushed, int count, float popAlpha, bool isPosGoal, bool isPopGoal,bool isElecConectedGoal)
+void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec,bool isPushed, int count, float popAlpha, bool isPosGoal, bool isPopGoal)
 {
 	if(worldTransform_.scale.x > scaleTmp) { worldTransform_.scale.x -= 0.05f; }
 	if(worldTransform_.scale.y > scaleTmp) { worldTransform_.scale.y -= 0.05f; }
@@ -154,7 +154,7 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 		/*goalMat.trans.y = -0.5;
 		draw[5].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &normal_[0], color);*/
 
-		if(form == Form::GOAL && isElecConectedGoal == true)
+		if(form == Form::GOAL )
 		{
 			/*connectEM->GenerateRandomConnectingEffect({ worldTransform_.trans.x,worldTransform_.trans.y + radius_ * 4.0f,worldTransform_.trans.z }
 			, radius_*1.0f, radius_*1.5f, 5, 3, { 0.1f,0.2,1.0f,0.5f });*/
@@ -197,7 +197,7 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 		draw[15].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color);*/
 
 
-		if(form == Form::GOAL && isElecConectedGoal == false)
+		if(form == Form::GOAL)
 		{
 			isGoalElec = false;
 			//goalMat.trans.y = -0.5;

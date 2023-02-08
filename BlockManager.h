@@ -133,8 +133,6 @@ public:
 	//ゲームの縦の長さ
 	float GetGameHeight();
 
-	void DrawTurnArrow();
-
 public:
 	bool isPopGoalEffect = false;
 
