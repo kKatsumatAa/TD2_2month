@@ -1230,8 +1230,8 @@ void BlockManager::DrawTurnArrow()
 		cameraM->usingCamera = cameraM->gameTurnCamera.get();
 		Vec2 posNum = Vec3toVec2(axis_pos_, cameraM->usingCamera->viewMat.matView, cameraM->usingCamera->projectionMat.matProjection);
 
-		//predictBlockM->DrawArrowRight(cameraM->usingCamera, Vec3(posNum.x + 100, posNum.y + 150, 0.0f), 0.3f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),true);
-		//predictBlockM->DrawArrowLeft(cameraM->usingCamera, Vec3(posNum.x - 100, posNum.y + 150, 0.0f), 0.3f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),true);
+		predictBlockM->DrawArrowRight(cameraM->usingCamera, Vec3(posNum.x + 100, posNum.y + 150, 0.0f), 0.3f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),true);
+		predictBlockM->DrawArrowLeft(cameraM->usingCamera, Vec3(posNum.x - 100, posNum.y + 150, 0.0f), 0.3f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),true);
 	}
 }
 
