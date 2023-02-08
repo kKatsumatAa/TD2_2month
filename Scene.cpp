@@ -241,8 +241,6 @@ void SceneGame::Draw()
 	ParticleManager::GetInstance()->Draw(scene->texhandle[1]);
 
 	scene->conectLimit_->Update(scene->player->GetWorldPos(), scene->cameraM->usingCamera);
-
-	scene->blockManager->DrawTurnArrow();
 }
 
 void SceneGame::DrawSprite()

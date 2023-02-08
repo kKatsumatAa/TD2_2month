@@ -22,11 +22,11 @@ void PredictBlock::Draw(Camera* camera)
 	float color = fabsf(sinf(count * 0.05f)) * 0.7f + 0.2f;
 	if (isRight)
 	{
-		obj.DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, model, { 0.8f,0.8f,0.1f,color });
+		obj.DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, model, { 0.80f,0.70f,0.1f,color });
 	}
 	else
 	{
-		obj.DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, model, { 0.8f,0.8f,0.1f,color-0.1f });
+		obj.DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, model, { 0.80f,0.70f,0.1f,color-0.1f });
 	}
 }
 
@@ -46,11 +46,7 @@ void PredictBlock::Draw(Camera* camera)
 
 void PredictBlockManager::Initialize()
 {
-	if(texhandle[0] == NULL)
-	{
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowYellow.png", texhandle[0]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowRed.png", texhandle[1]);
-	}
+	
 	count = 0;
 	ClearPredictBlock();
 }
@@ -59,11 +55,18 @@ void PredictBlockManager::Update()
 {
 	count++;
 
+
 	for (PredictBlock& pB : predictBlocks_)
 	{
 		pB.Update(this->count);
 	}
+
+	for(PredictArrow& pA : predictArrows_)
+	{
+		pA.Update(this->count);
+	}
 }
+
 
 void PredictBlockManager::Draw(Camera* camera)
 {
@@ -71,17 +74,11 @@ void PredictBlockManager::Draw(Camera* camera)
 	{
 		pB.Draw(camera);
 	}
-}
 
-void PredictBlockManager::DrawArrowLeft(Camera* camera, Vec3 pos, float scale, XMFLOAT4 color, bool reverseX)
-{
-	arrowObjLeft.DrawBoxSprite(pos, scale, color, texhandle[1], Vec2(0.0f, 0.0f), true,false,0.0f);
-}
-
-void PredictBlockManager::DrawArrowRight(Camera* camera,Vec3 pos, float scale, XMFLOAT4 color,bool reverseX)
-{
-	arrowObjRight.DrawBoxSprite(pos, scale, color, texhandle[0], Vec2(0.0f, 0.0f), false, false, 0.0f);
-	
+	for (PredictArrow& pA : predictArrows_)
+	{
+		pA.Draw(camera);
+	}
 }
 
 void PredictBlockManager::AddPredictBlock(Vec3 pos, Vec3 scale, bool isRight, Model* model)
@@ -91,9 +88,46 @@ void PredictBlockManager::AddPredictBlock(Vec3 pos, Vec3 scale, bool isRight, Mo
 	this->predictBlocks_.push_back(predictBlock);
 }
 
+void PredictBlockManager::AddPredictArrow(Vec3 pos, Vec3 scale)
+{
+	PredictArrow predictArrow;
+	predictArrow.Initialize(pos, scale);
+	this->predictArrows_.push_back(predictArrow);
+}
+
 void PredictBlockManager::ClearPredictBlock()
 {
 	this->predictBlocks_.clear();
+	this->predictArrows_.clear();
 }
 
+void PredictArrow::Initialize(Vec3 pos, Vec3 scale)
+{
+	worldTransform_.trans = pos;
+	worldTransform_.scale = scale;
+	worldTransform_.SetWorld();
 
+
+	if(texhandle[0] == NULL)
+	{
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowYellow.png", texhandle[0]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowRed.png", texhandle[1]);
+	}
+}
+
+void PredictArrow::Update(int count)
+{
+	this->count = count;
+}
+
+void PredictArrow::Draw(Camera* camera)
+{
+	Vec2 posNum = Vec3toVec2(worldTransform_.trans, camera->viewMat.matView, camera->projectionMat.matProjection);
+	Vec3 pos = Vec3(posNum.x + 80, posNum.y + 75, 0.0f);
+
+	float scale = fabsf(sinf(count * 0.04f)) * 0.2f + 0.2f;
+	
+	obj[0].DrawBoxSprite(pos, scale, XMFLOAT4(1.0f,1.0f,1.0f,1.0f), texhandle[0], Vec2(0.5f, 0.5f), false, false, 0.0f);
+	pos.x -= 80 * 2;
+	obj[1].DrawBoxSprite(pos, scale, XMFLOAT4(1.0f,1.0f,1.0f,1.0f), texhandle[1], Vec2(0.5f, 0.5f), false, false, 0.0f);
+}
