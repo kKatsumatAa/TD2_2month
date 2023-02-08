@@ -254,8 +254,7 @@ void SceneGame::DrawSprite()
 	obj[0].DrawBoxSprite({ 160,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[3]);
 	obj[1].DrawBoxSprite({ 280,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
 
-	//
-	//obj[2].DrawBoxSprite({ 0,0,0 }, 1.0f, { 1.0f,1.0f,1.0f,0.7f }, scene->texhandle[6]);
+	obj[2].DrawBoxSprite({ 0,0,0 }, 1.0f, { 1.0f,1.0f,1.0f,0.7f }, scene->texhandle[6]);
 
 	if (!scene->player->isGoal)
 	{
