@@ -72,6 +72,7 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 		this->rockOnImage = new RockOnImage();
 	}
 	*this->rockOnImage = *obj.rockOnImage;
+	this->axisLocked = obj.axisLocked;
 
 	for (int i = 0; i < blockWidth; i++)
 	{
@@ -139,6 +140,7 @@ void BlockManager::Initialize(RockOnImage* rockOnImage, ConnectingEffectManager*
 	if (texhandle[0] == NULL)
 	{
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/effect1.png", texhandle[0]);
+		
 	}
 
 	//初期化
@@ -381,6 +383,8 @@ void BlockManager::Update()
 		}
 	}
 
+	
+	
 	//for文のストッパーをリセットする
 	isStopElecConectedGoal = false;
 
@@ -467,7 +471,6 @@ void BlockManager::Draw(Camera* camera)
 	effectCount++;
 	effectCount2++;
 	count++;
-
 
 	for (int i = 0; i < stageWidth_; i++)
 	{
@@ -606,6 +609,7 @@ void BlockManager::RegistAxisGear(const Vec3& pos)
 				{
 					//軸登録する
 					isAxis_[i][j] = true;
+					
 					//軸のブロックの座標を得る
 					axis_pos_.x = worldmats_[i][j].trans.x;
 					axis_pos_.y = worldmats_[i][j].trans.y;
@@ -669,6 +673,8 @@ bool BlockManager::CheckAxisGear(Vec3 pos)
 						}
 					}
 
+					axisLocked = true;
+
 					//予測線
 					GeneratePredictBlock();
 
@@ -695,6 +701,7 @@ void BlockManager::ReleseConectedBlock()
 				//全部何もしていない状態に
 				action_[i][j] = Action::None;
 				isAxis_[i][j] = false;
+				axisLocked = false;
 			}
 		}
 	}
@@ -1216,6 +1223,18 @@ float BlockManager::GetGameHeight()
 	return gameWidthY;
 }
 
+void BlockManager::DrawTurnArrow()
+{
+	if(axisLocked == true)
+	{
+		cameraM->usingCamera = cameraM->gameTurnCamera.get();
+		Vec2 posNum = Vec3toVec2(axis_pos_, cameraM->usingCamera->viewMat.matView, cameraM->usingCamera->projectionMat.matProjection);
+
+		//predictBlockM->DrawArrowRight(cameraM->usingCamera, Vec3(posNum.x + 100, posNum.y + 150, 0.0f), 0.3f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),true);
+		//predictBlockM->DrawArrowLeft(cameraM->usingCamera, Vec3(posNum.x - 100, posNum.y + 150, 0.0f), 0.3f, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),true);
+	}
+}
+
 
 
 //重なった時の処理
@@ -1572,6 +1591,8 @@ void BlockManager::GeneratePredictBlock()
 			worldMat[1].trans.y = 0.8f;
 			worldMat[1].trans.z = axis_pos_.z + GetVec3xM4(distancePos[i][j], worldMat[1].matWorld, 0).z;
 
+			
+
 			this->electricBlock = electricBlock; this->doorGoalClosed = doorGoalClosed;
 
 			if (form_[i][j] == Form::BLOCK)
@@ -1604,8 +1625,12 @@ void BlockManager::GeneratePredictBlock()
 				predictBlockM->AddPredictBlock(worldMat[0].trans, { blockRadius_,blockRadius_,blockRadius_ }, false, this->electricBlock);
 				predictBlockM->AddPredictBlock(worldMat[1].trans, { blockRadius_,blockRadius_,blockRadius_ }, true, this->electricBlock);
 			}
+
+			
 		}
 	}
+
+	
 }
 
 //重なっていたブロックを元に戻す処理
@@ -2082,6 +2107,7 @@ void BlockManager::ResetBlock()
 
 	isConectedGoal = false;
 	isChangedConectGoal = false;
+	axisLocked = false;
 
 	//繋がっているフラグ初期化
 	for (int i = 0; i < stageWidth_; i++)
@@ -2237,6 +2263,7 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 	needGoalCount = 0;
 	isPopWait = false;
 	isStartPop = true;
+	axisLocked = false;
 
 	//読み込み用ワールド行列を設定
 	for (int i = 0; i < stageWidth_; i++)

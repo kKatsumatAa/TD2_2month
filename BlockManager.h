@@ -133,6 +133,8 @@ public:
 	//ゲームの縦の長さ
 	float GetGameHeight();
 
+	void DrawTurnArrow();
+
 public:
 	bool isPopGoalEffect = false;
 
@@ -369,5 +371,7 @@ private:
 
 	float gameWidthX;
 	float gameWidthY;
+
+	bool axisLocked;
 };
 

@@ -194,6 +194,8 @@ void SceneGame::Draw()
 	ParticleManager::GetInstance()->Draw(scene->texhandle[1]);
 
 	scene->conectLimit_->Update(scene->player->GetWorldPos(), scene->cameraM->usingCamera);
+
+	scene->blockManager->DrawTurnArrow();
 }
 
 void SceneGame::DrawSprite()
@@ -421,6 +423,7 @@ Scene::~Scene()
 	delete model[11];
 	delete model[12];
 	delete model[13];
+	delete model[14];
 }
 
 void Scene::ChangeState(SceneState* state)

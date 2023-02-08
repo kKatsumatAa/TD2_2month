@@ -46,6 +46,11 @@ void PredictBlock::Draw(Camera* camera)
 
 void PredictBlockManager::Initialize()
 {
+	if(texhandle[0] == NULL)
+	{
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowYellow.png", texhandle[0]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowRed.png", texhandle[1]);
+	}
 	count = 0;
 	ClearPredictBlock();
 }
@@ -66,6 +71,17 @@ void PredictBlockManager::Draw(Camera* camera)
 	{
 		pB.Draw(camera);
 	}
+}
+
+void PredictBlockManager::DrawArrowLeft(Camera* camera, Vec3 pos, float scale, XMFLOAT4 color, bool reverseX)
+{
+	arrowObjLeft.DrawBoxSprite(pos, scale, color, texhandle[1], Vec2(0.0f, 0.0f), true,false,0.0f);
+}
+
+void PredictBlockManager::DrawArrowRight(Camera* camera,Vec3 pos, float scale, XMFLOAT4 color,bool reverseX)
+{
+	arrowObjRight.DrawBoxSprite(pos, scale, color, texhandle[0], Vec2(0.0f, 0.0f), false, false, 0.0f);
+	
 }
 
 void PredictBlockManager::AddPredictBlock(Vec3 pos, Vec3 scale, bool isRight, Model* model)

@@ -11,6 +11,7 @@ private:
 
 	bool isRight = false;
 
+	
 public:
 	void Initialize(Vec3 pos, Vec3 scale, bool isRight, Model* model);
 	void Update(int count);
@@ -23,6 +24,9 @@ class PredictBlockManager
 {
 private:
 
+	UINT64 texhandle[2];
+	Object arrowObjRight;
+	Object arrowObjLeft;
 
 
 public:
@@ -35,6 +39,8 @@ public:
 	void Initialize();
 	void Update();
 	void Draw(Camera* camera);
+	void DrawArrowRight(Camera* camera, Vec3 pos, float scale, XMFLOAT4 color, bool reverseX);
+	void DrawArrowLeft(Camera* camera, Vec3 pos, float scale, XMFLOAT4 color, bool reverseX);
 
 	void AddPredictBlock(Vec3 pos, Vec3 scale, bool isRight, Model* model);
 	void ClearPredictBlock();
