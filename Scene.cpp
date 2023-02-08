@@ -12,6 +12,14 @@ void SceneState::SetScene(Scene* scene)
 //タイトル
 void SceneTitle::Initialize()
 {
+	scene->lightManager->SetCircleShadowActive(0, false);
+
+	obj[0].worldMat->scale = { 7.0f * 2.0f,7.0f * 0.8f,1.0f };
+	obj[0].worldMat->trans = { 0,-33.0f,0.0f };
+	obj[0].worldMat->SetWorld();
+
+	scene->StopAllWave();
+	//音
 
 }
 
@@ -20,18 +28,27 @@ void SceneTitle::Update()
 
 
 	//シーン遷移
-	/*if ()
+	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
 	{
-		scene->ChangeState(new SceneGame);
-	}*/
+		scene->ChangeState(new SceneStageSelect);
+	}
 }
 
 void SceneTitle::Draw()
 {
+
+
 }
 
 void SceneTitle::DrawSprite()
 {
+	count++;
+
+	obj[0].worldMat->scale = { 7.0f * 2.0f * (fabsf(sinf(count * 0.02f) * 0.5f) + 0.2f),7.0f * 0.8f * (fabsf(sinf(count * 0.02f) * 0.5f) + 0.2f),1.0f };
+	obj[0].worldMat->SetWorld();
+
+	obj[0].DrawBox(obj[0].worldMat, &scene->cameraM->usingCamera->viewMat, &scene->cameraM->usingCamera->projectionMat,
+		{ 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[8]);
 }
 
 //---------------------------------------------------------------------------------------
@@ -61,6 +78,12 @@ void SceneStageSelect::Update()
 	{
 		ParticleManager::GetInstance()->GenerateRandomParticle(50, 120, 3.0f, { 0,0,0 }, 5.0f, 0.1f, { 0.1f,0.5f,0.5,0.99f }, { 0,0,0,0 });
 		scene->ChangeState(new SceneLoad);
+	}
+	//ステージセレクトに戻る
+	else if (KeyboardInput::GetInstance().KeyTrigger(DIK_Q) || KeyboardInput::GetInstance().KeyTrigger(DIK_ESCAPE))
+	{
+		//scene->cameraM->usingCamera = scene->cameraM->stageSelectCamera.get();
+		scene->ChangeState(new SceneTitle);
 	}
 }
 
@@ -483,6 +506,8 @@ void Scene::Initialize()
 		TextureManager::LoadGraph(L"Resources/image/UI/UI_Border.png", texhandle[6]);
 		//Q
 		TextureManager::LoadGraph(L"Resources/image/backStageQ.png", texhandle[7]);
+		//
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/spaceKey.png", texhandle[8]);
 	}
 
 	//model
@@ -561,7 +586,8 @@ void Scene::Initialize()
 	lightManager->SetDirLightActive(0, true);
 	lightManager->SetDirLightActive(1, true);
 	lightManager->SetDirLightActive(2, false);
-	lightManager->SetDirLightDir(1, XMVectorSet(0, 0, 1.0f, 0));
+	lightManager->SetDirLightDir(0, XMVectorSet(0, 0, 1.0f, 0));
+	lightManager->SetDirLightDir(1, XMVectorSet(0, -1.0f, 0, 0));
 	//点光源
 	for (int i = 0; i < 6; i++)
 	{
@@ -598,7 +624,7 @@ void Scene::Initialize()
 
 
 	//ステート変更
-	ChangeState(new SceneStageSelect);
+	ChangeState(new SceneTitle);
 }
 
 int count = 0;
