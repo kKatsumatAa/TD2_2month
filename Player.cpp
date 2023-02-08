@@ -182,7 +182,7 @@ void Player::Update()
 	if (worldTransform_.scale.z > scaleTmp) { worldTransform_.scale.z -= 0.05f; }
 	if (worldTransform_.scale.z < scaleTmp) { worldTransform_.scale.z += 0.05f; }
 
-	
+
 
 	//先行入力
 	if (KeyboardInput::GetInstance().KeyTrigger(DIK_SPACE))
@@ -584,6 +584,13 @@ void StateMoveP::Update()
 		{
 			player->conectCount_ -= 1;
 			player->moveCount += 1;
+
+			//チュートリアル
+			if (player->tutorial->GetState() == TUTORIAL::CONNECT_LIMIT && player->tutorial->GetStateNum() == 0 && player->conectCount_ <= 0)
+			{
+				player->tutorial->AddStateNum();
+				player->tutorial->spriteCount = 0;
+			}
 		}
 		player->isMove = false;
 		player->posXTmp = player->GetWorldPos().x;
@@ -755,6 +762,9 @@ void StateConnectP::Update()
 			player->isConnect = false;
 
 			player->bufferedPushSpace = false;
+
+			//演出
+			player->conectLimit_->BeginNumEffect(30, 2.8f, { 0.3f,0.9f,0.9f,1.0f });
 
 			//演出
 			Vec3 scale = player->GetWorldTransForm()->scale;

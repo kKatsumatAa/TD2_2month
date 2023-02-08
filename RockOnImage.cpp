@@ -47,7 +47,9 @@ void RockOnImage::Update(/*Vec3 pos*/)
 	{
 		count++;
 
-		isGoalConnectScale = 0.1f + fabs(sinf(count * 0.05f)) * 0.09f;
+		isGoalConnectScale = 0.12f + fabs(sinf(count * 0.01f)) * 0.05f;
+
+		isGoalConnectRot += 0.3f;
 	}
 }
 
