@@ -582,7 +582,7 @@ void StageManager::SetStage10(const int& blockWidth, const int& blockHeight)
 
 	//プレイヤーの制限回数の上限を設定
 
-	conectLimit_->SetCount(10);
+	conectLimit_->SetCount(40);
 	conectLimit_->ResetCount();
 
 	//形の設定
