@@ -68,7 +68,7 @@ void PredictBlockManager::Update()
 }
 
 
-void PredictBlockManager::Draw(Camera* camera)
+void PredictBlockManager::Draw(Camera* camera, bool isArrowDraw)
 {
 	for (PredictBlock& pB : predictBlocks_)
 	{
@@ -77,7 +77,7 @@ void PredictBlockManager::Draw(Camera* camera)
 
 	for (PredictArrow& pA : predictArrows_)
 	{
-		pA.Draw(camera);
+		pA.Draw(camera,isArrowDraw);
 	}
 }
 
@@ -98,7 +98,9 @@ void PredictBlockManager::AddPredictArrow(Vec3 pos, Vec3 scale)
 void PredictBlockManager::ClearPredictBlock()
 {
 	this->predictBlocks_.clear();
+
 	this->predictArrows_.clear();
+	
 }
 
 void PredictArrow::Initialize(Vec3 pos, Vec3 scale)
@@ -110,24 +112,42 @@ void PredictArrow::Initialize(Vec3 pos, Vec3 scale)
 
 	if(texhandle[0] == NULL)
 	{
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowYellow.png", texhandle[0]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowRed.png", texhandle[1]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowRight.png", texhandle[0]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowLeft.png", texhandle[1]);
 	}
 }
 
 void PredictArrow::Update(int count)
 {
+	if(colorAlpha < 0.75f)
+	{
+		colorAlpha += 0.01f;
+	}
+	else
+	{
+		colorAlpha = 0.75f;
+	}
 	this->count = count;
 }
 
-void PredictArrow::Draw(Camera* camera)
+void PredictArrow::Draw(Camera* camera, bool isArrowDraw)
 {
 	Vec2 posNum = Vec3toVec2(worldTransform_.trans, camera->viewMat.matView, camera->projectionMat.matProjection);
-	Vec3 pos = Vec3(posNum.x + 80, posNum.y + 75, 0.0f);
+	Vec3 pos = Vec3(posNum.x + 180, posNum.y + 225, 0.0f);
 
-	float scale = fabsf(sinf(count * 0.04f)) * 0.2f + 0.2f;
-	
-	obj[0].DrawBoxSprite(pos, scale, XMFLOAT4(1.0f,1.0f,1.0f,1.0f), texhandle[0], Vec2(0.5f, 0.5f), false, false, 0.0f);
-	pos.x -= 80 * 2;
-	obj[1].DrawBoxSprite(pos, scale, XMFLOAT4(1.0f,1.0f,1.0f,1.0f), texhandle[1], Vec2(0.5f, 0.5f), false, false, 0.0f);
+	float scale = fabsf(sinf(count * 0.011f)) * 0.011f + 0.22f;
+
+	if (isArrowDraw)
+	{
+		//âE
+		obj[0].DrawBoxSprite(pos, scale, XMFLOAT4(0.8f, 0.8f, 0.8f, colorAlpha), texhandle[0], Vec2(0.5f, 0.5f), false, false, 0.0f);
+		//ç∂
+		pos.x -= 180 * 2;
+		obj[1].DrawBoxSprite(pos, scale, XMFLOAT4(0.8f, 0.8f, 0.8f, colorAlpha), texhandle[1], Vec2(0.5f, 0.5f), false, false, 0.0f);
+	}
+}
+
+void PredictArrow::fadeColor()
+{
+	colorAlpha -= 0.01f;
 }

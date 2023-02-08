@@ -234,7 +234,7 @@ void SceneGame::Draw()
 	scene->connectEM->Draw(*scene->cameraM.get()->usingCamera);
 	scene->connectE2M->Draw(scene->cameraM.get()->usingCamera);
 
-	scene->predictBlockManager->Draw(scene->cameraM.get()->usingCamera);
+	scene->predictBlockManager->Draw(scene->cameraM.get()->usingCamera, !scene->blockManager->isPopedGoal2);
 
 	scene->goalConnectEM->Draw(scene->cameraM.get()->usingCamera);
 
