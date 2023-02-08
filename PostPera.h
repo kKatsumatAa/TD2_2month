@@ -26,6 +26,8 @@ struct EffectConstBuffer
 	unsigned int isBarrelCurve = false;
 	//走査線
 	unsigned int isScanningLine = false;
+	//グレースケール
+	unsigned int isGrayScale = false;
 	//時間
 	unsigned int time = 0;
 };
