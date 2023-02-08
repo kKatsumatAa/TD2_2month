@@ -21,9 +21,9 @@ public:
 class PredictArrow
 {
 private:
-	UINT64 texhandle[2];
+	UINT64 texhandle[6];
 	int count = 0;
-	Object obj[2];
+	Object obj[4];
 
 	WorldMat worldTransform_;
 

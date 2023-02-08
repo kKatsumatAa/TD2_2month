@@ -110,8 +110,11 @@ void PredictArrow::Initialize(Vec3 pos, Vec3 scale)
 
 	if(texhandle[0] == NULL)
 	{
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowYellow.png", texhandle[0]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowRed.png", texhandle[1]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowRight.png", texhandle[0]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowLeft.png", texhandle[1]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowLeftOnly.png", texhandle[2]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/lightLeft.png", texhandle[3]);
+
 	}
 }
 
@@ -123,11 +126,13 @@ void PredictArrow::Update(int count)
 void PredictArrow::Draw(Camera* camera)
 {
 	Vec2 posNum = Vec3toVec2(worldTransform_.trans, camera->viewMat.matView, camera->projectionMat.matProjection);
-	Vec3 pos = Vec3(posNum.x + 80, posNum.y + 75, 0.0f);
+	Vec3 pos = Vec3(posNum.x + 180, posNum.y + 225, 0.0f);
 
-	float scale = fabsf(sinf(count * 0.04f)) * 0.2f + 0.2f;
+	float scale = fabsf(sinf(count * 0.011f)) * 0.011f + 0.22f;
 	
-	obj[0].DrawBoxSprite(pos, scale, XMFLOAT4(1.0f,1.0f,1.0f,1.0f), texhandle[0], Vec2(0.5f, 0.5f), false, false, 0.0f);
-	pos.x -= 80 * 2;
-	obj[1].DrawBoxSprite(pos, scale, XMFLOAT4(1.0f,1.0f,1.0f,1.0f), texhandle[1], Vec2(0.5f, 0.5f), false, false, 0.0f);
+	//âE
+	obj[0].DrawBoxSprite(pos, scale, XMFLOAT4(0.8f,0.8f,0.8f,0.85f), texhandle[0], Vec2(0.5f, 0.5f), false, false, 0.0f);
+	//ç∂
+	pos.x -= 180 * 2;
+	obj[1].DrawBoxSprite(pos, scale, XMFLOAT4(0.8f, 0.8f, 0.8f, 0.85f), texhandle[1], Vec2(0.5f, 0.5f), false, false, 0.0f);
 }
