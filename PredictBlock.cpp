@@ -109,7 +109,6 @@ void PredictArrow::Initialize(Vec3 pos, Vec3 scale)
 	worldTransform_.scale = scale;
 	worldTransform_.SetWorld();
 
-
 	if(texhandle[0] == NULL)
 	{
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowRight.png", texhandle[0]);
@@ -119,13 +118,13 @@ void PredictArrow::Initialize(Vec3 pos, Vec3 scale)
 
 void PredictArrow::Update(int count)
 {
-	if(colorAlpha < 0.75f)
+	if(colorAlpha < 0.65f)
 	{
 		colorAlpha += 0.01f;
 	}
 	else
 	{
-		colorAlpha = 0.75f;
+		colorAlpha = 0.65f;
 	}
 	this->count = count;
 }

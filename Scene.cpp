@@ -180,11 +180,11 @@ void SceneGame::Update()
 			}
 			if (scene->stageManager->selectStage == STAGE::STAGE3)
 			{
-				scene->tutorial->ButtonInitialize();
+				scene->tutorial->ElectricInitialize();
 			}
 			if (scene->stageManager->selectStage == STAGE::STAGE5)
 			{
-				scene->tutorial->ElectricInitialize();
+				scene->tutorial->ButtonInitialize();
 			}
 
 			GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get());
@@ -250,12 +250,12 @@ void SceneGame::DrawSprite()
 		scene->tutorial->Draw();
 	}
 
-	obj[3].DrawBoxSprite({ 50,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[7]);
-	obj[0].DrawBoxSprite({ 160,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[3]);
-	obj[1].DrawBoxSprite({ 280,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
+	//obj[3].DrawBoxSprite({ 50,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[7]);
+	//obj[0].DrawBoxSprite({ 160,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[3]);
+	//obj[1].DrawBoxSprite({ 280,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
 
-	//
-	obj[2].DrawBoxSprite({ 0,0,0 }, 1.0f, { 1.0f,1.0f,1.0f,0.7f }, scene->texhandle[6]);
+	////
+	//obj[2].DrawBoxSprite({ 0,0,0 }, 1.0f, { 1.0f,1.0f,1.0f,0.7f }, scene->texhandle[6]);
 
 	if (!scene->player->isGoal)
 	{
