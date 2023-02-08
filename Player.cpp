@@ -236,6 +236,7 @@ void Player::Draw(Camera* camera)
 	}
 	else
 	{
+		Sound::GetInstance().StopWave("tutu4.wav");
 		color = { 1.0f,1.0f,1.0f,1.0f };
 	}
 
