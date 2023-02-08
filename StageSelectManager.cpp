@@ -25,11 +25,11 @@ void StageSelectManager::Initialize(StageManager* stageM)
 	object[selectNumMax].worldMat->SetWorld();
 	//スペースボタン
 	object[selectNumMax + 1].worldMat->scale = { stageImageRadius * 1.6f,stageImageRadius * 0.6f,1.0f };
-	object[selectNumMax + 1].worldMat->trans = { 0,-30.0f,0.0f };
+	object[selectNumMax + 1].worldMat->trans = { 0,-33.0f,0.0f };
 	object[selectNumMax + 1].worldMat->SetWorld();
 	//十字キー
 	object[selectNumMax + 2].worldMat->scale = { stageImageRadius * 1.1f,stageImageRadius * 0.9f,1.0f };
-	object[selectNumMax + 2].worldMat->trans = { 50.0f,-30.0f,0.0f };
+	object[selectNumMax + 2].worldMat->trans = { 50.0f,-33.0f,0.0f };
 	object[selectNumMax + 2].worldMat->SetWorld();
 
 	//枠
