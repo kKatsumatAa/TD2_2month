@@ -61,9 +61,9 @@ void SceneTitle::Draw()
 	obj[1].DrawBox(obj[1].worldMat, &scene->cameraM->usingCamera->viewMat, &scene->cameraM->usingCamera->projectionMat,
 		{ 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[9]);
 
-	//スペースキー
-	obj[0].DrawBox(obj[0].worldMat, &scene->cameraM->usingCamera->viewMat, &scene->cameraM->usingCamera->projectionMat,
-		{ 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[8]);
+	////スペースキー
+	//obj[0].DrawBox(obj[0].worldMat, &scene->cameraM->usingCamera->viewMat, &scene->cameraM->usingCamera->projectionMat,
+	//	{ 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[8]);
 
 	ParticleManager::GetInstance()->Draw(scene->texhandle[1]);
 }

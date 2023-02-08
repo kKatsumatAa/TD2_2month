@@ -19,7 +19,7 @@ void PredictBlock::Update(int count)
 
 void PredictBlock::Draw(Camera* camera)
 {
-	float color = fabsf(sinf(count * 0.05f)) * 0.7f + 0.2f;
+	float color = fabsf(sinf(count * 0.02f)) * 0.9f + 0.0f;
 	if (isRight)
 	{
 		obj.DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, model, { 0.80f,0.70f,0.1f,color });
