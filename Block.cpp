@@ -126,7 +126,7 @@ void Block::SetColor(Vec3 blockColor)
 	color.z = blockColor.z;
 }
 
-void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec,bool isPushed, int count, float popAlpha, bool isPosGoal, bool isPopGoal)
+void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, bool isElec,bool isPushed, int count, float popAlpha, bool isPosGoal, bool isPopGoal,bool isElecConectedGoal)
 {
 	if(worldTransform_.scale.x > scaleTmp) { worldTransform_.scale.x -= 0.05f; }
 	if(worldTransform_.scale.y > scaleTmp) { worldTransform_.scale.y -= 0.05f; }
@@ -154,7 +154,7 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 		/*goalMat.trans.y = -0.5;
 		draw[5].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &normal_[0], color);*/
 
-		if(form == Form::GOAL)
+		if(form == Form::GOAL && isElecConectedGoal == true)
 		{
 			/*connectEM->GenerateRandomConnectingEffect({ worldTransform_.trans.x,worldTransform_.trans.y + radius_ * 4.0f,worldTransform_.trans.z }
 			, radius_*1.0f, radius_*1.5f, 5, 3, { 0.1f,0.2,1.0f,0.5f });*/
@@ -163,7 +163,7 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 
 				/*goalMat.trans.y = -0.5;
 				draw[11].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &normal_[0], color);*/
-
+			draw[16].DrawModel(&goalMat_, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color);
 			isGoalElec = true;
 			worldTransform_.trans.y = 0.2f;
 			draw[6].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &goal_[0], color);
@@ -197,15 +197,14 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 		draw[15].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color);*/
 
 
-		if(form == Form::GOAL)
+		if(form == Form::GOAL && isElecConectedGoal == false)
 		{
 			isGoalElec = false;
-			/*goalMat.trans.y = -0.5;
-			draw[11].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &normal_[0], color);*/
-
+			//goalMat.trans.y = -0.5;
+			//draw[11].DrawModel(&goalMat_, &camera->viewMat, &camera->projectionMat, &normal_[0], color);
+			draw[16].DrawModel(&goalMat_, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color);
 			worldTransform_.trans.y = 0.2f;
 			draw[11].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &doorGoalClosed_[0], color);
-			
 		}
 
 	}
@@ -230,7 +229,6 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 		goalMat_.trans.y = 0.5f;
 		//draw[17].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &beforePopGoal_[0], color);
 		draw[17].DrawModel(&goalMat_, &camera->viewMat, &camera->projectionMat, &beforePopGoal_[0], color);
-
 	}
 
 	//ゴール下のブロック
