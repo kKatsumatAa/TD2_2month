@@ -22,10 +22,12 @@ class PredictArrow
 {
 private:
 	UINT64 texhandle[2];
-
+	int count = 0;
 	Object obj[2];
 
 	WorldMat worldTransform_;
+
+	float scaleArrow;
 
 public:
 	void Initialize(Vec3 pos, Vec3 scale);

@@ -55,9 +55,15 @@ void PredictBlockManager::Update()
 {
 	count++;
 
+
 	for (PredictBlock& pB : predictBlocks_)
 	{
 		pB.Update(this->count);
+	}
+
+	for(PredictArrow& pA : predictArrows_)
+	{
+		pA.Update(this->count);
 	}
 }
 
@@ -111,14 +117,16 @@ void PredictArrow::Initialize(Vec3 pos, Vec3 scale)
 
 void PredictArrow::Update(int count)
 {
+	this->count = count;
 }
 
 void PredictArrow::Draw(Camera* camera)
 {
 	Vec2 posNum = Vec3toVec2(worldTransform_.trans, camera->viewMat.matView, camera->projectionMat.matProjection);
-	Vec3 pos = Vec3(posNum.x + 80, posNum.y + 64, 0.0f);
+	Vec3 pos = Vec3(posNum.x + 80, posNum.y + 75, 0.0f);
 
-	float scale = 0.3f;
+	float scale = fabsf(sinf(count * 0.04f)) * 0.2f + 0.2f;
+	
 	obj[0].DrawBoxSprite(pos, scale, XMFLOAT4(1.0f,1.0f,1.0f,1.0f), texhandle[0], Vec2(0.5f, 0.5f), false, false, 0.0f);
 	pos.x -= 80 * 2;
 	obj[1].DrawBoxSprite(pos, scale, XMFLOAT4(1.0f,1.0f,1.0f,1.0f), texhandle[1], Vec2(0.5f, 0.5f), false, false, 0.0f);
