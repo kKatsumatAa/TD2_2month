@@ -152,7 +152,7 @@ public:
 	const float blockRadius_ = 1.8f;
 
 	//ずれているブロックのマス目の数
-	static const int outOfBlockNum = 10;
+	static const int outOfBlockNum = 9;
 
 	PredictBlockManager* predictBlockM;
 private:
