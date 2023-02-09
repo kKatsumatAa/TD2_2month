@@ -47,10 +47,17 @@ void Player::Initialize(float moveDistance, BlockManager* blockM, PlayerSocket* 
 	}
 	colorCount = 0;
 
+	isLoadConectCount = true;
+
 	//繋ぐ回数を設定
 	conectCount_ = conectLimit_->GetConectcount();
 	//繋ぐ回数制限を設定
 	conectCountMax = conectLimit_->GetLimitCount();
+
+	//スタートマスのフラグ
+	isStartConect = true;
+	//進んだカウントを記録する
+	moveCount = 0;
 
 	worldTransform_.scale = { scaleTmp,0,scaleTmp };
 	//worldTransform_.trans = { 0,moveDistance,0 };
@@ -131,6 +138,11 @@ void Player::Reset()
 	conectCount_ = conectLimit_->GetConectcount();
 	//繋ぐ回数制限を設定
 	conectCountMax = conectLimit_->GetLimitCount();
+
+	//スタートマスのフラグ
+	isStartConect = true;
+	//進んだカウントを記録する
+	moveCount = 0;
 
 
 	worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
@@ -260,7 +272,7 @@ bool Player::PlayerOutArea()
 	//ずれているX分の長さ
 	float outOfPositionXLeft = (blockM->outOfBlockNum) * BlockDia;
 	float outOfPositionXRight = (blockM->gameAreaWidth - blockM->outOfBlockNum + 6) * BlockDia;
-	if(GetWorldPos().x <= outOfPositionXRight && GetWorldPos().x >= -outOfPositionXLeft && GetWorldPos().z <= playerLimitZ && GetWorldPos().z > -playerLimitZ - BlockDia)
+	if (GetWorldPos().x <= outOfPositionXRight && GetWorldPos().x >= -outOfPositionXLeft && GetWorldPos().z <= playerLimitZ && GetWorldPos().z > -playerLimitZ - BlockDia)
 	{
 		return false;
 	}
@@ -315,6 +327,9 @@ Player& Player::operator=(const Player& obj)
 	*this->conectLimit_ = *obj.conectLimit_;
 	this->moveCount = obj.moveCount;
 	this->color = obj.color;
+
+	isStartConect = obj.isStartConect;
+	isLoadConectCount = obj.isLoadConectCount;
 
 	colorCount = obj.colorCount;
 
