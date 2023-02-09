@@ -139,10 +139,10 @@ void PredictArrow::Draw(Camera* camera, bool isArrowDraw)
 	if (isArrowDraw)
 	{
 		//âE
-		obj[0].DrawBoxSprite(pos, scale, XMFLOAT4(0.8f, 0.8f, 0.8f, colorAlpha), texhandle[0], Vec2(0.5f, 0.5f), false, false, 0.0f);
+		obj[0].DrawBoxSprite(pos, scale, XMFLOAT4(1.0f, 1.0f, 1.0f, colorAlpha), texhandle[0], Vec2(0.5f, 0.5f), false, false, 0.0f);
 		//ç∂
 		pos.x -= 180 * 2;
-		obj[1].DrawBoxSprite(pos, scale, XMFLOAT4(0.8f, 0.8f, 0.8f, colorAlpha), texhandle[1], Vec2(0.5f, 0.5f), false, false, 0.0f);
+		obj[1].DrawBoxSprite(pos, scale, XMFLOAT4(0.5f, 0.5f, 0.5f, colorAlpha), texhandle[1], Vec2(0.5f, 0.5f), false, false, 0.0f);
 	}
 }
 
