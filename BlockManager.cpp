@@ -17,8 +17,8 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 	this->goalEffect = obj.goalEffect;
 	this->model_ = obj.model_;
 	this->goalCameraPoses = obj.goalCameraPoses;
-	this->block_ = obj.block_;
-	this->blocks_ = obj.blocks_;
+	//this->block_ = obj.block_;
+	//this->blocks_ = obj.blocks_;
 	this->worldmat_ = obj.worldmat_;
 	this->worldmats_ = obj.worldmats_;
 	this->axis_pos_ = obj.axis_pos_;
@@ -56,11 +56,6 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 	this->goalPopY = obj.goalPopY;
 	this->isCheckElec_ = obj.isCheckElec_;
 	this->checkCount = obj.checkCount;
-	if (predictBlockM == nullptr)
-	{
-		this->predictBlockM = new PredictBlockManager();
-	}
-	*this->predictBlockM = *obj.predictBlockM;
 	this->isConectedGoal = obj.isConectedGoal;
 	this->isChangedConectGoal = obj.isChangedConectGoal;
 	this->isElecConectedGoal = obj.isElecConectedGoal;
@@ -109,7 +104,8 @@ BlockManager::~BlockManager()
 	//ブロックの削除
 	blocks_.clear();
 	worldmats_.clear();
-	delete block_;
+	block_.release();
+	//delete predictBlockM;
 	//delete worldmat_;
 }
 
@@ -147,13 +143,15 @@ void BlockManager::Initialize(RockOnImage* rockOnImage, ConnectingEffectManager*
 	for (int i = 0; i < blockWidth; i++)
 	{
 		//ブロック型を持てる空のベクタを追加(行列でいうi列)
-		blocks_.push_back(vector<Block*>());
+		blocks_.push_back(vector<std::unique_ptr <Block>>());
 
 		for (int j = 0; j < blockHeight; j++)
 		{
-			block_ = new Block;
+			block_ = std::make_unique<Block>();
+			block_->Initialize(connectEM, normal, locked, goal, Socket, button, disconnectedBlock,
+				disconnectedButton, disconnectedSocketBlock, electricBlock, doorGoalClosed, overLapBlock, beforeButtonPop);
 			//ブロックの要素を追加
-			blocks_[i].push_back(block_);
+			blocks_[i].push_back(std::move(block_));
 		}
 	}
 
@@ -166,7 +164,7 @@ void BlockManager::Initialize(RockOnImage* rockOnImage, ConnectingEffectManager*
 		for (int j = 0; j < blockHeight; j++)
 		{
 			//ブロックの要素を追加
-			worldmats_[i].push_back(worldmat_);
+			worldmats_[i].push_back(std::move(worldmat_));
 		}
 	}
 
@@ -199,8 +197,7 @@ void BlockManager::Initialize(RockOnImage* rockOnImage, ConnectingEffectManager*
 
 			worldmats_[i][j].SetWorld();
 
-			block_->Initialize(connectEM, normal, locked, goal, Socket, button, disconnectedBlock,
-				disconnectedButton, disconnectedSocketBlock, electricBlock, doorGoalClosed, overLapBlock, beforeButtonPop);
+
 
 			//軸になっているかどうか
 			isAxis_[i][j] = false;

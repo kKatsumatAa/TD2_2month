@@ -7,15 +7,16 @@
 class SaveData
 {
 public:
-	Player player ;
-	PlayerSocket playerSocket ;
-	BlockManager blockManager ;
-	CameraManager cameraManager ;
+	std::unique_ptr < Player> player;
+	std::unique_ptr < PlayerSocket> playerSocket;
+	std::unique_ptr < BlockManager> blockManager;
+	std::unique_ptr < CameraManager> cameraManager;
+	std::unique_ptr < PredictBlockManager> predictBlockM;
 
 public:
 	SaveData(const SaveData& obj) {};
-	SaveData() {}
-	~SaveData();
+	SaveData() { ; }
+	~SaveData() { ; }
 };
 
 /// <summary>
@@ -32,10 +33,11 @@ private:
 	PlayerSocket* playerSocket_;
 	BlockManager* blockManager_;
 	CameraManager* cameraManager_;
+	PredictBlockManager* predictBlockM;
 
-	SaveData* saveData;
+	std::unique_ptr< SaveData> saveData;
 
-	std::list<SaveData*> saveDatas_;
+	std::list < std::unique_ptr< SaveData>> saveDatas_;
 
 public:
 	//コピーコンストラクタを無効
@@ -45,7 +47,7 @@ public:
 	//インスタンスを取得（シングルトン）
 	static GetBackManager* GetInstance();
 
-	void Initialize(Player* player, PlayerSocket* playerSocket, BlockManager* blockManager, CameraManager* cameraM);
+	void Initialize(Player* player, PlayerSocket* playerSocket, BlockManager* blockManager, CameraManager* cameraM, PredictBlockManager* predictBlockM);
 
 	//現在の状態をセーブ
 	void SaveDatas();

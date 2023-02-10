@@ -6,7 +6,7 @@ const int blockHeight = 13;
 
 Block::~Block()
 {
-
+	//delete[] this->draw;
 }
 
 void Block::Initialize(ConnectingEffectManager* connectEM,

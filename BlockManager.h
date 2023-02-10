@@ -177,8 +177,8 @@ private:
 
 	//ブロックの二次元配列
 	//std::unique_ptr < std::vector <std::vector<Block>> > blocks_ ;
-	Block* block_;
-	std::vector<std::vector<Block*>> blocks_;
+	std::unique_ptr <Block> block_;
+	std::vector<std::vector<std::unique_ptr <Block>>> blocks_;
 
 	//各ブロック用のワールドトランスフォーム
 	WorldMat worldmat_;

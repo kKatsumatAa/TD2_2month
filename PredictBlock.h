@@ -13,6 +13,10 @@ private:
 
 
 public:
+	~PredictBlock();
+
+	PredictBlock& operator=(const PredictBlock& obj);
+
 	void Initialize(Vec3 pos, Vec3 scale, bool isRight, Model* model);
 	void Update(int count);
 	void Draw(Camera* camera);
@@ -31,6 +35,8 @@ private:
 	float colorAlpha = 0.0f;
 
 public:
+	PredictArrow& operator=(const PredictArrow& obj);
+
 	void Initialize(Vec3 pos, Vec3 scale);
 	void Update(int count);
 	void Draw(Camera* camera, bool isArrowDraw);
@@ -44,9 +50,14 @@ private:
 
 
 public:
+	 ~PredictBlockManager();
+
+	 PredictBlockManager &  operator=(const PredictBlockManager & obj);
+
+
 	int count = 0;
-	std::list<PredictBlock> predictBlocks_;
-	std::list<PredictArrow> predictArrows_;
+	std::list<std::unique_ptr<PredictBlock>> predictBlocks_;
+	std::list< std::unique_ptr<PredictArrow>> predictArrows_;
 
 	//PredictBlockManager& operator=( PredictBlockManager& obj);
 

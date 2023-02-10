@@ -1,7 +1,23 @@
 #include "PredictBlock.h"
 
 
-void PredictBlock::Initialize(Vec3 pos, Vec3 scale,bool isRight, Model* model)
+PredictBlock::~PredictBlock()
+{
+
+}
+
+PredictBlock& PredictBlock::operator=(const PredictBlock& obj)
+{
+	this->obj = obj.obj;
+	count = obj.count;
+	model = obj.model;
+	worldTransform_ = obj.worldTransform_;
+	isRight = obj.isRight;
+
+	return *this;
+}
+
+void PredictBlock::Initialize(Vec3 pos, Vec3 scale, bool isRight, Model* model)
 {
 	worldTransform_.trans = pos;
 	worldTransform_.scale = scale;
@@ -26,7 +42,7 @@ void PredictBlock::Draw(Camera* camera)
 	}
 	else
 	{
-		obj.DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, model, { 0.80f,0.70f,0.1f,color-0.1f });
+		obj.DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, model, { 0.80f,0.70f,0.1f,color - 0.1f });
 	}
 }
 
@@ -44,9 +60,42 @@ void PredictBlock::Draw(Camera* camera)
 //	return *this;
 //}
 
+PredictBlockManager::~PredictBlockManager()
+{
+	predictArrows_.clear();
+	predictBlocks_.clear();
+}
+
+PredictBlockManager& PredictBlockManager::operator=(const PredictBlockManager& obj)
+{
+	count = obj.count;
+	//中身のみコピー
+	this->predictBlocks_.clear();
+	for (std::list<std::unique_ptr<PredictBlock>>::const_iterator itr = obj.predictBlocks_.begin(); itr != obj.predictBlocks_.end(); itr++)
+	{
+		std::unique_ptr<PredictBlock> p = std::make_unique<PredictBlock>();
+
+		p->operator=(*itr->get());
+
+		predictBlocks_.push_back(std::move(p));
+	}
+
+	this->predictArrows_.clear();
+	for (std::list<std::unique_ptr<PredictArrow>>::const_iterator itr = obj.predictArrows_.begin(); itr != obj.predictArrows_.end(); itr++)
+	{
+		std::unique_ptr<PredictArrow> p = std::make_unique<PredictArrow>();
+
+		p->operator=(*itr->get());
+
+		predictArrows_.push_back(std::move(p));
+	}
+
+	return *this;
+}
+
 void PredictBlockManager::Initialize()
 {
-	
+
 	count = 0;
 	ClearPredictBlock();
 }
@@ -56,43 +105,43 @@ void PredictBlockManager::Update()
 	count++;
 
 
-	for (PredictBlock& pB : predictBlocks_)
+	for (std::unique_ptr<PredictBlock>& pB : predictBlocks_)
 	{
-		pB.Update(this->count);
+		pB->Update(this->count);
 	}
 
-	for(PredictArrow& pA : predictArrows_)
+	for (std::unique_ptr<PredictArrow>& pA : predictArrows_)
 	{
-		pA.Update(this->count);
+		pA->Update(this->count);
 	}
 }
 
 
 void PredictBlockManager::Draw(Camera* camera, bool isArrowDraw)
 {
-	for (PredictBlock& pB : predictBlocks_)
+	for (std::unique_ptr<PredictBlock>& pB : predictBlocks_)
 	{
-		pB.Draw(camera);
+		pB->Draw(camera);
 	}
 
-	for (PredictArrow& pA : predictArrows_)
+	for (std::unique_ptr<PredictArrow>& pA : predictArrows_)
 	{
-		pA.Draw(camera,isArrowDraw);
+		pA->Draw(camera, isArrowDraw);
 	}
 }
 
 void PredictBlockManager::AddPredictBlock(Vec3 pos, Vec3 scale, bool isRight, Model* model)
 {
-	PredictBlock predictBlock;
-	predictBlock.Initialize(pos, scale,isRight, model);
-	this->predictBlocks_.push_back(predictBlock);
+	std::unique_ptr<PredictBlock> predictBlock = std::make_unique<PredictBlock>();
+	predictBlock->Initialize(pos, scale, isRight, model);
+	this->predictBlocks_.push_back(std::move(predictBlock));
 }
 
 void PredictBlockManager::AddPredictArrow(Vec3 pos, Vec3 scale)
 {
-	PredictArrow predictArrow;
-	predictArrow.Initialize(pos, scale);
-	this->predictArrows_.push_back(predictArrow);
+	std::unique_ptr<PredictArrow> predictArrow = std::make_unique<PredictArrow>();
+	predictArrow->Initialize(pos, scale);
+	this->predictArrows_.push_back(std::move(predictArrow));
 }
 
 void PredictBlockManager::ClearPredictBlock()
@@ -100,7 +149,29 @@ void PredictBlockManager::ClearPredictBlock()
 	this->predictBlocks_.clear();
 
 	this->predictArrows_.clear();
-	
+
+}
+
+
+//------------------------------------------------------------------
+PredictArrow& PredictArrow::operator=(const PredictArrow& obj)
+{
+	for (int i = 0; i < _countof(obj.texhandle); i++)
+	{
+		this->texhandle[i] = obj.texhandle[i];
+	}
+	count = obj.count;
+	for (int i = 0; i < _countof(obj.obj); i++)
+	{
+		this->obj[i] = obj.obj[i];
+	}
+
+	worldTransform_ = obj.worldTransform_;
+
+	scaleArrow = obj.scaleArrow;
+	colorAlpha = obj.colorAlpha;
+
+	return *this;
 }
 
 void PredictArrow::Initialize(Vec3 pos, Vec3 scale)
@@ -109,7 +180,7 @@ void PredictArrow::Initialize(Vec3 pos, Vec3 scale)
 	worldTransform_.scale = scale;
 	worldTransform_.SetWorld();
 
-	if(texhandle[0] == NULL)
+	if (texhandle[0] == NULL)
 	{
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowRight.png", texhandle[0]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowLeft.png", texhandle[1]);
@@ -118,7 +189,7 @@ void PredictArrow::Initialize(Vec3 pos, Vec3 scale)
 
 void PredictArrow::Update(int count)
 {
-	if(colorAlpha < 0.65f)
+	if (colorAlpha < 0.65f)
 	{
 		colorAlpha += 0.01f;
 	}
