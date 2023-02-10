@@ -13,7 +13,6 @@
 
 class BlockManager
 {
-
 	using Form = Block::Form;
 	using Action = Block::Action;
 
@@ -75,12 +74,6 @@ public:
 
 	//進む先に重なっているブロックがあるかどうか
 	//bool GetIsOverlapBlock(Vec3 pos);
-
-	//ブロック座標読み込み
-	//void LoadBlockPosData();
-	//void UpdateBlockPos();
-	//ブロックの発生関数
-	void BlockPop(Vec3 pos);
 
 	//ブロックのリセット
 	void ResetBlock();
@@ -221,11 +214,6 @@ private:
 
 	//ブロックの大きさ
 	Vec3 scale_;
-
-
-	//前のフレームにおいて選択用のブロックの情報を保存しておく変数
-	/*int prevBlockX;
-	int prevBlockY;*/
 
 	//選択カーソルのクールタイマーの設定時間
 	static const int32_t kSelectTime = 17;
