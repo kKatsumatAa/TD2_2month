@@ -12,6 +12,7 @@ public:
 	std::unique_ptr < BlockManager> blockManager;
 	std::unique_ptr < CameraManager> cameraManager;
 	std::unique_ptr < PredictBlockManager> predictBlockM;
+	std::unique_ptr < RockOnImage> rockOnImage;
 
 public:
 	SaveData(const SaveData& obj) {};
@@ -34,6 +35,7 @@ private:
 	BlockManager* blockManager_;
 	CameraManager* cameraManager_;
 	PredictBlockManager* predictBlockM;
+	RockOnImage* rockOnImage;
 
 	std::unique_ptr< SaveData> saveData;
 
@@ -47,7 +49,7 @@ public:
 	//インスタンスを取得（シングルトン）
 	static GetBackManager* GetInstance();
 
-	void Initialize(Player* player, PlayerSocket* playerSocket, BlockManager* blockManager, CameraManager* cameraM, PredictBlockManager* predictBlockM);
+	void Initialize(Player* player, PlayerSocket* playerSocket, BlockManager* blockManager, CameraManager* cameraM, PredictBlockManager* predictBlockM, RockOnImage* rockOnImage);
 
 	//現在の状態をセーブ
 	void SaveDatas();

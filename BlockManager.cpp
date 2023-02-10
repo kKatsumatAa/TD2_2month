@@ -62,11 +62,6 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 	this->isStopElecConectedGoal = obj.isStopElecConectedGoal;
 	this->isStartPop = obj.isStartPop;
 	this->isPopWait = obj.isPopWait;
-	if (rockOnImage == nullptr)
-	{
-		this->rockOnImage = new RockOnImage();
-	}
-	*this->rockOnImage = *obj.rockOnImage;
 	this->axisLocked = obj.axisLocked;
 
 	for (int i = 0; i < blockWidth; i++)

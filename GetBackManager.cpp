@@ -11,7 +11,7 @@ GetBackManager* GetBackManager::GetInstance()
 	return &instance;
 }
 
-void GetBackManager::Initialize(Player* player, PlayerSocket* playerSocket, BlockManager* blockManager, CameraManager* cameraM, PredictBlockManager* predictBlockM)
+void GetBackManager::Initialize(Player* player, PlayerSocket* playerSocket, BlockManager* blockManager, CameraManager* cameraM, PredictBlockManager* predictBlockM, RockOnImage* rockOnImage)
 {
 	saveDatas_.clear();
 
@@ -20,6 +20,7 @@ void GetBackManager::Initialize(Player* player, PlayerSocket* playerSocket, Bloc
 	blockManager_ = blockManager;
 	cameraManager_ = cameraM;
 	this->predictBlockM = predictBlockM;
+	this->rockOnImage = rockOnImage;
 	//SaveDatas();
 }
 
@@ -32,6 +33,7 @@ void GetBackManager::SaveDatas()
 	saveData->blockManager = std::make_unique<BlockManager>();
 	saveData->cameraManager = std::make_unique<CameraManager>();
 	saveData->predictBlockM = std::make_unique<PredictBlockManager>();
+	saveData->rockOnImage = std::make_unique<RockOnImage>();
 
 	//中身のみコピー(ポインターを渡しても同じものなので)
 	saveData->player->operator=(*player_);
@@ -39,6 +41,7 @@ void GetBackManager::SaveDatas()
 	saveData->blockManager->operator=(*blockManager_);
 	saveData->cameraManager->operator=(*cameraManager_);
 	saveData->predictBlockM->operator=(*predictBlockM);
+	saveData->rockOnImage->operator=(*rockOnImage);
 
 	saveDatas_.push_back(std::move(saveData));
 }
@@ -63,6 +66,7 @@ void GetBackManager::GetBack()
 		blockManager_->operator=(std::move(*(*itr).get()->blockManager.get()));
 		cameraManager_->operator=(std::move(*(*itr).get()->cameraManager.get()));
 		predictBlockM->operator=(std::move(*(*itr).get()->predictBlockM.get()));
+		rockOnImage->operator=(std::move(*(*itr).get()->rockOnImage.get()));
 
 		saveDatas_.erase(itr);
 

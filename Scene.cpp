@@ -79,6 +79,10 @@ void SceneStageSelect::Initialize()
 {
 	//Object::effectFlags.isBarrelCurve = true;
 
+	//一手戻る機能リセット
+	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get(), scene->predictBlockManager.get()
+		, scene->rockOnImage);
+
 	scene->lightManager->SetCircleShadowActive(0, false);
 	scene->stageSelectM->Initialize(scene->stageManager.get());
 	scene->cameraM->Initialize();
@@ -187,7 +191,9 @@ void SceneGame::Update()
 				scene->tutorial->ButtonInitialize();
 			}
 
-			GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get(),scene->predictBlockManager.get());
+			//一手戻る機能リセット
+			GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get(),scene->predictBlockManager.get()
+			,scene->rockOnImage);
 		}
 		if (KeyboardInput::GetInstance().KeyTrigger(DIK_Z))
 		{
@@ -369,7 +375,8 @@ void SceneLoad::LoadFunc()
 	scene->stageManager->Initialize(scene->blockManager, scene->tutorial.get(), scene->conectLimit_);
 	scene->player->SetConectCount(scene->stageManager->GetConectCount());
 
-	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get(),scene->predictBlockManager.get());
+	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get(),scene->predictBlockManager.get()
+		, scene->rockOnImage);
 
 	//カメラ位置セット
 	scene->cameraM->gameMainCamera->SetEye({ { scene->stageManager->stageWidth / 2.0f * scene->blockManager->blockRadius_ * 2.0f }
