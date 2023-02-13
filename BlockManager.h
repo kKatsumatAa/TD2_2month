@@ -200,7 +200,7 @@ private:
 
 	//回転する前の形
 	Form beforeForm_[blockWidth][blockHeight] = { Form::BLOCK };
-
+	//ブロックが行動を行っているかどうか
 	Action action_[blockWidth][blockHeight] = { Action::None };
 
 	//軸になっているかどうか
@@ -210,22 +210,22 @@ private:
 	Vec3 axis_pos_;
 
 	//選択されているかどうか
-	int isCount;
+	//int isCount;
 
 	//ブロックの大きさ
-	Vec3 scale_;
+	//Vec3 scale_;
 
 	//選択カーソルのクールタイマーの設定時間
-	static const int32_t kSelectTime = 17;
+	//static const int32_t kSelectTime = 17;
 
 	//選択カーソルのクールタイマー
-	int32_t selectTimer_ = kSelectTime;
+	//int32_t selectTimer_ = kSelectTime;
 
 	//選択状態にしてもいいか
-	bool changedAction_;
-	bool isChanged_;
+	//bool changedAction_;
+	//bool isChanged_;
 
-	Vec3 transforms[blockWidth][blockHeight];
+	//Vec3 transforms[blockWidth][blockHeight];
 
 	Object draw[10];
 
@@ -251,21 +251,22 @@ private:
 	const int effectCountMax = 10;
 
 	//比較用に保存しておく変数
-	Vec3 comparisonPos[blockWidth][blockHeight];
+	//Vec3 comparisonPos[blockWidth][blockHeight];
 
 	//ファイル読み込み用の変数
-	std::stringstream blocksPos;
+	//std::stringstream blocksPos;
 
 	//待機中フラグ
-	bool isWaitBlock;
+	//bool isWaitBlock;
 	//待機中タイマー
-	int32_t blockWaitTimer;
+	//int32_t blockWaitTimer;
 	//各ブロックの当たり判定保存用
-	int isOverLap_[blockWidth][blockHeight];
+	//int isOverLap_[blockWidth][blockHeight];
 
 	//回転する前の形状
 	Form beforeTurn_[blockWidth][blockHeight];
 
+	//描画用に高さを調整する変数
 	bool isUp[blockWidth][blockHeight];
 	bool isDown[blockWidth][blockHeight];
 
@@ -283,10 +284,11 @@ private:
 	int stageHeight_;
 
 	//上がる前の座標
-	float beforeTransY[blockWidth][blockHeight];
+	//float beforeTransY[blockWidth][blockHeight];
 
 	//ボタンが押されたかどうか(配列にしているのは複数ボタンに対応するため)
 	bool isPushed[blockWidth][blockHeight];
+	//押されたボタンの数
 	int pushedCount_;
 
 	//ゴールの位置を保存する配列
@@ -302,7 +304,7 @@ private:
 
 	//通った場所を記憶するためのフラグ
 	bool isElec[blockWidth][blockHeight];
-	bool isDecisionElec[blockWidth][blockHeight];
+	//bool isDecisionElec[blockWidth][blockHeight];
 
 	//ゴールが出現しているかどうか
 	bool isPopGoal;
@@ -310,7 +312,7 @@ private:
 	//一回のみゴール出現演出
 	bool isPopedGoal = false;
 
-
+	//これはfor文の条件で消せそう
 	int  goalPopX, goalPopY;
 
 	bool isCheckElec_ = false;
@@ -333,14 +335,15 @@ private:
 	float timeRate[blockWidth][blockHeight];	// 何% 時間が進んだか(率)
 
 	//P1 からスタートする
-	size_t startIndex_[blockWidth][blockHeight];
+	//size_t startIndex_[blockWidth][blockHeight];
 
+	//ポップ用のカウント
 	size_t elecCount_[blockWidth][blockHeight] = { 0 };
 
 	//電気タイマーの移動量
-	float elecWaitTimerMove_;
+	//float elecWaitTimerMove_;
 	//電気タイマーの待ち時間
-	float elecWaitTimer_;
+	//float elecWaitTimer_;
 	//変更するアルファ値
 	float elecWaitAlpha_[blockWidth][blockHeight] = { 0 };
 	//変更するアルファ値の移動量
@@ -355,6 +358,7 @@ private:
 
 	RockOnImage* rockOnImage;
 
+	//距離制限用のゲーム内の長さ
 	float gameWidthX;
 	float gameWidthY;
 
