@@ -7,6 +7,7 @@
 class ConectLimit
 {
 public:
+	~ConectLimit();
 	void Initialize();
 
 	void Update(Vec3 pos, Camera* camera);

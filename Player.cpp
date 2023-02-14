@@ -2,6 +2,12 @@
 #include "GetBackManager.h"
 #include "ParticleManager.h"
 
+Player::~Player()
+{
+	delete stateConnectTurn;
+	delete stateMove;
+	//delete conectLimit_;
+}
 
 void Player::ChangeStateTurnConnect(PlayerState* state)
 {
@@ -324,7 +330,7 @@ Player& Player::operator=(const Player& obj)
 	this->worldTransform_ = obj.worldTransform_;
 	this->worldTransform_.SetWorld();
 	this->velocity = obj.velocity;
-	*this->conectLimit_ = *obj.conectLimit_;
+	//*this->conectLimit_ = *obj.conectLimit_;
 	this->moveCount = obj.moveCount;
 	this->color = obj.color;
 

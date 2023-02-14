@@ -100,6 +100,7 @@ BlockManager::~BlockManager()
 	blocks_.clear();
 	worldmats_.clear();
 	block_.release();
+
 	//delete predictBlockM;
 	//delete worldmat_;
 }

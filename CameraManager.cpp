@@ -22,6 +22,8 @@ CameraManager::~CameraManager()
 	gameMainCamera.reset();
 	gameTurnCamera.reset();
 	goalEffectCamera.reset();
+
+	delete state;
 }
 
 void CameraManager::ChangeUsingCameraState(UsingCameraState* state)

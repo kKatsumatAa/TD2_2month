@@ -182,6 +182,10 @@ public:
 	//std::unique_ptr<ConectLimit> conectLimit_;
 	ConectLimit* conectLimit_;
 
+
+public:
+	~Player();
+
 	void ChangeStateTurnConnect(PlayerState* state);
 	void ChangeStateMove(PlayerState* state);
 

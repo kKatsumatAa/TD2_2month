@@ -11,7 +11,8 @@ GetBackManager* GetBackManager::GetInstance()
 	return &instance;
 }
 
-void GetBackManager::Initialize(Player* player, PlayerSocket* playerSocket, BlockManager* blockManager, CameraManager* cameraM, PredictBlockManager* predictBlockM, RockOnImage* rockOnImage)
+void GetBackManager::Initialize(Player* player, PlayerSocket* playerSocket, BlockManager* blockManager, CameraManager* cameraM, PredictBlockManager* predictBlockM, RockOnImage* rockOnImage
+, ConectLimit* connectLimit)
 {
 	saveDatas_.clear();
 
@@ -21,6 +22,7 @@ void GetBackManager::Initialize(Player* player, PlayerSocket* playerSocket, Bloc
 	cameraManager_ = cameraM;
 	this->predictBlockM = predictBlockM;
 	this->rockOnImage = rockOnImage;
+	this->connectLimit = connectLimit;
 	//SaveDatas();
 }
 
@@ -28,12 +30,13 @@ void GetBackManager::SaveDatas()
 {
 	saveData = std::make_unique<SaveData>();
 
-	saveData->player = std::make_unique<Player>();
+ 	saveData->player = std::make_unique<Player>();
 	saveData->playerSocket = std::make_unique<PlayerSocket>();
 	saveData->blockManager = std::make_unique<BlockManager>();
 	saveData->cameraManager = std::make_unique<CameraManager>();
 	saveData->predictBlockM = std::make_unique<PredictBlockManager>();
 	saveData->rockOnImage = std::make_unique<RockOnImage>();
+	saveData->connectLimit = std::make_unique<ConectLimit>();
 
 	//中身のみコピー(ポインターを渡しても同じものなので)
 	saveData->player->operator=(*player_);
@@ -42,6 +45,7 @@ void GetBackManager::SaveDatas()
 	saveData->cameraManager->operator=(*cameraManager_);
 	saveData->predictBlockM->operator=(*predictBlockM);
 	saveData->rockOnImage->operator=(*rockOnImage);
+	saveData->connectLimit->operator=(*connectLimit);
 
 	saveDatas_.push_back(std::move(saveData));
 }
@@ -67,6 +71,7 @@ void GetBackManager::GetBack()
 		cameraManager_->operator=(std::move(*(*itr).get()->cameraManager.get()));
 		predictBlockM->operator=(std::move(*(*itr).get()->predictBlockM.get()));
 		rockOnImage->operator=(std::move(*(*itr).get()->rockOnImage.get()));
+		connectLimit->operator=(std::move(*(*itr).get()->connectLimit.get()));
 
 		saveDatas_.erase(itr);
 

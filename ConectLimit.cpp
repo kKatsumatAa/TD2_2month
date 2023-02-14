@@ -1,5 +1,11 @@
 #include "ConectLimit.h"
 
+
+ConectLimit::~ConectLimit()
+{
+	//delete &drawNum;
+}
+
 void ConectLimit::Initialize()
 {
 	if (texhandle == NULL)

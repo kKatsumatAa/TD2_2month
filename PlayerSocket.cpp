@@ -2,6 +2,11 @@
 #include "ParticleManager.h"
 
 
+PlayerSocket::~PlayerSocket()
+{
+	delete state;
+}
+
 void PlayerSocket::ChangeState(PlayerSocketState* state)
 {
 	delete this->state;

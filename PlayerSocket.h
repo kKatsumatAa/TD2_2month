@@ -91,6 +91,8 @@ public:
 	bool GetIsUsed() { return isUsed; }
 	void SetIsUsed(bool is) { isUsed = is; }
 
+	~PlayerSocket();
+
 	void ChangeState(PlayerSocketState* state);
 
 
