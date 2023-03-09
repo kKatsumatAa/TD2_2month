@@ -196,8 +196,8 @@ void SceneGame::Update()
 			}
 
 			//一手戻る機能リセット
-			GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get(),scene->predictBlockManager.get()
-			,scene->rockOnImage, scene->conectLimit_);
+			GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get(), scene->predictBlockManager.get()
+				, scene->rockOnImage, scene->conectLimit_);
 		}
 		if (KeyboardInput::GetInstance().KeyTrigger(DIK_Z))
 		{
@@ -255,19 +255,19 @@ void SceneGame::Draw()
 
 void SceneGame::DrawSprite()
 {
-	if (scene->stageSelectM->isTutorial)
+	if (scene->stageSelectM->isTutorial && !scene->player->isGoal)
 	{
 		scene->tutorial->Draw();
 	}
-
-	obj[3].DrawBoxSprite({ 50,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[7]);
-	obj[0].DrawBoxSprite({ 160,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[3]);
-	obj[1].DrawBoxSprite({ 280,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
 
 	obj[2].DrawBoxSprite({ 0,0,0 }, 1.0f, { 1.0f,1.0f,1.0f,0.7f }, scene->texhandle[6]);
 
 	if (!scene->player->isGoal)
 	{
+		obj[3].DrawBoxSprite({ 50,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[7]);
+		obj[0].DrawBoxSprite({ 160,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[3]);
+		obj[1].DrawBoxSprite({ 280,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
+
 		scene->conectLimit_->Draw();
 		scene->rockOnImage->Draw(scene->cameraM.get()->usingCamera);
 	}
@@ -379,7 +379,7 @@ void SceneLoad::LoadFunc()
 	scene->stageManager->Initialize(scene->blockManager, scene->tutorial.get(), scene->conectLimit_);
 	scene->player->SetConectCount(scene->stageManager->GetConectCount());
 
-	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get(),scene->predictBlockManager.get()
+	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get(), scene->predictBlockManager.get()
 		, scene->rockOnImage, scene->conectLimit_);
 
 	//カメラ位置セット

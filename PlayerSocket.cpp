@@ -5,6 +5,7 @@
 PlayerSocket::~PlayerSocket()
 {
 	delete state;
+	delete obj;
 }
 
 void PlayerSocket::ChangeState(PlayerSocketState* state)
