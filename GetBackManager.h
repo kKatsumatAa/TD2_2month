@@ -18,7 +18,7 @@ public:
 public:
 	SaveData(const SaveData& obj) {};
 	SaveData() { ; }
-	~SaveData() { ; }
+	~SaveData();
 };
 
 /// <summary>

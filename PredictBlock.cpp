@@ -47,18 +47,6 @@ void PredictBlock::Draw(Camera* camera)
 }
 
 //-------------------------------------------------------------------------------
-//PredictBlockManager& PredictBlockManager::operator=( PredictBlockManager& obj)
-//{
-//	predictBlocks_.clear();
-//
-//	this->count = obj.count;
-//	for (PredictBlock& pB : obj.predictBlocks_)
-//	{
-//		this->predictBlocks_.push_back(pB);
-//	}
-//
-//	return *this;
-//}
 
 PredictBlockManager::~PredictBlockManager()
 {
@@ -78,6 +66,8 @@ PredictBlockManager& PredictBlockManager::operator=(const PredictBlockManager& o
 		p->operator=(*itr->get());
 
 		predictBlocks_.push_back(std::move(p));
+
+		p.reset();
 	}
 
 	this->predictArrows_.clear();
@@ -88,6 +78,8 @@ PredictBlockManager& PredictBlockManager::operator=(const PredictBlockManager& o
 		p->operator=(*itr->get());
 
 		predictArrows_.push_back(std::move(p));
+
+		p.reset();
 	}
 
 	return *this;
@@ -95,6 +87,12 @@ PredictBlockManager& PredictBlockManager::operator=(const PredictBlockManager& o
 
 void PredictBlockManager::Initialize()
 {
+	//ñÓàÛópÇÃâÊëúì«Ç›çûÇ›
+	if (texhandle[0] == NULL)
+	{
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowRight.png", texhandle[0]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowLeft.png", texhandle[1]);
+	}
 
 	count = 0;
 	ClearPredictBlock();
@@ -126,7 +124,7 @@ void PredictBlockManager::Draw(Camera* camera, bool isArrowDraw)
 
 	for (std::unique_ptr<PredictArrow>& pA : predictArrows_)
 	{
-		pA->Draw(camera, isArrowDraw);
+		pA->Draw(camera, isArrowDraw, this->texhandle);
 	}
 }
 
@@ -156,10 +154,6 @@ void PredictBlockManager::ClearPredictBlock()
 //------------------------------------------------------------------
 PredictArrow& PredictArrow::operator=(const PredictArrow& obj)
 {
-	for (int i = 0; i < _countof(obj.texhandle); i++)
-	{
-		this->texhandle[i] = obj.texhandle[i];
-	}
 	count = obj.count;
 	for (int i = 0; i < _countof(obj.obj); i++)
 	{
@@ -179,12 +173,6 @@ void PredictArrow::Initialize(Vec3 pos, Vec3 scale)
 	worldTransform_.trans = pos;
 	worldTransform_.scale = scale;
 	worldTransform_.SetWorld();
-
-	if (texhandle[0] == NULL)
-	{
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowRight.png", texhandle[0]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowLeft.png", texhandle[1]);
-	}
 }
 
 void PredictArrow::Update(int count)
@@ -200,7 +188,7 @@ void PredictArrow::Update(int count)
 	this->count = count;
 }
 
-void PredictArrow::Draw(Camera* camera, bool isArrowDraw)
+void PredictArrow::Draw(Camera* camera, bool isArrowDraw, UINT64* texhandle)
 {
 	Vec2 posNum = Vec3toVec2(worldTransform_.trans, camera->viewMat.matView, camera->projectionMat.matProjection);
 	Vec3 pos = Vec3(posNum.x + 180, posNum.y + 225, 0.0f);

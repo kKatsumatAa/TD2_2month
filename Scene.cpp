@@ -12,6 +12,10 @@ void SceneState::SetScene(Scene* scene)
 //タイトル
 void SceneTitle::Initialize()
 {
+	//一手戻る機能リセット
+	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get(), scene->predictBlockManager.get()
+		, scene->rockOnImage, scene->conectLimit_);
+
 	scene->lightManager->SetCircleShadowActive(0, false);
 	//スペースキー
 	obj[0].worldMat->scale = { 310 / 15.0f,50 / 15.0f,1.0f };

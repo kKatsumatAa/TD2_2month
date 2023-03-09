@@ -12,7 +12,7 @@ GetBackManager* GetBackManager::GetInstance()
 }
 
 void GetBackManager::Initialize(Player* player, PlayerSocket* playerSocket, BlockManager* blockManager, CameraManager* cameraM, PredictBlockManager* predictBlockM, RockOnImage* rockOnImage
-, ConectLimit* connectLimit)
+	, ConectLimit* connectLimit)
 {
 	saveDatas_.clear();
 
@@ -30,7 +30,7 @@ void GetBackManager::SaveDatas()
 {
 	saveData = std::make_unique<SaveData>();
 
- 	saveData->player = std::make_unique<Player>();
+	saveData->player = std::make_unique<Player>();
 	saveData->playerSocket = std::make_unique<PlayerSocket>();
 	saveData->blockManager = std::make_unique<BlockManager>();
 	saveData->cameraManager = std::make_unique<CameraManager>();
@@ -66,7 +66,7 @@ void GetBackManager::GetBack()
 		itr--;
 
 		player_->operator=(std::move(*(*itr).get()->player.get()));
-		playerSocket_->operator=(std::move (*(*itr).get()->playerSocket.get()));
+		playerSocket_->operator=(std::move(*(*itr).get()->playerSocket.get()));
 		blockManager_->operator=(std::move(*(*itr).get()->blockManager.get()));
 		cameraManager_->operator=(std::move(*(*itr).get()->cameraManager.get()));
 		predictBlockM->operator=(std::move(*(*itr).get()->predictBlockM.get()));
@@ -75,9 +75,19 @@ void GetBackManager::GetBack()
 
 		saveDatas_.erase(itr);
 
-		//delete (*itr);
 	}
 }
 
 
 //-----------------------------
+
+SaveData::~SaveData()
+{
+	player.reset();
+	playerSocket.reset();
+	blockManager.reset();
+	cameraManager.reset();
+	predictBlockM.reset();
+	rockOnImage.reset();
+	connectLimit.reset();
+}

@@ -25,7 +25,7 @@ public:
 class PredictArrow
 {
 private:
-	UINT64 texhandle[6];
+	
 	int count = 0;
 	Object obj[4];
 
@@ -39,7 +39,7 @@ public:
 
 	void Initialize(Vec3 pos, Vec3 scale);
 	void Update(int count);
-	void Draw(Camera* camera, bool isArrowDraw);
+	void Draw(Camera* camera, bool isArrowDraw, UINT64* texhandle);
 	float GetColor() { return colorAlpha; }
 	void fadeColor();
 };
@@ -47,7 +47,7 @@ public:
 class PredictBlockManager
 {
 private:
-
+	UINT64 texhandle[6];
 
 public:
 	 ~PredictBlockManager();

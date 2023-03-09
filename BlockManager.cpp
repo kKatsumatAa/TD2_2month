@@ -8,9 +8,6 @@ using namespace std;
 
 BlockManager& BlockManager::operator=(const BlockManager& obj)
 {
-	/*this->Initialize(obj.connectEM, obj.predictBlockM, obj.tutorial, obj.cameraM, obj.goalEffect, obj.normal, obj.locked, obj.goal, obj.Socket, obj.button, obj.disconnectedBlock,
-		obj.disconnectedButton, obj.disconnectedSocketBlock, obj.electricBlock, obj.doorGoalClosed);*/
-
 		//ポインタは削除される可能性があるので中身のみコピー
 	this->cameraM = obj.cameraM;
 	this->tutorial = obj.tutorial;
@@ -99,7 +96,8 @@ BlockManager::~BlockManager()
 	//ブロックの削除
 	blocks_.clear();
 	worldmats_.clear();
-	block_.release();
+	block_.reset();
+	this->goalCameraPoses.clear();
 
 	//delete predictBlockM;
 	//delete worldmat_;
@@ -148,6 +146,8 @@ void BlockManager::Initialize(RockOnImage* rockOnImage, ConnectingEffectManager*
 				disconnectedButton, disconnectedSocketBlock, electricBlock, doorGoalClosed, overLapBlock, beforeButtonPop);
 			//ブロックの要素を追加
 			blocks_[i].push_back(std::move(block_));
+		
+			block_.reset();
 		}
 	}
 
@@ -1557,6 +1557,7 @@ void BlockManager::ConectElec()
 
 void BlockManager::GeneratePredictBlock()
 {
+
 	predictBlockM->ClearPredictBlock();
 
 	for (int i = 0; i < blockWidth; i++)
