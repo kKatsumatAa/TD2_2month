@@ -72,9 +72,6 @@ public:
 	//ブロックとブロックの当たり判定
 	bool CollisionBlockToBlock(Vec3 blockPos, Vec3 pos);
 
-	//進む先に重なっているブロックがあるかどうか
-	//bool GetIsOverlapBlock(Vec3 pos);
-
 	//ブロックのリセット
 	void ResetBlock();
 
@@ -112,8 +109,6 @@ public:
 
 	//電気確認用Imguiへのゲッター
 	bool GetIsElec() const{ return &isElec; }
-
-	//void SetElec(int elec[13][13]);
 
 	//重なっているブロックに乗っているかどうか
 	bool GetisLockedBlock(Vec3 pos);
@@ -181,25 +176,6 @@ private:
 	//現在の形
 	Form form_[blockWidth][blockHeight];
 
-	/*Form formTmp_[blockWidth][blockHeight] = {
-		{Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::Electric,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::GEAR,Form::GEAR,Form::NONE,Form::GEAR,Form::GEAR,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::BUTTON,Form::BUTTON,Form::NONE,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::NONE,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::GEAR,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::NONE,Form::GEAR,Form::GEAR,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::BLOCK,Form::BLOCK,Form::GOAL,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-	};*/
-
-
-	//回転する前の形
-	//Form beforeForm_[blockWidth][blockHeight] = { Form::BLOCK };
 	//ブロックが行動を行っているかどうか
 	Action action_[blockWidth][blockHeight] = { Action::None };
 
@@ -208,24 +184,6 @@ private:
 
 	//軸になっているブロックの座標
 	Vec3 axis_pos_;
-
-	//選択されているかどうか
-	//int isCount;
-
-	//ブロックの大きさ
-	//Vec3 scale_;
-
-	//選択カーソルのクールタイマーの設定時間
-	//static const int32_t kSelectTime = 17;
-
-	//選択カーソルのクールタイマー
-	//int32_t selectTimer_ = kSelectTime;
-
-	//選択状態にしてもいいか
-	//bool changedAction_;
-	//bool isChanged_;
-
-	//Vec3 transforms[blockWidth][blockHeight];
 
 	Object draw[10];
 
@@ -250,19 +208,6 @@ private:
 
 	const int effectCountMax = 10;
 
-	//比較用に保存しておく変数
-	//Vec3 comparisonPos[blockWidth][blockHeight];
-
-	//ファイル読み込み用の変数
-	//std::stringstream blocksPos;
-
-	//待機中フラグ
-	//bool isWaitBlock;
-	//待機中タイマー
-	//int32_t blockWaitTimer;
-	//各ブロックの当たり判定保存用
-	//int isOverLap_[blockWidth][blockHeight];
-
 	//回転する前の形状
 	Form beforeTurn_[blockWidth][blockHeight];
 
@@ -283,9 +228,6 @@ private:
 	int stageWidth_;
 	int stageHeight_;
 
-	//上がる前の座標
-	//float beforeTransY[blockWidth][blockHeight];
-
 	//ボタンが押されたかどうか(配列にしているのは複数ボタンに対応するため)
 	bool isPushed[blockWidth][blockHeight];
 	//押されたボタンの数
@@ -304,8 +246,7 @@ private:
 
 	//通った場所を記憶するためのフラグ
 	bool isElec[blockWidth][blockHeight];
-	//bool isDecisionElec[blockWidth][blockHeight];
-
+	
 	//ゴールが出現しているかどうか
 	bool isPopGoal;
 
@@ -334,16 +275,9 @@ private:
 	float maxTime = 60.0f;						//　全体時間[s]
 	float timeRate[blockWidth][blockHeight];	// 何% 時間が進んだか(率)
 
-	//P1 からスタートする
-	//size_t startIndex_[blockWidth][blockHeight];
-
 	//ポップ用のカウント
 	size_t elecCount_[blockWidth][blockHeight] = { 0 };
 
-	//電気タイマーの移動量
-	//float elecWaitTimerMove_;
-	//電気タイマーの待ち時間
-	//float elecWaitTimer_;
 	//変更するアルファ値
 	float elecWaitAlpha_[blockWidth][blockHeight] = { 0 };
 	//変更するアルファ値の移動量
