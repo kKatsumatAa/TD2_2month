@@ -181,7 +181,7 @@ private:
 	//現在の形
 	Form form_[blockWidth][blockHeight];
 
-	Form formTmp_[blockWidth][blockHeight] = {
+	/*Form formTmp_[blockWidth][blockHeight] = {
 		{Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::Electric,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::GEAR,Form::GEAR,Form::NONE,Form::GEAR,Form::GEAR,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
@@ -195,11 +195,11 @@ private:
 		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
 		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-	};
+	};*/
 
 
 	//回転する前の形
-	Form beforeForm_[blockWidth][blockHeight] = { Form::BLOCK };
+	//Form beforeForm_[blockWidth][blockHeight] = { Form::BLOCK };
 	//ブロックが行動を行っているかどうか
 	Action action_[blockWidth][blockHeight] = { Action::None };
 

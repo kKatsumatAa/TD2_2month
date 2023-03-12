@@ -105,7 +105,6 @@ public:
 
 	//const WorldMat GetWorldTransform() { return worldTransform_; };
 
-
 	//セッター
 	void SetWorldPos(Vec3& pos);
 	void SetScale(const Vec3& scale);
