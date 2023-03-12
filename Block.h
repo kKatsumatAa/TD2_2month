@@ -23,18 +23,13 @@ public:
 
 	enum Action
 	{
-		//Rotate,		//回転しているとき
-		//Overlap,	//重なっているとき
 		Connect,	//繋がっているとき
 		None,		//何もしていないとき
 	};
 
 private:
 
-
 	ConnectingEffectManager* connectEM;
-
-	//Object* objcet_ = nullptr;
 
 	Model* normal_ = nullptr;
 	Model* locked_ = nullptr;
@@ -50,9 +45,6 @@ private:
 	//ゴールが出てくる前の枠組み
 	Model* beforePopGoal_ = nullptr;
 
-	//テクスチャハンドル
-	//UINT64 textureHandle_[10];
-
 	const float scaleTmp = 1.8f;
 
 	//ブロックの大きさ
@@ -62,8 +54,7 @@ private:
 	Vec3 pos_;
 
 	XMFLOAT4 color;
-	//XMFLOAT4 changeColor;
-
+	
 	WorldMat goalMat_;
 
 	//引数でもってきているけど、他で必要なのか
@@ -78,9 +69,6 @@ public:
 
 	Object draw[20];
 
-	//使ってない
-	DebugText* debugText_ = nullptr;
-
 	void Initialize(ConnectingEffectManager* connectEM,
 		Model* normal, Model* locked, Model* goal, Model* Socket, Model* button, Model* disconnectedBlock,
 		Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed,
@@ -94,21 +82,13 @@ public:
 	
 	void SetWorldPos(const Vec3& pos) { worldTransform_.trans = pos; };
 
-	//衝突時に呼ばれる
-	void OnCollision(Collider& collider)override;
-	//手と敵の判定用
-	void OnCollision2(Collider& collider)override;
-
 	//ゲッター
 	const Vec3 GetPos(Vec3 pos) const { return pos_; };
 	const Vec3 GetScale(Vec3 scale) const { return scale_; };
-
-	//const WorldMat GetWorldTransform() { return worldTransform_; };
+	float GetRadius() { return radius_; };
 
 	//セッター
 	void SetWorldPos(Vec3& pos);
 	void SetScale(const Vec3& scale);
-	//ゲッター
-	float GetRadius() { return radius_; };
 };
 

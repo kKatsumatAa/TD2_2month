@@ -22,7 +22,6 @@ void Block::Initialize(ConnectingEffectManager* connectEM,
 	assert(overlapBlock);
 	assert(beforePopGoal);
 
-
 	normal_ = normal;
 	locked_ = locked;
 	button_ = button;
@@ -36,9 +35,6 @@ void Block::Initialize(ConnectingEffectManager* connectEM,
 	overlapBlock_ = overlapBlock;
 	beforePopGoal_ = beforePopGoal;
 
-
-	//this->debugText_ = debugText_;
-
 	this->connectEM = connectEM;
 
 	worldTransform_.scale = { scaleTmp,scaleTmp,scaleTmp };
@@ -51,9 +47,7 @@ void Block::Updata(Vec3 pos, int form, Action action, bool isElec, int count, Wo
 {
 	goalMat_ = goalMat;
 
-	//worldTransform_.trans = { pos.x,pos.y,pos.z };
-
-		//仮表示
+	//仮表示
 	if(action == Action::Connect)
 	{
 		color = { 0.2f,0.1f,0.8f,0.95f };
@@ -74,15 +68,9 @@ void Block::Updata(Vec3 pos, int form, Action action, bool isElec, int count, Wo
 		if(color.w < 1.0f) { color.w = 0.95f; }
 	}
 
-	if(form == Form::LOCKED && isPosGoal == true)
-	{
-		//color = { 0.15f + fabsf(sinf(count * 0.025f)) * 0.55f,0.45f + fabsf(sinf(count * 0.025f)) * 0.55f , 0.15f + fabsf(sinf(count * 0.025f)) * 0.55f ,0.95f };
-	}
-
 	//演出(使用するものは目立たせる)
 	if((form == LOCKED || form == Form::BUTTON || form == Form::Electric || form == Form::GEAR || form == Form::GOAL) && action != Action::Connect /*&& form != Form::LOCKED*/)
 	{
-		//color = { 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,0.3f, 0.3f + fabsf(sinf(count * 0.025f)) * 0.55f,popAlpha };
 		if(form == Form::GOAL)
 		{
 			color = { 0.22f + fabsf(sinf(count * 0.025f)) * 0.55f,0.45f + fabsf(sinf(count * 0.025f)) * 0.55f , 0.22f + fabsf(sinf(count * 0.025f)) * 0.55f ,0.95f };
@@ -110,7 +98,6 @@ void Block::Updata(Vec3 pos, int form, Action action, bool isElec, int count, Wo
 		}
 	}
 
-	//block_.SetWorldPos(pos);
 	worldTransform_.SetWorld();
 }
 
@@ -151,18 +138,8 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 			draw[4].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &overlapBlock_[0], color);
 		}
 
-		/*goalMat.trans.y = -0.5;
-		draw[5].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &normal_[0], color);*/
-
 		if(form == Form::GOAL )
 		{
-			/*connectEM->GenerateRandomConnectingEffect({ worldTransform_.trans.x,worldTransform_.trans.y + radius_ * 4.0f,worldTransform_.trans.z }
-			, radius_*1.0f, radius_*1.5f, 5, 3, { 0.1f,0.2,1.0f,0.5f });*/
-			/*ParticleManager::GetInstance()->GenerateRandomParticle(2, 60, 0.6f, { worldTransform_.trans.x,worldTransform_.trans.y + radius_ * 4.8f,worldTransform_.trans.z },
-				0.2f, 0, { 0,1.0f,0.5f,1.0f }, { 0,0,0,0 });*/
-
-				/*goalMat.trans.y = -0.5;
-				draw[11].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &normal_[0], color);*/
 			draw[16].DrawModel(&goalMat_, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color);
 			isGoalElec = true;
 			worldTransform_.trans.y = 0.2f;
@@ -193,15 +170,9 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 			draw[10].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &overlapBlock_[0], color);
 		}
 
-		/*goalMat.trans.y = -0.5;
-		draw[15].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color);*/
-
-
 		if(form == Form::GOAL)
 		{
 			isGoalElec = false;
-			//goalMat.trans.y = -0.5;
-			//draw[11].DrawModel(&goalMat_, &camera->viewMat, &camera->projectionMat, &normal_[0], color);
 			draw[16].DrawModel(&goalMat_, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color);
 			worldTransform_.trans.y = 0.2f;
 			draw[11].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &doorGoalClosed_[0], color);
@@ -211,11 +182,7 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 
 	if(form == Form::LOCKED)
 	{
-		if(isPosGoal == true)
-		{
-			
-
-		}
+		if(isPosGoal == true){}
 		else
 		{
 			draw[12].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &locked_[0], color);
@@ -227,23 +194,8 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 	{
 		draw[16].DrawModel(&goalMat_, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color);
 		goalMat_.trans.y = 0.5f;
-		//draw[17].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &beforePopGoal_[0], color);
 		draw[17].DrawModel(&goalMat_, &camera->viewMat, &camera->projectionMat, &beforePopGoal_[0], color);
 	}
-
-	//ゴール下のブロック
-
-	//if(isGoalElec == true)
-	//{
-	//	//goalMat.trans.y = -0.5;
-	//	//draw[5].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &normal_[0], color);
-	//}
-	//else
-	//{
-	//	//goalMat.trans.y = -0.5;
-	//	//draw[15].DrawModel(&goalMat, &camera->viewMat, &camera->projectionMat, &disconnectedBlock_[0], color);
-	//}
-
 
 	if(form == Form::Electric)
 	{
@@ -253,14 +205,6 @@ void Block::Draw(Camera* camera, UINT64* texhandle, int form, Action action, boo
 		worldTransform_.trans.y = 0.2f;
 		draw[14].DrawModel(&worldTransform_, &camera->viewMat, &camera->projectionMat, &electricBlock_[0], color);
 	}
-}
-
-void Block::OnCollision(Collider& collider)
-{
-}
-
-void Block::OnCollision2(Collider& collider)
-{
 }
 
 void Block::SetScale(const Vec3& scale)
