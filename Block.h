@@ -23,8 +23,8 @@ public:
 
 	enum Action
 	{
-		Rotate,		//回転しているとき
-		Overlap,	//重なっているとき
+		//Rotate,		//回転しているとき
+		//Overlap,	//重なっているとき
 		Connect,	//繋がっているとき
 		None,		//何もしていないとき
 	};
@@ -47,6 +47,7 @@ private:
 	Model* electricBlock_ = nullptr;
 	Model* doorGoalClosed_ = nullptr;
 	Model* overlapBlock_ = nullptr;
+	//ゴールが出てくる前の枠組み
 	Model* beforePopGoal_ = nullptr;
 
 	//テクスチャハンドル
@@ -61,10 +62,11 @@ private:
 	Vec3 pos_;
 
 	XMFLOAT4 color;
-	XMFLOAT4 changeColor;
+	//XMFLOAT4 changeColor;
 
 	WorldMat goalMat_;
 
+	//引数でもってきているけど、他で必要なのか
 	int count = 0;
 
 	bool isGoalElec = false;
@@ -75,6 +77,8 @@ public:
 	~Block();
 
 	Object draw[20];
+
+	//使ってない
 	DebugText* debugText_ = nullptr;
 
 	void Initialize(ConnectingEffectManager* connectEM,
@@ -100,7 +104,6 @@ public:
 	const Vec3 GetScale(Vec3 scale) const { return scale_; };
 
 	//const WorldMat GetWorldTransform() { return worldTransform_; };
-
 
 	//セッター
 	void SetWorldPos(Vec3& pos);

@@ -19,8 +19,8 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 	this->worldmat_ = obj.worldmat_;
 	this->worldmats_ = obj.worldmats_;
 	this->axis_pos_ = obj.axis_pos_;
-	this->isCount = obj.isCount;
-	this->scale_ = obj.scale_;
+	//this->isCount = obj.isCount;
+	//this->scale_ = obj.scale_;
 	//this->prevBlockX = obj.prevBlockX;
 	//this->prevBlockY = obj.prevBlockY;
 	//this->selectTimer_ = obj.selectTimer_;
@@ -35,8 +35,8 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 	this->effectCount = obj.effectCount;
 	this->effectCount2 = obj.effectCount2;
 
-	this->isWaitBlock = obj.isWaitBlock;
-	this->blockWaitTimer = obj.blockWaitTimer;
+	//this->isWaitBlock = obj.isWaitBlock;
+	//this->blockWaitTimer = obj.blockWaitTimer;
 	this->loadForm_ = obj.loadForm_;
 	this->loadForms_ = obj.loadForms_;
 	this->loadWorldmats_ = obj.loadWorldmats_;
@@ -66,23 +66,23 @@ BlockManager& BlockManager::operator=(const BlockManager& obj)
 		for (int j = 0; j < blockHeight; j++)
 		{
 			this->isGoal_[i][j] = obj.isGoal_[i][j];
-			this->beforeTransY[i][j] = obj.beforeTransY[i][j];
+			//this->beforeTransY[i][j] = obj.beforeTransY[i][j];
 			this->isPushed[i][j] = obj.isPushed[i][j];
-			this->isOverLap_[i][j] = obj.isOverLap_[i][j];
+			//this->isOverLap_[i][j] = obj.isOverLap_[i][j];
 			this->beforeTurn_[i][j] = obj.beforeTurn_[i][j];
 			this->isUp[i][j] = obj.isUp[i][j];
 			this->isDown[i][j] = obj.isDown[i][j];
 			this->isTurn[i][j] = obj.isTurn[i][j];
 			this->distancePos[i][j] = obj.distancePos[i][j];
-			this->comparisonPos[i][j] = obj.comparisonPos[i][j];
-			this->transforms[i][j] = obj.transforms[i][j];
-			this->beforeForm_[i][j] = obj.beforeForm_[i][j];
+			//this->comparisonPos[i][j] = obj.comparisonPos[i][j];
+			//this->transforms[i][j] = obj.transforms[i][j];
+			//this->beforeForm_[i][j] = obj.beforeForm_[i][j];
 			this->action_[i][j] = obj.action_[i][j];
 			this->isAxis_[i][j] = obj.isAxis_[i][j];
 			this->form_[i][j] = obj.form_[i][j];
-			this->formTmp_[i][j] = obj.formTmp_[i][j];
+			//this->formTmp_[i][j] = obj.formTmp_[i][j];
 			this->isElec[i][j] = obj.isElec[i][j];
-			this->isDecisionElec[i][j] = obj.isDecisionElec[i][j];
+			//this->isDecisionElec[i][j] = obj.isDecisionElec[i][j];
 			this->isTurning[i][j] = obj.isTurning[i][j];
 		}
 	}
@@ -274,7 +274,7 @@ void BlockManager::Initialize(RockOnImage* rockOnImage, ConnectingEffectManager*
 
 
 	//その他の設定
-	isCount = 1;
+	//isCount = 1;
 
 	//回転
 
@@ -384,14 +384,14 @@ void BlockManager::Update()
 	goalMat.scale = { Vec3(blockRadius_,blockRadius_,blockRadius_) };
 
 	//状態を変える時の遅延
-	if (isChanged_ == false)
+	/*if (isChanged_ == false)
 	{
 		if (--selectTimer_ <= 0)
 		{
 			isChanged_ = true;
 			selectTimer_ = kSelectTime;
 		}
-	}
+	}*/
 
 	//カメラ演出の後にゴール出現
 	if (cameraM != nullptr && (cameraM->isLerpEnd && cameraM->isLerpMoving && isPopGoal && isPopGoalEffect))
@@ -2065,13 +2065,13 @@ void BlockManager::ResetBlock()
 			//Y座標を浮かせるフラグを初期化
 			isUp[i][j] = false;
 
-			isDecisionElec[i][j] = false;
+			//isDecisionElec[i][j] = false;
 
 			isTurn[i][j] = false;
 
 			isTurning[i][j] = false;
 
-			startIndex_[i][j] = 1;
+			//startIndex_[i][j] = 1;
 			timeRate[i][j] = 0;
 			elecCount_[i][j] = 0;
 			elecWaitAlpha_[i][j] = 0.01;
@@ -2215,7 +2215,7 @@ void BlockManager::UpPosY()
 						/*blocks_[i][j]->GetWorldTransForm()->trans =
 						{ blocks_[i][j]->GetRadius() * 1.1f,blocks_[i][j]->GetRadius() * 1.1f, blocks_[i][j]->GetRadius() * 1.1f };*/
 
-						beforeTransY[i][j] = worldmats_[i][j].trans.y;
+						//beforeTransY[i][j] = worldmats_[i][j].trans.y;
 						worldmats_[i][j].trans.y -= 0.20f;
 
 						isUp[i][j] = true;
@@ -2238,7 +2238,7 @@ void BlockManager::DownPosY()
 					if (isUp[i][j] == true)
 					{
 
-						beforeTransY[i][j] = worldmats_[i][j].trans.y;
+						//beforeTransY[i][j] = worldmats_[i][j].trans.y;
 						worldmats_[i][j].trans.y += 0.20f;
 
 						isUp[i][j] = false;
@@ -2320,7 +2320,7 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 			//上記の項目はリセットの際に再設定
 			loadForms_[i][j] = forms[i][j];
 
-			isDecisionElec[i][j] = false;
+			//isDecisionElec[i][j] = false;
 
 			isTurning[i][j] = false;
 		}
