@@ -63,9 +63,6 @@ public:
 
 	Object draw[20];
 
-	//Žg‚Á‚Ä‚È‚¢
-	DebugText* debugText_ = nullptr;
-
 	void Initialize(ConnectingEffectManager* connectEM,
 		Model* normal, Model* locked, Model* goal, Model* Socket, Model* button, Model* disconnectedBlock,
 		Model* disconnectedButton, Model* disconnectedSocketBlock, Model* electricBlock, Model* doorGoalClosed,
