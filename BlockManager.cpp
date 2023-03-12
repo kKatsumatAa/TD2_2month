@@ -272,7 +272,6 @@ void BlockManager::Initialize(RockOnImage* rockOnImage, ConnectingEffectManager*
 	//for文のストッパーをリセットする
 	isStopElecConectedGoal = false;
 
-
 	//その他の設定
 	//isCount = 1;
 
@@ -376,8 +375,6 @@ void BlockManager::Update()
 		}
 	}
 
-	
-	
 	//for文のストッパーをリセットする
 	isStopElecConectedGoal = false;
 
@@ -768,7 +765,6 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 		isCheckElec_ = false;
 		checkCount = 0;
 
-
 		//角度が必要
 		for (int i = 0; i < stageWidth_; i++)
 		{
@@ -795,8 +791,6 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 					rotatePos.x = axis_pos_.x + GetVec3xM4(distancePosPlayer, worldMat.matWorld, 0).x;
 
 					rotatePos.z = axis_pos_.z + GetVec3xM4(distancePosPlayer, worldMat.matWorld, 0).z;
-
-
 				}
 			}
 		}
@@ -836,7 +830,6 @@ void BlockManager::UpdateRotate(Vec3& rotatePos)
 
 	if (isLeftRolling == true)
 	{
-
 		rotateCount++;
 		isCheckElec_ = false;
 		checkCount = 0;
@@ -1227,8 +1220,6 @@ float BlockManager::GetGameHeight()
 //	}
 //}
 
-
-
 //重なった時の処理
 void BlockManager::UpdateOverlap()
 {
@@ -1304,8 +1295,6 @@ void BlockManager::UpdateOverlap()
 								//回転したフラグをONに
 								isTurn[i][j] = true;
 								isTurn[k][l] = true;
-
-
 							}
 							//ボタンを押したときの処理
 							else if (form_[i][j] == Form::BUTTON && form_[k][l] != Form::GOAL)
@@ -1409,9 +1398,6 @@ void BlockManager::UpdateOverlap()
 					//		{
 					//			isElec[k][l] = false;
 					//		}*/
-
-
-
 					//	}
 					//}
 
@@ -1470,7 +1456,6 @@ void BlockManager::UpdateOverlap()
 	//for文のストッパーをリセットする
 	isChangedConectGoal = false;
 
-
 	/*if(checkCount > 11)
 	{
 		isCheckElec_ = true;
@@ -1479,8 +1464,6 @@ void BlockManager::UpdateOverlap()
 
 void BlockManager::ConectElec()
 {
-
-
 	//一回の更新処理
 	for (int i = 0; i < stageWidth_; i++)
 	{
@@ -1546,18 +1529,14 @@ void BlockManager::ConectElec()
 		}
 	}
 
-
-
 	if (checkCount > 11)
 	{
-
 		isCheckElec_ = true;
 	}
 }
 
 void BlockManager::GeneratePredictBlock()
 {
-
 	predictBlockM->ClearPredictBlock();
 
 	for (int i = 0; i < blockWidth; i++)
@@ -1583,8 +1562,6 @@ void BlockManager::GeneratePredictBlock()
 			worldMat[1].trans.x = axis_pos_.x + GetVec3xM4(distancePos[i][j], worldMat[1].matWorld, 0).x;
 			worldMat[1].trans.y = 0.8f;
 			worldMat[1].trans.z = axis_pos_.z + GetVec3xM4(distancePos[i][j], worldMat[1].matWorld, 0).z;
-
-			
 
 			this->electricBlock = electricBlock; this->doorGoalClosed = doorGoalClosed;
 
@@ -1618,8 +1595,6 @@ void BlockManager::GeneratePredictBlock()
 				predictBlockM->AddPredictBlock(worldMat[0].trans, { blockRadius_,blockRadius_,blockRadius_ }, false, this->electricBlock);
 				predictBlockM->AddPredictBlock(worldMat[1].trans, { blockRadius_,blockRadius_,blockRadius_ }, true, this->electricBlock);
 			}
-
-			
 		}
 	}
 
@@ -1706,12 +1681,9 @@ void BlockManager::RepositBlock()
 											isElec[k][l] = false;
 										}*/
 
-
 										//回転したフラグをOFFに
 										isTurn[i][j] = false;
 										isTurn[k][l] = false;
-
-
 									}
 								}
 							}
@@ -1943,7 +1915,6 @@ void BlockManager::AppearGoal()
 
 						isPopGoalEffect = true;
 
-
 						////チュートリアル
 						//if (tutorial->GetState() == TUTORIAL::BUTTON && tutorial->GetStateNum() == 0)
 						//{
@@ -2006,7 +1977,6 @@ bool BlockManager::BlockJunction(Vec3 Pos1, Vec3 Pos2)
 	}
 
 	return false;
-
 }
 
 void BlockManager::ResetBlock()
@@ -2126,7 +2096,6 @@ void BlockManager::ResetBlock()
 							}
 						}
 					}
-
 				}
 			}
 		}
@@ -2170,8 +2139,6 @@ void BlockManager::ResetBlock()
 	effectCount = 0;
 
 	pushedCount_ = 0;
-
-
 
 	//電気初期化用
 	checkCount = 0;
@@ -2345,18 +2312,19 @@ void BlockManager::SetStage(const int& stageWidth, const int& stageHeight, std::
 	}
 }
 
-void BlockManager::SetElec(int elec[13][13])
-{
-
-	//全ての壁の座標を渡す
-	for (int i = 0; i < blockWidth; i++)
-	{
-		for (int j = 0; j < blockHeight; j++)
-		{
-			//ワールド行列の平行移動成分を取得(ワールド座標)
-			//blockPos[i][j] = worldTransforms_[i][j].translation_;
-			elec[i][j] = isElec[i][j];
-		}
-	}
-
-}
+//
+//void BlockManager::SetElec(int elec[13][13])
+//{
+//
+//	//全ての壁の座標を渡す
+//	for (int i = 0; i < blockWidth; i++)
+//	{
+//		for (int j = 0; j < blockHeight; j++)
+//		{
+//			//ワールド行列の平行移動成分を取得(ワールド座標)
+//			//blockPos[i][j] = worldTransforms_[i][j].translation_;
+//			elec[i][j] = isElec[i][j];
+//		}
+//	}
+//
+//}
