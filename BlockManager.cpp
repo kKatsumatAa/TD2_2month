@@ -998,13 +998,15 @@ bool BlockManager::GetIsGoal(Vec3& pos, bool isPlayer)
 							}
 						}
 
+						//ゴール演出
 						goalEffect->BegineGoalEffect(goalCameraPoses, { worldmats_[i][j].trans.x, worldmats_[i][j].trans.y + blockRadius_ * 2.0f,worldmats_[i][j].trans.z }, 30,
 							3, 20);
+						//ほかのカメラ演出の終了時カメラのせいでおかしくなるので
+						cameraM->EndLerpUsingCamera();
+
+						//カメラ切り替え
+						cameraM->usingCamera = cameraM->goalEffectCamera.get();
 					}
-
-					//カメラ切り替え
-					cameraM->usingCamera = cameraM->goalEffectCamera.get();
-
 					return true;
 				}
 			}

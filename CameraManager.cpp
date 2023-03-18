@@ -80,6 +80,13 @@ void CameraManager::BegineLerpUsingCamera(Vec3 startEye, Vec3 endEye, Vec3 start
 	Update();
 }
 
+void CameraManager::EndLerpUsingCamera()
+{
+	isLerpMoving = false;
+	isLerpEnd = false;
+	ChangeUsingCameraState(new UsingCameraNormalState);
+}
+
 CameraManager& CameraManager::operator=(const CameraManager& obj)
 {
 	this->Initialize();
