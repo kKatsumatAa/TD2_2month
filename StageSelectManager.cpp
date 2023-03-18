@@ -63,9 +63,10 @@ void StageSelectManager::Initialize(StageManager* stageM)
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFrame8.png", texhandle[8]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFrame9.png", texhandle[9]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFrame10.png", texhandle[10]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/selectBackground.png", texhandle[11]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/spaceKey.png", texhandle[12]);
-		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowKey.png", texhandle[13]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageFrame10.png", texhandle[11]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/selectBackground.png", texhandle[12]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/spaceKey.png", texhandle[13]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/arrowKey.png", texhandle[14]);
 		//ステージイメージ
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s0.png", texhandleSI[0]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s1.png", texhandleSI[1]);
@@ -78,6 +79,7 @@ void StageSelectManager::Initialize(StageManager* stageM)
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s8.png", texhandleSI[8]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s9.png", texhandleSI[9]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s10.png", texhandleSI[10]);
+		TextureManager::GetInstance().LoadGraph(L"Resources/image/stageImage/s10.png", texhandleSI[11]);
 		//枠
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/UI_LevelStage_Frame.png", texhandleSIF);
 	}
