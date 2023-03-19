@@ -633,46 +633,6 @@ void StageManager::SetStage10(const int& blockWidth, const int& blockHeight)
 	blockManager_->SetStage(blockWidth, blockHeight, worldmats_, forms_);
 }
 
-void StageManager::SetStage11(const int& blockWidth, const int& blockHeight)
-{
-	stageWidth = blockWidth;
-	selectStage = STAGE::STAGE11;
-
-	ResetStage();
-	SetWorldMat(blockWidth, blockHeight);
-
-	//ここでプレイヤーの位置指定
-	playerPos[1][4] = true;
-
-	//プレイヤーの制限回数の上限を設定
-
-
-	conectLimit_->SetCount(16);
-	conectLimit_->ResetCount();
-
-	//形の設定
-	forms_ =
-	{
-		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::LOCKED,Form::GEAR,Form::NONE,Form::BUTTON,Form::BUTTON,Form::BUTTON,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::LOCKED,Form::GEAR,Form::BLOCK,Form::NONE,Form::BUTTON,Form::LOCKED,Form::BUTTON,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::BLOCK,Form::GOAL,Form::BUTTON,Form::BUTTON,Form::BUTTON,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::BLOCK,Form::Electric,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::GEAR,Form::BLOCK,Form::GEAR,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::BLOCK,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::GEAR,Form::GEAR,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-		{Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,Form::NONE,},
-
-	};
-
-	//行列をセット
-	blockManager_->SetStage(blockWidth, blockHeight, worldmats_, forms_);
-}
-
 void StageManager::ResetStage()
 {
 	blockManager_->ResetBlock();
@@ -714,9 +674,6 @@ void StageManager::SelectStage(int stageNum)
 		break;
 	case STAGE::STAGE10:
 		SetStage10(13, 13);
-		break;
-	case STAGE::STAGE11:
-		SetStage11(13, 13);
 		break;
 	}
 }
