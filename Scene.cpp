@@ -186,11 +186,11 @@ void SceneGame::Update()
 			{
 				scene->tutorial->OverlapInitialize();
 			}
-			if (scene->stageManager->selectStage == STAGE::STAGE3)
+			if (scene->stageManager->selectStage == STAGE::STAGE4)
 			{
 				scene->tutorial->ElectricInitialize();
 			}
-			if (scene->stageManager->selectStage == STAGE::STAGE5)
+			if (scene->stageManager->selectStage == STAGE::STAGE6)
 			{
 				scene->tutorial->ButtonInitialize();
 			}
