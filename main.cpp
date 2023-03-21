@@ -65,6 +65,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//
 			scene->DrawPostEffect();
 
+			//
+			scene->DrawSprite2();
+
 			// 4.描画コマンドここまで //
 			Directx::GetInstance().PostDrawToPera();
 		}

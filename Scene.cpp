@@ -8,6 +8,10 @@ void SceneState::SetScene(Scene* scene)
 	this->scene = scene;
 }
 
+void SceneState::DrawSprite2()
+{
+}
+
 //---------------------------------------------------------------------------------------
 //タイトル
 void SceneTitle::Initialize()
@@ -81,7 +85,7 @@ void SceneTitle::DrawSprite()
 //セレクト画面
 void SceneStageSelect::Initialize()
 {
-	//Object::effectFlags.isBarrelCurve = true;
+	Object::effectFlags.isGrayScale = false;
 
 	//一手戻る機能リセット
 	GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get(), scene->predictBlockManager.get()
@@ -143,66 +147,72 @@ void SceneGame::Update()
 {
 	if (!scene->player->isGoal) {
 
-		scene->blockManager->Update();
-		//特定のカメラ演出時は動かさない
-		if (!scene->blockManager->isPopedGoal2)
+		//ヒント表示中は動かさない
+		if (!Hint::GetInstance().GetIsDisplayingHint())
 		{
-			scene->player->Update();
+			scene->blockManager->Update();
+			//特定のカメラ演出時は動かさない
+			if (!scene->blockManager->isPopedGoal2)
+			{
+				scene->player->Update();
 
 
-			Vec3 pos = scene->player->GetWorldPos();
-			scene->playerSocket->Update({ pos.x,pos.y,pos.z });
+				Vec3 pos = scene->player->GetWorldPos();
+				scene->playerSocket->Update({ pos.x,pos.y,pos.z });
 
 
-			scene->predictBlockManager->Update();
+				scene->predictBlockManager->Update();
 
-			scene->rockOnImage->Update();
+				scene->rockOnImage->Update();
+			}
+			if (scene->stageSelectM->isTutorial)
+			{
+				scene->tutorial->Update();
+			}
+			//リセット
+			if (KeyboardInput::GetInstance().KeyTrigger(DIK_R) || scene->player->PlayerOutArea())
+			{
+				//カメラをゲームのメインカメラに
+				scene->cameraM.get()->usingCamera = scene->cameraM->gameMainCamera.get();
+				scene->cameraM.get()->Initialize();
+				scene->player->Reset();
+				scene->blockManager->ResetBlock();
+				scene->connectE2M->Initialize();
+				scene->predictBlockManager->Initialize();
+				scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
+				scene->rockOnImage->Initialize();
+				if (scene->stageManager->selectStage == STAGE::TUTORIAL)
+				{
+					scene->tutorial->Initialize();
+				}
+				if (scene->stageManager->selectStage == STAGE::STAGE1)
+				{
+					scene->tutorial->ConnectLimitInitialize();
+				}
+				if (scene->stageManager->selectStage == STAGE::STAGE2)
+				{
+					scene->tutorial->OverlapInitialize();
+				}
+				if (scene->stageManager->selectStage == STAGE::STAGE4)
+				{
+					scene->tutorial->ElectricInitialize();
+				}
+				if (scene->stageManager->selectStage == STAGE::STAGE6)
+				{
+					scene->tutorial->ButtonInitialize();
+				}
+
+				//一手戻る機能リセット
+				GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get(), scene->predictBlockManager.get()
+					, scene->rockOnImage, scene->conectLimit_);
+			}
+			if (KeyboardInput::GetInstance().KeyTrigger(DIK_Z))
+			{
+				GetBackManager::GetInstance()->GetBack();
+			}
 		}
-		if (scene->stageSelectM->isTutorial)
-		{
-			scene->tutorial->Update();
-		}
-		//リセット
-		if (KeyboardInput::GetInstance().KeyTrigger(DIK_R) || scene->player->PlayerOutArea())
-		{
-			//カメラをゲームのメインカメラに
-			scene->cameraM.get()->usingCamera = scene->cameraM->gameMainCamera.get();
-			scene->cameraM.get()->Initialize();
-			scene->player->Reset();
-			scene->blockManager->ResetBlock();
-			scene->connectE2M->Initialize();
-			scene->predictBlockManager->Initialize();
-			scene->playerSocket->Initialize(scene->connectE2M.get(), scene->blockManager->blockRadius_, scene->model[0]);
-			scene->rockOnImage->Initialize();
-			if (scene->stageManager->selectStage == STAGE::TUTORIAL)
-			{
-				scene->tutorial->Initialize();
-			}
-			if (scene->stageManager->selectStage == STAGE::STAGE1)
-			{
-				scene->tutorial->ConnectLimitInitialize();
-			}
-			if (scene->stageManager->selectStage == STAGE::STAGE2)
-			{
-				scene->tutorial->OverlapInitialize();
-			}
-			if (scene->stageManager->selectStage == STAGE::STAGE4)
-			{
-				scene->tutorial->ElectricInitialize();
-			}
-			if (scene->stageManager->selectStage == STAGE::STAGE6)
-			{
-				scene->tutorial->ButtonInitialize();
-			}
-
-			//一手戻る機能リセット
-			GetBackManager::GetInstance()->Initialize(scene->player.get(), scene->playerSocket.get(), scene->blockManager, scene->cameraM.get(), scene->predictBlockManager.get()
-				, scene->rockOnImage, scene->conectLimit_);
-		}
-		if (KeyboardInput::GetInstance().KeyTrigger(DIK_Z))
-		{
-			GetBackManager::GetInstance()->GetBack();
-		}
+		//ヒント
+		Hint::GetInstance().Update();
 	}
 	scene->goalConnectEM->Update();
 	scene->connectEM->Update();
@@ -255,25 +265,39 @@ void SceneGame::Draw()
 
 void SceneGame::DrawSprite()
 {
-	if (scene->stageSelectM->isTutorial && !scene->player->isGoal)
+	//ヒント表示されてないとき
+	if (!Hint::GetInstance().GetIsDisplayingHint())
 	{
-		scene->tutorial->Draw();
+		//チュートリアル
+		if (scene->stageSelectM->isTutorial && !scene->player->isGoal)
+		{
+			scene->tutorial->Draw();
+		}
+
+		//ボーダー
+		obj[2].DrawBoxSprite({ 0,0,0 }, 1.0f, { 1.0f,1.0f,1.0f,0.7f }, scene->texhandle[6]);
+
+		//ゴール演出時はチュートリアルとかui消す
+		if (!scene->player->isGoal)
+		{
+			obj[0].DrawBoxSprite({ 160,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[3]);
+			obj[1].DrawBoxSprite({ 280,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
+
+			scene->conectLimit_->Draw();
+			scene->rockOnImage->Draw(scene->cameraM.get()->usingCamera);
+		}
 	}
-
-	obj[2].DrawBoxSprite({ 0,0,0 }, 1.0f, { 1.0f,1.0f,1.0f,0.7f }, scene->texhandle[6]);
-
-	if (!scene->player->isGoal)
-	{
-		obj[3].DrawBoxSprite({ 50,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[7]);
-		obj[0].DrawBoxSprite({ 160,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[3]);
-		obj[1].DrawBoxSprite({ 280,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
-
-		scene->conectLimit_->Draw();
-		scene->rockOnImage->Draw(scene->cameraM.get()->usingCamera);
-	}
+	//ヒント
+	Hint::GetInstance().Draw();
 }
 
-
+void SceneGame::DrawSprite2()
+{
+	if (!scene->player->isGoal)
+	{//Q
+		obj[3].DrawBoxSprite({ 50,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[7]);
+	}
+}
 
 //---------------------------------------------------------------------------------------
 //終了画面
@@ -339,6 +363,8 @@ void SceneClear::DrawSprite()
 //--------------------------------------------------------------------------------------
 void SceneLoad::LoadFunc()
 {
+	Hint::GetInstance().Initialize();
+
 	scene->rockOnImage->Initialize();
 
 	scene->goalConnectEM->Initialize();
@@ -517,8 +543,7 @@ void Scene::Initialize()
 		Sound::GetInstance().LoadWave("limitFailed.wav", false);
 		Sound::GetInstance().LoadWave("goal.wav", false);
 		Sound::GetInstance().LoadWave("tutu4.wav", false);
-
-
+		Sound::GetInstance().LoadWave("hint.wav", false);
 	}
 
 	//白い画像
@@ -655,7 +680,8 @@ void Scene::Initialize()
 	stageSelectM = std::make_unique<StageSelectManager>();
 	stageSelectM->Initialize(stageManager.get());
 
-
+	//ヒントクラス
+	Hint::GetInstance().Initialize();
 
 	//ステート変更
 	ChangeState(new SceneTitle);
@@ -757,6 +783,11 @@ void Scene::Draw()
 void Scene::DrawSprite()
 {
 	state->DrawSprite();
+}
+
+void Scene::DrawSprite2()
+{
+	state->DrawSprite2();
 
 #ifdef _DEBUG
 	debugText.DrawAll(debugTextHandle);
@@ -793,6 +824,7 @@ void Scene::StopAllWave()
 	Sound::GetInstance().StopWave("limitFailed.wav");
 	Sound::GetInstance().StopWave("goal.wav");
 	Sound::GetInstance().StopWave("tutu4.wav");
+	Sound::GetInstance().StopWave("hint.wav");
 }
 
 
