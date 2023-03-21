@@ -1,7 +1,7 @@
 #pragma once
 #include"Object.h"
 #include"Camera.h"
-#include"StageManager.h"
+#include"Hint.h"
 
 
 class StageSelectManager
