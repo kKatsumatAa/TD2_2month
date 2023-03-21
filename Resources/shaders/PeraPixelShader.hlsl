@@ -146,7 +146,7 @@ float4 PS(Output input) : SV_TARGET
 	{
 		float2 samplePoint = input.uv;
 		float4 Tex = tex.Sample(smp, input.uv);
-		float vignette = length(float2(0.5f, 0.5f) - input.uv);
+		float vignette = length(float2(0.5f, 0.5f) - input.uv) + (sin(time * 0.01f) * 0.1f);
 		vignette = clamp(vignette - 0.4f, 0, 1);
 		Tex.rgb -= vignette;
 		ret = Tex;
@@ -191,17 +191,22 @@ float4 PS(Output input) : SV_TARGET
 		float4 tcolor = RGBA;
 
 		// 輝度算出
-		if ((tcolor.x > 0.9f || tcolor.y > 0.9f || tcolor.z > 0.9f || tcolor.w > 0.9f))
+		//if ((tcolor.x > 0.9f || tcolor.y > 0.9f || tcolor.z > 0.9f || tcolor.w > 0.9f))
 		{
 			float y, u, v;
 			y = tcolor.x * 0.199 + tcolor.y * 0.487 + tcolor.z * 0.014;
+
+			if (time % 280 == 0 || time % 280 == 10 || time % 280 == 50 || time % 280 == 120)
+			{
+				y = -(tcolor.x * 0.199 + tcolor.y * 0.487 + tcolor.z * 0.014) / -input.uv.y;
+			}
 
 			// グレースケール変換
 			tcolor.x = y;
 			tcolor.y = y;
 			tcolor.z = y;
 		}
-		else
+		//else
 		{
 			/*if (tcolor.x >= 0.9f)
 			{

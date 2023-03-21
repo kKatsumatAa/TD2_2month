@@ -166,6 +166,7 @@
     <ClCompile Include="GetBackManager.cpp" />
     <ClCompile Include="GoalConnectEffect.cpp" />
     <ClCompile Include="GoalEffect.cpp" />
+    <ClCompile Include="Hint.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
     <ClCompile Include="KeyboardInput.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="GetBackManager.h" />
     <ClInclude Include="GoalConnectEffect.h" />
     <ClInclude Include="GoalEffect.h" />
+    <ClInclude Include="Hint.h" />
     <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="KeyboardInput.h" />
     <ClInclude Include="LightManager.h" />

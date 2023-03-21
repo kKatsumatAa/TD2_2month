@@ -189,6 +189,9 @@ void StageSelectManager::Update()
 
 		stageM->SelectStage(selectNum);
 
+		//表示するヒント画像用にステージの番号をセット
+		Hint::GetInstance().SetStageNum(selectNum);
+
 		//音
 		Sound::GetInstance().PlayWave("select.wav", 0.7f);
 	}

@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "GetBackManager.h"
 #include "ParticleManager.h"
+#include "Hint.h"
 
 Player::~Player()
 {
@@ -247,7 +248,8 @@ void Player::Draw(Camera* camera)
 		{
 			color = { color.x - 0.4f,color.y - 0.4f,color.z + 0.2f,1.0f };
 		}
-		if (colorCount % 180 == 5)
+		//ƒqƒ“ƒgŽžˆÈŠO
+		if (colorCount % 180 == 5 && !Hint::GetInstance().GetIsDisplayingHint())
 		{
 			Sound::GetInstance().PlayWave("tutu4.wav", 0.25f);
 		}
