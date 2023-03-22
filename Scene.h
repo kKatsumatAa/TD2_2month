@@ -50,7 +50,7 @@ public:
 
 	//デバッグテキスト
 	UINT64 debugTextHandle;
-	UINT64 texhandle[10];
+	UINT64 texhandle[20];
 
 	//画像用ハンドル
 	UINT64 textureHandle[30] = { 0 };
@@ -155,7 +155,7 @@ public:
 class SceneGame : public SceneState
 {
 private:
-	
+	int count = 0;
 	Object obj[5];
 
 public:

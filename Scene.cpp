@@ -229,7 +229,7 @@ void SceneGame::Update()
 		}
 	}
 	//ステージセレクトに戻る
-	else if (KeyboardInput::GetInstance().KeyTrigger(DIK_Q) || KeyboardInput::GetInstance().KeyTrigger(DIK_ESCAPE))
+	else if ((KeyboardInput::GetInstance().KeyTrigger(DIK_Q) || KeyboardInput::GetInstance().KeyTrigger(DIK_ESCAPE)) && !Hint::GetInstance().GetIsDisplayingHint())
 	{
 		scene->cameraM->usingCamera = scene->cameraM->stageSelectCamera.get();
 		scene->ChangeState(new SceneStageSelect);
@@ -282,6 +282,7 @@ void SceneGame::DrawSprite()
 		{
 			obj[0].DrawBoxSprite({ 160,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[3]);
 			obj[1].DrawBoxSprite({ 280,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[4]);
+			obj[3].DrawBoxSprite({ 50,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[7]);
 
 			scene->conectLimit_->Draw();
 			scene->rockOnImage->Draw(scene->cameraM.get()->usingCamera);
@@ -294,8 +295,11 @@ void SceneGame::DrawSprite()
 void SceneGame::DrawSprite2()
 {
 	if (!scene->player->isGoal)
-	{//Q
-		obj[3].DrawBoxSprite({ 50,50,0 }, 0.2f, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[7]);
+	{//hint
+		count++;
+		float scale = 0.2f;
+		if (Hint::GetInstance().GetIsDisplayingHint()) { scale += sinf(count * 0.03f) * 0.01f; }
+		obj[4].DrawBoxSprite({ 400,50,0 }, scale, { 1.0f,1.0f,1.0f,1.0f }, scene->texhandle[10]);
 	}
 }
 
@@ -564,6 +568,8 @@ void Scene::Initialize()
 		TextureManager::LoadGraph(L"Resources/image/UI/UI_Border.png", texhandle[6]);
 		//Q
 		TextureManager::LoadGraph(L"Resources/image/backStageQ.png", texhandle[7]);
+		//hint
+		TextureManager::LoadGraph(L"Resources/image/hint.png", texhandle[10]);
 		//タイトル
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/title.png", texhandle[9]);
 		TextureManager::GetInstance().LoadGraph(L"Resources/image/press_space.png", texhandle[8]);
