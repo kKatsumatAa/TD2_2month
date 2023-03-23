@@ -248,8 +248,8 @@ void Player::Draw(Camera* camera)
 		{
 			color = { color.x - 0.4f,color.y - 0.4f,color.z + 0.2f,1.0f };
 		}
-		//ヒント時以外
-		if (colorCount % 180 == 5 && !Hint::GetInstance().GetIsDisplayingHint())
+		//ヒント,ゴール時以外
+		if (colorCount % 180 == 5 && !Hint::GetInstance().GetIsDisplayingHint() && !isGoal)
 		{
 			Sound::GetInstance().PlayWave("tutu4.wav", 0.25f);
 		}
@@ -599,6 +599,7 @@ void StateMoveP::Update()
 	//ゴールしたら
 	if (!player->isGoal && player->blockM->GetIsGoal(player->GetWorldPos(), true))
 	{
+		Sound::GetInstance().StopWave("tutu4.wav");
 		player->isGoal = true;
 	}
 	//移動し終わったらステート戻す

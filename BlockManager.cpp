@@ -1681,6 +1681,7 @@ void BlockManager::AppearGoal()
 							cameraM->usingCamera->CameraShake(30, 1.0f);
 
 							isPopedGoal2 = true;
+							Sound::StopWave("tutu4.wav");
 						}
 						else
 						{

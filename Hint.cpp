@@ -14,6 +14,8 @@ void HintStateNormal::Update()
 	//外部でヒントフラグがたったら
 	if (hint->GetIsDisplayingHint())
 	{
+		Object::effectFlags.isGrayScale = true;
+
 		this->timer++;
 
 		//一定時間たったら
@@ -45,17 +47,18 @@ void HintStateNormal::Draw()
 //表示中
 void HintStateDisplay::Update()
 {
-	Object::effectFlags.isGrayScale = true;
 
 	//外部で表示フラグがオフになったら
 	if (!hint->GetIsDisplayingHint())
 	{
-		Object::effectFlags.isGrayScale = false;
+		
 
 		timer++;
 
 		if (timer >= timerMax)
 		{
+			Object::effectFlags.isGrayScale = false;
+
 			//音
 			Sound::GetInstance().StopWave("hint.wav");
 			Sound::GetInstance().PlayWave("Stage_BGM.wav", 0.5f, true);
@@ -109,7 +112,7 @@ void Hint::Initialize()
 
 void Hint::Update()
 {
-	if (KeyboardInput::GetInstance().KeyTrigger(DIK_E))
+	if (KeyboardInput::GetInstance().KeyTrigger(DIK_C))
 	{
 		if (isDisplayingHint) { isDisplayingHint = false; }
 		else { isDisplayingHint = true; }
